@@ -1,0 +1,20 @@
+.active{
+    text-decoration:underline;
+}
+
+.notFound{
+    text-align: center;
+    margin-top: 50px;
+    font-size: 24px;
+    color: red;
+}
+
+.notFound h1{
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.notFound p{
+    font-size: 18px;
+    color: #333;
+}
