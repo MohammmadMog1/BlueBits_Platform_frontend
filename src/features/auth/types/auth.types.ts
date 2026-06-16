@@ -9,8 +9,18 @@ export type UserRole =
 // ===== PERMISSIONS =====
 // export type Permission = string;
 
+
+
+// ===== AUTH STATE =====
+export interface AuthState {
+  user: IUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
 // ===== USER =====
-export interface User {
+export interface IUser {
   _id: string;
   name: string;
   email: string;
@@ -30,7 +40,7 @@ export interface User {
 }
 
 // ===== BASE API RESPONSE =====
-export interface ApiResponse<T> {
+export interface IApiResponse<T> {
   isSuccess: boolean;
   message: string;
   statusCode: number;
@@ -38,23 +48,30 @@ export interface ApiResponse<T> {
 }
 
 // ===== LOGIN =====
-export type LoginResponse = ApiResponse<{
+export type LoginResponse = IApiResponse<{
   token: string;
-  user: User;
+  user: IUser;
 }>;
 
 
-export interface RegisterUser {
-  id: string;
-  name: string;
+export interface LoginRequest {
   email: string;
+  password: string;
 }
 
+
+
 // ===== REGISTER =====
-export type RegisterResponse = ApiResponse<{
-  user: RegisterUser;
+export type RegisterResponse = IApiResponse<{
+  user: IUser;
   message: string;
 }>;
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
 
 // ===== VERIFY EMAIL =====
 export interface VerifyEmailResponse {
@@ -63,13 +80,6 @@ export interface VerifyEmailResponse {
   statusCode: number;
 }
 
-// ===== AUTH STATE =====
-export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-}
 
 // ===== FORGOT PASSWORD =====
 export interface ForgotPasswordRequest {
@@ -88,23 +98,22 @@ export interface UpdateMyPasswordRequest {
   password: string;
 }
 
-export type UpdateMyPasswordResponse = ApiResponse<{
+export type UpdateMyPasswordResponse = IApiResponse<{
   token: string;
-  user: User;
+  user: IUser;
 }>;
 
 // ===== RESET PASSWORD =====
 export interface ResetPasswordRequest {
   password: string;
-  passwordConfirm: string;
 }
 
-export type ResetPasswordResponse = ApiResponse<{
+export type ResetPasswordResponse = IApiResponse<{
   token: string;
-  user: User;
+  user: IUser;
 }>;
 
 // ===== GET ME =====
-export type GetMeResponse = ApiResponse<{
-  user: User;
+export type GetMeResponse = IApiResponse<{
+  user: IUser;
 }>;
