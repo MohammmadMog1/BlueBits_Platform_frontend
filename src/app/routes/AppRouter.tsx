@@ -9,7 +9,7 @@ import MainLayout from "../../shared/layout/MainLayout/MainLayout";
 // import Login from "@pages/Login";
 // import Register from "@pages/Register";
 // import Error from "@pages/Error";
-
+import { LandingPage } from "../../features/landing";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,10 +36,7 @@ const router = createBrowserRouter([
     //       }
     //     },
     //   },
-    //   {
-    //     path: "categories",
-    //     element: <Categories />,
-    //   },
+
     //   {
     //     path: "about-us",
     //     element: <AboutUs />,
@@ -53,6 +50,10 @@ const router = createBrowserRouter([
     //     element: <Register />,
     //   },
     // ],
+  },
+  {
+    path: "LandingPage",
+    element: <LandingPage />,
   },
 ]);
 

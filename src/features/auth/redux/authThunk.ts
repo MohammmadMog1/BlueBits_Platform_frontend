@@ -58,7 +58,7 @@ export const getMeThunk = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await getMeApi();
-
+      console.log(response.data);
       return response.data.user;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
