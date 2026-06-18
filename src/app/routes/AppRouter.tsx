@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-//layouts
+// layouts
 import MainLayout from "../../shared/layout/MainLayout/MainLayout";
 //pages
 // import Home from "@pages/Home";
@@ -9,7 +9,7 @@ import MainLayout from "../../shared/layout/MainLayout/MainLayout";
 // import Login from "@pages/Login";
 // import Register from "@pages/Register";
 // import Error from "@pages/Error";
-import { LandingPage } from "../../features/landing";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,7 +36,10 @@ const router = createBrowserRouter([
     //       }
     //     },
     //   },
-
+    //   {
+    //     path: "categories",
+    //     element: <Categories />,
+    //   },
     //   {
     //     path: "about-us",
     //     element: <AboutUs />,
