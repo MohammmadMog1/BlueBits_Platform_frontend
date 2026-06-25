@@ -14,6 +14,7 @@ export type UserRole =
 // ===== AUTH STATE =====
 export interface AuthState {
   user: IUser | null;
+  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -62,10 +63,7 @@ export interface LoginRequest {
 
 
 // ===== REGISTER =====
-export type RegisterResponse = IApiResponse<{
-  user: IUser;
-  message: string;
-}>;
+export type RegisterResponse = IApiResponse<IUser>;
 
 export interface RegisterRequest {
   name: string;
@@ -114,6 +112,4 @@ export type ResetPasswordResponse = IApiResponse<{
 }>;
 
 // ===== GET ME =====
-export type GetMeResponse = IApiResponse<{
-  user: IUser;
-}>;
+export type GetMeResponse = IApiResponse<IUser>;

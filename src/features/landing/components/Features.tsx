@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, ArrowUpRight } from 'lucide-react';
-import { HexGrid, DiagonalBands, TabLabel, PageCorner } from './shared/VisualHelpers';
+import { TabLabel, PageCorner } from './shared/VisualHelpers';
 
 interface Feature {
   icon: any;
@@ -20,11 +20,7 @@ interface FeaturesProps {
 
 export function Features({ isDark, features, handleFeatureClick }: FeaturesProps) {
   return (
-    <section id="features" className={`relative py-20 sm:py-32 overflow-hidden ${isDark ? 'bg-[#111217]' : 'bg-[#F1FFFA]'}`}>
-      <div className="absolute right-0 top-0 h-full pointer-events-none overflow-hidden">
-        <DiagonalBands className="h-full w-auto max-w-[50px] sm:max-w-[80px] opacity-50 scale-x-[-1]" />
-      </div>
-      <HexGrid className="absolute left-0 top-0 w-[250px] sm:w-[350px] h-[250px] sm:h-[350px]" opacity={isDark ? 0.05 : 0.035} />
+    <section id="features" className="relative py-20 sm:py-32 overflow-hidden">
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         <div className="mb-12 sm:mb-20">
@@ -45,7 +41,9 @@ export function Features({ isDark, features, handleFeatureClick }: FeaturesProps
             <div key={f.title}
                  onClick={() => handleFeatureClick(f)}
                  className={`relative group p-6 sm:p-8 rounded-3xl border transition-all duration-300 hover:-translate-y-2 overflow-hidden cursor-pointer active:scale-[0.98] ${
-                   isDark ? 'bg-white/4 border-white/8 hover:bg-white/7 hover:border-[#404293]/40' : 'bg-white border-gray-200 hover:border-[#404293]/30 hover:shadow-xl hover:shadow-[#404293]/8'
+                   isDark 
+                     ? 'bg-[#151720]/80 backdrop-blur-md border-white/5 hover:bg-[#181a26] hover:border-[#404293]/40 hover:shadow-xl hover:shadow-[#404293]/5' 
+                     : 'bg-white border-slate-100 hover:border-[#404293]/35 hover:shadow-xl hover:shadow-[#404293]/8'
                  }`}>
               {f.free && (
                 <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 text-[10px] font-black uppercase tracking-wide">

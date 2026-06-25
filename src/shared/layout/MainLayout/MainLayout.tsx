@@ -1,18 +1,17 @@
-import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../../components/Header/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import BottomBar from "../../components/BottomBar/BottomBar";
 
-import { useAppDispatch } from "../../../features/auth/redux/hooks";
-import { getMeThunk } from "../../../features/auth/redux/authThunk";
+// import { useAppDispatch } from "../../../features/auth/redux/hooks";
+// import { getMeThunk } from "../../../features/auth/redux/authThunk";
 
 const MainLayout = () => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(getMeThunk());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getMeThunk());
+  // }, [dispatch]);
 
   return (
     // إضافة overflow-hidden لمنع التمرير المزدوج

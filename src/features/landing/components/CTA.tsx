@@ -9,7 +9,7 @@ interface CTAProps {
 export function CTA({ navigate }: CTAProps) {
   return (
     <section className="relative py-20 sm:py-32 overflow-hidden">
-      <div className="absolute inset-0" style={{ background:'linear-gradient(135deg,#2E3190 0%,#33529F 40%,#2376BB 100%)' }} />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0f1015 0%, #404293 50%, #2376BB 100%)' }} />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <HexGrid className="absolute -right-10 top-0 w-[400px] sm:w-[600px] h-full" opacity={0.08} />
         <HexGrid className="absolute -left-10 bottom-0 w-[280px] sm:w-[400px] h-full" opacity={0.05} />
@@ -31,13 +31,13 @@ export function CTA({ navigate }: CTAProps) {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button onClick={() => navigate('/auth')}
-            className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-12 py-3.5 sm:py-4 rounded-2xl bg-white font-bold shadow-2xl hover:-translate-y-1 active:scale-[0.97] transition-all duration-300"
+            className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-12 py-3.5 sm:py-4 rounded-2xl bg-white font-bold shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300"
             style={{ color:'#404293', fontSize:'0.95rem' }}>
             Get Started for Free
             <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button onClick={() => navigate('/app/lectures')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl border-2 border-white/30 text-white font-bold hover:bg-white/10 active:scale-[0.97] transition-all"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl border-2 border-white/20 text-white font-bold backdrop-blur-sm hover:bg-white/10 hover:border-white/40 active:scale-[0.97] transition-all duration-300"
             style={{ fontSize:'0.95rem' }}>
             <BookOpen className="w-4 h-4" />استعرض المحاضرات
           </button>

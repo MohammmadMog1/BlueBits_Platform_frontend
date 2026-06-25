@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
-import imge from "../../../../app/aett/Logo.png"
+import imge from "../../../../app/assets/Logo.png"
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -21,7 +21,7 @@ export default function Header() {
       <div className="flex items-center gap-3">
           <Link to={"/LandingPage"}>
         <div className="lg:hidden text-lg font-bold">
-          <img src={imge} alt="Logo" />
+          <img  className="h-10 w-auto"src={imge} alt="Logo" />
         </div>
           </Link>
 

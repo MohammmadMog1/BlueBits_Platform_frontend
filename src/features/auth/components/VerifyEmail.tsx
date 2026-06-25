@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
-import { Mail, RefreshCcw, ChevronLeft } from 'lucide-react';
+import { Mail, RefreshCcw, ChevronLeft, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../../shared/api/apiClient'; // استيراد الـ Client الخاص بك لطلبات الـ API المباشرة
 
 type Props = {
   onNavigate?: (mode: 'login' | 'register' | 'verify') => void;
@@ -9,6 +11,7 @@ type Props = {
 export default function VerifyEmail({ onNavigate }: Props) {
   const [countdown, setCountdown] = useState(30);
   const [isResending, setIsResending] = useState(false);
+  const [resendError, setResendError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,9 +23,18 @@ export default function VerifyEmail({ onNavigate }: Props) {
 
   const handleResend = async () => {
     setIsResending(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setIsResending(false);
-    setCountdown(30);
+    setResendError(null);
+    try {
+      // استدعاء رابط إعادة إرسال كود التحقق من السيرفر مباشرة
+      // عدل المسار ("/auth/resend-verify") حسب روابط الـ API لديك
+      await apiClient.post("/auth/resend-verify"); 
+      
+      setCountdown(30); // إعادة تعيين العداد التنازلي بعد النجاح
+    } catch (err: any) {
+      setResendError(err.response?.data?.message || "Failed to resend verification email");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const goToLogin = () => {
@@ -39,11 +51,18 @@ export default function VerifyEmail({ onNavigate }: Props) {
 
       <h2 className="text-3xl font-bold text-[#202121] mb-5">Verify Your Email</h2>
 
-      <p className="text-gray-600 mb-12 leading-relaxed text-base sm:text-base">
+      <p className="text-gray-600 mb-12 leading-relaxed text-base">
         We have sent a confirmation link to your email.
         <br className="hidden sm:block" />
         Please check your inbox and click the link to activate your account.
       </p>
+
+      {/* عرض الخطأ في حال فشل إعادة الإرسال */}
+      {resendError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2 text-red-600 text-sm mb-5 text-left">
+          <AlertCircle className="w-4 h-4 shrink-0" /> {resendError}
+        </div>
+      )}
 
       <div className="space-y-5">
         <button

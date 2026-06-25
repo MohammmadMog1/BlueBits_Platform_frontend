@@ -7,8 +7,12 @@ import {
   logoutThunk,
 } from "./authThunk";
 
+// داخل ملف authSlice.ts
+// const hasToken = typeof window !== 'undefined' ? !!localStorage.getItem("token") : false;
+
 const initialState: AuthState = {
   user: null,
+  token: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -27,12 +31,14 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+        state.token = null;
         state.isAuthenticated = false;
       });
 
@@ -79,6 +85,7 @@ const authSlice = createSlice({
       .addCase(logoutThunk.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
+        state.token = null;
         state.isAuthenticated = false;
         state.error = null;
       })

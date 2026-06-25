@@ -16,8 +16,7 @@ interface AboutProps {
 
 export function About({ isDark, navigate }: AboutProps) {
   return (
-    <section id="about" className={`relative py-20 sm:py-32 overflow-hidden ${isDark ? 'bg-[#0e0f10]' : 'bg-white'}`}>
-      <HexGrid className="absolute right-0 top-0 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px]" opacity={isDark ? 0.05 : 0.03} />
+    <section id="about" className="relative py-20 sm:py-32 overflow-hidden">
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -45,17 +44,19 @@ export function About({ isDark, navigate }: AboutProps) {
                 { icon: Users,      label: 'Community',        desc: 'Collaborative environment'   },
                 { icon: TrendingUp, label: 'Always Improving', desc: 'Regular updates'             },
               ].map(item => (
-                <div key={item.label} className={`p-4 rounded-2xl border transition-colors ${
-                  isDark ? 'bg-white/4 border-white/8 hover:border-[#404293]/30' : 'bg-[#F1FFFA]/60 border-gray-200 hover:border-[#404293]/30'
+                <div key={item.label} className={`p-4 rounded-2xl border transition-all duration-300 ${
+                  isDark 
+                    ? 'bg-white/3 border-white/5 hover:border-[#404293]/40' 
+                    : 'bg-gradient-to-br from-[#404293]/5 to-[#2376BB]/5 border-slate-100 hover:border-[#404293]/30 shadow-sm'
                 }`}>
                   <item.icon className="w-4 h-4 text-[#404293] mb-2.5" />
                   <div className={`text-sm font-bold mb-0.5 ${isDark ? 'text-white' : 'text-[#1a1b2e]'}`}>{item.label}</div>
-                  <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{item.desc}</div>
+                  <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-slate-500'}`}>{item.desc}</div>
                 </div>
               ))}
             </div>
             <button onClick={() => navigate('/auth')}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-lg shadow-[#404293]/25 hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm active:scale-[0.98]">
+              className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-lg shadow-[#404293]/20 hover:shadow-xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all text-sm duration-300">
               Join BlueBits <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -69,7 +70,9 @@ export function About({ isDark, navigate }: AboutProps) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#404293]/40 via-transparent to-transparent" />
             </div>
-            <div className={`absolute -bottom-4 -left-2 sm:-left-6 z-20 p-4 rounded-2xl shadow-2xl border ${isDark ? 'bg-[#1a1b2e] border-white/10' : 'bg-white border-gray-100'}`}>
+            <div className={`absolute -bottom-4 -left-2 sm:-left-6 z-20 p-4 rounded-2xl shadow-xl backdrop-blur-md border ${
+              isDark ? 'bg-[#151720]/90 border-white/8' : 'bg-white/90 border-slate-100'
+            }`}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg flex-shrink-0">
                   <Star className="w-5 h-5 text-white" />
@@ -80,7 +83,7 @@ export function About({ isDark, navigate }: AboutProps) {
                 </div>
               </div>
             </div>
-            <div className="absolute -top-3 -right-2 sm:-right-4 z-20 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#404293] to-[#33529F] shadow-xl">
+            <div className="absolute -top-3 -right-2 sm:-right-4 z-20 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] shadow-lg shadow-[#404293]/20">
               <div className="text-white font-black text-sm">2025 / 2026</div>
               <div className="text-white/70 text-xs font-semibold">Academic Year</div>
             </div>
