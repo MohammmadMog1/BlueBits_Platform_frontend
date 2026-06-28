@@ -1,11 +1,10 @@
-
-import React, { useEffect, useState } from 'react';
-import { Mail, RefreshCcw, ChevronLeft, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import apiClient from '../../../shared/api/apiClient'; // استيراد الـ Client الخاص بك لطلبات الـ API المباشرة
+import { useEffect, useState } from "react";
+import { Mail, RefreshCcw, ChevronLeft, AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../../../shared/api/apiClient"; // استيراد الـ Client الخاص بك لطلبات الـ API المباشرة
 
 type Props = {
-  onNavigate?: (mode: 'login' | 'register' | 'verify') => void;
+  onNavigate?: (mode: "login" | "register" | "verify") => void;
 };
 
 export default function VerifyEmail({ onNavigate }: Props) {
@@ -27,29 +26,36 @@ export default function VerifyEmail({ onNavigate }: Props) {
     try {
       // استدعاء رابط إعادة إرسال كود التحقق من السيرفر مباشرة
       // عدل المسار ("/auth/resend-verify") حسب روابط الـ API لديك
-      await apiClient.post("/auth/resend-verify"); 
-      
+      await apiClient.post("/auth/resend-verify");
+
       setCountdown(30); // إعادة تعيين العداد التنازلي بعد النجاح
     } catch (err: any) {
-      setResendError(err.response?.data?.message || "Failed to resend verification email");
+      setResendError(
+        err.response?.data?.message || "Failed to resend verification email",
+      );
     } finally {
       setIsResending(false);
     }
   };
 
   const goToLogin = () => {
-    if (onNavigate) onNavigate('login');
-    else navigate('/login');
+    if (onNavigate) onNavigate("login");
+    else navigate("/login");
   };
 
   return (
     <div className="bg-white/90 backdrop-blur-2xl border border-gray-200 shadow-2xl rounded-[2rem] p-10 sm:p-14 w-full text-center">
       <div className="mx-auto w-28 h-28 bg-gradient-to-br from-[#404293]/20 to-[#2376BB]/20 rounded-full flex items-center justify-center mb-10 border border-gray-200 shadow-lg shadow-[#404293]/10 relative">
-        <div className="absolute inset-0 rounded-full animate-ping border border-[#404293]/30 opacity-50" style={{ animationDuration: '3s' }} />
+        <div
+          className="absolute inset-0 rounded-full animate-ping border border-[#404293]/30 opacity-50"
+          style={{ animationDuration: "3s" }}
+        />
         <Mail className="w-12 h-12 text-[#404293]" />
       </div>
 
-      <h2 className="text-3xl font-bold text-[#202121] mb-5">Verify Your Email</h2>
+      <h2 className="text-3xl font-bold text-[#202121] mb-5">
+        Verify Your Email
+      </h2>
 
       <p className="text-gray-600 mb-12 leading-relaxed text-base">
         We have sent a confirmation link to your email.
@@ -70,8 +76,12 @@ export default function VerifyEmail({ onNavigate }: Props) {
           disabled={countdown > 0 || isResending}
           className="w-full bg-gray-100 border border-gray-200 text-[#202121] font-bold text-lg rounded-2xl py-5 flex items-center justify-center gap-2 hover:bg-gray-200 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed shadow-md"
         >
-          {isResending ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Mail className="w-5 h-5" />}
-          {countdown > 0 ? `Resend Email in ${countdown}s` : 'Resend Email'}
+          {isResending ? (
+            <RefreshCcw className="w-5 h-5 animate-spin" />
+          ) : (
+            <Mail className="w-5 h-5" />
+          )}
+          {countdown > 0 ? `Resend Email in ${countdown}s` : "Resend Email"}
         </button>
 
         <button

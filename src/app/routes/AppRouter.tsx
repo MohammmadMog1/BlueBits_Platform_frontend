@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import MainLayout from "../../shared/layout/MainLayout/MainLayout";
 import { landingRoutes } from "../../features/landing/landing.routes";
 import { authRoutes } from "../../features/auth/auth.routes";
+import ProtectedRoute from "../../features/auth/components/ProtectedRoute";
+import GlobalError from "../../shared/components/ErrorBoundary/GlobalError";
 // import { studentDashboardRoutes } from "../../features/studentDashboard/student.routes";
 // import { adminDashboardRoutes } from "../../features/adminDashboard/admin.routes";
 
@@ -16,11 +18,30 @@ const router = createBrowserRouter([
 
   {
     path: "/dashboard",
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    errorElement: (
+      <GlobalError
+        title="Page not found"
+        message="The page you are looking for does not exist."
+      />
+    ),
     children: [
       // ...studentDashboardRoutes,
       // ...adminDashboardRoutes,
     ],
+  },
+  {
+    path: "*",
+    element: (
+      <GlobalError
+        title="Page not found"
+        message="The page you are looking for does not exist."
+      />
+    ),
   },
 ]);
 

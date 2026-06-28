@@ -1,4 +1,7 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
+import { store } from "../../app/store/store";
+import { logout } from "../../features/auth/redux/authSlice";
+import { startLoading, stopLoading } from "../../app/store/loadingSlice";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -6,19 +9,41 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  //   baseURL: "/api/v1.0.0", 
-  // headers: {
-  //   "Content-Type": "application/json",
-  // },
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  store.dispatch(startLoading());
+
+  const token = store.getState().auth.token;
+
   if (token) {
-    config.headers = config.headers ?? {};
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = new AxiosHeaders(config.headers);
+    config.headers.set("Authorization", `Bearer ${token}`);
   }
+
   return config;
 });
+
+apiClient.interceptors.response.use(
+  (response) => {
+    store.dispatch(stopLoading());
+    return response;
+  },
+  (error) => {
+    store.dispatch(stopLoading());
+    if (error.response?.status === 401) {
+      store.dispatch(logout());
+
+      if (
+        typeof window !== "undefined" &&
+        !window.location.pathname.includes("/login")
+      ) {
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default apiClient;

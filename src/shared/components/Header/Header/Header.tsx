@@ -19,7 +19,7 @@ export default function Header() {
        } shadow-sm`}
     >
       <div className="flex items-center gap-3">
-          <Link to={"/LandingPage"}>
+          <Link to={"/"}>
         <div className="lg:hidden text-lg font-bold">
           <img  className="h-10 w-auto"src={imge} alt="Logo" />
         </div>

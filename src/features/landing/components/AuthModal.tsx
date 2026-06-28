@@ -1,6 +1,5 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Shield, LogIn, UserPlus } from 'lucide-react';
+import { motion, AnimatePresence } from "motion/react";
+import { Shield, LogIn, UserPlus } from "lucide-react";
 
 interface AuthModalProps {
   onClose: () => void;
@@ -21,8 +20,8 @@ export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-          onClick={e => e.stopPropagation()}
+          transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          onClick={(e) => e.stopPropagation()}
           className="w-full max-w-sm bg-white dark:bg-[#151720] border dark:border-white/5 rounded-3xl shadow-2xl overflow-hidden"
         >
           <div className="h-1.5 bg-gradient-to-r from-[#404293] to-[#2376BB]" />
@@ -31,21 +30,30 @@ export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#404293]/10 to-[#2376BB]/10 flex items-center justify-center mx-auto mb-5 border border-[#404293]/15 dark:border-[#404293]/30">
               <Shield className="w-8 h-8 text-[#404293]" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">تسجيل الدخول مطلوب</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              تسجيل الدخول مطلوب
+            </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-7">
-              هذه الميزة متاحة للمستخدمين المسجلين فقط.<br />
+              هذه الميزة متاحة للمستخدمين المسجلين فقط.
+              <br />
               سجل دخولك أو أنشئ حساباً مجانياً للوصول إليها.
             </p>
             <div className="flex gap-3">
               <button
-                onClick={() => { onNavigate('/auth'); onClose(); }}
+                onClick={() => {
+                  onNavigate("/auth");
+                  onClose();
+                }}
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
               >
                 <LogIn className="w-4 h-4" />
                 تسجيل الدخول
               </button>
               <button
-                onClick={() => { onNavigate('/auth'); onClose(); }}
+                onClick={() => {
+                  onNavigate("/auth");
+                  onClose();
+                }}
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border-2 border-[#404293] text-[#404293] dark:text-[#9fa8e8] dark:border-[#404293]/40 font-bold text-sm hover:bg-[#404293]/5 dark:hover:bg-[#404293]/10 transition-all"
               >
                 <UserPlus className="w-4 h-4" />

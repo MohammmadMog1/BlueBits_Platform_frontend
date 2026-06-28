@@ -7,9 +7,6 @@ import {
   logoutThunk,
 } from "./authThunk";
 
-// داخل ملف authSlice.ts
-// const hasToken = typeof window !== 'undefined' ? !!localStorage.getItem("token") : false;
-
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -21,9 +18,16 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
-    // Login Thunk
     builder
       .addCase(loginThunk.pending, (state) => {
         state.isLoading = true;
@@ -42,7 +46,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       });
 
-    // Register Thunk
     builder
       .addCase(registerThunk.pending, (state) => {
         state.isLoading = true;
@@ -59,7 +62,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       });
 
-    // GetMe Thunk
     builder
       .addCase(getMeThunk.pending, (state) => {
         state.isLoading = true;
@@ -76,7 +78,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       });
 
-    // Logout Thunk
     builder
       .addCase(logoutThunk.pending, (state) => {
         state.isLoading = true;
@@ -96,4 +97,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

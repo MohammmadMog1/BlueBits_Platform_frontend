@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { 
-  persistReducer, 
-  persistStore, 
+import {
+  persistReducer,
+  persistStore,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -10,6 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import authReducer from "../../features/auth/redux/authSlice";
+import loadingReducer from "./loadingSlice";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -26,6 +27,7 @@ const customStorage = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  loading: loadingReducer,
 });
 
 const persistConfig = {

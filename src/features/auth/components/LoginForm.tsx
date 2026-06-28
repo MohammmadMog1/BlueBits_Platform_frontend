@@ -1,26 +1,22 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
-
-// 1. استيراد الـ Hooks المخصصة والـ Thunk
-// (تأكد من تعديل المسارات ../../hooks و ../../store/auth/authThunk لتناسب هيكل مجلدات مشروعك)
-import { useAppDispatch, useAppSelector } from "../../../app/store/hooks"; 
-import { loginThunk } from "../redux/authThunk"; 
+import useAuth from "../hooks/useAuth";
 
 type Props = {
   onNavigate?: (mode: "login" | "register" | "verify") => void;
 };
 
 export default function LoginForm({ onNavigate }: Props) {
-  // 2. إعداد Dispatch و جلب الحالة من Redux
-  const dispatch = useAppDispatch();
-  // نفترض أن الـ slice مسجل في الـ store باسم 'auth'
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { login, isLoading, error } = useAuth();
+  const location = useLocation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
   const navigate = useNavigate();
 
   // حذفنا المتغيرات المحلية (isSubmitting و loginError) لأننا سنستخدم isLoading و error من Redux
@@ -39,15 +35,12 @@ export default function LoginForm({ onNavigate }: Props) {
     if (!validate()) return;
 
     try {
-      // 3. إرسال البيانات إلى Redux Thunk
-      // نستخدم .unwrap() لانتظار النتيجة، إذا نجحت سينتقل للسطر التالي، وإذا فشلت سيذهب للـ catch
-      await dispatch(loginThunk({ email, password })).unwrap();
-      
-      // 4. في حالة نجاح تسجيل الدخول، الانتقال إلى الصفحة المطلوبة
-      navigate("/dashboard"); // غيّر هذا المسار إلى الصفحة التي تريدها بعد تسجيل الدخول
+      await login({ email, password });
+
+      const from = (location.state as { from?: { pathname?: string } } | null)
+        ?.from?.pathname;
+      navigate(from && from !== "/login" ? from : "/dashboard");
     } catch (err) {
-      // الخطأ يتم التعامل معه وتخزينه تلقائياً في Redux (state.auth.error)
-      // ولا نحتاج لعمل شيء إضافي هنا لأنه سيظهر في الواجهة عبر متغير error
       console.error("Login failed:", err);
     }
   };
@@ -58,10 +51,12 @@ export default function LoginForm({ onNavigate }: Props) {
   };
 
   return (
-    <div className="bg-white/90 backdrop-blur-2xl border border-gray-200 shadow-2xl rounded-[2rem] p-10 sm:p-12 w-full">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold text-[#202121] mb-3">Welcome Back</h2>
-        <p className="text-gray-600">Login to your account to continue</p>
+    <div className="w-full rounded-[1.75rem] border border-white/30 bg-white/95 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
+      <div className="mb-8 text-center">
+        <h2 className="mb-2 text-3xl font-bold text-slate-900">Welcome Back</h2>
+        <p className="text-sm text-slate-600">
+          Login to your account to continue
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -75,7 +70,7 @@ export default function LoginForm({ onNavigate }: Props) {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email Address"
-              className={`w-full bg-gray-50 border ${errors.email ? "border-red-500/50 focus:ring-red-500" : "border-gray-200 focus:ring-[#33529F]"} rounded-2xl py-4 pl-14 pr-5 text-[#202121] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all`}
+              className={`w-full border ${errors.email ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-14 pr-5 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all`}
             />
           </div>
           {errors.email && (
@@ -95,12 +90,12 @@ export default function LoginForm({ onNavigate }: Props) {
               onChange={(e) => setPassword(e.target.value)}
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`w-full bg-gray-50 border ${errors.password ? "border-red-500/50 focus:ring-red-500" : "border-gray-200 focus:ring-[#33529F]"} rounded-2xl py-4 pl-14 pr-14 text-[#202121] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all`}
+              className={`w-full border ${errors.password ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-14 pr-14 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#202121] transition-colors"
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700"
             >
               {showPassword ? (
                 <EyeOff className="w-5 h-5" />
@@ -119,7 +114,7 @@ export default function LoginForm({ onNavigate }: Props) {
         <div className="flex justify-end">
           <a
             href="#"
-            className="text-sm text-[#404293] hover:text-[#33529F] hover:underline transition-colors font-medium"
+            className="text-sm font-medium text-[#404293] transition-colors hover:text-[#2f3378] hover:underline"
           >
             Forgot Password?
           </a>
@@ -143,11 +138,11 @@ export default function LoginForm({ onNavigate }: Props) {
         </button>
       </form>
 
-      <div className="mt-10 text-center text-sm text-gray-600">
+      <div className="mt-8 text-center text-sm text-slate-600">
         Don't have an account?{" "}
         <button
           onClick={goToRegister}
-          className="text-[#33529F] font-bold hover:text-[#202121] transition-colors"
+          className="font-bold text-[#404293] transition-colors hover:text-[#2f3378]"
         >
           Register here
         </button>

@@ -1,7 +1,7 @@
 import {
   BookOpen, BrainCircuit, MessageSquare, Calendar,
   Star, Users, TrendingUp, GraduationCap, ClipboardList,
-  Award, Code2, FlaskConical, BookMarked,
+  Code2, FlaskConical, BookMarked,
 } from 'lucide-react';
 
 // ─── Team Batches Data ─────────────────────────────────────────────────────────
