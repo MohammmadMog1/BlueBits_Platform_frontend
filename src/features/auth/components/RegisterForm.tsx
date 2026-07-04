@@ -75,7 +75,7 @@ export default function RegisterForm({ onNavigate }: Props) {
     try {
       await register({ name, email, password });
       if (onNavigate) onNavigate("verify");
-      else navigate("/verify");
+      else navigate("auth/verify");
     } catch (err) {
       console.error("Registration failed:", err);
     }
@@ -83,7 +83,7 @@ export default function RegisterForm({ onNavigate }: Props) {
 
   const goToLogin = () => {
     if (onNavigate) onNavigate("login");
-    else navigate("/login");
+    else navigate("/auth/login");
   };
 
   return (

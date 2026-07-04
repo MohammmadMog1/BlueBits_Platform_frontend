@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // استيراد الـ Layouts ومصفوفات المسارات من الميزات
 import MainLayout from "../../shared/layout/MainLayout/MainLayout";
@@ -34,15 +34,7 @@ const router = createBrowserRouter([
       // ...adminDashboardRoutes,
     ],
   },
-  {
-    path: "*",
-    element: (
-      <GlobalError
-        title="Page not found"
-        message="The page you are looking for does not exist."
-      />
-    ),
-  },
+  
 ]);
 
 const AppRouter = () => {

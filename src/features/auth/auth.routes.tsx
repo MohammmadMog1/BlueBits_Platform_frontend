@@ -6,18 +6,19 @@ import VerifyPage from "./pages/VerifyPage";
 
 export const authRoutes: RouteObject[] = [
   {
+    path: "/auth",
     element: <AuthLayout />, 
     children: [
       {
-        path: "/login",
+        path: "login",
         element: <LoginPage />,
       },
       {
-        path: "/register",
+        path: "register",
         element: <RegisterPage />,
       },
       {
-        path:"/verify",
+        path:"verify",
         element:<VerifyPage/>,
       },
     ],

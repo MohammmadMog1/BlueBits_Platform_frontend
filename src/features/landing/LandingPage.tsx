@@ -20,7 +20,7 @@ import logoImg from "../../app/assets/Logo.png";
 import { featuresData, statsData } from "./data/landingData";
 const LogoImg = logoImg;
 
-export function LandingPage() {
+export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
