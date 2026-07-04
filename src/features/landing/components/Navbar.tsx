@@ -251,7 +251,7 @@ export function Navbar({
             /* ✅ Not Authenticated - Login/Register Buttons */
             <div className="hidden md:flex items-center gap-3">
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("auth/login")}
                 className={`text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-300 ${
                   isDark
                     ? "text-gray-300 hover:bg-white/5 border border-white/10"
@@ -261,7 +261,7 @@ export function Navbar({
                 Login
               </button>
               <button
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("auth/register")}
                 className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg shadow-[#404293]/30 hover:shadow-xl hover:shadow-[#404293]/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
               >
                 Get Started
@@ -378,7 +378,7 @@ export function Navbar({
             <div className="pt-2 flex gap-3">
               <button
                 onClick={() => {
-                  navigate("/login");
+                  navigate("auth/login");
                   setMobileMenuOpen(false);
                 }}
                 className={`flex-1 text-sm font-bold py-2.5 rounded-xl transition-all ${
@@ -391,7 +391,7 @@ export function Navbar({
               </button>
               <button
                 onClick={() => {
-                  navigate("/register");
+                  navigate("auth/register");
                   setMobileMenuOpen(false);
                 }}
                 className="flex-1 text-sm font-bold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg active:scale-[0.98] transition-all"
