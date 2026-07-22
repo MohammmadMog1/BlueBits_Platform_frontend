@@ -5,6 +5,7 @@ import AuthLayout from "../../shared/layout/AuthLayout";
 import {ResetPasswordPage} from "./pages/ResetPasswordPage";
 import {ForgetPasswordPage} from "./pages/ForgetPasswordPage";
 import VerifyPage from "./pages/VerifyPage";
+import { CheckEmailPage } from "./pages/CheckEmailPage";
 
 export const authRoutes: RouteObject[] = [
   {
@@ -30,7 +31,11 @@ export const authRoutes: RouteObject[] = [
     element:<ForgetPasswordPage/>,
   },
   {
-    path:"/reset-password",
+    path:"/reset-password/:token?",
     element:<ResetPasswordPage/>,
   },
+  {
+  path: "/check-email",
+  element: <CheckEmailPage />,
+},
 ];

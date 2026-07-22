@@ -47,9 +47,11 @@ export default function LoginForm({ onNavigate }: Props) {
 
   const goToRegister = () => {
     if (onNavigate) onNavigate("register");
-    else navigate("/register");
+    else navigate("/auth/register");
   };
-
+const handleForgotPassword = () => {
+    navigate("/forget-password");
+  };
   return (
     <div className="w-full rounded-[1.75rem] border border-white/30 bg-white/95 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
       <div className="mb-8 text-center">
@@ -114,6 +116,7 @@ export default function LoginForm({ onNavigate }: Props) {
         <div className="flex justify-end">
           <a
             href="#"
+            onClick={handleForgotPassword} 
             className="text-sm font-medium text-[#404293] transition-colors hover:text-[#2f3378] hover:underline"
           >
             Forgot Password?

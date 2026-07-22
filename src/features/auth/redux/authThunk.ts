@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { loginApi, registerApi, logoutApi, getMeApi } from "../api/authApi";
 import type { LoginRequest, RegisterRequest } from "../types/auth.types";
+import  {forgotPasswordApi,resetPasswordApi} from  "../api/authApi";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
@@ -71,3 +72,51 @@ export const logoutThunk = createAsyncThunk(
     }
   }
 );
+export  const forgotPasswordThunk = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email: string, thunkAPI) => {
+    try {
+      const response = await forgotPasswordApi(email);
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || error.message);
+      }
+
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
+    }
+  }
+);
+export  const resendResetPasswordThunk = createAsyncThunk(
+  "auth/resendResetPassword",
+  async (email: string, thunkAPI) => {
+    try {
+      const response = await forgotPasswordApi(email);
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || error.message);
+      }
+
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
+    }
+  }
+);
+
+export const resetPasswordThunk=createAsyncThunk(
+  "auth/resetPassword",
+  async ({token,password}:{token:string,password:string},thunkAPI)=>{
+    try {
+      const response = await resetPasswordApi(token,password);
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data.message || error.message);
+      }
+
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
+    }
+  }
+);
+
+
