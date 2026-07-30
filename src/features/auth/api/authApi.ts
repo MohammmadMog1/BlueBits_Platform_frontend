@@ -49,12 +49,14 @@ export const getMeApi =
   export const forgotPasswordApi = async (
   email: string
 ): Promise<ForgotPasswordResponse> => {
-  const response = await apiClient.post(
-    "/users/forgotPassword",
-    {
-      email,
-    }
-  );
+  const redirectUrl =
+    import.meta.env.VITE_REDIRECT_URL ||
+    "http://localhost:5173/reset-password";
+
+  const response = await apiClient.post("/users/forgotPassword", {
+    email,
+    redirectUrl,
+  });
 
   return response.data;
 };
