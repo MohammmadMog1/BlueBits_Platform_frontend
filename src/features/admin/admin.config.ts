@@ -1,0 +1,22 @@
+// src/features/admin/admin.config.ts
+import { LayoutDashboard, Users, Shield, Settings, FileText } from "lucide-react";
+import type { NavItem, UserProfile } from "../../shared/layout/MainLayout/MainLayout";
+
+export const adminNavItems: NavItem[] = [
+  { icon: LayoutDashboard, label: "Admin Dashboard", path: "/admin/dashboard" },
+  { icon: Users, label: "Manage Users", path: "/admin/users" },
+  { icon: FileText, label: "Content", path: "/admin/content" },
+   { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" },
+];
+
+export const adminMoreNavItems: NavItem[] = [
+  { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" },
+];
+
+export const mockAdminProfile: UserProfile = {
+  name: "Admin User",
+  roleLabel: "System Administrator",
+  initials: "AD",
+};

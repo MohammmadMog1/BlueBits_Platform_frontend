@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import authReducer from "../../features/auth/redux/authSlice";
 import loadingReducer from "./loadingSlice";
+import { usersApi } from "../../features/users/api/usersApiSlice";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -28,6 +29,7 @@ const customStorage = {
 const rootReducer = combineReducers({
   auth: authReducer,
   loading: loadingReducer,
+  [usersApi.reducerPath]: usersApi.reducer,
 });
 
 const persistConfig = {
@@ -45,7 +47,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(usersApi.middleware),
 });
 
 export const persistor = persistStore(store);

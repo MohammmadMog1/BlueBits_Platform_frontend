@@ -118,7 +118,7 @@ export function Navbar({
 
           {/* ✅ زر المحاضرات */}
           <button
-            onClick={() => navigate("/app/lectures")}
+            onClick={() => navigate("/user/lectures")}
             className={`hidden md:flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-300 ${
               isDark
                 ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] hover:from-[#404293]/30 hover:to-[#2376BB]/30 border border-[#404293]/30"
@@ -132,7 +132,7 @@ export function Navbar({
           {/* ✅ زر الداشبورد بجانب زر المحاضرات (فقط عند تسجيل الدخول) */}
           {isAuthenticated && user && (
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("user/dashboard")}
               className={`hidden md:flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-300 ${
                 isDark
                   ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] hover:from-[#404293]/30 hover:to-[#2376BB]/30 border border-[#404293]/30"
@@ -312,7 +312,7 @@ export function Navbar({
           <div className="flex gap-2">
             <button
               onClick={() => {
-                navigate("/app/lectures");
+                navigate("/user/lectures");
                 setMobileMenuOpen(false);
               }}
               className={`flex-1 flex items-center justify-center gap-2 text-sm font-bold py-2.5 px-3 rounded-xl transition-all ${
@@ -328,7 +328,7 @@ export function Navbar({
             {isAuthenticated && user && (
               <button
                 onClick={() => {
-                  navigate("/dashboard");
+                  navigate("/user/dashboard");
                   setMobileMenuOpen(false);
                 }}
                 className={`flex-1 flex items-center justify-center gap-2 text-sm font-bold py-2.5 px-3 rounded-xl transition-all ${
