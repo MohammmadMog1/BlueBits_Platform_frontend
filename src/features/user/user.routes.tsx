@@ -1,10 +1,9 @@
-// import type { RouteObject } from "react-router"; 
-
+// import type { RouteObject } from "react-router";
 
 // export const userRoutes: RouteObject[] = [
 //   {
 //     path: "/user",
-//     // element: <AuthLayout />, 
+//     // element: <AuthLayout />,
 //     // children: [
 //     //   {
 //     //     path: "login",
@@ -16,9 +15,8 @@
 //     //   },
 //     // ],
 //   },
-  
-// ];
 
+// ];
 
 // src/features/user/user.routes.tsx
 import type { RouteObject } from "react-router";

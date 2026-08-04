@@ -12,13 +12,15 @@ import {
 import authReducer from "../../features/auth/redux/authSlice";
 import loadingReducer from "./loadingSlice";
 import { usersApi } from "../../features/users/api/usersApiSlice";
+import { academicApi } from "../../features/admin/academic/api/academicApi";
+import { subjectsApi } from "../../features/admin/subjects/api/subjectsApi";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
   getItem: async (key: string) => {
     return localStorage.getItem(key);
   },
-  setItem: async (key: string, item: any) => {
+  setItem: async (key: string, item: string) => {
     localStorage.setItem(key, item);
   },
   removeItem: async (key: string) => {
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   loading: loadingReducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [academicApi.reducerPath]: academicApi.reducer,
+  [subjectsApi.reducerPath]: subjectsApi.reducer,
 });
 
 const persistConfig = {
@@ -47,7 +51,11 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(usersApi.middleware),
+    }).concat(
+      usersApi.middleware,
+      academicApi.middleware,
+      subjectsApi.middleware,
+    ),
 });
 
 export const persistor = persistStore(store);

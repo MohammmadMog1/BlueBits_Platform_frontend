@@ -1,10 +1,9 @@
-// import type { RouteObject } from "react-router"; 
-
+// import type { RouteObject } from "react-router";
 
 // export const adminRoutes: RouteObject[] = [
 //   {
 //     path: "/admin",
-//     // element: <AuthLayout />, 
+//     // element: <AuthLayout />,
 //     // children: [
 //     //   {
 //     //     path: "login",
@@ -16,13 +15,14 @@
 //     //   },
 //     // ],
 //   },
-  
-// ];
 
+// ];
 
 // src/features/admin/admin.routes.tsx
 import type { RouteObject } from "react-router";
 import UsersManagementPage from "../users/pages/UsersManagementPage";
+import { AcademicPage } from "./academic";
+import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -33,5 +33,14 @@ export const adminRoutes: RouteObject[] = [
     path: "users", // هذا يعني /admin/users
     element: <UsersManagementPage />,
   },
+  {
+    path: "academic",
+    element: <AcademicPage />,
+  },
+  {
+    path: "subjects",
+    element: <SubjectManagementPage />,
+  },
+ 
   // أضف باقي صفحات الأدمن هنا
 ];
