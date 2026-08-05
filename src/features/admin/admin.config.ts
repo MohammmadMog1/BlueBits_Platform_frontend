@@ -1,7 +1,6 @@
 // src/features/admin/admin.config.ts
 import {
   BookMarked,
-  BookOpen,
   GraduationCap,
   LayoutDashboard,
   Users,
@@ -11,7 +10,6 @@ import {
 } from "lucide-react";
 import type {
   NavItem,
-  UserProfile,
 } from "../../shared/layout/MainLayout/MainLayout";
 
 export const adminNavItems: NavItem[] = [
@@ -29,8 +27,4 @@ export const adminMoreNavItems: NavItem[] = [
   { icon: Settings, label: "System Settings", path: "/admin/settings" },
 ];
 
-export const mockAdminProfile: UserProfile = {
-  name: "Admin User",
-  roleLabel: "System Administrator",
-  initials: "AD",
-};
+
