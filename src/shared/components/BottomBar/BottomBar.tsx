@@ -70,12 +70,15 @@ import { MoreHorizontal } from 'lucide-react';
 import MoreOpenIcon from './MoreOpen';
 import type { NavItem } from '../../layout/MainLayout/MainLayout';
 
+// interface BottomBarProps {
+//   navItems: NavItem[];
+//   moreNavItems: NavItem[];
+// }
 interface BottomBarProps {
   navItems: NavItem[];
-  moreNavItems: NavItem[];
 }
 
-export default function BottomBar({ navItems, moreNavItems }: BottomBarProps) {
+export default function BottomBar({ navItems }: BottomBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
@@ -91,7 +94,9 @@ export default function BottomBar({ navItems, moreNavItems }: BottomBarProps) {
   };
 
   // نأخذ أول 4 عناصر للشريط السفلي، والباقي يذهب لـ More (أو يمكنك تمرير مصفوفة منفصلة)
-  const visibleBottomItems = navItems.slice(0, 4); 
+  // const visibleBottomItems = navItems.slice(0, 4); 
+  const visibleBottomItems = navItems.slice(0, 4);
+const moreNavItems = navItems.slice(4);
 
   return (
     <>

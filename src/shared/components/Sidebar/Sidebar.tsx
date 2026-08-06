@@ -1,168 +1,3 @@
-// import { useState } from "react";
-// import { useNavigate, useLocation, Link } from "react-router-dom";
-// import {
-//   LayoutDashboard,
-//   BookOpen,
-//   BrainCircuit,
-//   CheckSquare,
-//   Calendar,
-//   CalendarDays,
-//   MessageSquare,
-//   Settings,
-//   LogOut,
-//   ChevronRight,
-//   Shield,
-// } from "lucide-react";
-
-// const sideNavItems = [
-//   { icon: LayoutDashboard, label: "Dashboard", path: "/app" },
-//   { icon: BookOpen, label: "Lectures", path: "/app/lectures" },
-//   { icon: BrainCircuit, label: "MCQ Practice", path: "/app/mcq" },
-//   { icon: CheckSquare, label: "To-Do & Pomodoro", path: "/app/todo" },
-//   { icon: Calendar, label: "Exam Schedule", path: "/app/exams/official" },
-//   { icon: CalendarDays, label: "My Schedule", path: "/app/exams/generate" },
-//   { icon: MessageSquare, label: "AI Chatbot", path: "/app/chatbot" },
-// ];
-
-// const adminItems = [
-//   { icon: Shield, label: "Admin Panel", path: "/app/admin" },
-//   { icon: Settings, label: "Settings", path: "/app" },
-// ];
-
-// export default function Sidebar() {
-//   const [collapsed, setCollapsed] = useState(false);
-//   const navigate = useNavigate();
-//   const location = useLocation();
-
-//   const handleNav = (path: string) => {
-//     navigate(path);
-//   };
-
-//   const isActive = (path: string) => {
-//     if (path === "/app") return location.pathname === "/app";
-//     return location.pathname.startsWith(path);
-//   };
-
-//   const isDark = false;
-
-//   return (
-//     <aside
-//       className={`hidden lg:flex lg:flex-col lg:relative z-30 h-full overflow-hidden transition-all duration-300 ease-in-out ${collapsed ? "lg:w-[72px]" : "lg:w-[252px]"} ${isDark ? "bg-[#1a1b1e]/98 border-r border-white/8" : "bg-white/98 border-r border-gray-200/80"}`}
-//     >
-//       {/* الهيدر بدون min-w ثابتة لتفادي مشاكل الحجم */}
-//       <div
-//         className={`flex items-center justify-between px-4 py-5 border-b ${isDark ? "border-white/8" : "border-gray-100"}`}
-//       >
-//         <div className="h-10 flex items-center overflow-hidden">
-//           <Link to={"/"}>
-//             <img
-//               className="h-10 w-auto object-contain flex-shrink-0 "
-//               src="src/app/assets/Logo notext.png"
-//               alt="Logo"
-//             />
-//           </Link>
-//         </div>
-//         <button
-//           onClick={() => setCollapsed(!collapsed)}
-//           className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 flex-shrink-0"
-//         >
-//           <ChevronRight
-//             className={`w-4 h-4 transition-transform duration-300 ${collapsed ? "" : "rotate-180"}`}
-//           />
-//         </button>
-//       </div>
-
-//       {/* القائمة */}
-//       <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
-//         {sideNavItems.map((item) => {
-//           const active = isActive(item.path);
-//           const Icon = item.icon;
-//           return (
-//             <button
-//               key={item.label}
-//               onClick={() => handleNav(item.path)}
-//               title={collapsed ? item.label : ""}
-//               className={`w-full flex items-center px-3 py-3 rounded-xl transition-all duration-200 ${active ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md" : isDark ? "text-gray-400 hover:bg-white/8 hover:text-white" : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"}`}
-//             >
-//               <Icon className="w-[18px] h-[18px] flex-shrink-0" />
-//               <span
-//                 className={`text-[13px] font-semibold truncate transition-all duration-300 ease-in-out ${collapsed ? "opacity-0 max-w-0 ml-0 pointer-events-none" : "opacity-100 max-w-[150px] ml-3"}`}
-//               >
-//                 {item.label}
-//               </span>
-//             </button>
-//           );
-//         })}
-
-//         <div
-//           className={`my-3 border-t ${isDark ? "border-white/8" : "border-gray-100"}`}
-//         />
-
-//         {/* عنوان القسم */}
-//         <p
-//           className={`px-3 text-[10px] font-black uppercase tracking-widest mb-2 transition-all duration-300 whitespace-nowrap ${isDark ? "text-gray-600" : "text-gray-400"} ${collapsed ? "opacity-0 max-w-0 overflow-hidden" : "opacity-100"}`}
-//         >
-//           Management
-//         </p>
-
-//         {adminItems.map((item) => {
-//           const active = isActive(item.path) && item.path !== "/app";
-//           const Icon = item.icon;
-//           return (
-//             <button
-//               key={item.label}
-//               onClick={() => handleNav(item.path)}
-//               title={collapsed ? item.label : ""}
-//               className={`w-full flex items-center px-3 py-3 rounded-xl transition-all duration-200 ${active ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md" : isDark ? "text-gray-400 hover:bg-white/8 hover:text-white" : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"}`}
-//             >
-//               <Icon className="w-[18px] h-[18px] flex-shrink-0" />
-//               <span
-//                 className={`text-[13px] font-semibold truncate transition-all duration-300 ease-in-out ${collapsed ? "opacity-0 max-w-0 ml-0 pointer-events-none" : "opacity-100 max-w-[150px] ml-3"}`}
-//               >
-//                 {item.label}
-//               </span>
-//             </button>
-//           );
-//         })}
-//       </nav>
-
-//       {/* الفوتر */}
-//       <div
-//         className={`p-3 border-t overflow-hidden ${isDark ? "border-white/8" : "border-gray-100"}`}
-//       >
-//         <div className="flex items-center p-3 rounded-xl cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-white/8">
-//           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 shadow-md">
-//             <span className="text-white text-xs font-bold">AH</span>
-//           </div>
-
-//           <div
-//             className={`flex items-center justify-between flex-1 min-w-0 transition-all duration-300 ease-in-out ${collapsed ? "opacity-0 max-w-0 ml-0 pointer-events-none" : "opacity-100 max-w-[150px] ml-3"}`}
-//           >
-//             <div className="flex-1 min-w-0">
-//               <p
-//                 className={`text-[13px] font-semibold truncate ${isDark ? "text-white" : "text-gray-900"}`}
-//               >
-//                 Ahmed Hassan
-//               </p>
-//               <p
-//                 className={`text-[11px] truncate ${isDark ? "text-gray-500" : "text-gray-400"}`}
-//               >
-//                 Student · CS Dept
-//               </p>
-//             </div>
-//             <LogOut
-//               className={`w-4 h-4 flex-shrink-0 ml-2 ${isDark ? "text-gray-600" : "text-gray-300"}`}
-//             />
-//           </div>
-//         </div>
-//       </div>
-//     </aside>
-//   );
-// }
-
-
-
-// src/shared/components/Sidebar/Sidebar.tsx
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut, Settings, Shield, User } from "lucide-react";
@@ -182,13 +17,10 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
   const isDark = false;
 
   const handleNav = (path: string) => navigate(path);
-
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
   };
-
   const isAdminView = location.pathname.startsWith("/admin");
-
   return (
     <aside
       className={`hidden lg:flex lg:flex-col lg:relative z-30 h-full overflow-hidden transition-all duration-300 ease-in-out ${
@@ -204,15 +36,26 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
           isDark ? "border-white/8" : "border-gray-100"
         }`}
       >
-        <div className="h-10 flex items-center overflow-hidden">
-          <Link to={"/"}>
-            <img
-              className="h-10 w-auto object-contain flex-shrink-0"
-              src="/src/app/assets/Logo notext.png"
-              alt="Logo"
-            />
-          </Link>
-        </div>
+        <div className="flex items-center gap-3 overflow-hidden">
+  <Link to={"/"}>
+    <img
+      className="h-10 w-auto object-contain flex-shrink-0"
+      src="/src/app/assets/Logo notext.png"
+      alt="Logo"
+    />
+  </Link>
+  {!collapsed && (
+    <div className="leading-tight">
+      <h2 className="text-[20px] font-bold text-[#404295]">
+        BlueBits
+      </h2>
+
+      <p className="text-[12px]  uppercase tracking-wider text-[#404293]">
+                    {userProfile.roleLabel}
+      </p>
+    </div>
+  )}
+</div>
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 flex-shrink-0"
@@ -224,8 +67,7 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
           />
         </button>
       </div>
-
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
+<nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
         {navItems.map((item) => {
           const active = isActive(item.path);
           const Icon = item.icon;
@@ -256,149 +98,55 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
           );
         })}
       </nav>
+      {/* Footer */}
+<div
+  className={`border-t p-3 ${
+    isDark ? "border-white/8" : "border-gray-200"
+  }`}
+>
+  {/* Back To App */}
+    <button
+    onClick={() => handleNav("/user")}
+    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all hover:bg-[#404293]/6 hover:text-[#404293] ${
 
-      {/* الفوتر وسيكشن الوصول السريع فوق اسم المستخدم */}
-      <div
-        className={`p-3 border-t overflow-hidden ${
-          isDark ? "border-white/8" : "border-gray-100"
-        }`}
-      >
-        {/* سيكشن الأزرار فوق اسم المستخدم */}
-        <div className="mb-2.5 space-y-1">
-          {!collapsed && (
-            <p className={`px-3 text-[10px] font-black uppercase tracking-widest mb-2 ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-              {isAdminView ? "Admin Actions" : "Quick Actions"}
-            </p>
-          )}
+      collapsed ? "justify-center" : ""
+    }`}
+  >
+    <LogOut className="w-4 h-4 text-gray-500  
+    hover:text-[#404293]" 
+    />
+    {!collapsed && (
+      <span className="text-[14px] font-semibold">
 
-          {isAdminView ? (
-            /* بالنسبة للأدمن: زر الإعدادات + زر العودة لصفحات المستخدم */
-            <>
-              <button
-                onClick={() => handleNav("/admin/settings")}
-                title={collapsed ? "Settings" : ""}
-                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
-                  isActive("/admin/settings")
-                    ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md"
-                    : isDark
-                    ? "text-gray-400 hover:bg-white/8 hover:text-white"
-                    : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
-                } ${collapsed ? "justify-center" : ""}`}
-              >
-                <Settings className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && (
-                  <span className="text-[13px] font-semibold">Settings</span>
-                )}
-              </button>
+        Back to App
+      </span>
+    )}
+  </button>
+  {/* User Card */}
+  <div className={`mt-4 flex items-center hover:bg-[#404293]/6 hover:text-[#404293]   ${
+    collapsed ? "justify-center" : ""
+  }`}
+  >
+    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center">
+      <span className="text-white text-sm font-bold">
+        {userProfile.initials}
+      </span>
+    </div>
+    {!collapsed && (
+      <>
+        <div className="ml-3 flex-1">
+          <p className="text-sm font-semibold ">
+            {userProfile.name}
+          </p>
 
-              <button
-                onClick={() => handleNav("/user")}
-                title={collapsed ? "User View" : ""}
-                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
-                  isActive("/user")
-                    ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md"
-                    : isDark
-                    ? "text-gray-400 hover:bg-white/8 hover:text-white"
-                    : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
-                } ${collapsed ? "justify-center" : ""}`}
-              >
-                <User className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && (
-                  <span className="text-[13px] font-semibold">User View</span>
-                )}
-              </button>
-            </>
-          ) : (
-            /* بالنسبة لليوزر: زر الانتقال للـ Admin Panel + زر الإعدادات */
-            <>
-              <button
-                onClick={() => handleNav("/admin")}
-                title={collapsed ? "Admin Panel" : ""}
-                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
-                  isActive("/admin")
-                    ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md"
-                    : isDark
-                    ? "text-gray-400 hover:bg-white/8 hover:text-white"
-                    : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
-                } ${collapsed ? "justify-center" : ""}`}
-              >
-                <Shield className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && (
-                  <span className="text-[13px] font-semibold">Admin Panel</span>
-                )}
-              </button>
-
-              <button
-                onClick={() => handleNav("/user/settings")}
-                title={collapsed ? "Settings" : ""}
-                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
-                  isActive("/user/settings")
-                    ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md"
-                    : isDark
-                    ? "text-gray-400 hover:bg-white/8 hover:text-white"
-                    : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
-                } ${collapsed ? "justify-center" : ""}`}
-              >
-                <Settings className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && (
-                  <span className="text-[13px] font-semibold">Settings</span>
-                )}
-              </button>
-            </>
-          )}
+          <p className="text-xs text-gray-400">
+            {userProfile.roleLabel}
+          </p>
         </div>
-
-        <div
-          className={`my-2 border-t ${
-            isDark ? "border-white/8" : "border-gray-100"
-          }`}
-        />
-
-        {/* بطاقة اسم المستخدم */}
-        <div className="flex items-center p-2 rounded-xl transition-colors hover:bg-gray-50 dark:hover:bg-white/8">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 shadow-md">
-            <span className="text-white text-xs font-bold">
-              {userProfile.initials}
-            </span>
-          </div>
-
-          <div
-            className={`flex items-center justify-between flex-1 min-w-0 transition-all duration-300 ease-in-out ${
-              collapsed
-                ? "opacity-0 max-w-0 ml-0 pointer-events-none"
-                : "opacity-100 max-w-[150px] ml-3"
-            }`}
-          >
-            <div className="flex-1 min-w-0">
-              <p
-                className={`text-[13px] font-semibold truncate ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                {userProfile.name}
-              </p>
-              <p
-                className={`text-[11px] truncate ${
-                  isDark ? "text-gray-500" : "text-gray-400"
-                }`}
-              >
-                {userProfile.roleLabel}
-              </p>
-            </div>
-            <button
-              onClick={() => logout()}
-              title="Logout"
-              className="p-1 rounded-lg hover:bg-gray-200/50 dark:hover:bg-white/10 transition-colors"
-            >
-              <LogOut
-                className={`w-4 h-4 flex-shrink-0 ${
-                  isDark ? "text-gray-400" : "text-gray-500"
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
+      </>
+    )}
+  </div>
+</div>
     </aside>
   );
 }

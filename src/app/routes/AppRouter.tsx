@@ -52,19 +52,6 @@ const AppRouter = () => {
 
 export default AppRouter;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // // استيراد الـ Layouts ومصفوفات المسارات من الميزات

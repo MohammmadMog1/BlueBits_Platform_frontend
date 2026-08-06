@@ -1,4 +1,3 @@
-// src/features/admin/admin.config.ts
 import {
   BookMarked,
   GraduationCap,
@@ -9,7 +8,7 @@ import {
   FileText,
 } from "lucide-react";
 import type {
-  NavItem,
+  NavItem
 } from "../../shared/layout/MainLayout/MainLayout";
 
 export const adminNavItems: NavItem[] = [
@@ -19,12 +18,5 @@ export const adminNavItems: NavItem[] = [
   { icon: BookMarked, label: "Manage Subjects", path: "/admin/subjects" },
   { icon: FileText, label: "Content", path: "/admin/content" },
   { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
-  { icon: Settings, label: "System Settings", path: "/admin/settings" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" }
 ];
-
-export const adminMoreNavItems: NavItem[] = [
-  { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
-  { icon: Settings, label: "System Settings", path: "/admin/settings" },
-];
-
-

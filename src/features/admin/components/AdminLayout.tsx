@@ -1,7 +1,7 @@
 // src/features/admin/components/AdminLayout.tsx
 // import MainLayout, { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
-import { adminNavItems, adminMoreNavItems } from "../admin.config";
+import { adminNavItems } from "../admin.config";
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
 
@@ -45,7 +45,7 @@ const userProfile: UserProfile = userFromStore
   return (
     <MainLayout 
       navItems={adminNavItems} 
-      moreNavItems={adminMoreNavItems} 
+      // moreNavItems={adminMoreNavItems} 
       userProfile={userProfile} 
     />
   );
