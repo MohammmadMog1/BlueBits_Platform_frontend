@@ -1,4 +1,3 @@
-// src/features/admin/admin.config.ts
 import {
   BookMarked,
   GraduationCap,
@@ -18,7 +17,7 @@ export const adminNavItems: NavItem[] = [
   { icon: FileText, label: "Manage Lectures", path: "/admin/lectures" },
   { icon: FileText, label: "Content", path: "/admin/content" },
   { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
-  { icon: Settings, label: "System Settings", path: "/admin/settings" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" }
 ];
 
 export const adminMoreNavItems: NavItem[] = [

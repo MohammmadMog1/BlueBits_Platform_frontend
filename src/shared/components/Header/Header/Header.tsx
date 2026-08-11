@@ -3,8 +3,12 @@ import { Search, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
 import imge from "../../../../app/assets/Logo.png"
 import { Link } from "react-router-dom";
+import  type { UserProfile } from "../../../layout/MainLayout/MainLayout";
 
-export default function Header() {
+// import type { UserProfile } from "../../layout/MainLayout/MainLayout";
+
+
+export default function Header({ userProfile }: { userProfile: UserProfile }) {
   const [notifications, setNotifications] = useState(3);
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
@@ -88,7 +92,9 @@ export default function Header() {
         </button>
 
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center cursor-pointer shadow-md flex-shrink-0">
-          <span className="text-white text-xs font-bold">AH</span>
+          <span className="text-white text-xs font-bold">
+            {userProfile.initials}
+          </span>
         </div>
       </div>
     </header>

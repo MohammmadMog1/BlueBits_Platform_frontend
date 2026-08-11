@@ -31,13 +31,16 @@ const MainLayout = ({ navItems, moreNavItems = [], userProfile }: MainLayoutProp
       <Sidebar navItems={navItems} userProfile={userProfile} />
       
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
+        {/* <Header /> */}
+        <Header userProfile={userProfile} />
         <main className="flex-1 p-6 overflow-auto">
           <Outlet /> {/* هنا يتم حقن صفحات Admin أو User */}
         </main>
         
         {/* تمرير البيانات للـ BottomBar */}
-        <BottomBar navItems={navItems} moreNavItems={moreNavItems} />
+        <BottomBar navItems={navItems}
+        //  moreNavItems={moreNavItems} 
+         />
       </div>
     </div>
   );

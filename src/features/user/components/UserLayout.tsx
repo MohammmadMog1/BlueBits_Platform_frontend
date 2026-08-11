@@ -1,7 +1,7 @@
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
-import { userNavItems, userMoreNavItems } from "../user.config";
+import { userNavItems } from "../user.config";
 
 function getUserInitials(name: string) {
   return name
@@ -44,7 +44,7 @@ export default function UserLayout() {
   return (
     <MainLayout 
       navItems={userNavItems} 
-      moreNavItems={userMoreNavItems} 
+      // moreNavItems={userMoreNavItems} 
       userProfile={userProfile} 
     />
   );

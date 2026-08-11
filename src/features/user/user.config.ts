@@ -9,9 +9,6 @@ export const userNavItems: NavItem[] = [
   { icon: CheckSquare, label: "To-Do", path: "/user/todo" },
   { icon: MessageSquare, label: "AI Chatbot", path: "/user/chatbot" },
   { icon: Calendar, label: "Exam Schedule", path: "/user/exams" },
-];
-
-export const userMoreNavItems: NavItem[] = [
-  { icon: Calendar, label: "Exam Schedule", path: "/user/exams" },
   { icon: Settings, label: "Settings", path: "/user/settings" },
+
 ];
