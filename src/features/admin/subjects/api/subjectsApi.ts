@@ -38,7 +38,14 @@ export const subjectsApi = createApi({
       query: (filters) => {
         const yearId = filters?.yearId;
         const semesterId = filters?.semesterId;
+        const type = filters?.type;
 
+        if (yearId && semesterId && type) {
+          return {
+            url: `${productionBaseUrl}/subjects/year/${yearId}/semester/${semesterId}/type/${type}`,
+            baseUrl: undefined,
+          };
+        }
         if (yearId && semesterId) {
           return {
             url: `${productionBaseUrl}/subjects/year/${yearId}/semester/${semesterId}`,

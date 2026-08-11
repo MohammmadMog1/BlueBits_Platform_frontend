@@ -14,6 +14,7 @@ import loadingReducer from "./loadingSlice";
 import { usersApi } from "../../features/users/api/usersApiSlice";
 import { academicApi } from "../../features/admin/academic/api/academicApi";
 import { subjectsApi } from "../../features/admin/subjects/api/subjectsApi";
+import lecturesReducer from "../../features/admin/lectures/redux/lecturesSlice";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -31,6 +32,7 @@ const customStorage = {
 const rootReducer = combineReducers({
   auth: authReducer,
   loading: loadingReducer,
+  lectures: lecturesReducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [academicApi.reducerPath]: academicApi.reducer,
   [subjectsApi.reducerPath]: subjectsApi.reducer,

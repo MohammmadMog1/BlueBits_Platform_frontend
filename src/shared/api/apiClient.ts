@@ -15,12 +15,17 @@ apiClient.interceptors.request.use((config) => {
   store.dispatch(startLoading());
 
   const token = store.getState().auth.token;
+  const headers = new AxiosHeaders(config.headers);
 
-  if (token) {
-    config.headers = new AxiosHeaders(config.headers);
-    config.headers.set("Authorization", `Bearer ${token}`);
+  if (config.data instanceof FormData) {
+    headers.delete("Content-Type");
   }
 
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  config.headers = headers;
   return config;
 });
 

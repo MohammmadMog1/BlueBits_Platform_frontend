@@ -2,11 +2,10 @@ import { motion } from "motion/react";
 import { Mail, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../src/App/store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { forgotPasswordThunk } from "../redux/authThunk";
 // import { navigate } from "react-router";
 // import { useNavigate } from "react-router";
-
 
 // استوردي نفس الصور المستخدمة في صفحة Login
 import bgImage from "../../../app/assets/Logo notext.png";
@@ -17,24 +16,22 @@ export const ForgetPasswordPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const {isLoading,error} = useAppSelector(
-    (state) => state.auth
-  );
+  const { isLoading, error } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async () => {
-  if (!email.trim()) return;
+    if (!email.trim()) return;
 
-  // await dispatch(forgotPasswordThunk(email));
-  const result = await dispatch(forgotPasswordThunk(email));
+    // await dispatch(forgotPasswordThunk(email));
+    const result = await dispatch(forgotPasswordThunk(email));
 
-if (forgotPasswordThunk.fulfilled.match(result)) {
-  navigate("/check-email", {
-  state: {
-    email,
-  },
-});
-}
-};
+    if (forgotPasswordThunk.fulfilled.match(result)) {
+      navigate("/check-email", {
+        state: {
+          email,
+        },
+      });
+    }
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
@@ -49,11 +46,7 @@ if (forgotPasswordThunk.fulfilled.match(result)) {
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <img
-            src={logoImage}
-            alt="BlueBits"
-            className="h-14 object-contain"
-          />
+          <img src={logoImage} alt="BlueBits" className="h-14 object-contain" />
         </div>
 
         <motion.div
@@ -69,8 +62,7 @@ if (forgotPasswordThunk.fulfilled.match(result)) {
             </h1>
 
             <p className="text-gray-500 mt-3 leading-7">
-              Enter your email address and we'll send you a password reset
-              link.
+              Enter your email address and we'll send you a password reset link.
             </p>
           </div>
 

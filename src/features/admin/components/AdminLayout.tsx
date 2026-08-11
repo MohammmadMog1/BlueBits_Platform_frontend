@@ -1,10 +1,12 @@
 // src/features/admin/components/AdminLayout.tsx
-// import MainLayout, { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
 import { adminNavItems, adminMoreNavItems } from "../admin.config";
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
-
+import {
+  useGetYearsQuery,
+  useGetSemestersQuery,
+} from "../academic/api/academicApi";
 
 function getUserInitials(name: string) {
   return name
@@ -15,7 +17,6 @@ function getUserInitials(name: string) {
     .join("")
     .toUpperCase();
 }
-
 
 function getRoleLabel(role: string) {
   switch (role) {
@@ -33,20 +34,32 @@ function getRoleLabel(role: string) {
       return role;
   }
 }
+
 export default function AdminLayout() {
-    const userFromStore = useAppSelector((state) => state.auth.user);
-const userProfile: UserProfile = userFromStore
+  const userFromStore = useAppSelector((state) => state.auth.user);
+
+  /**
+   * ✅ Prefetch مرة واحدة عند دخول أي صفحة Admin.
+   * بفضل keepUnusedDataFor: 3600 في academicApi، لن تُعاد الـ fetch
+   * طالما البيانات موجودة في الكاش (ساعة كاملة).
+   * لا نحتاج الـ data هنا — فقط نطلق الكاش.
+   */
+  useGetYearsQuery();
+  useGetSemestersQuery();
+
+  const userProfile: UserProfile = userFromStore
     ? {
         name: userFromStore.name,
         roleLabel: getRoleLabel(userFromStore.role),
         initials: getUserInitials(userFromStore.name),
       }
     : { name: "Guest", roleLabel: "Guest", initials: "G" };
+
   return (
-    <MainLayout 
-      navItems={adminNavItems} 
-      moreNavItems={adminMoreNavItems} 
-      userProfile={userProfile} 
+    <MainLayout
+      navItems={adminNavItems}
+      moreNavItems={adminMoreNavItems}
+      userProfile={userProfile}
     />
   );
-}
+}

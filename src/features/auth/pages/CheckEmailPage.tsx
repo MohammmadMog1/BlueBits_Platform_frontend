@@ -1,24 +1,21 @@
 import { motion } from "motion/react";
 import { MailCheck, ArrowLeft } from "lucide-react";
-import { Link } from "react-router";
-import { useAppDispatch } from "../../../../src/App/store/hooks";
+import { Link, useLocation } from "react-router";
+import { useAppDispatch } from "../../../app/store/hooks";
 import { forgotPasswordThunk } from "../redux/authThunk";
-import { useLocation } from "react-router";
-
-
 
 import bgImage from "../../../app/assets/Logo notext.png";
 import logoImage from "../../../app/assets/Logo.png";
 
 export const CheckEmailPage = () => {
-    const dispatch = useAppDispatch();
-    const { state } = useLocation();
+  const dispatch = useAppDispatch();
+  const { state } = useLocation();
 
-const email = state?.email;
+  const email = state?.email;
 
-    const handleResend = async () => {
-  await dispatch(forgotPasswordThunk(email));
-};
+  const handleResend = async () => {
+    await dispatch(forgotPasswordThunk(email));
+  };
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
       {/* Background */}
@@ -32,11 +29,7 @@ const email = state?.email;
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <img
-            src={logoImage}
-            alt="BlueBits"
-            className="h-14 object-contain"
-          />
+          <img src={logoImage} alt="BlueBits" className="h-14 object-contain" />
         </div>
 
         <motion.div
@@ -61,7 +54,8 @@ const email = state?.email;
             <p className="text-gray-500 mt-3 leading-7">
               We've sent a password reset link to your email address.
               <br />
-              Please check your inbox and follow the instructions to reset your password.
+              Please check your inbox and follow the instructions to reset your
+              password.
             </p>
           </div>
 
