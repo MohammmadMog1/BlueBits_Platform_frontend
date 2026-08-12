@@ -16,7 +16,7 @@ export const ForgetPasswordPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { isLoading } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async () => {
     if (!email.trim()) return;

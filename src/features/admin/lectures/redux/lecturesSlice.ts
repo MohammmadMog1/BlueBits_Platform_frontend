@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Lecture } from "../types";
+import type { LecturePopulated } from "../types";
 import {
   deleteLectureThunk,
   fetchLecturesThunk,
@@ -8,7 +8,8 @@ import {
 } from "./lecturesThunks";
 
 export interface LecturesState {
-  items: Lecture[];
+  // ✅ تغيير من Lecture[] إلى LecturePopulated[]
+  items: LecturePopulated[];
   fetchStatus: "idle" | "loading" | "succeeded" | "failed";
   uploadStatus: "idle" | "loading" | "succeeded" | "failed";
   updateStatus: "idle" | "loading" | "succeeded" | "failed";
@@ -66,6 +67,7 @@ const lecturesSlice = createSlice({
       })
       .addCase(uploadLectureThunk.fulfilled, (state, action) => {
         state.uploadStatus = "succeeded";
+        // ✅ الآن action.payload هو LecturePopulated
         state.items.unshift(action.payload);
         state.uploadProgress = 100;
       })

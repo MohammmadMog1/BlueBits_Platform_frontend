@@ -24,7 +24,7 @@ interface MainLayoutProps {
   userProfile: UserProfile;  // بيانات المستخدم الديناميكية
 }
 
-const MainLayout = ({ navItems, moreNavItems = [], userProfile }: MainLayoutProps) => {
+const MainLayout = ({ navItems,  userProfile }: MainLayoutProps) => {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* تمرير البيانات للـ Sidebar */}

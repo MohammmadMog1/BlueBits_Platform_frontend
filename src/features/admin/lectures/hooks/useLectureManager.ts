@@ -1,14 +1,3 @@
-/**
- * useLectureManager
- *
- * Hook مخصص يغلف كل منطق صفحة إدارة المحاضرات.
- * الترتيب: year → semester → type → subject → lectures
- *
- * ✅ السنوات والفصول تُجلب مرة واحدة فقط (RTK Query Cache – keepUnusedDataFor: 3600)
- * ✅ المواد تُجلب عند اختيار السنة + الفصل
- * ✅ المحاضرات تُجلب عند اختيار المادة + النوع
- */
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../app/store/hooks";
 import {
@@ -21,75 +10,59 @@ import {
   fetchLecturesThunk,
   updateLectureThunk,
 } from "../redux/lecturesThunks";
-import { downloadLecture } from "../api/lecturesService";
-import type { Lecture, LectureType } from "../types";
+import {
+  getLectureDownloadInfo,
+  downloadLectureAsBlob,
+  getLecturesCountPerSubject,
+} from "../api/lecturesService";
+import type {
+  LecturePopulated,
+  LectureType,
+  LectureSubjectStats,
+} from "../types";
 
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
-export type LectureStep = "year" | "semester" | "type" | "subject" | "lectures";
+export type LectureStep = "year" | "semester" | "subject" | "type" | "lectures"; // ✅ تم تبديل الترتيب
 
 export interface UseLectureManagerReturn {
-  // ── Data ──────────────────────────────────
   years: { _id: string; name: string }[];
   semesters: { _id: string; name: string }[];
   subjects: { _id: string; name: string }[];
-  lectures: Lecture[];
-  contextLectures: Lecture[];
-
-  // ── Loading states ─────────────────────────
+  lectures: LecturePopulated[];
+  contextLectures: LecturePopulated[];
   yearsLoading: boolean;
   semestersLoading: boolean;
   subjectsLoading: boolean;
   fetchStatus: "idle" | "loading" | "succeeded" | "failed";
-
-  // ── Selection state ────────────────────────
   step: LectureStep;
   selectedYearId: string;
   selectedSemesterId: string;
   selectedSubjectId: string;
   selectedType: LectureType;
   search: string;
-
-  // ── Setters ────────────────────────────────
   setSearch: (v: string) => void;
-
-  // ── Navigation ─────────────────────────────
   selectYear: (yearId: string) => void;
   selectSemester: (semesterId: string) => void;
   selectType: (type: LectureType) => void;
   selectSubject: (subjectId: string) => void;
   goBack: () => void;
   navTo: (target: LectureStep) => void;
-
-  // ── CRUD ───────────────────────────────────
   handleDelete: (id: string) => Promise<void>;
-  handleDownload: (lecture: Lecture) => Promise<void>;
-  handleView: (lecture: Lecture) => Promise<void>;
-  handleToggleStatus: (lecture: Lecture) => Promise<void>;
-  handleRename: (lecture: Lecture, title: string) => Promise<void>;
-
-  // ── Upload modal ───────────────────────────
+  handleDownload: (lecture: LecturePopulated) => Promise<void>;
+  handleView: (lecture: LecturePopulated) => Promise<void>;
+  handleToggleStatus: (lecture: LecturePopulated) => Promise<void>;
+  handleRename: (lecture: LecturePopulated, title: string) => Promise<void>;
   showUpload: boolean;
   openUpload: () => void;
   closeUpload: () => void;
-
-  // ── Stats ──────────────────────────────────
   stats: { label: string; value: number | string; color: string }[];
 }
 
-// ─────────────────────────────────────────────
-// Hook
-// ─────────────────────────────────────────────
 export function useLectureManager(): UseLectureManagerReturn {
   const dispatch = useAppDispatch();
-
-  // ── Redux state ───────────────────────────
   const { items: lectures, fetchStatus } = useAppSelector(
     (state) => state.lectures,
   );
 
-  // ── Step machine ──────────────────────────
   const [step, setStep] = useState<LectureStep>("year");
   const [selectedYearId, setSelectedYearId] = useState("");
   const [selectedSemesterId, setSelectedSemesterId] = useState("");
@@ -97,38 +70,26 @@ export function useLectureManager(): UseLectureManagerReturn {
   const [selectedType, setSelectedType] = useState<LectureType>("theoretical");
   const [search, setSearch] = useState("");
   const [showUpload, setShowUpload] = useState(false);
+  const [subjectStats, setSubjectStats] = useState<LectureSubjectStats[]>([]);
 
-  // ── RTK Query – السنوات والفصول ───────────
-  // تُجلب مرة واحدة فقط وتبقى في الكاش ساعة كاملة (keepUnusedDataFor: 3600)
   const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
   const { data: semesters = [], isLoading: semestersLoading } =
     useGetSemestersQuery();
 
-  // ── RTK Query – المواد ────────────────────
-  // تُجلب عند اختيار السنة والفصل والنوع فقط
+  // ✅ تُجلب المواد الآن عند اختيار السنة والفصل فقط (بدون النوع)
   const { data: subjects = [], isLoading: subjectsLoading } =
     useGetSubjectsQuery(
-      {
-        yearId: selectedYearId,
-        semesterId: selectedSemesterId,
-        type: selectedType,
-      },
-      { skip: !selectedYearId || !selectedSemesterId || !selectedType },
+      { yearId: selectedYearId, semesterId: selectedSemesterId },
+      { skip: !selectedYearId || !selectedSemesterId },
     );
 
-  // ── Fetch lectures ────────────────────────
-  // تُجلب عند الانتقال لخطوة "lectures" مع اكتمال جميع المعاملات
+  // ✅ تُجلب المحاضرات عندما نكون في خطوة "lectures" ويتوفر لدينا subjectId و type
   const lectureFiltersReady = Boolean(
-    step === "lectures" &&
-    selectedYearId &&
-    selectedSemesterId &&
-    selectedSubjectId &&
-    selectedType,
+    step === "lectures" && selectedSubjectId && selectedType,
   );
 
   useEffect(() => {
     if (!lectureFiltersReady) return;
-
     dispatch(
       fetchLecturesThunk({
         yearId: selectedYearId,
@@ -146,57 +107,48 @@ export function useLectureManager(): UseLectureManagerReturn {
     selectedType,
   ]);
 
-  // ── Filtered lectures for current context ─
+  useEffect(() => {
+    getLecturesCountPerSubject()
+      .then((stats) => setSubjectStats(stats))
+      .catch(() => setSubjectStats([]));
+  }, []);
+
   const contextLectures = useMemo(
     () =>
       lectures.filter(
         (l) =>
-          l.yearId === selectedYearId &&
-          l.semesterId === selectedSemesterId &&
-          l.subjectId === selectedSubjectId &&
+          l.subjectId._id === selectedSubjectId &&
           l.type === selectedType &&
           (!search || l.title.toLowerCase().includes(search.toLowerCase())),
       ),
-    [
-      lectures,
-      selectedYearId,
-      selectedSemesterId,
-      selectedSubjectId,
-      selectedType,
-      search,
-    ],
+    [lectures, selectedSubjectId, selectedType, search],
   );
 
-  // ── Stats ─────────────────────────────────
-  const stats = useMemo(
-    () => [
-      { label: "Total Lectures", value: lectures.length, color: "#404293" },
-      {
-        label: "Published",
-        value: lectures.filter((l) => l.isPublished).length,
-        color: "#059669",
-      },
-      {
-        label: "Total Downloads",
-        value: lectures
-          .reduce((sum, l) => sum + (l.downloads ?? 0), 0)
-          .toLocaleString(),
-        color: "#F59E0B",
-      },
-      {
-        label: "Drafts",
-        value: lectures.filter((l) => !l.isPublished).length,
-        color: "#6B7280",
-      },
-    ],
-    [lectures],
-  );
+  const stats = useMemo(() => {
+    const safeStats = Array.isArray(subjectStats) ? subjectStats : [];
+    const currentSubjectStats = safeStats.find(
+      (s) => s.subjectId === selectedSubjectId,
+    );
+    const totalLectures = currentSubjectStats?.totalLectures ?? lectures.length;
+    const theoreticalCount =
+      currentSubjectStats?.theoreticalCount ??
+      lectures.filter((l) => l.type === "theoretical").length;
+    const practicalCount =
+      currentSubjectStats?.practicalCount ??
+      lectures.filter((l) => l.type === "practical").length;
+    const publishedCount = lectures.filter((l) => l.isPublished).length;
+
+    return [
+      { label: "Total Lectures", value: totalLectures, color: "#404293" },
+      { label: "Published", value: publishedCount, color: "#059669" },
+      { label: "Theoretical", value: theoreticalCount, color: "#2376BB" },
+      { label: "Practical", value: practicalCount, color: "#F59E0B" },
+    ];
+  }, [lectures, subjectStats, selectedSubjectId]);
 
   // ─────────────────────────────────────────
-  // Navigation
+  // Navigation (تم تحديث الترتيب)
   // ─────────────────────────────────────────
-
-  /** اختيار السنة — تصفير كل الاختيارات اللاحقة */
   const selectYear = useCallback((yearId: string) => {
     setSelectedYearId(yearId);
     setSelectedSemesterId("");
@@ -206,59 +158,44 @@ export function useLectureManager(): UseLectureManagerReturn {
     setStep("semester");
   }, []);
 
-  /** اختيار الفصل */
   const selectSemester = useCallback((semesterId: string) => {
     setSelectedSemesterId(semesterId);
     setSelectedSubjectId("");
-    setSelectedType("theoretical");
     setSearch("");
-    setStep("type");
+    setStep("subject"); // ✅ الخطوة التالية هي اختيار المادة
   }, []);
 
-  /** اختيار النوع */
-  const selectType = useCallback((type: LectureType) => {
-    setSelectedType(type);
-    setSelectedSubjectId("");
-    setSearch("");
-    setStep("subject");
-  }, []);
-
-  /** اختيار المادة → انتقل مباشرة لجلب المحاضرات */
   const selectSubject = useCallback((subjectId: string) => {
     setSelectedSubjectId(subjectId);
     setSearch("");
-    setStep("lectures");
+    setStep("type"); // ✅ الخطوة التالية هي اختيار النوع
   }, []);
 
-  /** رجوع خطوة للخلف */
+  const selectType = useCallback((type: LectureType) => {
+    setSelectedType(type);
+    setSearch("");
+    setStep("lectures"); // ✅ الخطوة التالية هي عرض المحاضرات
+  }, []);
+
   const goBack = useCallback(() => {
     setSearch("");
-    if (step === "lectures") setStep("subject");
-    else if (step === "subject") setStep("type");
-    else if (step === "type") setStep("semester");
+    if (step === "lectures") setStep("type");
+    else if (step === "type") setStep("subject");
+    else if (step === "subject") setStep("semester");
     else if (step === "semester") setStep("year");
   }, [step]);
 
-  /** انتقل لخطوة معينة (breadcrumb) */
   const navTo = useCallback(
     (target: LectureStep) => {
-      if (target === "year") {
-        setStep("year");
-      } else if (target === "semester" && selectedYearId) {
-        setStep("semester");
-      } else if (target === "type" && selectedSemesterId) {
-        setStep("type");
-      } else if (target === "subject" && selectedSemesterId) {
-        setStep("subject");
-      }
+      if (target === "year") setStep("year");
+      else if (target === "semester" && selectedYearId) setStep("semester");
+      else if (target === "subject" && selectedSemesterId) setStep("subject");
+      else if (target === "type" && selectedSubjectId) setStep("type");
     },
-    [selectedYearId, selectedSemesterId],
+    [selectedYearId, selectedSemesterId, selectedSubjectId],
   );
 
-  // ─────────────────────────────────────────
-  // CRUD Operations
-  // ─────────────────────────────────────────
-
+  // CRUD operations (كما هي)
   const handleDelete = useCallback(
     async (id: string) => {
       await dispatch(deleteLectureThunk(id))
@@ -268,13 +205,11 @@ export function useLectureManager(): UseLectureManagerReturn {
     [dispatch],
   );
 
-  const handleDownload = useCallback(async (lecture: Lecture) => {
+  const handleDownload = useCallback(async (lecture: LecturePopulated) => {
     try {
-      const response = await downloadLecture(lecture._id);
-      const blob = response.data;
-      const contentDisposition = response.headers["content-disposition"] || "";
-      const fileNameMatch = /filename="?([^";]+)"?/.exec(contentDisposition);
-      const fileName = fileNameMatch?.[1] || `${lecture.title}.pdf`;
+      const info = await getLectureDownloadInfo(lecture._id);
+      const blob = await downloadLectureAsBlob(lecture._id);
+      const fileName = `${info.title || lecture.title}.${info.fileType.split("/")[1] || "pdf"}`;
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
@@ -283,27 +218,18 @@ export function useLectureManager(): UseLectureManagerReturn {
       anchor.click();
       anchor.remove();
       setTimeout(() => URL.revokeObjectURL(url), 30000);
-    } catch {
-      // Keep silent to avoid blocking UI.
-    }
+    } catch {}
   }, []);
 
-  const handleView = useCallback(async (lecture: Lecture) => {
+  const handleView = useCallback(async (lecture: LecturePopulated) => {
     try {
-      const response = await downloadLecture(lecture._id);
-      const blob = response.data;
-      const url = URL.createObjectURL(blob);
-      const popup = window.open("about:blank", "_blank");
-      if (!popup) return;
-      popup.location.href = url;
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
-    } catch {
-      // Keep silent to avoid blocking UI.
-    }
+      const info = await getLectureDownloadInfo(lecture._id);
+      if (info.downloadUrl) window.open(info.downloadUrl, "_blank");
+    } catch {}
   }, []);
 
   const handleToggleStatus = useCallback(
-    async (lecture: Lecture) => {
+    async (lecture: LecturePopulated) => {
       await dispatch(
         updateLectureThunk({
           id: lecture._id,
@@ -317,7 +243,7 @@ export function useLectureManager(): UseLectureManagerReturn {
   );
 
   const handleRename = useCallback(
-    async (lecture: Lecture, title: string) => {
+    async (lecture: LecturePopulated, title: string) => {
       await dispatch(updateLectureThunk({ id: lecture._id, data: { title } }))
         .unwrap()
         .catch(() => undefined);
@@ -325,27 +251,19 @@ export function useLectureManager(): UseLectureManagerReturn {
     [dispatch],
   );
 
-  // ─────────────────────────────────────────
-  // Upload modal
-  // ─────────────────────────────────────────
   const openUpload = useCallback(() => setShowUpload(true), []);
   const closeUpload = useCallback(() => setShowUpload(false), []);
 
   return {
-    // Data
     years,
     semesters,
     subjects,
     lectures,
     contextLectures,
-
-    // Loading
     yearsLoading,
     semestersLoading,
     subjectsLoading,
     fetchStatus,
-
-    // State
     step,
     selectedYearId,
     selectedSemesterId,
@@ -353,28 +271,20 @@ export function useLectureManager(): UseLectureManagerReturn {
     selectedType,
     search,
     setSearch,
-
-    // Navigation
     selectYear,
     selectSemester,
     selectType,
     selectSubject,
     goBack,
     navTo,
-
-    // CRUD
     handleDelete,
     handleDownload,
     handleView,
     handleToggleStatus,
     handleRename,
-
-    // Upload
     showUpload,
     openUpload,
     closeUpload,
-
-    // Stats
     stats,
   };
 }

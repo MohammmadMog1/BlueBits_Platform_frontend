@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Users, Plus, RefreshCcw, AlertCircle, X } from "lucide-react";
+import { Users, Plus, RefreshCcw, AlertCircle } from "lucide-react";
 import CreateUserModal from "../components/CreateUserModal";
 import UsersFilter from "../components/UsersFilter";
 import UsersStats from "../components/UsersStats";

@@ -3,7 +3,6 @@ import type { RootState } from "../../../../app/store/store";
 import type {
   CreateSubjectPayload,
   Subject,
-  SubjectListResponse,
   SubjectResponse,
   SubjectsQuery,
   UpdateSubjectPayload,
@@ -11,9 +10,21 @@ import type {
 
 const productionBaseUrl = "https://bluebits24.onrender.com/api/v1.0.0";
 
-const unwrapList = (response: SubjectListResponse | Subject[]): Subject[] => {
+// ✅ تم إصلاح unwrapList للتعامل مع جميع أشكال الاستجابات
+const unwrapList = (response: any): Subject[] => {
+  // 1. مصفوفة مباشرة
   if (Array.isArray(response)) return response;
-  return response.data ?? response.subjects ?? [];
+  
+  // 2. Bluebits envelope مع data = مصفوفة مباشرة
+  if (Array.isArray(response?.data)) return response.data;
+  
+  // 3. ✅ Bluebits envelope مع data = { count, subjects }
+  if (Array.isArray(response?.data?.subjects)) return response.data.subjects;
+  
+  // 4. response مباشرة مع subjects
+  if (Array.isArray(response?.subjects)) return response.subjects;
+  
+  return [];
 };
 
 const unwrapItem = (response: SubjectResponse): Subject => {
@@ -35,39 +46,27 @@ export const subjectsApi = createApi({
   tagTypes: ["Subject"],
   endpoints: (builder) => ({
     getSubjects: builder.query<Subject[], SubjectsQuery | void>({
+      // ✅ تم تبسيط query function لتكون أنظف وأكثر اتساقاً
       query: (filters) => {
         const yearId = filters?.yearId;
         const semesterId = filters?.semesterId;
         const type = filters?.type;
 
         if (yearId && semesterId && type) {
-          return {
-            url: `${productionBaseUrl}/subjects/year/${yearId}/semester/${semesterId}/type/${type}`,
-            baseUrl: undefined,
-          };
+          return `/subjects/year/${yearId}/semester/${semesterId}/type/${type}`;
         }
         if (yearId && semesterId) {
-          return {
-            url: `${productionBaseUrl}/subjects/year/${yearId}/semester/${semesterId}`,
-            baseUrl: undefined,
-          };
+          return `/subjects/year/${yearId}/semester/${semesterId}`;
         }
         if (yearId) {
-          return {
-            url: `${productionBaseUrl}/subjects/year/${yearId}`,
-            baseUrl: undefined,
-          };
+          return `/subjects/year/${yearId}`;
         }
         if (semesterId) {
-          return {
-            url: `${productionBaseUrl}/subjects/semester/${semesterId}`,
-            baseUrl: undefined,
-          };
+          return `/subjects/semester/${semesterId}`;
         }
         return "/subjects";
       },
-      transformResponse: (response: SubjectListResponse | Subject[]) =>
-        unwrapList(response),
+      transformResponse: (response: any) => unwrapList(response),
       providesTags: (result) =>
         result
           ? [

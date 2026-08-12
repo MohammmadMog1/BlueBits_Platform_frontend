@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../../../app/store/store";
 import type {
   CreateUserPayload,
-  UpdateUserRolePayload,
   User,
   UsersResponse,
   UserRole,
@@ -61,7 +60,7 @@ export const usersApi = createApi({
       transformResponse: (response: { data: User } | User) => {
         return (response as { data: User }).data ?? (response as User);
       },
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: "Users", id },
         { type: "Users", id: "LIST" },
       ],
@@ -71,7 +70,7 @@ export const usersApi = createApi({
         url: `/users/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_result, _error, id) => [
         { type: "Users", id },
         { type: "Users", id: "LIST" },
       ],

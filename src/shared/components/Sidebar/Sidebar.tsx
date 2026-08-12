@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { ChevronRight, LogOut, Settings, Shield, User } from "lucide-react";
+import { ChevronRight, LogOut } from "lucide-react";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 
@@ -13,14 +13,12 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
   const isDark = false;
 
   const handleNav = (path: string) => navigate(path);
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
   };
-  const isAdminView = location.pathname.startsWith("/admin");
   return (
     <aside
       className={`hidden lg:flex lg:flex-col lg:relative z-30 h-full overflow-hidden transition-all duration-300 ease-in-out ${

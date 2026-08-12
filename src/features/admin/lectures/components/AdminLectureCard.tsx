@@ -13,7 +13,7 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "lucide-react";
-import type { Lecture } from "../types";
+import type { LecturePopulated } from "../types";
 
 export function AdminLectureCard({
   lec,
@@ -23,7 +23,7 @@ export function AdminLectureCard({
   onToggleStatus,
   onRename,
 }: {
-  lec: Lecture;
+  lec: LecturePopulated;
   onDelete: () => void;
   onDownload: () => void;
   onView: () => void;
@@ -40,7 +40,17 @@ export function AdminLectureCard({
   };
 
   const isPractical = lec.type === "practical";
-  const formattedDate = lec.createdAt ?? lec.updatedAt ?? lec.date ?? "--";
+
+  // ✅ تم إصلاح: إزالة lec.date لأنها غير موجودة في الـ Type
+  // ✅ تم إضافة: تنسيق التاريخ بشكل مقروء
+  const formattedDate = new Date(lec.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  // ✅ تم إصلاح: إزالة downloads و views لأنها غير موجودة في الـ API
+  // إذا أردت إضافتها لاحقاً، يجب تحديث الـ Lecture type أولاً
 
   return (
     <motion.div
@@ -122,19 +132,12 @@ export function AdminLectureCard({
             <span className="flex items-center gap-1 font-medium">
               <File size={11} className="text-gray-300" /> {lec.type}
             </span>
+            {/* ✅ تم إضافة حجم الملف بدلاً من downloads/views */}
             <span className="flex items-center gap-1 font-medium">
               <Download size={11} className="text-[#2376BB]/60" />
               <span className="text-[#2376BB] font-bold">
-                {(lec.downloads ?? 0).toLocaleString()}
-              </span>{" "}
-              downloads
-            </span>
-            <span className="flex items-center gap-1 font-medium">
-              <Eye size={11} className="text-[#404293]/60" />
-              <span className="text-[#404293] font-bold">
-                {(lec.views ?? 0).toLocaleString()}
-              </span>{" "}
-              views
+                {(lec.fileSize / 1024 / 1024).toFixed(2)} MB
+              </span>
             </span>
           </div>
           <p className="text-[10px] text-gray-300 italic hidden sm:block">

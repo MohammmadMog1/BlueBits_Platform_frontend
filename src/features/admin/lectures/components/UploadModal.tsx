@@ -25,8 +25,6 @@ interface UploadModalProps {
 
 export function UploadModal({
   onClose,
-  yearId,
-  semesterId,
   subjectId,
   subjectName,
   type,
@@ -57,6 +55,9 @@ export function UploadModal({
   const validateAndSet = (selected: File) => {
     const allowedTypes = [
       "application/pdf",
+      "video/mp4",
+      "video/webm",
+      "video/quicktime",
     ];
     const maxSize = 200 * 1024 * 1024; // 200 MB
 
@@ -93,13 +94,13 @@ export function UploadModal({
     setLocalError("");
     dispatch(setUploadProgress(0));
 
+    // ✅ تم التعديل: إزالة yearId و semesterId من الـ payload
+    // لأن الـ Backend يستنتجهما تلقائياً من subjectId
     await dispatch(
       uploadLectureThunk({
         title: title.trim(),
         description: description.trim(),
         file,
-        yearId,
-        semesterId,
         subjectId,
         type,
         isPublished,
@@ -203,7 +204,7 @@ export function UploadModal({
                 <input
                   ref={fileRef}
                   type="file"
-                  accept=".pdf,video/*"
+                  accept="application/pdf,video/*"
                   className="hidden"
                   onChange={(event) => {
                     const selected = event.target.files?.[0];

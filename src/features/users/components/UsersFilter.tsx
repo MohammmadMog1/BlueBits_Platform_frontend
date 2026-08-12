@@ -1,5 +1,4 @@
 import { ChevronDown, Search, X } from "lucide-react";
-import type { UserRole } from "../types";
 import { USER_ROLES } from "../types";
 
 interface UsersFilterProps {

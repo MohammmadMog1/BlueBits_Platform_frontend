@@ -4,7 +4,7 @@
  * Presentation-only component.
  * كل المنطق موجود في useLectureManager hook.
  *
- * الترتيب: year → semester → type → subject → lectures
+ * ✅ الترتيب الصحيح: year → semester → subject → type → lectures
  */
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -87,10 +87,12 @@ export default function LectureManagementPage() {
     semesters.find((s) => s._id === selectedSemesterId)?.name ?? "Semester";
   const selectedSubjectName =
     subjects.find((s) => s._id === selectedSubjectId)?.name ?? "Subject";
+    
   const canUpload = !!(
     selectedYearId &&
     selectedSemesterId &&
-    selectedSubjectId
+    selectedSubjectId &&
+    selectedType
   );
 
   // ── Breadcrumb ────────────────────────────
@@ -127,26 +129,8 @@ export default function LectureManagementPage() {
         </>
       )}
 
-      {/* Type */}
+      {/* ✅ Subject (يأتي قبل Type الآن) */}
       {selectedSemesterId && (
-        <>
-          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
-          <button
-            onClick={() => navTo("type")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
-              step === "type"
-                ? "bg-[#2376BB]/10 text-[#2376BB]"
-                : "text-gray-400 hover:text-[#404293] hover:bg-[#404293]/5"
-            }`}
-          >
-            <Book className="w-4 h-4" />
-            {selectedType === "theoretical" ? "Theoretical" : "Practical"}
-          </button>
-        </>
-      )}
-
-      {/* Subject */}
-      {(step === "subject" || step === "lectures") && (
         <>
           <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
           <button
@@ -163,8 +147,26 @@ export default function LectureManagementPage() {
         </>
       )}
 
+      {/* ✅ Type (يأتي بعد Subject الآن) */}
+      {selectedSubjectId && (step === "type" || step === "lectures") && (
+        <>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+          <button
+            onClick={() => navTo("type")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
+              step === "type"
+                ? "bg-[#2376BB]/10 text-[#2376BB]"
+                : "text-gray-400 hover:text-[#404293] hover:bg-[#404293]/5"
+            }`}
+          >
+            <Book className="w-4 h-4" />
+            {selectedType === "theoretical" ? "Theoretical" : "Practical"}
+          </button>
+        </>
+      )}
+
       {/* Lectures */}
-      {selectedSubjectId && step === "lectures" && (
+      {selectedSubjectId && selectedType && step === "lectures" && (
         <>
           <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600">
@@ -185,14 +187,15 @@ export default function LectureManagementPage() {
         <div>
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
-              <BookOpen className="w-4.5 h-4.5 text-white" />
+              <BookOpen className="w-[18px] h-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black text-gray-900 tracking-tight">
               Lecture Management
             </h1>
           </div>
+          {/* ✅ تم تعديل النص */}
           <p className="text-sm text-gray-400 font-medium ml-0.5">
-            Navigate by year → semester → type → subject to manage lectures
+            Navigate by year → semester → subject → type to manage lectures
           </p>
         </div>
         <button
@@ -320,40 +323,7 @@ export default function LectureManagementPage() {
               </motion.div>
             )}
 
-            {/* ── STEP: type ──────────────────────── */}
-            {step === "type" && (
-              <motion.div
-                key="type"
-                initial={{ opacity: 0, x: 22 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -18 }}
-                transition={{ type: "tween", ease: "easeOut", duration: 0.22 }}
-              >
-                <div className="flex items-center gap-2.5 mb-6">
-                  <Book className="w-5 h-5 text-[#2376BB]" />
-                  <h2 className="text-lg font-bold text-gray-800">
-                    Select Type —{" "}
-                    <span className="text-[#33529F]">
-                      {selectedSemesterName}
-                    </span>
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
-                  {LECTURE_TYPES.map((typeOption) => (
-                    <button
-                      key={typeOption.value}
-                      onClick={() => selectType(typeOption.value)}
-                      className="group py-12 px-6 rounded-2xl border-2 border-gray-100 bg-gray-50 font-bold text-gray-700 flex flex-col items-center gap-4 hover:border-[#2376BB]/40 hover:bg-gradient-to-br hover:from-[#2376BB] hover:to-[#33529F] hover:text-white hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#2376BB]/20 transition-all duration-300"
-                    >
-                      <BookOpen className="w-12 h-12 text-gray-300 group-hover:text-white/80 transition-colors group-hover:scale-110 duration-300" />
-                      <span className="text-lg">{typeOption.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* ── STEP: subject ────────────────────── */}
+            {/* ── ✅ STEP: subject (تم تقديمه ليصبح قبل Type) ────────────────────── */}
             {step === "subject" && (
               <motion.div
                 key="sub"
@@ -366,11 +336,7 @@ export default function LectureManagementPage() {
                   <Book className="w-5 h-5 text-[#2376BB]" />
                   <h2 className="text-lg font-bold text-gray-800">
                     Select Subject —{" "}
-                    <span className="text-[#33529F]">
-                      {selectedType === "theoretical"
-                        ? "Theoretical"
-                        : "Practical"}
-                    </span>
+                    <span className="text-[#33529F]">{selectedSemesterName}</span>
                   </h2>
                 </div>
 
@@ -402,6 +368,37 @@ export default function LectureManagementPage() {
                     ))}
                   </div>
                 )}
+              </motion.div>
+            )}
+
+            {/* ── ✅ STEP: type (تم تأخيره ليصبح بعد Subject) ──────────────────────── */}
+            {step === "type" && (
+              <motion.div
+                key="type"
+                initial={{ opacity: 0, x: 22 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ type: "tween", ease: "easeOut", duration: 0.22 }}
+              >
+                <div className="flex items-center gap-2.5 mb-6">
+                  <Book className="w-5 h-5 text-[#2376BB]" />
+                  <h2 className="text-lg font-bold text-gray-800">
+                    Select Type —{" "}
+                    <span className="text-[#33529F]">{selectedSubjectName}</span>
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
+                  {LECTURE_TYPES.map((typeOption) => (
+                    <button
+                      key={typeOption.value}
+                      onClick={() => selectType(typeOption.value)}
+                      className="group py-12 px-6 rounded-2xl border-2 border-gray-100 bg-gray-50 font-bold text-gray-700 flex flex-col items-center gap-4 hover:border-[#2376BB]/40 hover:bg-gradient-to-br hover:from-[#2376BB] hover:to-[#33529F] hover:text-white hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#2376BB]/20 transition-all duration-300"
+                    >
+                      <BookOpen className="w-12 h-12 text-gray-300 group-hover:text-white/80 transition-colors group-hover:scale-110 duration-300" />
+                      <span className="text-lg">{typeOption.label}</span>
+                    </button>
+                  ))}
+                </div>
               </motion.div>
             )}
 

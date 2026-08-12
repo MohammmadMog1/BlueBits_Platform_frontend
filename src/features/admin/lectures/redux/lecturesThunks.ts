@@ -4,9 +4,10 @@ import {
   fetchLecturesByFilter,
   updateLecture,
   uploadLecture,
+  getLecture, // ✅ إضافة import
 } from "../api/lecturesService";
 import type {
-  Lecture,
+  LecturePopulated, // ✅ تغيير من Lecture
   LectureFilters,
   LectureUpdatePayload,
   LectureUploadPayload,
@@ -25,8 +26,9 @@ const formatError = (error: unknown): string => {
   return "تعذر إكمال الطلب.";
 };
 
+// ✅ تغيير نوع الـ return إلى LecturePopulated[]
 export const fetchLecturesThunk = createAsyncThunk<
-  Lecture[],
+  LecturePopulated[],
   LectureFilters,
   { rejectValue: string }
 >("lectures/fetch", async (filters, thunkAPI) => {
@@ -38,23 +40,29 @@ export const fetchLecturesThunk = createAsyncThunk<
   }
 });
 
+// ✅ تغيير نوع الـ return إلى LecturePopulated
 export const uploadLectureThunk = createAsyncThunk<
-  Lecture,
+  LecturePopulated,
   LectureUploadPayload,
   { rejectValue: string }
 >("lectures/upload", async (payload, thunkAPI) => {
   try {
+    // الـ API يرجع Lecture (غير populated)
     const lecture = await uploadLecture(payload, (progress) => {
       thunkAPI.dispatch(setUploadProgress(progress));
     });
-    return lecture;
+    
+    // ✅ نجلب المحاضرة الكاملة (populated) باستخدام الـ id
+    const fullLecture = await getLecture(lecture._id);
+    return fullLecture;
   } catch (error) {
     return thunkAPI.rejectWithValue(formatError(error));
   }
 });
 
+// ✅ تغيير نوع الـ return إلى LecturePopulated
 export const updateLectureThunk = createAsyncThunk<
-  Lecture,
+  LecturePopulated,
   LectureUpdatePayload,
   { rejectValue: string }
 >("lectures/update", async ({ id, data }, thunkAPI) => {
