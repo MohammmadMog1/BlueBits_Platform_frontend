@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
-import { useAuth } from "../../../features/auth/hooks/useAuth";
 
 interface SidebarProps {
   navItems: NavItem[];
