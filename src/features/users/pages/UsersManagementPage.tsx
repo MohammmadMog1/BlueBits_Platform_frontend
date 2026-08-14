@@ -49,7 +49,7 @@ export default function UsersManagementPage() {
 
   const stats = [
     { label: "إجمالي المستخدمين", value: users.length, color: "#404293" },
-    { label: "STUDENT", value: users.filter((user) => user.role === "STUDENT").length, color: "#2376BB" },
+    { label: "USER", value: users.filter((user) => user.role === "USER").length, color: "#2376BB" },
     { label: "DOCTOR", value: users.filter((user) => user.role === "DOCTOR").length, color: "#7c3aed" },
     { label: "مُوثّقون", value: users.filter((user) => user.isVerified !== false).length, color: "#059669" },
   ];

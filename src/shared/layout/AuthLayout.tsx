@@ -15,7 +15,7 @@ const AuthLayout = () => {
       <div className="relative z-10 flex min-h-[100dvh] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         
         {/* الكارد الأبيض الفاخر مع حواف ناعمة وظلال خفيفة مستوحاة من نمط التصميم الحديث للفريق */}
-        <div className="w-full max-w-6xl rounded-[2rem] border border-white/60 bg-white/70 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl sm:p-8 lg:p-10">
+        <div className="w-full max-w-6xl rounded-3xl border border-white/60 bg-white/70 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl sm:rounded-4xl sm:p-8 lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
             
             {/* القسم الجانبي الترحيبي (يظهر على الشاشات الكبيرة) */}
@@ -48,15 +48,15 @@ const AuthLayout = () => {
             </div>
 
             {/* قسم الفورم الديناميكي (Outlet) */}
-            <div className="flex w-full justify-center px-2">
+            <div className="flex w-full justify-center px-0 sm:px-2">
               <div className="w-full max-w-md">
                 {/* اللوغو للشاشات الصغيرة فقط */}
                 <div className="mb-6 flex items-center justify-center lg:hidden">
                   <img src={logo} alt="BlueBits logo" className="h-16 w-auto object-contain" />
                 </div>
-                
+
                 {/* هنا يتم عرض محتوى صفحة تسجيل الدخول أو الإنشاء */}
-                <div className="bg-white/40 p-2 lg:p-0 rounded-2xl">
+                <div className="bg-white/40 p-0 sm:p-2 lg:p-0 rounded-2xl">
                   <Outlet />
                 </div>
               </div>

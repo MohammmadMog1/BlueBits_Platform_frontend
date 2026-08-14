@@ -1,0 +1,77 @@
+// src/features/profile/api/profileApi.ts
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { RootState } from "../../../app/store/store";
+import type {
+  User,
+  ApiResponse,
+  UpdateMePayload,
+  UpdateImagePayload,
+  ActiveMePayload,
+  AcademicYear,
+} from "../types/profile.types";
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: import.meta.env.VITE_API_URL,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.token;
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    return headers;
+  },
+});
+
+export const profileApi = createApi({
+  reducerPath: "profileApi",
+  baseQuery,
+  tagTypes: ["Profile"],
+  endpoints: (builder) => ({
+    getMe: builder.query<User, void>({
+      query: () => "/users/me",
+      transformResponse: (res: ApiResponse<User>) => res.data,
+      providesTags: ["Profile"],
+    }),
+
+    getUserById: builder.query<User, string>({
+      query: (id) => `/users/${id}`,
+      transformResponse: (res: ApiResponse<User>) => res.data,
+      providesTags: (result) => [{ type: "Profile", id: result?._id }],
+    }),
+
+    updateMe: builder.mutation<User, UpdateMePayload>({
+      // ⚠️ غيّرها PUT/POST إذا كان الـ backend مختلف
+      query: (body) => ({ url: "/users/updateMe", method: "PATCH", body }),
+      transformResponse: (res: ApiResponse<User>) => res.data,
+      invalidatesTags: ["Profile"],
+    }),
+
+    updateMeAndUpload: builder.mutation<User, UpdateImagePayload>({
+      query: (body) => ({ url: "/users/updateMeAndUpload", method: "PATCH", body }),
+      transformResponse: (res: ApiResponse<User>) => res.data,
+      invalidatesTags: ["Profile"],
+    }),
+
+    activeMe: builder.mutation<{ status: string }, ActiveMePayload>({
+      query: (body) => ({ url: "/users/activeMe", method: "PATCH", body }),
+    }),
+
+    deleteMe: builder.mutation<{ status: string }, void>({
+      query: () => ({ url: "/users/deleteMe", method: "DELETE" }),
+    }),
+
+    /** لسنوات الدراسة (لليوزر الطالب) — نفس مسار الـ academicApi عندك */
+    getYears: builder.query<AcademicYear[], void>({
+      query: () => "/academic/years", // ⚠️ طابق المسار مع academicApi
+      transformResponse: (res: any) =>
+        Array.isArray(res) ? res : res?.data ?? [],
+    }),
+  }),
+});
+
+export const {
+  useGetMeQuery,
+  useGetUserByIdQuery,
+  useUpdateMeMutation,
+  useUpdateMeAndUploadMutation,
+  useActiveMeMutation,
+  useDeleteMeMutation,
+  useGetYearsQuery,
+} = profileApi;

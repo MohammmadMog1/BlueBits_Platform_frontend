@@ -53,9 +53,9 @@ const handleForgotPassword = () => {
     navigate("/forget-password");
   };
   return (
-    <div className="w-full rounded-[1.75rem] border border-white/30 bg-white/95 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
+    <div className="w-full rounded-[1.75rem] border border-white/30 bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
       <div className="mb-8 text-center">
-        <h2 className="mb-2 text-3xl font-bold text-slate-900">Welcome Back</h2>
+        <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl">Welcome Back</h2>
         <p className="text-sm text-slate-600">
           Login to your account to continue
         </p>
@@ -65,14 +65,14 @@ const handleForgotPassword = () => {
         <div>
           <div className="relative">
             <Mail
-              className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${errors.email ? "text-red-400" : "text-gray-500"}`}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors sm:left-5 ${errors.email ? "text-red-400" : "text-gray-500"}`}
             />
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email Address"
-              className={`w-full border ${errors.email ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-14 pr-5 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all`}
+              className={`w-full border ${errors.email ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all sm:pl-14 sm:pr-5`}
             />
           </div>
           {errors.email && (
@@ -85,19 +85,19 @@ const handleForgotPassword = () => {
         <div>
           <div className="relative">
             <Lock
-              className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${errors.password ? "text-red-400" : "text-gray-500"}`}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors sm:left-5 ${errors.password ? "text-red-400" : "text-gray-500"}`}
             />
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`w-full border ${errors.password ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-14 pr-14 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all`}
+              className={`w-full border ${errors.password ? "border-red-400/60 bg-red-50 focus:ring-red-500" : "border-slate-200 bg-slate-50 focus:ring-[#404293]"} rounded-2xl py-4 pl-11 pr-11 text-slate-900 placeholder:text-slate-400 focus:border-transparent focus:outline-none focus:ring-2 transition-all sm:pl-14 sm:pr-14`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700 sm:right-5"
             >
               {showPassword ? (
                 <EyeOff className="w-5 h-5" />

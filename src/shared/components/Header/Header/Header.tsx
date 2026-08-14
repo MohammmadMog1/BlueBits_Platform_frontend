@@ -8,7 +8,13 @@ import  type { UserProfile } from "../../../layout/MainLayout/MainLayout";
 // import type { UserProfile } from "../../layout/MainLayout/MainLayout";
 
 
-export default function Header({ userProfile }: { userProfile: UserProfile }) {
+interface HeaderProps {
+  userProfile: UserProfile;
+  onOpenProfile?: () => void;
+  isProfileOpen?: boolean;
+}
+
+export default function Header({ userProfile, onOpenProfile, isProfileOpen }: HeaderProps) {
   const [notifications, setNotifications] = useState(3);
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
@@ -91,11 +97,18 @@ export default function Header({ userProfile }: { userProfile: UserProfile }) {
           )}
         </button>
 
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center cursor-pointer shadow-md flex-shrink-0">
+        <button
+          onClick={onOpenProfile}
+          aria-label="Open profile"
+          aria-pressed={isProfileOpen}
+          className={`w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md flex-shrink-0 ring-2 transition-all hover:scale-105 ${
+            isProfileOpen ? "ring-[#404293]/40" : "ring-transparent hover:ring-[#404293]/30"
+          }`}
+        >
           <span className="text-white text-xs font-bold">
             {userProfile.initials}
           </span>
-        </div>
+        </button>
       </div>
     </header>
   );

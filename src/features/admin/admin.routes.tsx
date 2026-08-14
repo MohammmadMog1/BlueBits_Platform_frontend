@@ -25,6 +25,7 @@ import { AcademicPage } from "./academic";
 import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
 import { LectureManagementPage } from "./lectures";
 
+
 export const adminRoutes: RouteObject[] = [
   {
     index: true, // هذا يعني /admin/
@@ -46,6 +47,5 @@ export const adminRoutes: RouteObject[] = [
     path: "lectures",
     element: <LectureManagementPage />,
   },
-
   // أضف باقي صفحات الأدمن هنا
 ];

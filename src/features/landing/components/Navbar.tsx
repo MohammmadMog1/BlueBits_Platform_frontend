@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 // ✅ 1. استيراد Redux
 import { useAppSelector, useAppDispatch } from "../../auth/redux/hooks";
 import { logoutThunk } from "../../auth/redux/authThunk";
+import { getProfileImageUrl } from "../../../shared/utils/user";
+import ProfileDrawer from "../../profile/components/ProfileDrawer";
 
 interface NavbarProps {
   scrolled: boolean;
@@ -28,6 +30,8 @@ export function Navbar({
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [avatarImageFailed, setAvatarImageFailed] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,12 +53,14 @@ export function Navbar({
   };
 
   const getAvatarContent = () => {
-    if (user?.profile_image && user.profile_image !== "default.jpg") {
+    const avatarUrl = avatarImageFailed ? null : getProfileImageUrl(user?.profile_image);
+    if (avatarUrl) {
       return (
         <img
-          src={user.profile_image}
-          alt={user.name}
+          src={avatarUrl}
+          alt={user?.name}
           className="w-full h-full object-cover rounded-full"
+          onError={() => setAvatarImageFailed(true)}
         />
       );
     }
@@ -66,13 +72,14 @@ export function Navbar({
   };
 
   return (
+    <>
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${
         scrolled
           ? isDark
-            ? "bg-[#08090d]/90  border-white/10 shadow-2xl backdrop-blur-xl"
-            : "bg-white/90  border-slate-200 shadow-lg backdrop-blur-xl"
-          : "bg-transparent"
+            ? "bg-[#08090d]/90 border-white/10 shadow-2xl backdrop-blur-xl"
+            : "bg-white/90 border-slate-200 shadow-lg backdrop-blur-xl"
+          : "bg-transparent border-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between h-16 sm:h-20">
@@ -132,7 +139,7 @@ export function Navbar({
           {/* ✅ زر الداشبورد بجانب زر المحاضرات (فقط عند تسجيل الدخول) */}
           {isAuthenticated && user && (
             <button
-              onClick={() => navigate("user")}
+              onClick={() => navigate("/user")}
               className={`hidden md:flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-300 ${
                 isDark
                   ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] hover:from-[#404293]/30 hover:to-[#2376BB]/30 border border-[#404293]/30"
@@ -204,7 +211,7 @@ export function Navbar({
                   <div className="py-2">
                     <button
                       onClick={() => {
-                        navigate("/profile");
+                        setIsProfileOpen(true);
                         setProfileDropdownOpen(false);
                       }}
                       className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
@@ -251,7 +258,7 @@ export function Navbar({
             /* ✅ Not Authenticated - Login/Register Buttons */
             <div className="hidden md:flex items-center gap-3">
               <button
-                onClick={() => navigate("auth/login")}
+                onClick={() => navigate("/auth/login")}
                 className={`text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-300 ${
                   isDark
                     ? "text-gray-300 hover:bg-white/5 border border-white/10"
@@ -261,7 +268,7 @@ export function Navbar({
                 Login
               </button>
               <button
-                onClick={() => navigate("auth/register")}
+                onClick={() => navigate("/auth/register")}
                 className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg shadow-[#404293]/30 hover:shadow-xl hover:shadow-[#404293]/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
               >
                 Get Started
@@ -294,7 +301,6 @@ export function Navbar({
           {[
             ["Features", "#features"],
             ["About", "#about"],
-            ["Team", "#team"],
           ].map(([l, h]) => (
             <a
               key={l}
@@ -378,7 +384,7 @@ export function Navbar({
             <div className="pt-2 flex gap-3">
               <button
                 onClick={() => {
-                  navigate("auth/login");
+                  navigate("/auth/login");
                   setMobileMenuOpen(false);
                 }}
                 className={`flex-1 text-sm font-bold py-2.5 rounded-xl transition-all ${
@@ -391,7 +397,7 @@ export function Navbar({
               </button>
               <button
                 onClick={() => {
-                  navigate("auth/register");
+                  navigate("/auth/register");
                   setMobileMenuOpen(false);
                 }}
                 className="flex-1 text-sm font-bold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg active:scale-[0.98] transition-all"
@@ -403,5 +409,7 @@ export function Navbar({
         </div>
       )}
     </nav>
+    <ProfileDrawer open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+    </>
   );
 }

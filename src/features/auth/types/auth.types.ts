@@ -1,6 +1,6 @@
 // ===== ENUMS =====
 export type UserRole =
-  | "STUDENT"
+  | "USER"
   | "LECTURER"
   | "BLUE"
   | "ADMIN"

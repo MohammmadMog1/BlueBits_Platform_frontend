@@ -1,5 +1,5 @@
 export type UserRole =
-  | "STUDENT"
+  | "USER"
   | "DOCTOR"
   | "LECTURER"
   | "BLUE"
@@ -38,7 +38,7 @@ export interface UsersStatsItem {
 }
 
 export const USER_ROLES: UserRole[] = [
-  "STUDENT",
+  "USER",
   "DOCTOR",
   "LECTURER",
   "BLUE",
@@ -47,7 +47,7 @@ export const USER_ROLES: UserRole[] = [
 ];
 
 export const ROLE_COLORS: Record<UserRole, string> = {
-  STUDENT: "bg-slate-100 text-slate-700",
+  USER: "bg-slate-100 text-slate-700",
   DOCTOR: "bg-violet-100 text-violet-700",
   LECTURER: "bg-indigo-100 text-indigo-700",
   BLUE: "bg-cyan-100 text-cyan-700",

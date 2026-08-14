@@ -1,4 +1,5 @@
 import { Shield, ArrowUpRight } from "lucide-react";
+import { motion } from "motion/react";
 import { TabLabel, PageCorner } from "./shared/VisualHelpers";
 
 interface Feature {
@@ -25,7 +26,13 @@ export function Features({
   return (
     <section id="features" className="relative py-20 sm:py-32 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
-        <div className="mb-12 sm:mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12 sm:mb-20"
+        >
           <TabLabel className="mb-4 sm:mb-6">
             <Shield className="w-3 h-3" />
             Platform Features
@@ -42,13 +49,17 @@ export function Features({
             From interactive lectures to AI-powered tutoring, BlueBits gives you
             the complete academic toolkit.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-          {features.map((f) => (
-            <div
+          {features.map((f, idx) => (
+            <motion.div
               key={f.title}
               onClick={() => handleFeatureClick(f)}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: (idx % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
               className={`relative group p-6 sm:p-8 rounded-3xl border transition-all duration-300 hover:-translate-y-2 overflow-hidden cursor-pointer active:scale-[0.98] ${
                 isDark
                   ? "bg-[#151720]/80 backdrop-blur-md border-white/5 hover:bg-[#181a26] hover:border-[#404293]/40 hover:shadow-xl hover:shadow-[#404293]/5"
@@ -102,7 +113,7 @@ export function Features({
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </div>
               <PageCorner num={f.num} />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

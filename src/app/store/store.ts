@@ -15,6 +15,8 @@ import { usersApi } from "../../features/users/api/usersApiSlice";
 import { academicApi } from "../../features/admin/academic/api/academicApi";
 import { subjectsApi } from "../../features/admin/subjects/api/subjectsApi";
 import lecturesReducer from "../../features/admin/lectures/redux/lecturesSlice";
+// ✨ جديد: إضافة profileApi
+import { profileApi } from "../../features/profile/api/profileApi";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -36,11 +38,13 @@ const rootReducer = combineReducers({
   [usersApi.reducerPath]: usersApi.reducer,
   [academicApi.reducerPath]: academicApi.reducer,
   [subjectsApi.reducerPath]: subjectsApi.reducer,
+  // ✨ جديد: تسجيل reducer الخاص بـ profileApi
+  [profileApi.reducerPath]: profileApi.reducer,
 });
 
 const persistConfig = {
   key: "root",
-  storage: customStorage, // ✅ استخدام الـ customStorage بدلاً من الاستيراد القديم
+  storage: customStorage,
   whitelist: ["auth"],
 };
 
@@ -57,6 +61,8 @@ export const store = configureStore({
       usersApi.middleware,
       academicApi.middleware,
       subjectsApi.middleware,
+      // ✨ جديد: تسجيل middleware الخاص بـ profileApi
+      profileApi.middleware,
     ),
 });
 
