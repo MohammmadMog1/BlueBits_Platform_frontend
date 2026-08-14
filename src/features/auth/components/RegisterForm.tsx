@@ -75,7 +75,7 @@ export default function RegisterForm({ onNavigate }: Props) {
     try {
       await register({ name, email, password });
       if (onNavigate) onNavigate("verify");
-      else navigate("verify");
+      else navigate("/verify");
     } catch (err) {
       console.error("Registration failed:", err);
     }
@@ -87,8 +87,8 @@ export default function RegisterForm({ onNavigate }: Props) {
   };
 
   return (
-    <div className="w-full rounded-[1.75rem] border border-white/30 bg-white/95 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
-      <div className="mb-8 text-center">
+    <div className="w-full rounded-3xl border border-white/30 bg-white/95 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl sm:rounded-[1.75rem] sm:p-10">
+      <div className="mb-6 text-center sm:mb-8">
         <h2 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl">
           Create Account
         </h2>
@@ -216,13 +216,13 @@ export default function RegisterForm({ onNavigate }: Props) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-lg rounded-2xl py-5 flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all shadow-lg shadow-[#404293]/25 mt-6 disabled:opacity-70 disabled:hover:scale-100"
+          className="w-full bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-base sm:text-lg rounded-2xl py-4 sm:py-5 flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.02] transition-all shadow-lg shadow-[#404293]/25 mt-6 disabled:opacity-70 disabled:hover:scale-100"
         >
           {isLoading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
 
-      <div className="mt-8 text-center text-sm text-slate-400">
+      <div className="mt-6 sm:mt-8 text-center text-sm text-slate-400">
         Already have an account?{" "}
         <button
           onClick={goToLogin}

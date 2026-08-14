@@ -27,7 +27,7 @@ export default function DangerZoneCard() {
     try {
       await deleteMe().unwrap();
       dispatch(logout());
-      navigate("/login");
+      navigate("/auth/login");
     } catch {
       // ⚠️ اعرض toast خطأ حسب نظامك
     } finally {

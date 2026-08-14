@@ -100,7 +100,7 @@ export const ForgetPasswordPage = () => {
           {/* Back */}
           <div className="mt-8 flex justify-center">
             <Link
-              to="/login"
+              to="/auth/login"
               className="flex items-center gap-2 text-gray-500 hover:text-[#404293] transition"
             >
               <ArrowLeft className="w-4 h-4" />

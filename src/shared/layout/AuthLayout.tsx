@@ -12,10 +12,10 @@ const AuthLayout = () => {
       <div className="absolute bottom-[-10%] right-[-5%] h-96 w-96 rounded-full bg-[#1da1f2]/10 blur-3xl" />
 
       {/* الحاوية الرئيسية المتمركزة */}
-      <div className="relative z-10 flex min-h-[100dvh] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-        
-        {/* الكارد الأبيض الفاخر مع حواف ناعمة وظلال خفيفة مستوحاة من نمط التصميم الحديث للفريق */}
-        <div className="w-full max-w-6xl rounded-3xl border border-white/60 bg-white/70 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl sm:rounded-4xl sm:p-8 lg:p-10">
+      <div className="relative z-10 flex min-h-[100dvh] items-center justify-center px-5 py-6 sm:px-6 sm:py-8 lg:px-8">
+
+        {/* الكارد الأبيض الفاخر: بدون تأطير مزدوج على الموبايل (كارد الفورم نفسه هو الكارد الوحيد الظاهر)، ويعود التصميم الفاخر بحوافه وظله من sm فما فوق */}
+        <div className="w-full max-w-6xl rounded-none border-0 bg-transparent p-0 shadow-none sm:rounded-4xl sm:border sm:border-white/60 sm:bg-white/70 sm:p-8 sm:shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:backdrop-blur-xl lg:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
             
             {/* القسم الجانبي الترحيبي (يظهر على الشاشات الكبيرة) */}
@@ -51,12 +51,12 @@ const AuthLayout = () => {
             <div className="flex w-full justify-center px-0 sm:px-2">
               <div className="w-full max-w-md">
                 {/* اللوغو للشاشات الصغيرة فقط */}
-                <div className="mb-6 flex items-center justify-center lg:hidden">
-                  <img src={logo} alt="BlueBits logo" className="h-16 w-auto object-contain" />
+                <div className="mb-5 flex items-center justify-center sm:mb-6 lg:hidden">
+                  <img src={logo} alt="BlueBits logo" className="h-14 w-auto object-contain sm:h-16" />
                 </div>
 
                 {/* هنا يتم عرض محتوى صفحة تسجيل الدخول أو الإنشاء */}
-                <div className="bg-white/40 p-0 sm:p-2 lg:p-0 rounded-2xl">
+                <div className="bg-transparent p-0 sm:bg-white/40 sm:p-2 lg:bg-transparent lg:p-0 rounded-2xl">
                   <Outlet />
                 </div>
               </div>

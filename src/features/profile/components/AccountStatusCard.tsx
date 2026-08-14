@@ -18,7 +18,7 @@ export default function AccountStatusCard() {
     try {
       await activeMe({ active: "false" }).unwrap();
       dispatch(logout()); // تسجيل خروج فوري بعد التعطيل
-      navigate("/login");
+      navigate("/auth/login");
     } catch {
       // ⚠️ اعرض toast خطأ حسب نظامك
     } finally {

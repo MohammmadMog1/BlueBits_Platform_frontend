@@ -55,7 +55,7 @@ export function CTA({ navigate }: CTAProps) {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate("/auth/register")}
             className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-12 py-3.5 sm:py-4 rounded-2xl bg-white font-bold shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300"
             style={{ color: "#404293", fontSize: "0.95rem" }}
           >
@@ -63,7 +63,7 @@ export function CTA({ navigate }: CTAProps) {
             <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => navigate("/app/lectures")}
+            onClick={() => navigate("/user/lectures")}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl border-2 border-white/20 text-white font-bold backdrop-blur-sm hover:bg-white/10 hover:border-white/40 active:scale-[0.97] transition-all duration-300"
             style={{ fontSize: "0.95rem" }}
           >

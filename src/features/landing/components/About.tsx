@@ -122,7 +122,7 @@ export function About({ isDark, navigate }: AboutProps) {
               ))}
             </div>
             <button
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/auth/register")}
               className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-lg shadow-[#404293]/20 hover:shadow-xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all text-sm duration-300"
             >
               Join BlueBits <ChevronRight className="w-4 h-4" />

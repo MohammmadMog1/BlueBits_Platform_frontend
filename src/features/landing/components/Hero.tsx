@@ -103,7 +103,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6"
           >
             <button
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/auth/register")}
               className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-xl shadow-[#404293]/20 hover:shadow-[#404293]/35 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300"
               style={{ fontSize: "0.95rem" }}
             >
@@ -112,7 +112,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             </button>
 
             <button
-              onClick={() => navigate("/app/lectures")}
+              onClick={() => navigate("/user/lectures")}
               className={`w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-bold border-2 active:scale-[0.98] transition-all duration-300 ${
                 isDark
                   ? "border-[#404293]/40 text-[#9fa8e8] hover:border-[#404293] hover:bg-[#404293]/10"
