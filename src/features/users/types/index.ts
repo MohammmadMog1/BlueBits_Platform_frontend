@@ -12,10 +12,6 @@ export interface User {
   email: string;
   role: UserRole;
   isVerified: boolean;
-  yearId?: string | { _id: string; name: string; order?: number } | null;
-  profile_image?: string;
-  profile_image_publicId?: string | null;
-  isBanned?: boolean;
   createdAt: string;
   updatedAt: string;
   yearId?: string | null;
