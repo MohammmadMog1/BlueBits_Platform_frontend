@@ -40,6 +40,7 @@ export default function UserLayout() {
         roleLabel: getRoleLabel(userFromStore.role),
         role: userFromStore.role, // ✨ أضفنا الدور الخام
         initials: getUserInitials(userFromStore.name),
+        profile_image: userFromStore.profile_image,
       }
     : { name: "Guest", roleLabel: "Guest", role: "GUEST", initials: "G" };
 

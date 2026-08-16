@@ -17,6 +17,7 @@ export interface UserProfile {
   roleLabel: string; // للعرض فقط (Student, Admin, etc.)
   role: string;      // ✨ جديد: الدور الخام للمقارنة (USER, ADMIN, SUPER_ADMIN)
   initials: string;
+  profile_image?: string;
 }
 
 interface MainLayoutProps {

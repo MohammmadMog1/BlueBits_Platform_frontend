@@ -1,7 +1,8 @@
 // src/features/profile/components/EditProfileForm.tsx
 import { useEffect, useState } from "react";
 import { Loader2, Save, UserRound, GraduationCap, CheckCircle2 } from "lucide-react";
-import { useUpdateMeMutation, useGetYearsQuery } from "../api/profileApi";
+import { useUpdateMeMutation } from "../api/profileApi";
+import { useGetYearsQuery } from "../../admin/academic/api/academicApi";
 import type { User } from "../types/profile.types";
 
 interface Props {
@@ -15,8 +16,7 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
   const [saved, setSaved] = useState(false);
   const [updateMe, { isLoading }] = useUpdateMeMutation();
 
-  const isStudent = user.role === "USER";
-  const { data: years } = useGetYearsQuery(undefined, { skip: !isStudent });
+  const { data: years } = useGetYearsQuery();
 
   useEffect(() => {
     setName(user.name);
@@ -32,7 +32,7 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
     try {
       const updated = await updateMe({
         name: name.trim(),
-        ...(isStudent && yearId ? { yearId } : {}),
+        ...(yearId ? { yearId } : {}),
       }).unwrap();
       onUpdated(updated);
       setSaved(true);
@@ -64,8 +64,8 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
           />
         </div>
 
-        {/* Year (للطلاب فقط) */}
-        {isStudent && years && years.length > 0 && (
+        {/* Year */}
+        {years && years.length > 0 && (
           <div>
             <label className="flex items-center gap-1.5 text-[12px] font-semibold text-gray-600 mb-1.5">
               <GraduationCap className="w-3.5 h-3.5" /> Academic Year

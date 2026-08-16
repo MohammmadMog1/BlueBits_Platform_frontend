@@ -5,7 +5,13 @@ import CreateUserModal from "../components/CreateUserModal";
 import UsersFilter from "../components/UsersFilter";
 import UsersStats from "../components/UsersStats";
 import UsersTable from "../components/UsersTable";
-import { useDeleteUserMutation, useGetUsersQuery, useUpdateUserRoleMutation } from "../api/usersApiSlice";
+import {
+  useDeleteUserMutation,
+  useGetUsersByYearQuery,
+  useGetUsersQuery,
+  useUpdateUserRoleMutation,
+} from "../api/usersApiSlice";
+import { useGetYearsQuery } from "../../admin/academic/api/academicApi";
 import type { User } from "../types";
 
 const toastDuration = 3000;
@@ -13,11 +19,32 @@ const toastDuration = 3000;
 export default function UsersManagementPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
+  const [yearFilter, setYearFilter] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
-  const { data: users = [], isLoading, refetch, error } = useGetUsersQuery();
+  const { data: years = [] } = useGetYearsQuery();
+
+  const {
+    data: allUsers = [],
+    isLoading: isLoadingAllUsers,
+    refetch: refetchAllUsers,
+    error: allUsersError,
+  } = useGetUsersQuery(undefined, { skip: !!yearFilter });
+
+  const {
+    data: usersByYear = [],
+    isLoading: isLoadingUsersByYear,
+    refetch: refetchUsersByYear,
+    error: usersByYearError,
+  } = useGetUsersByYearQuery(yearFilter, { skip: !yearFilter });
+
+  const users = yearFilter ? usersByYear : allUsers;
+  const isLoading = yearFilter ? isLoadingUsersByYear : isLoadingAllUsers;
+  const error = yearFilter ? usersByYearError : allUsersError;
+  const refetch = yearFilter ? refetchUsersByYear : refetchAllUsers;
+
   const [updateUserRole] = useUpdateUserRoleMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
@@ -90,9 +117,12 @@ export default function UsersManagementPage() {
       <UsersFilter
         search={search}
         roleFilter={roleFilter}
+        yearFilter={yearFilter}
+        years={years}
         onSearchChange={setSearch}
         onRoleChange={setRoleFilter}
-        onClearFilter={() => setRoleFilter("")}
+        onYearChange={setYearFilter}
+        onClearFilter={() => setSearch("")}
       />
 
       {error ? (

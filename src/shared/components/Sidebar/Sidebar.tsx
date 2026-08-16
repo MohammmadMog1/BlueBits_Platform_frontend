@@ -1,11 +1,12 @@
 // src/shared/components/Sidebar/Sidebar.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
 import { useContextSwitch } from "../../hooks/useContextSwitch";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
+import { getProfileImageUrl } from "../../utils/user";
 
 interface SidebarProps {
   navItems: NavItem[];
@@ -22,6 +23,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
@@ -38,6 +40,12 @@ export default function Sidebar({
     await logout();
     navigate("/");
   };
+
+  useEffect(() => {
+    setAvatarImageFailed(false);
+  }, [userProfile.profile_image]);
+
+  const avatarUrl = avatarImageFailed ? null : getProfileImageUrl(userProfile.profile_image);
 
   // زر التبديل بين لوحة الإدارة وتطبيق المستخدم (مشترك مع BottomBar عبر useContextSwitch)
   const backButton = useContextSwitch(userProfile.role);
@@ -157,10 +165,19 @@ export default function Sidebar({
               isProfileOpen ? "" : isDark ? "hover:bg-white/8" : "hover:bg-[#404293]/6"
             } ${collapsed ? "justify-center" : ""}`}
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-sm font-bold">
-                {userProfile.initials}
-              </span>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={userProfile.name}
+                  className="w-full h-full object-cover"
+                  onError={() => setAvatarImageFailed(true)}
+                />
+              ) : (
+                <span className="text-white text-sm font-bold">
+                  {userProfile.initials}
+                </span>
+              )}
             </div>
             {!collapsed && (
               <div className="ml-3 flex-1 min-w-0 text-left">

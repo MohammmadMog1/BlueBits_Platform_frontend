@@ -1,9 +1,12 @@
 import {
   BookMarked,
+  ClipboardList,
   GraduationCap,
   LayoutDashboard,
+  Megaphone,
   Users,
   FileText,
+  Sparkles,
 } from "lucide-react";
 import type { NavItem } from "../../shared/layout/MainLayout/MainLayout";
 
@@ -13,4 +16,7 @@ export const adminNavItems: NavItem[] = [
   { icon: GraduationCap, label: "Academic Structure", path: "/admin/academic" },
   { icon: BookMarked, label: "Manage Subjects", path: "/admin/subjects" },
   { icon: FileText, label: "Manage Lectures", path: "/admin/lectures" },
+  { icon: ClipboardList, label: "Academic Tasks", path: "/admin/academic-tasks" },
+  { icon: Megaphone, label: "Announcements", path: "/admin/announcements" },
+  { icon: Sparkles, label: "AI Assistant", path: "/admin/assistant" },
 ];

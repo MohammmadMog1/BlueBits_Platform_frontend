@@ -14,6 +14,10 @@ export interface User {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
+  yearId?: string | null;
+  year?: string;
+  profile_image?: string;
+  profile_image_publicId?: string | null;
 }
 
 export interface CreateUserPayload {

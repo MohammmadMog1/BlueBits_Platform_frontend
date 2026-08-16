@@ -5,9 +5,7 @@ import type {
   User,
   ApiResponse,
   UpdateMePayload,
-  UpdateImagePayload,
   ActiveMePayload,
-  AcademicYear,
 } from "../types/profile.types";
 
 const baseQuery = fetchBaseQuery({
@@ -43,8 +41,8 @@ export const profileApi = createApi({
       invalidatesTags: ["Profile"],
     }),
 
-    updateMeAndUpload: builder.mutation<User, UpdateImagePayload>({
-      query: (body) => ({ url: "/users/updateMeAndUpload", method: "PATCH", body }),
+    updateMeAndUpload: builder.mutation<User, FormData>({
+      query: (formData) => ({ url: "/users/updateMeAndUpload", method: "PATCH", body: formData }),
       transformResponse: (res: ApiResponse<User>) => res.data,
       invalidatesTags: ["Profile"],
     }),
@@ -56,13 +54,6 @@ export const profileApi = createApi({
     deleteMe: builder.mutation<{ status: string }, void>({
       query: () => ({ url: "/users/deleteMe", method: "DELETE" }),
     }),
-
-    /** لسنوات الدراسة (لليوزر الطالب) — نفس مسار الـ academicApi عندك */
-    getYears: builder.query<AcademicYear[], void>({
-      query: () => "/academic/years", // ⚠️ طابق المسار مع academicApi
-      transformResponse: (res: any) =>
-        Array.isArray(res) ? res : res?.data ?? [],
-    }),
   }),
 });
 
@@ -73,5 +64,4 @@ export const {
   useUpdateMeAndUploadMutation,
   useActiveMeMutation,
   useDeleteMeMutation,
-  useGetYearsQuery,
 } = profileApi;

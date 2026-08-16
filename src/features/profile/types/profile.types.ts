@@ -13,6 +13,7 @@ export interface User {
   email: string;
   role: UserRole;
   profile_image: string;
+  profile_image_publicId?: string | null;
   isVerified: boolean;
   isBanned: boolean;
   createdAt: string;
@@ -30,10 +31,6 @@ export interface ApiResponse<T> {
 export interface UpdateMePayload {
   name?: string;
   yearId?: string;
-}
-
-export interface UpdateImagePayload {
-  profile_image: string;
 }
 
 export interface ActiveMePayload {

@@ -40,6 +40,22 @@ export const usersApi = createApi({
             ]
           : [{ type: "Users", id: "LIST" }],
     }),
+    getUsersByYear: builder.query<User[], string>({
+      query: (yearId) => `/users/year/${yearId}`,
+      transformResponse: (response: UsersResponse | User[]) => {
+        return (response as UsersResponse).data ?? (response as User[]);
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((user) => ({
+                type: "Users" as const,
+                id: user._id,
+              })),
+              { type: "Users", id: "LIST" },
+            ]
+          : [{ type: "Users", id: "LIST" }],
+    }),
     createUser: builder.mutation<User, CreateUserPayload>({
       query: (body) => ({
         url: "/users",
@@ -80,6 +96,7 @@ export const usersApi = createApi({
 
 export const {
   useGetUsersQuery,
+  useGetUsersByYearQuery,
   useCreateUserMutation,
   useUpdateUserRoleMutation,
   useDeleteUserMutation,

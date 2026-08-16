@@ -353,15 +353,21 @@ export function Navbar({
           {isAuthenticated && user ? (
             <>
               {/* User Profile Card */}
-              <div
-                className={`flex items-center gap-3 p-3 rounded-xl ${
-                  isDark ? "bg-white/5 border border-white/10" : "bg-slate-50 border border-slate-200"
+              <button
+                onClick={() => {
+                  setIsProfileOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                  isDark
+                    ? "bg-white/5 border border-white/10 hover:bg-white/10"
+                    : "bg-slate-50 border border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg overflow-hidden">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
                   {getAvatarContent()}
                 </div>
-                <div className="flex flex-col overflow-hidden flex-1">
+                <div className="flex flex-col overflow-hidden flex-1 text-left">
                   <span className={`text-sm font-bold truncate ${isDark ? "text-white" : "text-gray-800"}`}>
                     {user.name || user.email}
                   </span>
@@ -369,7 +375,7 @@ export function Navbar({
                     {user.email}
                   </span>
                 </div>
-              </div>
+              </button>
 
               <button
                 onClick={handleLogout}

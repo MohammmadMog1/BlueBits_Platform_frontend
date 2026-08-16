@@ -13,7 +13,7 @@ interface Props {
 export default function ProfileImageUploader({ user, onUpdated }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageFailed, setImageFailed] = useState(false);
   const [updateImage, { isLoading }] = useUpdateMeAndUploadMutation();
 
@@ -27,20 +27,22 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
     const file = e.target.files?.[0];
     if (!file || !file.type.startsWith("image/")) return;
     setPreview(URL.createObjectURL(file));
-    setFileName(file.name);
+    setSelectedFile(file);
     e.target.value = ""; // للسماح باختيار نفس الصورة مجدداً
   };
 
   const cancelPreview = () => {
     if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
-    setFileName(null);
+    setSelectedFile(null);
   };
 
   const handleSave = async () => {
-    if (!fileName) return;
+    if (!selectedFile) return;
     try {
-      const updated = await updateImage({ profile_image: fileName }).unwrap();
+      const formData = new FormData();
+      formData.append("profile_image", selectedFile);
+      const updated = await updateImage(formData).unwrap();
       onUpdated(updated);
     } catch {
       // ⚠️ اعرض toast خطأ حسب نظامك

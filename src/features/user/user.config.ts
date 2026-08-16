@@ -4,7 +4,8 @@ import {
   BookOpen,
   BrainCircuit,
   CheckSquare,
-  MessageSquare,
+  Megaphone,
+  Sparkles,
 } from "lucide-react";
 import type { NavItem } from "../../shared/layout/MainLayout/MainLayout";
 
@@ -13,5 +14,6 @@ export const userNavItems: NavItem[] = [
   { icon: BookOpen, label: "Lectures", path: "/user/lectures" },
   { icon: BrainCircuit, label: "MCQ Practice", path: "/user/mcq" },
   { icon: CheckSquare, label: "To-Do", path: "/user/todo" },
-  { icon: MessageSquare, label: "AI Chatbot", path: "/user/chatbot" },
+  { icon: Megaphone, label: "Announcements", path: "/user/announcements" },
+  { icon: Sparkles, label: "AI Assistant", path: "/user/assistant" },
 ];
