@@ -25,7 +25,9 @@ interface MainLayoutProps {
   userProfile: UserProfile;
 }
 
-const MainLayout = ({ navItems,  userProfile }: MainLayoutProps) => {
+const MainLayout = ({ navItems, userProfile }: MainLayoutProps) => {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* ✅ تم تمرير userProfile الذي يحتوي الآن على role */}

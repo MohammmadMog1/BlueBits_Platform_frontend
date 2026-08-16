@@ -2,7 +2,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
+import { useTheme } from "next-themes";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
+import { useContextSwitch } from "../../hooks/useContextSwitch";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
+import { getProfileImageUrl } from "../../utils/user";
 
 interface SidebarProps {
   navItems: NavItem[];
@@ -22,12 +26,30 @@ export default function Sidebar({
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const isDark = false;
+  const { theme } = useTheme();
+  const { logout } = useAuth();
+  const isDark = theme === "dark";
 
   const handleNav = (path: string) => navigate(path);
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
   };
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await logout();
+    navigate("/");
+  };
+
+  useEffect(() => {
+    setAvatarImageFailed(false);
+  }, [userProfile.profile_image]);
+
+  const avatarUrl = avatarImageFailed ? null : getProfileImageUrl(userProfile.profile_image);
+
+  // زر التبديل بين لوحة الإدارة وتطبيق المستخدم (مشترك مع BottomBar عبر useContextSwitch)
+  const backButton = useContextSwitch(userProfile.role);
+
   return (
     <aside
       className={`hidden lg:flex lg:flex-col lg:relative z-30 h-full overflow-hidden transition-all duration-300 ease-in-out ${

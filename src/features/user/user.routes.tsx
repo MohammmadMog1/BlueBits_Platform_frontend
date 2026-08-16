@@ -1,8 +1,28 @@
+// import type { RouteObject } from "react-router";
 
+// export const userRoutes: RouteObject[] = [
+//   {
+//     path: "/user",
+//     // element: <AuthLayout />,
+//     // children: [
+//     //   {
+//     //     path: "login",
+//     //     element: <LoginPage />,
+//     //   },
+//     //   {
+//     //     path: "register",
+//     //     element: <RegisterPage />,
+//     //   },
+//     // ],
+//   },
+
+// ];
 
 // src/features/user/user.routes.tsx
 import type { RouteObject } from "react-router";
-import { UserLectureManager } from "./Lectures";
+import { AiChatPage } from "../ai";
+import { StudentAnnouncementsPage } from "../studentAnnouncements";
+import TasksHubPage from "./pages/TasksHubPage";
 // import UserDashboardPage from "./pages/UserDashboardPage"; // مثال
 
 export const userRoutes: RouteObject[] = [
@@ -12,7 +32,7 @@ export const userRoutes: RouteObject[] = [
   },
   {
     path: "lectures", // هذا يعني /user/lectures
-    element: <UserLectureManager />,
+    element: <div>Lectures Page Placeholder</div>,
   },
   {
     path: "todo", // هذا يعني /user/todo — يضم المهام الشخصية والأكاديمية
