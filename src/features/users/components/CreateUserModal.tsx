@@ -23,7 +23,7 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("STUDENT");
+  const [role, setRole] = useState<UserRole>("USER");
   const [showPass, setShowPass] = useState(false);
   const [formErr, setFormErr] = useState("");
   const [createUser, { isLoading }] = useCreateUserMutation();

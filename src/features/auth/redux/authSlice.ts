@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { AuthState } from "../types/auth.types";
 import {
   loginThunk,
@@ -8,6 +8,7 @@ import {
   forgotPasswordThunk,
   resetPasswordThunk
 } from "./authThunk";
+import type { User } from "../../profile";
 // import { buildErrorMessage } from "vite";
 
 const initialState: AuthState = {
@@ -28,6 +29,11 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isLoading = false;
       state.error = null;
+    },
+    updateUserInStore: (state, action: PayloadAction<User>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -125,12 +131,8 @@ builder
     state.isLoading = false;
     state.error = action.payload as string;
   });
-  
   },
 });
 
-
-
-
-export const { logout } = authSlice.actions;
+export const { logout, updateUserInStore } = authSlice.actions;
 export default authSlice.reducer;

@@ -14,5 +14,17 @@ export const userRoutes: RouteObject[] = [
     path: "lectures", // هذا يعني /user/lectures
     element: <UserLectureManager />,
   },
+  {
+    path: "todo", // هذا يعني /user/todo — يضم المهام الشخصية والأكاديمية
+    element: <TasksHubPage />,
+  },
+  {
+    path: "announcements", // هذا يعني /user/announcements
+    element: <StudentAnnouncementsPage />,
+  },
+  {
+    path: "assistant", // هذا يعني /user/assistant
+    element: <AiChatPage />,
+  },
   // أضف باقي صفحات المستخدم هنا
 ];

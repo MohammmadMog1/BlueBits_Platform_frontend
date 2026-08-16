@@ -1,4 +1,5 @@
 import { Zap, ChevronRight, BookOpen } from "lucide-react";
+import { motion } from "motion/react";
 import { HexGrid, DiagonalBands } from "./shared/VisualHelpers";
 
 interface CTAProps {
@@ -29,7 +30,13 @@ export function CTA({ navigate }: CTAProps) {
         <DiagonalBands className="h-full w-auto max-w-[60px] sm:max-w-[100px] opacity-30 scale-x-[-1]" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 lg:px-16 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 lg:px-16 text-center"
+      >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold mb-6 sm:mb-8">
           <Zap className="w-3.5 h-3.5" />
           Start your academic journey
@@ -48,7 +55,7 @@ export function CTA({ navigate }: CTAProps) {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate("/auth/register")}
             className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-12 py-3.5 sm:py-4 rounded-2xl bg-white font-bold shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300"
             style={{ color: "#404293", fontSize: "0.95rem" }}
           >
@@ -56,7 +63,7 @@ export function CTA({ navigate }: CTAProps) {
             <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button
-            onClick={() => navigate("/app/lectures")}
+            onClick={() => navigate("/user/lectures")}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl border-2 border-white/20 text-white font-bold backdrop-blur-sm hover:bg-white/10 hover:border-white/40 active:scale-[0.97] transition-all duration-300"
             style={{ fontSize: "0.95rem" }}
           >
@@ -64,7 +71,7 @@ export function CTA({ navigate }: CTAProps) {
             استعرض المحاضرات
           </button>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

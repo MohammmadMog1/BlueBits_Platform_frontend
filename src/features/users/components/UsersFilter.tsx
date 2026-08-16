@@ -1,19 +1,30 @@
 import { ChevronDown, Search, X } from "lucide-react";
 import { USER_ROLES } from "../types";
 
+interface YearOption {
+  _id: string;
+  name: string;
+}
+
 interface UsersFilterProps {
   search: string;
   roleFilter: string;
+  yearFilter: string;
+  years: YearOption[];
   onSearchChange: (value: string) => void;
   onRoleChange: (value: string) => void;
+  onYearChange: (value: string) => void;
   onClearFilter: () => void;
 }
 
 export default function UsersFilter({
   search,
   roleFilter,
+  yearFilter,
+  years,
   onSearchChange,
   onRoleChange,
+  onYearChange,
   onClearFilter,
 }: UsersFilterProps) {
   return (
@@ -53,6 +64,32 @@ export default function UsersFilter({
         <button
           type="button"
           onClick={() => onRoleChange("")}
+          className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
+        >
+          <X size={13} /> مسح
+        </button>
+      )}
+
+      <div className="relative">
+        <select
+          value={yearFilter}
+          onChange={(event) => onYearChange(event.target.value)}
+          className="appearance-none pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-semibold text-gray-700 outline-none focus:ring-2 focus:ring-[#404293]/20 cursor-pointer"
+        >
+          <option value="">كل السنوات</option>
+          {years.map((year) => (
+            <option key={year._id} value={year._id}>
+              {year.name}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+      </div>
+
+      {yearFilter && (
+        <button
+          type="button"
+          onClick={() => onYearChange("")}
           className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
         >
           <X size={13} /> مسح

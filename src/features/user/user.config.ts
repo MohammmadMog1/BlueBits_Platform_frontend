@@ -1,5 +1,12 @@
 // src/features/user/user.config.ts
-import { LayoutDashboard, BookOpen, BrainCircuit, CheckSquare, MessageSquare, Calendar, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  BookOpen,
+  BrainCircuit,
+  CheckSquare,
+  Megaphone,
+  Sparkles,
+} from "lucide-react";
 import type { NavItem } from "../../shared/layout/MainLayout/MainLayout";
 
 export const userNavItems: NavItem[] = [
@@ -7,8 +14,6 @@ export const userNavItems: NavItem[] = [
   { icon: BookOpen, label: "Lectures", path: "/user/lectures" },
   { icon: BrainCircuit, label: "MCQ Practice", path: "/user/mcq" },
   { icon: CheckSquare, label: "To-Do", path: "/user/todo" },
-  { icon: MessageSquare, label: "AI Chatbot", path: "/user/chatbot" },
-  { icon: Calendar, label: "Exam Schedule", path: "/user/exams" },
-  { icon: Settings, label: "Settings", path: "/user/settings" },
-
+  { icon: Megaphone, label: "Announcements", path: "/user/announcements" },
+  { icon: Sparkles, label: "AI Assistant", path: "/user/assistant" },
 ];

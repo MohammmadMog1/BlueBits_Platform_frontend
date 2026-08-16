@@ -6,15 +6,13 @@ import GlobalLoader from "./shared/components/GlobalLoader/GlobalLoader";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, user, token } = useAppSelector(
-    (state) => state.auth,
-  );
+  const { token } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (token && !user && !isAuthenticated) {
+    if (token) {
       dispatch(getMeThunk());
     }
-  }, [dispatch, token, user, isAuthenticated]);
+  }, [dispatch, token]);
 
   return (
     <div >

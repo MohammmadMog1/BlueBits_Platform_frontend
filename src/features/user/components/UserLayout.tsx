@@ -1,3 +1,4 @@
+// src/features/user/UserLayout.tsx
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
@@ -15,7 +16,7 @@ function getUserInitials(name: string) {
 
 function getRoleLabel(role: string) {
   switch (role) {
-    case "STUDENT":
+    case "USER":
       return "Student";
     case "LECTURER":
       return "Lecturer";
@@ -37,15 +38,16 @@ export default function UserLayout() {
     ? {
         name: userFromStore.name,
         roleLabel: getRoleLabel(userFromStore.role),
+        role: userFromStore.role, // ✨ أضفنا الدور الخام
         initials: getUserInitials(userFromStore.name),
+        profile_image: userFromStore.profile_image,
       }
-    : { name: "Guest", roleLabel: "Guest", initials: "G" };
+    : { name: "Guest", roleLabel: "Guest", role: "GUEST", initials: "G" };
 
   return (
-    <MainLayout 
-      navItems={userNavItems} 
-      // moreNavItems={userMoreNavItems} 
-      userProfile={userProfile} 
+    <MainLayout
+      navItems={userNavItems}
+      userProfile={userProfile}
     />
   );
 }

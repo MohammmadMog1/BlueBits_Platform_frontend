@@ -40,7 +40,7 @@ export default function VerifyEmail({ onNavigate }: Props) {
 
   const goToLogin = () => {
     if (onNavigate) onNavigate("login");
-    else navigate("/login");
+    else navigate("/auth/login");
   };
 
   return (

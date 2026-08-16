@@ -40,11 +40,17 @@ const rootReducer = combineReducers({
   [usersApi.reducerPath]: usersApi.reducer,
   [academicApi.reducerPath]: academicApi.reducer,
   [subjectsApi.reducerPath]: subjectsApi.reducer,
+  [academicTasksApi.reducerPath]: academicTasksApi.reducer,
+  // ✨ جديد: تسجيل reducer الخاص بـ profileApi
+  [profileApi.reducerPath]: profileApi.reducer,
+  [aiApi.reducerPath]: aiApi.reducer,
+  [personalTasksApi.reducerPath]: personalTasksApi.reducer,
+  [announcementsApi.reducerPath]: announcementsApi.reducer,
 });
 
 const persistConfig = {
   key: "root",
-  storage: customStorage, // ✅ استخدام الـ customStorage بدلاً من الاستيراد القديم
+  storage: customStorage,
   whitelist: ["auth"],
 };
 
@@ -61,6 +67,12 @@ export const store = configureStore({
       usersApi.middleware,
       academicApi.middleware,
       subjectsApi.middleware,
+      academicTasksApi.middleware,
+      // ✨ جديد: تسجيل middleware الخاص بـ profileApi
+      profileApi.middleware,
+      aiApi.middleware,
+      personalTasksApi.middleware,
+      announcementsApi.middleware,
     ),
 });
 

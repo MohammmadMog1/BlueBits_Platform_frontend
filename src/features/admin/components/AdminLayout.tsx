@@ -20,7 +20,7 @@ function getUserInitials(name: string) {
 
 function getRoleLabel(role: string) {
   switch (role) {
-    case "STUDENT":
+    case "USER":
       return "Student";
     case "LECTURER":
       return "Lecturer";
@@ -51,7 +51,9 @@ export default function AdminLayout() {
     ? {
         name: userFromStore.name,
         roleLabel: getRoleLabel(userFromStore.role),
+        role: userFromStore.role, // ✨ أضفنا الدور الخام
         initials: getUserInitials(userFromStore.name),
+        profile_image: userFromStore.profile_image,
       }
     : { name: "Guest", roleLabel: "Guest", initials: "G" };
 

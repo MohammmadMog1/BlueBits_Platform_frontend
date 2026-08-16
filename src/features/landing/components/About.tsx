@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { TabLabel } from "./shared/VisualHelpers";
 
 // Fallback image component if not found in shared
@@ -40,7 +41,12 @@ export function About({ isDark, navigate }: AboutProps) {
     <section id="about" className="relative py-20 sm:py-32 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
             <TabLabel className="mb-6 sm:mb-8">
               <GraduationCap className="w-3 h-3" />
               About BlueBits
@@ -116,14 +122,20 @@ export function About({ isDark, navigate }: AboutProps) {
               ))}
             </div>
             <button
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/auth/register")}
               className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-lg shadow-[#404293]/20 hover:shadow-xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all text-sm duration-300"
             >
               Join BlueBits <ChevronRight className="w-4 h-4" />
             </button>
-          </div>
+          </motion.div>
 
-          <div className="relative mt-4 lg:mt-0">
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="relative mt-4 lg:mt-0"
+          >
             <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-white/10">
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1541178735493-479c1a27ed24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
@@ -163,7 +175,7 @@ export function About({ isDark, navigate }: AboutProps) {
                 Academic Year
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

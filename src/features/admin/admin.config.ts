@@ -1,11 +1,12 @@
 import {
   BookMarked,
+  ClipboardList,
   GraduationCap,
   LayoutDashboard,
+  Megaphone,
   Users,
-  Shield,
-  Settings,
   FileText,
+  Sparkles,
 } from "lucide-react";
 import type { NavItem } from "../../shared/layout/MainLayout/MainLayout";
 

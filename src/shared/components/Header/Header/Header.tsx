@@ -1,17 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
 import imge from "../../../../app/assets/Logo.png"
 import { Link } from "react-router-dom";
 import  type { UserProfile } from "../../../layout/MainLayout/MainLayout";
+import { getProfileImageUrl } from "../../../utils/user";
 
 // import type { UserProfile } from "../../layout/MainLayout/MainLayout";
 
 
-export default function Header({ userProfile }: { userProfile: UserProfile }) {
+interface HeaderProps {
+  userProfile: UserProfile;
+  onOpenProfile?: () => void;
+  isProfileOpen?: boolean;
+}
+
+export default function Header({ userProfile, onOpenProfile, isProfileOpen }: HeaderProps) {
   const [notifications, setNotifications] = useState(3);
+  const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
+
+  useEffect(() => {
+    setAvatarImageFailed(false);
+  }, [userProfile.profile_image]);
+
+  const avatarUrl = avatarImageFailed ? null : getProfileImageUrl(userProfile.profile_image);
 
   return (
     <header
@@ -91,11 +105,27 @@ export default function Header({ userProfile }: { userProfile: UserProfile }) {
           )}
         </button>
 
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center cursor-pointer shadow-md flex-shrink-0">
-          <span className="text-white text-xs font-bold">
-            {userProfile.initials}
-          </span>
-        </div>
+        <button
+          onClick={onOpenProfile}
+          aria-label="Open profile"
+          aria-pressed={isProfileOpen}
+          className={`w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md flex-shrink-0 ring-2 transition-all hover:scale-105 overflow-hidden ${
+            isProfileOpen ? "ring-[#404293]/40" : "ring-transparent hover:ring-[#404293]/30"
+          }`}
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={userProfile.name}
+              className="w-full h-full object-cover"
+              onError={() => setAvatarImageFailed(true)}
+            />
+          ) : (
+            <span className="text-white text-xs font-bold">
+              {userProfile.initials}
+            </span>
+          )}
+        </button>
       </div>
     </header>
   );

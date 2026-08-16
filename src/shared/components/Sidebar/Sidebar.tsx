@@ -1,4 +1,5 @@
-import { useState } from "react";
+// src/shared/components/Sidebar/Sidebar.tsx
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
@@ -6,10 +7,19 @@ import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
 interface SidebarProps {
   navItems: NavItem[];
   userProfile: UserProfile;
+  onOpenProfile?: () => void;
+  isProfileOpen?: boolean;
 }
 
-export default function Sidebar({ navItems, userProfile }: SidebarProps) {
+export default function Sidebar({
+  navItems,
+  userProfile,
+  onOpenProfile,
+  isProfileOpen,
+}: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isDark = false;
@@ -29,33 +39,32 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
       }`}
     >
       <div
-        className={`flex items-center justify-between px-4 py-5 border-b ${
-          isDark ? "border-white/8" : "border-gray-100"
+        className={`flex items-center justify-between px-4 lg:px-6 py-3.5 border-b flex-shrink-0 ${
+          isDark ? "border-white/8" : "border-gray-200/80"
         }`}
       >
         <div className="flex items-center gap-3 overflow-hidden">
-  <Link to={"/"}>
-    <img
-      className="h-10 w-auto object-contain flex-shrink-0"
-      src="/src/app/assets/Logo notext.png"
-      alt="Logo"
-    />
-  </Link>
-  {!collapsed && (
-    <div className="leading-tight">
-      <h2 className="text-[20px] font-bold text-[#404295]">
-        BlueBits
-      </h2>
-
-      <p className="text-[12px]  uppercase tracking-wider text-[#404293]">
-                    {userProfile.roleLabel}
-      </p>
-    </div>
-  )}
-</div>
+          <Link to={"/"}>
+            <img
+              className="h-10 w-auto object-contain flex-shrink-0"
+              src="/src/app/assets/Logo notext.png"
+              alt="Logo"
+            />
+          </Link>
+          {!collapsed && (
+            <div className="leading-tight">
+              <h2 className="text-[20px] font-bold text-[#404295]">BlueBits</h2>
+              <p className="text-[12px] uppercase tracking-wider text-[#404293]">
+                {userProfile.roleLabel}
+              </p>
+            </div>
+          )}
+        </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 flex-shrink-0"
+          className={`p-1.5 rounded-lg flex-shrink-0 transition-colors ${
+            isDark ? "text-gray-400 hover:bg-white/8" : "text-gray-500 hover:bg-gray-100"
+          }`}
         >
           <ChevronRight
             className={`w-4 h-4 transition-transform duration-300 ${
@@ -64,7 +73,8 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
           />
         </button>
       </div>
-<nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
+
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
         {navItems.map((item) => {
           const active = isActive(item.path);
           const Icon = item.icon;
@@ -95,55 +105,85 @@ export default function Sidebar({ navItems, userProfile }: SidebarProps) {
           );
         })}
       </nav>
+
       {/* Footer */}
-<div
-  className={`border-t p-3 ${
-    isDark ? "border-white/8" : "border-gray-200"
-  }`}
->
-  {/* Back To App */}
-    <button
-    onClick={() => handleNav("/user")}
-    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all hover:bg-[#404293]/6 hover:text-[#404293] ${
+      <div
+        className={`border-t p-3 flex-shrink-0 ${
+          isDark ? "border-white/8" : "border-gray-200/80"
+        }`}
+      >
+        {/* ✨ Back Button الديناميكي */}
+        {backButton && (
+          <button
+            onClick={() => handleNav(backButton.path)}
+            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group ${
+              isDark
+                ? "text-gray-400 hover:bg-white/8 hover:text-white"
+                : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
+            } ${collapsed ? "justify-center" : ""}`}
+          >
+            <backButton.icon className="w-4 h-4 flex-shrink-0" />
+            {!collapsed && (
+              <span className="text-[14px] font-semibold truncate">{backButton.label}</span>
+            )}
+          </button>
+        )}
 
-      collapsed ? "justify-center" : ""
-    }`}
-  >
-    <LogOut className="w-4 h-4 text-gray-500  
-    hover:text-[#404293]" 
-    />
-    {!collapsed && (
-      <span className="text-[14px] font-semibold">
+        {/* User Card */}
+        <div
+          className={`mt-4 w-full flex items-center gap-1 rounded-xl p-1.5 -m-1.5 transition-colors ${
+            isProfileOpen ? (isDark ? "bg-white/8" : "bg-[#404293]/8") : ""
+          } ${collapsed ? "justify-center" : ""}`}
+        >
+          <button
+            onClick={onOpenProfile}
+            title={collapsed ? "My Profile" : ""}
+            aria-pressed={isProfileOpen}
+            className={`flex items-center flex-1 min-w-0 rounded-lg p-0.5 transition-colors ${
+              isProfileOpen ? "" : isDark ? "hover:bg-white/8" : "hover:bg-[#404293]/6"
+            } ${collapsed ? "justify-center" : ""}`}
+          >
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={userProfile.name}
+                  className="w-full h-full object-cover"
+                  onError={() => setAvatarImageFailed(true)}
+                />
+              ) : (
+                <span className="text-white text-sm font-bold">
+                  {userProfile.initials}
+                </span>
+              )}
+            </div>
+            {!collapsed && (
+              <div className="ml-3 flex-1 min-w-0 text-left">
+                <p className={`text-sm font-semibold truncate ${isDark ? "text-white" : "text-gray-800"}`}>
+                  {userProfile.name}
+                </p>
+                <p className="text-xs text-gray-400 truncate">{userProfile.roleLabel}</p>
+              </div>
+            )}
+          </button>
 
-        Back to App
-      </span>
-    )}
-  </button>
-  {/* User Card */}
-  <div className={`mt-4 flex items-center hover:bg-[#404293]/6 hover:text-[#404293]   ${
-    collapsed ? "justify-center" : ""
-  }`}
-  >
-    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center">
-      <span className="text-white text-sm font-bold">
-        {userProfile.initials}
-      </span>
-    </div>
-    {!collapsed && (
-      <>
-        <div className="ml-3 flex-1">
-          <p className="text-sm font-semibold ">
-            {userProfile.name}
-          </p>
-
-          <p className="text-xs text-gray-400">
-            {userProfile.roleLabel}
-          </p>
+          {!collapsed && (
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              title="Log out"
+              aria-label="Log out"
+              className={`p-2 rounded-lg flex-shrink-0 transition-colors disabled:opacity-50 ${
+                isDark
+                  ? "text-gray-400 hover:bg-white/8 hover:text-red-400"
+                  : "text-gray-400 hover:bg-red-50 hover:text-red-500"
+              }`}
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </>
-    )}
-  </div>
-</div>
+      </div>
     </aside>
   );
 }
