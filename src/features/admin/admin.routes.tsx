@@ -24,10 +24,6 @@ import UsersManagementPage from "../users/pages/UsersManagementPage";
 import { AcademicPage } from "./academic";
 import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
 import { LectureManagementPage } from "./lectures";
-import { AcademicTasksManagementPage } from "./tasks";
-import { AnnouncementsManagementPage } from "./announcements";
-import { AiChatPage } from "../ai";
-
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -50,17 +46,6 @@ export const adminRoutes: RouteObject[] = [
     path: "lectures",
     element: <LectureManagementPage />,
   },
-  {
-    path: "academic-tasks",
-    element: <AcademicTasksManagementPage />,
-  },
-  {
-    path: "announcements",
-    element: <AnnouncementsManagementPage />,
-  },
-  {
-    path: "assistant", // هذا يعني /admin/assistant
-    element: <AiChatPage />,
-  },
+
   // أضف باقي صفحات الأدمن هنا
 ];

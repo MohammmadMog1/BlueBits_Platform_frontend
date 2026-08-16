@@ -12,6 +12,7 @@ import GlobalError from "../../shared/components/ErrorBoundary/GlobalError";
 import { userRoutes } from "../../features/user/user.routes";
 import { adminRoutes } from "../../features/admin/admin.routes";
 
+
 // استيراد النوع فقط للتحقق (لن نستخدمه كقيمة)
 // import type { UserRole } from "../../features/auth/types/auth.types"; 
 
