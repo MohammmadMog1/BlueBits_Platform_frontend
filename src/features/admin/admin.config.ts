@@ -16,7 +16,12 @@ export const adminNavItems: NavItem[] = [
   { icon: GraduationCap, label: "Academic Structure", path: "/admin/academic" },
   { icon: BookMarked, label: "Manage Subjects", path: "/admin/subjects" },
   { icon: FileText, label: "Manage Lectures", path: "/admin/lectures" },
-  { icon: ClipboardList, label: "Academic Tasks", path: "/admin/academic-tasks" },
-  { icon: Megaphone, label: "Announcements", path: "/admin/announcements" },
-  { icon: Sparkles, label: "AI Assistant", path: "/admin/assistant" },
+  { icon: FileText, label: "Content", path: "/admin/content" },
+  { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" }
+];
+
+export const adminMoreNavItems: NavItem[] = [
+  { icon: Shield, label: "Roles & Permissions", path: "/admin/roles" },
+  { icon: Settings, label: "System Settings", path: "/admin/settings" },
 ];

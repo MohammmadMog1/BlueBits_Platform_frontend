@@ -1,0 +1,1 @@
+export { UserLectureManager } from "./pages/UserLectureManager";
