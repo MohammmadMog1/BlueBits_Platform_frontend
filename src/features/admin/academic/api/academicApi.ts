@@ -36,6 +36,7 @@ export const academicApi = createApi({
   endpoints: (builder) => ({
     getYears: builder.query<AcademicYear[], void>({
       query: () => "/years",
+      keepUnusedDataFor: 3600, // ✅ تبقى في الكاش ساعة كاملة – تُجلب مرة واحدة فقط
       transformResponse: (
         response: AcademicListResponse<AcademicYear> | AcademicYear[],
       ) => unwrapList(response),
@@ -84,6 +85,7 @@ export const academicApi = createApi({
     }),
     getSemesters: builder.query<Semester[], void>({
       query: () => "/semesters",
+      keepUnusedDataFor: 3600, // ✅ تبقى في الكاش ساعة كاملة – تُجلب مرة واحدة فقط
       transformResponse: (
         response: AcademicListResponse<Semester> | Semester[],
       ) => unwrapList(response),

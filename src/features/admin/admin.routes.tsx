@@ -23,6 +23,7 @@ import type { RouteObject } from "react-router";
 import UsersManagementPage from "../users/pages/UsersManagementPage";
 import { AcademicPage } from "./academic";
 import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
+import { LectureManagementPage } from "./lectures";
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -41,6 +42,10 @@ export const adminRoutes: RouteObject[] = [
     path: "subjects",
     element: <SubjectManagementPage />,
   },
- 
+  {
+    path: "lectures",
+    element: <LectureManagementPage />,
+  },
+
   // أضف باقي صفحات الأدمن هنا
 ];

@@ -115,22 +115,21 @@ export default function SubjectManagementPage() {
     { label: "إجمالي المواد", value: subjects.length, color: "#404293" },
     {
       label: yearOptions[2]?.label ?? "السنة الثالثة",
-      value: subjects.filter(
-        (subject) => subject.yearId === yearOptions[2]?._id,
-      ).length,
+      value: subjects.filter((subject) => subject.yearId === yearOptions[2]?.id)
+        .length,
       color: "#33529F",
     },
     {
       label: semesterOptions[0]?.label ?? "الفصل الأول",
       value: subjects.filter(
-        (subject) => subject.semesterId === semesterOptions[0]?._id,
+        (subject) => subject.semesterId === semesterOptions[0]?.id,
       ).length,
       color: "#2376BB",
     },
     {
       label: semesterOptions[1]?.label ?? "الفصل الثاني",
       value: subjects.filter(
-        (subject) => subject.semesterId === semesterOptions[1]?._id,
+        (subject) => subject.semesterId === semesterOptions[1]?.id,
       ).length,
       color: "#059669",
     },

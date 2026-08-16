@@ -18,6 +18,8 @@ export interface CreateSubjectPayload extends SubjectFormData {
   createdBy: string;
 }
 
+import type { LectureType } from "../../lectures/types";
+
 export interface UpdateSubjectPayload {
   id: string;
   data: Partial<SubjectFormData>;
@@ -26,6 +28,7 @@ export interface UpdateSubjectPayload {
 export interface SubjectsQuery {
   yearId?: string;
   semesterId?: string;
+  type?: LectureType;
 }
 
 export interface SubjectListResponse {
