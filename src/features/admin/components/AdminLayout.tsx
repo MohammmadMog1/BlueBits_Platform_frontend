@@ -1,6 +1,6 @@
 // src/features/admin/components/AdminLayout.tsx
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
-import { adminNavItems, adminMoreNavItems } from "../admin.config";
+import { adminNavItems } from "../admin.config";
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
 import {
@@ -38,12 +38,6 @@ function getRoleLabel(role: string) {
 export default function AdminLayout() {
   const userFromStore = useAppSelector((state) => state.auth.user);
 
-  /**
-   * ✅ Prefetch مرة واحدة عند دخول أي صفحة Admin.
-   * بفضل keepUnusedDataFor: 3600 في academicApi، لن تُعاد الـ fetch
-   * طالما البيانات موجودة في الكاش (ساعة كاملة).
-   * لا نحتاج الـ data هنا — فقط نطلق الكاش.
-   */
   useGetYearsQuery();
   useGetSemestersQuery();
 
@@ -55,13 +49,9 @@ export default function AdminLayout() {
         initials: getUserInitials(userFromStore.name),
         profile_image: userFromStore.profile_image,
       }
-    : { name: "Guest", roleLabel: "Guest", initials: "G" };
+    : { name: "Guest", roleLabel: "Guest", role: "GUEST", initials: "G" };
 
-  return (
-    <MainLayout
-      navItems={adminNavItems}
-      moreNavItems={adminMoreNavItems}
-      userProfile={userProfile}
-    />
-  );
+  return <MainLayout navItems={adminNavItems} userProfile={userProfile} />;
 }
+
+
