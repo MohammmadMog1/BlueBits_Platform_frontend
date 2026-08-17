@@ -7,9 +7,10 @@ export type UserRole =
   | "SUPER_ADMIN";
 
 // ===== PERMISSIONS =====
-// export type Permission = string;
-
-
+export type Permission =
+  | "CREATE_QUESTION_BANK"
+  | "UPDATE_QUESTION"
+  | "DELETE_QUESTION";
 
 // ===== AUTH STATE =====
 export interface AuthState {
@@ -27,7 +28,7 @@ export interface IUser {
   email: string;
   role: UserRole;
 
-  // permissions?: Permission[];
+  permissions: Permission[];
 
   profile_image: string;
   isVerified: boolean;

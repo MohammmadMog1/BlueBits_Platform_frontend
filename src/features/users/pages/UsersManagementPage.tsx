@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Users, Plus, RefreshCcw, AlertCircle } from "lucide-react";
 import CreateUserModal from "../components/CreateUserModal";
+import ManagePermissionsModal from "../components/ManagePermissionsModal";
 import UsersFilter from "../components/UsersFilter";
 import UsersStats from "../components/UsersStats";
 import UsersTable from "../components/UsersTable";
@@ -22,6 +23,7 @@ export default function UsersManagementPage() {
   const [yearFilter, setYearFilter] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [managingPermissionsUserId, setManagingPermissionsUserId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
 
   const { data: years = [] } = useGetYearsQuery();
@@ -82,6 +84,7 @@ export default function UsersManagementPage() {
   ];
 
   const deletingUser = users.find((user) => user._id === deletingId);
+  const managingPermissionsUser = users.find((user) => user._id === managingPermissionsUserId);
 
   return (
     <div className="flex flex-col gap-6">
@@ -143,6 +146,7 @@ export default function UsersManagementPage() {
         loading={isLoading}
         onRoleChange={handleRoleChange}
         onDelete={setDeletingId}
+        onManagePermissions={(user) => setManagingPermissionsUserId(user._id)}
       />
 
       <AnimatePresence>
@@ -153,6 +157,16 @@ export default function UsersManagementPage() {
               setShowCreate(false);
               showToast("تم إنشاء الحساب بنجاح ✓", "success");
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {managingPermissionsUser && (
+          <ManagePermissionsModal
+            user={managingPermissionsUser}
+            onClose={() => setManagingPermissionsUserId(null)}
+            onError={(message) => showToast(message, "error")}
           />
         )}
       </AnimatePresence>

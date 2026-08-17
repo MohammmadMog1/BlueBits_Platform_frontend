@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronDown, Trash2, Users } from "lucide-react";
+import { ChevronDown, ShieldCheck, Trash2, Users } from "lucide-react";
 import type { User } from "../types";
-import { ROLE_COLORS, USER_ROLES } from "../types";
+import { PERMISSIONS_LIST, ROLE_COLORS, USER_ROLES } from "../types";
 
 interface UsersTableProps {
   users: User[];
@@ -9,6 +9,7 @@ interface UsersTableProps {
   roleFilter: string;
   onRoleChange: (id: string, newRole: string) => void;
   onDelete: (id: string) => void;
+  onManagePermissions: (user: User) => void;
   loading: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function UsersTable({
   roleFilter,
   onRoleChange,
   onDelete,
+  onManagePermissions,
   loading,
 }: UsersTableProps) {
   const filteredUsers = users.filter((user) => {
@@ -53,11 +55,12 @@ export default function UsersTable({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] items-center gap-4 px-6 py-3.5 bg-gray-50/80 border-b border-gray-100 text-[11px] font-black text-gray-400 uppercase tracking-wider">
+          <div className="grid grid-cols-[1fr_1fr_auto_auto_1fr_auto] items-center gap-4 px-6 py-3.5 bg-gray-50/80 border-b border-gray-100 text-[11px] font-black text-gray-400 uppercase tracking-wider">
             <span>المستخدم</span>
             <span>البريد الإلكتروني</span>
             <span>الحالة</span>
             <span>الدور</span>
+            <span>الصلاحيات</span>
             <span></span>
           </div>
           <AnimatePresence mode="popLayout">
@@ -69,7 +72,7 @@ export default function UsersTable({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -16 }}
                 transition={{ delay: index * 0.03 }}
-                className="grid grid-cols-[1fr_1fr_auto_auto_auto] items-center gap-4 px-6 py-4 border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
+                className="grid grid-cols-[1fr_1fr_auto_auto_1fr_auto] items-center gap-4 px-6 py-4 border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -112,12 +115,37 @@ export default function UsersTable({
                   </select>
                   <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none opacity-60" />
                 </div>
-                <button
-                  onClick={() => onDelete(user._id)}
-                  className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all flex-shrink-0"
-                >
-                  <Trash2 size={14} />
-                </button>
+                <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                  {user.permissions && user.permissions.length > 0 ? (
+                    user.permissions.map((permission) => (
+                      <span
+                        key={permission}
+                        title={PERMISSIONS_LIST.find((item) => item.key === permission)?.description}
+                        className="text-[10px] font-bold px-2 py-1 rounded-full bg-[#404293]/10 text-[#404293] whitespace-nowrap"
+                      >
+                        {PERMISSIONS_LIST.find((item) => item.key === permission)?.label ?? permission}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-[11px] text-gray-300 font-semibold">لا توجد</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => onManagePermissions(user)}
+                    title="إدارة الصلاحيات"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-300 hover:text-[#404293] hover:bg-[#404293]/10 transition-all shrink-0"
+                  >
+                    <ShieldCheck size={14} />
+                  </button>
+                  <button
+                    onClick={() => onDelete(user._id)}
+                    title="حذف"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all shrink-0"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>

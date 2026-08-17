@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../../../app/store/store";
 import type {
   CreateUserPayload,
+  Permission,
   User,
   UsersResponse,
   UserRole,
@@ -91,6 +92,34 @@ export const usersApi = createApi({
         { type: "Users", id: "LIST" },
       ],
     }),
+    grantPermission: builder.mutation<User, { id: string; permission: Permission }>({
+      query: ({ id, permission }) => ({
+        url: `/users/${id}/permissions/grant`,
+        method: "PATCH",
+        body: { permission },
+      }),
+      transformResponse: (response: { data: User } | User) => {
+        return (response as { data: User }).data ?? (response as User);
+      },
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Users", id },
+        { type: "Users", id: "LIST" },
+      ],
+    }),
+    revokePermission: builder.mutation<User, { id: string; permission: Permission }>({
+      query: ({ id, permission }) => ({
+        url: `/users/${id}/permissions/revoke`,
+        method: "PATCH",
+        body: { permission },
+      }),
+      transformResponse: (response: { data: User } | User) => {
+        return (response as { data: User }).data ?? (response as User);
+      },
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Users", id },
+        { type: "Users", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -100,4 +129,6 @@ export const {
   useCreateUserMutation,
   useUpdateUserRoleMutation,
   useDeleteUserMutation,
+  useGrantPermissionMutation,
+  useRevokePermissionMutation,
 } = usersApi;
