@@ -16,11 +16,14 @@ import { academicApi } from "../../features/admin/academic/api/academicApi";
 import { subjectsApi } from "../../features/admin/subjects/api/subjectsApi";
 import { academicTasksApi } from "../../features/admin/tasks/api/academicTasksApi";
 import lecturesReducer from "../../features/admin/lectures/redux/lecturesSlice";
+import userLecturesReducer from "../../features/user/Lectures/redux/lecturesSlice";
 // ✨ جديد: إضافة profileApi
 import { profileApi } from "../../features/profile/api/profileApi";
 import { aiApi } from "../../features/ai/api/aiApi";
 import { personalTasksApi } from "../../features/personalTasks/api/personalTasksApi";
 import { announcementsApi } from "../../features/admin/announcements/api/announcementsApi";
+import { commentsApi } from "../../features/user/Lectures/interactions/api/commentsApi";
+import { reactionsApi } from "../../features/user/Lectures/interactions/api/reactionsApi";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -39,6 +42,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   loading: loadingReducer,
   lectures: lecturesReducer,
+  userLectures: userLecturesReducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [academicApi.reducerPath]: academicApi.reducer,
   [subjectsApi.reducerPath]: subjectsApi.reducer,
@@ -48,6 +52,8 @@ const rootReducer = combineReducers({
   [aiApi.reducerPath]: aiApi.reducer,
   [personalTasksApi.reducerPath]: personalTasksApi.reducer,
   [announcementsApi.reducerPath]: announcementsApi.reducer,
+  [commentsApi.reducerPath]: commentsApi.reducer,
+  [reactionsApi.reducerPath]: reactionsApi.reducer,
 });
 
 const persistConfig = {
@@ -75,6 +81,8 @@ export const store = configureStore({
       aiApi.middleware,
       personalTasksApi.middleware,
       announcementsApi.middleware,
+      commentsApi.middleware,
+      reactionsApi.middleware,
     ),
 });
 

@@ -23,16 +23,13 @@ import type { RouteObject } from "react-router";
 import { AiChatPage } from "../ai";
 import { StudentAnnouncementsPage } from "../studentAnnouncements";
 import TasksHubPage from "./pages/TasksHubPage";
+import { UserLectureManager } from "./Lectures";
 // import UserDashboardPage from "./pages/UserDashboardPage"; // مثال
 
 export const userRoutes: RouteObject[] = [
   {
     index: true, // هذا يعني /user/
     element: <div>User Dashboard Placeholder</div>, // استبدلها بالمكون الحقيقي
-  },
-  {
-    path: "lectures", // هذا يعني /user/lectures
-    element: <div>Lectures Page Placeholder</div>,
   },
   {
     path: "todo", // هذا يعني /user/todo — يضم المهام الشخصية والأكاديمية
@@ -45,6 +42,10 @@ export const userRoutes: RouteObject[] = [
   {
     path: "assistant", // هذا يعني /user/assistant
     element: <AiChatPage />,
+  },
+  {
+    path: "lectures", // هذا يعني /user/lectures
+    element: <UserLectureManager />,
   },
   // أضف باقي صفحات المستخدم هنا
 ];
