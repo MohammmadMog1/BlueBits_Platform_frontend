@@ -22,12 +22,6 @@ export const profileApi = createApi({
   baseQuery,
   tagTypes: ["Profile"],
   endpoints: (builder) => ({
-    getMe: builder.query<User, void>({
-      query: () => "/users/me",
-      transformResponse: (res: ApiResponse<User>) => res.data,
-      providesTags: ["Profile"],
-    }),
-
     getUserById: builder.query<User, string>({
       query: (id) => `/users/${id}`,
       transformResponse: (res: ApiResponse<User>) => res.data,
@@ -58,7 +52,6 @@ export const profileApi = createApi({
 });
 
 export const {
-  useGetMeQuery,
   useGetUserByIdQuery,
   useUpdateMeMutation,
   useUpdateMeAndUploadMutation,

@@ -44,7 +44,7 @@ const MainLayout = ({ navItems, userProfile }: MainLayoutProps) => {
           onOpenProfile={() => setIsProfileOpen(true)}
           isProfileOpen={isProfileOpen}
         />
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 overflow-y-auto overscroll-contain p-3 pb-24 sm:p-6 lg:pb-6">
           <Outlet />
         </main>
         <BottomBar navItems={navItems} userProfile={userProfile} />

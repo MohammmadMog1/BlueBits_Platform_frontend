@@ -172,10 +172,10 @@ export function UserLectureManager() {
       <LatestLecturesSection onOpenLecture={handleView} />
 
       <div
-        className={`flex-1 flex flex-col rounded-xl sm:rounded-2xl md:rounded-[2rem] border shadow-xl overflow-hidden transition-colors backdrop-blur-xl ${isDark ? "bg-white/5 border-white/10" : "bg-white/90 border-gray-200"}`}
+        className={`flex-1 flex flex-col rounded-xl sm:rounded-2xl md:rounded-[2rem] border shadow-xl transition-colors backdrop-blur-xl ${isDark ? "bg-white/5 border-white/10" : "bg-white/90 border-gray-200"}`}
       >
         <div
-          className={`p-3 sm:p-4 md:p-6 sm:px-4 md:px-8 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 md:gap-6 ${isDark ? "border-white/10 bg-white/[0.02]" : "border-gray-200 bg-white/50"}`}
+          className={`p-3 sm:p-4 md:p-6 sm:px-4 md:px-8 rounded-t-xl sm:rounded-t-2xl md:rounded-t-[2rem] border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 md:gap-6 ${isDark ? "border-white/10 bg-white/[0.02]" : "border-gray-200 bg-white/50"}`}
         >
           {renderBreadcrumb()}
 
@@ -216,10 +216,10 @@ export function UserLectureManager() {
                       <button
                         key={year._id}
                         onClick={() => selectYear(year._id)}
-                        className={`py-5 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-base sm:text-lg md:text-xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-2 sm:gap-3 md:gap-4 group backdrop-blur-md
+                        className={`py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-sm sm:text-lg md:text-xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-1.5 sm:gap-3 md:gap-4 group backdrop-blur-md
                           ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
                       >
-                        <GraduationCap className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 opacity-40 transition-opacity duration-500 ${iconHover}`} />
+                        <GraduationCap className={`w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12 opacity-40 transition-opacity duration-500 ${iconHover}`} />
                         {year.name}
                       </button>
                     ))}
@@ -245,10 +245,10 @@ export function UserLectureManager() {
                       <button
                         key={semester._id}
                         onClick={() => selectSemester(semester._id)}
-                        className={`py-8 sm:py-10 md:py-12 px-5 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-lg sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-5 group backdrop-blur-md
+                        className={`py-5 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-base sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-2 sm:gap-4 md:gap-5 group backdrop-blur-md
                           ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
                       >
-                        <Layers className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
+                        <Layers className={`w-7 h-7 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
                         {semester.name}
                       </button>
                     ))}
@@ -281,15 +281,15 @@ export function UserLectureManager() {
                       <button
                         key={subject._id}
                         onClick={() => selectSubject(subject._id)}
-                        className={`p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-3 sm:gap-4 md:gap-5 group text-left backdrop-blur-md
+                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-left backdrop-blur-md
                           ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverBrDark}` : `bg-white/80 text-gray-800 border border-gray-200 ${tileHoverBrLight}`}`}
                       >
                         <div
-                          className={`p-2.5 sm:p-3 md:p-4 rounded-xl sm:rounded-xl md:rounded-2xl transition-colors ${isDark ? "bg-white/10 text-white" : `bg-blue-50 text-[#404293] [@media(hover:hover)]:group-hover:bg-white/20 [@media(hover:hover)]:group-hover:text-white`}`}
+                          className={`p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl transition-colors ${isDark ? "bg-white/10 text-white" : `bg-blue-50 text-[#404293] [@media(hover:hover)]:group-hover:bg-white/20 [@media(hover:hover)]:group-hover:text-white`}`}
                         >
-                          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+                          <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8" />
                         </div>
-                        <span className="text-base sm:text-lg md:text-xl leading-tight font-bold">
+                        <span className="text-sm sm:text-lg md:text-xl leading-tight font-bold">
                           {subject.name}
                         </span>
                       </button>
@@ -318,10 +318,10 @@ export function UserLectureManager() {
                     <button
                       key={value}
                       onClick={() => selectType(value)}
-                      className={`py-8 sm:py-10 md:py-12 px-5 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-lg sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-5 group backdrop-blur-md
+                      className={`py-5 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-base sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-2 sm:gap-4 md:gap-5 group backdrop-blur-md
                         ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
                     >
-                      <Icon className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
+                      <Icon className={`w-7 h-7 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
                       {label}
                     </button>
                   ))}

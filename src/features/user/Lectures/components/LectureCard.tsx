@@ -38,16 +38,16 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
             : "bg-gradient-to-r from-[#404293] to-[#2376BB]"
         }`}
       />
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 p-3 sm:p-5">
         <div className="relative flex-shrink-0 self-start">
           <div
-            className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg ${
+            className={`w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-2xl flex items-center justify-center shadow-lg ${
               isPractical
                 ? "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-200/40"
                 : "bg-gradient-to-br from-[#404293] to-[#2376BB] shadow-[#404293]/30"
             }`}
           >
-            <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            <FileText className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
           </div>
           <span
             className={`absolute -bottom-1 -right-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
@@ -82,20 +82,20 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
         <div className="flex items-center gap-2 flex-shrink-0 pt-1">
           <button
             onClick={() => onView(lecture)}
-            className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-xs sm:text-sm font-bold shadow-md hover:opacity-90 hover:-translate-y-0.5 transition-all"
+            className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-[11px] sm:text-sm font-bold shadow-md hover:opacity-90 hover:-translate-y-0.5 transition-all"
           >
-            <Eye size={14} /> View
+            <Eye size={13} /> View
           </button>
           <button
             onClick={() => onDownload(lecture)}
-            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${isDark ? "border-white/20 bg-white/5 hover:bg-white/15 text-gray-100" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"}`}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-semibold border transition-all ${isDark ? "border-white/20 bg-white/5 hover:bg-white/15 text-gray-100" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"}`}
           >
-            <Download size={14} /> Download
+            <Download size={13} /> Download
           </button>
         </div>
       </div>
 
-      <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+      <div className="px-3 sm:px-5 pb-3 sm:pb-5">
         <LectureInteractions lectureId={lecture._id} isDark={isDark} />
       </div>
     </div>

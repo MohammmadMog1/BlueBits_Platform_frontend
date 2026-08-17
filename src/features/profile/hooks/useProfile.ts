@@ -1,23 +1,26 @@
 // src/features/profile/hooks/useProfile.ts
-import { useAppSelector } from "../../../app/store/hooks";
-import { useGetMeQuery } from "../api/profileApi";
+import { useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { getMeThunk } from "../../auth/redux/authThunk";
 import type { User } from "../types/profile.types";
 
 /**
- * يدمج بيانات الـ store (السريعة) مع بيانات الـ API (الطازجة).
- * نعرض الـ store فوراً، ولما يوصل الرد من الـ API نحدّث تلقائياً.
+ * يقرأ بيانات المستخدم من الـ store فقط (تُجلب مرة واحدة عند فتح الموقع في App.tsx).
+ * refetch متاح فقط لإعادة الجلب اليدوية (مثلاً زر "Try Again").
  */
 export function useProfile() {
-  const storeUser = useAppSelector((state) => state.auth.user) as User | null;
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user) as User | null;
+  const isLoading = useAppSelector((state) => state.auth.isLoading);
+  const isError = useAppSelector((state) => !!state.auth.error);
 
-  const { data: apiUser, isLoading, isError, refetch } = useGetMeQuery(
-    undefined,
-    { skip: !storeUser }
-  );
+  const refetch = useCallback(() => {
+    dispatch(getMeThunk());
+  }, [dispatch]);
 
   return {
-    user: apiUser ?? storeUser,
-    isLoading,
+    user,
+    isLoading: isLoading && !user,
     isError,
     refetch,
   };
