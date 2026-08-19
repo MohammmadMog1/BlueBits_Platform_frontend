@@ -20,7 +20,9 @@
 
 // src/features/admin/admin.routes.tsx
 import type { RouteObject } from "react-router";
+import { Navigate } from "react-router-dom";
 import UsersManagementPage from "../users/pages/UsersManagementPage";
+import { AdminDashboardPage } from "./dashboard";
 import { AcademicPage } from "./academic";
 import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
 import { LectureManagementPage } from "./lectures";
@@ -34,8 +36,12 @@ import { AiChatPage } from "../ai";
 
 export const adminRoutes: RouteObject[] = [
   {
-    index: true, // هذا يعني /admin/
-    element: <div>Admin Dashboard Placeholder</div>,
+    index: true, // /admin → مسار واحد قانوني للداشبورد
+    element: <Navigate to="dashboard" replace />,
+  },
+  {
+    path: "dashboard", // هذا يعني /admin/dashboard (نفس مسار adminNavItems)
+    element: <AdminDashboardPage />,
   },
   {
     path: "users", // هذا يعني /admin/users

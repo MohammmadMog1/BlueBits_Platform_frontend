@@ -20,7 +20,9 @@
 
 // src/features/user/user.routes.tsx
 import type { RouteObject } from "react-router";
+import { Navigate } from "react-router-dom";
 import { AiChatPage } from "../ai";
+import { UserDashboardPage } from "./dashboard";
 import { StudentAnnouncementsPage } from "../studentAnnouncements";
 import TasksHubPage from "./pages/TasksHubPage";
 import { UserLectureManager } from "./Lectures";
@@ -30,8 +32,12 @@ import { SurveyPage } from "./survey";
 
 export const userRoutes: RouteObject[] = [
   {
-    index: true, // هذا يعني /user/
-    element: <div>User Dashboard Placeholder</div>, // استبدلها بالمكون الحقيقي
+    index: true, // /user → مسار واحد قانوني للداشبورد
+    element: <Navigate to="dashboard" replace />,
+  },
+  {
+    path: "dashboard", // هذا يعني /user/dashboard (نفس مسار userNavItems)
+    element: <UserDashboardPage />,
   },
   {
     path: "todo", // هذا يعني /user/todo — يضم المهام الشخصية والأكاديمية
