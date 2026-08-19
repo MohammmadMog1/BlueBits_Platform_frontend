@@ -48,7 +48,7 @@ export default function UserDashboardPage() {
     : "إليك ملخّص يومك على المنصّة";
 
   return (
-    <div className="flex flex-col gap-5" dir="rtl">
+    <div className="flex flex-col gap-5">
       <DashboardHeader
         icon={LayoutDashboard}
         title={`${greetingByHour()}، ${firstName}`}

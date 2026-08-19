@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "BlueBits",
+    "tagline": "حياتك الجامعية، منظّمة"
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "search": "بحث",
+    "searchPlaceholder": "ابحث...",
+    "retry": "إعادة المحاولة",
+    "back": "رجوع",
+    "more": "المزيد"
+  },
+  "profile": {
+    "open": "فتح الملف الشخصي",
+    "myProfile": "ملفي الشخصي",
+    "logout": "تسجيل الخروج"
+  },
+  "theme": {
+    "toggle": "تبديل المظهر",
+    "switchToDark": "التبديل إلى الوضع الليلي",
+    "switchToLight": "التبديل إلى الوضع النهاري"
+  },
+  "notifications": {
+    "label": "الإشعارات",
+    "count_zero": "لا توجد إشعارات",
+    "count_one": "إشعار واحد",
+    "count_two": "إشعاران",
+    "count_few": "{{count}} إشعارات",
+    "count_many": "{{count}} إشعاراً",
+    "count_other": "{{count}} إشعار"
+  },
+  "language": {
+    "label": "اللغة",
+    "change": "تغيير اللغة",
+    "current": "اللغة الحالية: {{language}}"
+  },
+  "roles": {
+    "USER": "طالب",
+    "LECTURER": "محاضر",
+    "BLUE": "بلو",
+    "ADMIN": "مشرف",
+    "SUPER_ADMIN": "مشرف عام",
+    "GUEST": "زائر"
+  },
+  "errors": {
+    "title": "خطأ",
+    "userArea": "حدث خطأ في منطقة المستخدم.",
+    "adminArea": "حدث خطأ في منطقة الإدارة.",
+    "generic": "حدث خطأ غير متوقّع."
+  },
+  "states": {
+    "loading": "جارِ التحميل...",
+    "empty": "لا توجد بيانات",
+    "noResults": "لا توجد نتائج"
+  }
+}

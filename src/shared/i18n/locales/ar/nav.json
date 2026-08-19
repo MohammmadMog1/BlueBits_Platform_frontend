@@ -1,0 +1,37 @@
+{
+  "user": {
+    "dashboard": "الرئيسية",
+    "lectures": "المحاضرات",
+    "mcq": "تدريب الأسئلة",
+    "survey": "استبيان الامتحانات",
+    "todo": "المهام",
+    "announcements": "الإعلانات",
+    "assistant": "المساعد الذكي"
+  },
+  "admin": {
+    "dashboard": "لوحة الإدارة",
+    "users": "إدارة المستخدمين",
+    "academic": "الهيكل الأكاديمي",
+    "subjects": "إدارة المواد",
+    "lectures": "إدارة المحاضرات",
+    "questionBanks": "بنوك الأسئلة",
+    "academicTasks": "المهام الأكاديمية",
+    "announcements": "الإعلانات",
+    "surveys": "استبيان الجدول",
+    "surveyStats": "إحصاءات الاستبيان",
+    "scheduleSettings": "إعدادات الجدول",
+    "scheduleGenerate": "جدول الامتحانات",
+    "assistant": "المساعد الذكي"
+  },
+  "switch": {
+    "backToApp": "العودة إلى التطبيق",
+    "goToAdmin": "الذهاب إلى لوحة الإدارة"
+  },
+  "aria": {
+    "bottomNav": "التنقّل السفلي",
+    "moreOptions": "خيارات تنقّل إضافية",
+    "closeMenu": "إغلاق القائمة",
+    "collapseSidebar": "طيّ القائمة الجانبية",
+    "expandSidebar": "توسيع القائمة الجانبية"
+  }
+}

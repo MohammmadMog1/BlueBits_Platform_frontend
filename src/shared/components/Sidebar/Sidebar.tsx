@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
 import { useContextSwitch } from "../../hooks/useContextSwitch";
+import { useLanguage } from "../../i18n/useLanguage";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { getProfileImageUrl } from "../../utils/user";
 
@@ -28,7 +30,11 @@ export default function Sidebar({
   const location = useLocation();
   const { theme } = useTheme();
   const { logout } = useAuth();
+  const { t } = useTranslation(["common", "nav"]);
+  const { isRTL } = useLanguage();
   const isDark = theme === "dark";
+
+  const roleLabel = t(`roles.${userProfile.role}`, { defaultValue: userProfile.role });
 
   const handleNav = (path: string) => navigate(path);
   const isActive = (path: string) => {
@@ -56,8 +62,8 @@ export default function Sidebar({
         collapsed ? "lg:w-[72px]" : "lg:w-[252px]"
       } ${
         isDark
-          ? "bg-[#1a1b1e]/98 border-r border-white/8"
-          : "bg-white/98 border-r border-gray-200/80"
+          ? "bg-[#1a1b1e]/98 border-e border-white/8"
+          : "bg-white/98 border-e border-gray-200/80"
       }`}
     >
       <div
@@ -75,22 +81,33 @@ export default function Sidebar({
           </Link>
           {!collapsed && (
             <div className="leading-tight">
-              <h2 className="text-[20px] font-bold text-[#404295]">BlueBits</h2>
+              {/* اسم المنتج علامة تجارية – يبقى لاتينياً في كل اللغات */}
+              <h2 className="text-[20px] font-bold text-[#404295]" dir="ltr">
+                BlueBits
+              </h2>
               <p className="text-[12px] uppercase tracking-wider text-[#404293]">
-                {userProfile.roleLabel}
+                {roleLabel}
               </p>
             </div>
           )}
         </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
+          aria-label={t(collapsed ? "nav:aria.expandSidebar" : "nav:aria.collapseSidebar")}
+          aria-expanded={!collapsed}
           className={`p-1.5 rounded-lg flex-shrink-0 transition-colors ${
             isDark ? "text-gray-400 hover:bg-white/8" : "text-gray-500 hover:bg-gray-100"
           }`}
         >
+          {/*
+            السهم أيقونة اتجاهية: يجب أن ينقلب مع اتجاه الواجهة.
+            في RTL يشير "الطيّ" يميناً، وفي LTR يساراً – لذا نجمع الدوران
+            الناتج عن الحالة (مطويّ/مفتوح) مع الدوران الناتج عن الاتجاه.
+          */}
           <ChevronRight
+            aria-hidden="true"
             className={`w-4 h-4 transition-transform duration-300 ${
-              collapsed ? "" : "rotate-180"
+              collapsed === isRTL ? "rotate-180" : ""
             }`}
           />
         </button>
@@ -100,11 +117,14 @@ export default function Sidebar({
         {navItems.map((item) => {
           const active = isActive(item.path);
           const Icon = item.icon;
+          const label = t(item.labelKey);
           return (
             <button
-              key={item.label}
+              key={item.path}
               onClick={() => handleNav(item.path)}
-              title={collapsed ? item.label : ""}
+              title={collapsed ? label : ""}
+              aria-label={collapsed ? label : undefined}
+              aria-current={active ? "page" : undefined}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
                 active
                   ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md shadow-[#404293]/25"
@@ -119,9 +139,7 @@ export default function Sidebar({
                 }`}
               />
               {!collapsed && (
-                <span className="text-[13px] font-semibold truncate">
-                  {item.label}
-                </span>
+                <span className="text-[13px] font-semibold truncate">{label}</span>
               )}
             </button>
           );
@@ -144,9 +162,11 @@ export default function Sidebar({
                 : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
             } ${collapsed ? "justify-center" : ""}`}
           >
-            <backButton.icon className="w-4 h-4 flex-shrink-0" />
+            <backButton.icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             {!collapsed && (
-              <span className="text-[14px] font-semibold truncate">{backButton.label}</span>
+              <span className="text-[14px] font-semibold truncate">
+                {t(backButton.labelKey)}
+              </span>
             )}
           </button>
         )}
@@ -159,7 +179,8 @@ export default function Sidebar({
         >
           <button
             onClick={onOpenProfile}
-            title={collapsed ? "My Profile" : ""}
+            title={collapsed ? t("profile.myProfile") : ""}
+            aria-label={t("profile.open")}
             aria-pressed={isProfileOpen}
             className={`flex items-center flex-1 min-w-0 rounded-lg p-0.5 transition-colors ${
               isProfileOpen ? "" : isDark ? "hover:bg-white/8" : "hover:bg-[#404293]/6"
@@ -179,12 +200,13 @@ export default function Sidebar({
                 </span>
               )}
             </div>
+            {/* ms-3 / text-start منطقيان: ينقلبان تلقائياً بين RTL و LTR */}
             {!collapsed && (
-              <div className="ml-3 flex-1 min-w-0 text-left">
+              <div className="ms-3 flex-1 min-w-0 text-start">
                 <p className={`text-sm font-semibold truncate ${isDark ? "text-white" : "text-gray-800"}`}>
                   {userProfile.name}
                 </p>
-                <p className="text-xs text-gray-400 truncate">{userProfile.roleLabel}</p>
+                <p className="text-xs text-gray-400 truncate">{roleLabel}</p>
               </div>
             )}
           </button>
@@ -193,8 +215,8 @@ export default function Sidebar({
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              title="Log out"
-              aria-label="Log out"
+              title={t("profile.logout")}
+              aria-label={t("profile.logout")}
               className={`p-2 rounded-lg flex-shrink-0 transition-colors disabled:opacity-50 ${
                 isDark
                   ? "text-gray-400 hover:bg-white/8 hover:text-red-400"

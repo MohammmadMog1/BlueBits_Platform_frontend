@@ -40,7 +40,6 @@ export default function BottomSheetModal({
         exit={{ y: "100%", opacity: 0 }}
         transition={{ type: "spring", stiffness: 340, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        dir="rtl"
         className={`relative flex max-h-[92dvh] w-full flex-col rounded-t-3xl shadow-2xl sm:mx-4 sm:max-h-[85dvh] sm:rounded-3xl ${maxWidthClassName} ${
           isDark ? "border border-white/10 bg-[#1a1b1e]" : "border border-gray-200 bg-white"
         }`}

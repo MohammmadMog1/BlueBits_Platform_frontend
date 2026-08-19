@@ -98,7 +98,7 @@ export default function SubjectFormModal({
             </button>
           </div>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-5 px-7 py-6" dir="rtl">
+        <form onSubmit={handleSubmit} className="space-y-5 px-7 py-6">
           <label className="block text-sm font-bold text-gray-700">
             اسم المادة <span className="text-red-400">*</span>
             <input

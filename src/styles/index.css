@@ -1,5 +1,74 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   الخطوط
+   ========================================================================== */
+
+/**
+ * Boutros MBC Dinkum – الخط العربي الرسمي للمنصّة.
+ *
+ * `unicode-range` هي المفتاح هنا: المتصفّح يحمّل هذا الملف ويستخدمه للمحارف
+ * العربية فقط، بينما تُرسَم الأحرف اللاتينية والأرقام بخط Plus Jakarta Sans.
+ * الفائدة مزدوجة – نصوص مختلطة (مثل "محاضرة CS101") تظهر بخطّين مناسبين لكل
+ * نصّ، ولا يُحمَّل ملف الخط أصلاً في صفحة لاتينية بالكامل.
+ */
+@font-face {
+  font-family: "Boutros MBC Dinkum";
+  src:
+    url("/fonts/BoutrosMBCDinkum-Medium.woff2") format("woff2"),
+    url("/fonts/BoutrosMBCDinkum-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0600-06FF, /* العربية */
+    U+0750-077F, /* ملحق العربية */
+    U+0870-089F, /* ملحق العربية المُوسَّع-B */
+    U+08A0-08FF, /* ملحق العربية المُوسَّع-A */
+    U+FB50-FDFF, /* أشكال العربية التقديمية-A */
+    U+FE70-FEFF, /* أشكال العربية التقديمية-B */
+    U+200C-200F, /* محارف التحكّم بالاتجاه */
+    U+2010-2011, U+204F, U+2E41, U+FD3E-FD3F;
+}
+
+@theme {
+  /* عائلة الخط الافتراضية: العربي أولاً للمحارف العربية، واللاتيني لما تبقّى */
+  --font-sans:
+    "Boutros MBC Dinkum", "Plus Jakarta Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+
+  /* للاستخدام الصريح عند الحاجة إلى فرض خط بعينه.
+     السلسلة الاحتياطية خطوط عربية متوفّرة في الأنظمة (ويندوز/ماك/لينكس). */
+  --font-arabic:
+    "Boutros MBC Dinkum", "Segoe UI", Tahoma, "Geeza Pro", "Noto Sans Arabic",
+    sans-serif;
+  --font-latin:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    /* أرقام بعرض ثابت: يمنع "رقصة" الأرقام في العدّادات والإحصاءات */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /**
+   * الخط متوفّر بوزن Medium فقط، لذا نسمح للمتصفّح بتوليد الأوزان الأثقل
+   * صناعياً حتى يبقى التسلسل البصري (font-bold / font-black) مرئياً.
+   * عند توفّر أوزان حقيقية: أضف @font-face لكل وزن واحذف هذه القاعدة.
+   */
+  :lang(ar) {
+    font-synthesis-weight: auto;
+  }
+
+  /* المحتوى اللاتيني إجبارياً (بريد، روابط، كود) داخل نصّ عربي */
+  [dir="ltr"] :where(code, kbd, samp, pre) {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

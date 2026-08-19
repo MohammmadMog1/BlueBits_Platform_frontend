@@ -129,7 +129,7 @@ export default function PersonalTasksPage() {
   );
 
   return (
-    <div className="flex flex-col gap-5" dir="rtl">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
         <div
           className={`flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border px-3.5 py-2.5 ${

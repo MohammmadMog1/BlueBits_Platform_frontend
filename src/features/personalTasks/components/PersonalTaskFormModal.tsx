@@ -82,7 +82,7 @@ export default function PersonalTaskFormModal({
         </button>
       }
     >
-      <form id="personal-task-form" onSubmit={handleSubmit} className="space-y-4" dir="rtl">
+      <form id="personal-task-form" onSubmit={handleSubmit} className="space-y-4">
         <label className={labelClass}>
           عنوان المهمة <span className="text-red-400">*</span>
           <input

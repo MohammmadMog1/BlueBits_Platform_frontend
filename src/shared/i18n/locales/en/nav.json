@@ -1,0 +1,37 @@
+{
+  "user": {
+    "dashboard": "Dashboard",
+    "lectures": "Lectures",
+    "mcq": "MCQ Practice",
+    "survey": "Exam Survey",
+    "todo": "To-Do",
+    "announcements": "Announcements",
+    "assistant": "AI Assistant"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "users": "Manage Users",
+    "academic": "Academic Structure",
+    "subjects": "Manage Subjects",
+    "lectures": "Manage Lectures",
+    "questionBanks": "Question Banks",
+    "academicTasks": "Academic Tasks",
+    "announcements": "Announcements",
+    "surveys": "Schedule Survey",
+    "surveyStats": "Survey Stats",
+    "scheduleSettings": "Schedule Settings",
+    "scheduleGenerate": "Exam Schedule",
+    "assistant": "AI Assistant"
+  },
+  "switch": {
+    "backToApp": "Back to App",
+    "goToAdmin": "Go to Admin Panel"
+  },
+  "aria": {
+    "bottomNav": "Bottom navigation",
+    "moreOptions": "More navigation options",
+    "closeMenu": "Close menu",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar"
+  }
+}

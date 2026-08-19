@@ -41,7 +41,7 @@ export default function AdminDashboardPage() {
   } = useAdminDashboard();
 
   return (
-    <div className="flex flex-col gap-5" dir="rtl">
+    <div className="flex flex-col gap-5">
       <DashboardHeader
         icon={LayoutDashboard}
         title="لوحة الإدارة"

@@ -50,7 +50,7 @@ export default function StudentAnnouncementsPage() {
   });
 
   return (
-    <div className="flex flex-col gap-5" dir="rtl">
+    <div className="flex flex-col gap-5">
       <div>
         <h1 className={`text-xl font-black tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}>
           الإعلانات

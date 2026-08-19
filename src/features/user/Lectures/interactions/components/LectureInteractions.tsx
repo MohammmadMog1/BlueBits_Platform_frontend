@@ -79,7 +79,6 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
 
   return (
     <div
-      dir="rtl"
       className={`mt-3 sm:mt-4 border-t pt-3 sm:pt-4 ${isDark ? "border-white/10" : "border-gray-200/50"}`}
     >
       <div className="flex items-center gap-2">

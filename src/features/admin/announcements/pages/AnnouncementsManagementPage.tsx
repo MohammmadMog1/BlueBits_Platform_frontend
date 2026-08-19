@@ -112,7 +112,7 @@ export default function AnnouncementsManagementPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6" dir="rtl">
+    <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="mb-1 flex items-center gap-2.5">

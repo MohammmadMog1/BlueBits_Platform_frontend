@@ -76,7 +76,6 @@ export default function TimetableView({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      dir="rtl"
       className="space-y-5 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
     >
       {/* ── الترويسة + النشر ─────────────────── */}

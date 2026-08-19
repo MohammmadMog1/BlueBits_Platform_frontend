@@ -1,0 +1,59 @@
+{
+  "app": {
+    "name": "BlueBits",
+    "tagline": "Your University Life, Organized"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "searchPlaceholder": "Search...",
+    "retry": "Retry",
+    "back": "Back",
+    "more": "More"
+  },
+  "profile": {
+    "open": "Open profile",
+    "myProfile": "My Profile",
+    "logout": "Log out"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "notifications": {
+    "label": "Notifications",
+    "count_one": "{{count}} notification",
+    "count_other": "{{count}} notifications"
+  },
+  "language": {
+    "label": "Language",
+    "change": "Change language",
+    "current": "Current language: {{language}}"
+  },
+  "roles": {
+    "USER": "Student",
+    "LECTURER": "Lecturer",
+    "BLUE": "Blue",
+    "ADMIN": "Admin",
+    "SUPER_ADMIN": "Super Admin",
+    "GUEST": "Guest"
+  },
+  "errors": {
+    "title": "Error",
+    "userArea": "Something went wrong in the user area.",
+    "adminArea": "Something went wrong in the admin area.",
+    "generic": "An unexpected error occurred."
+  },
+  "states": {
+    "loading": "Loading...",
+    "empty": "No data",
+    "noResults": "No results"
+  }
+}

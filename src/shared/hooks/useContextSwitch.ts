@@ -1,10 +1,12 @@
 // src/shared/hooks/useContextSwitch.ts
 import { useLocation } from "react-router-dom";
 import { LogOut, ShieldCheck, type LucideIcon } from "lucide-react";
+import type { NavKey } from "../i18n/types";
 
 export interface ContextSwitchAction {
   path: string;
-  label: string;
+  /** مفتاح ترجمة – يُترجَم في المكوّن الذي يعرضه */
+  labelKey: NavKey;
   icon: LucideIcon;
 }
 
@@ -22,11 +24,11 @@ export function useContextSwitch(role: string): ContextSwitchAction | null {
   const isAdminRole = ADMIN_ROLES.includes(role);
 
   if (isInAdminArea) {
-    return { path: "/user", label: "Back to App", icon: LogOut };
+    return { path: "/user", labelKey: "nav:switch.backToApp", icon: LogOut };
   }
 
   if (isInUserArea && isAdminRole) {
-    return { path: "/admin", label: "Go to Admin Panel", icon: ShieldCheck };
+    return { path: "/admin", labelKey: "nav:switch.goToAdmin", icon: ShieldCheck };
   }
 
   return null;

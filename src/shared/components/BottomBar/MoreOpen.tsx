@@ -3,9 +3,12 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { X, ChevronRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
 import type { NavItem } from "../../layout/MainLayout/MainLayout";
 import type { ContextSwitchAction } from "../../hooks/useContextSwitch";
 import { useNavigation } from "../../hooks/useNavigation";
+import { useLanguage } from "../../i18n/useLanguage";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 
 interface MoreOpenIconProps {
   isOpen: boolean;
@@ -24,6 +27,8 @@ export default function MoreOpenIcon({
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const { theme } = useTheme();
+  const { t } = useTranslation(["common", "nav"]);
+  const { isRTL } = useLanguage();
   const isDark = theme === "dark";
 
   // Focus trap و Escape key handler
@@ -77,8 +82,8 @@ export default function MoreOpenIcon({
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            aria-label="Close menu"
-            className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+            aria-label={t("nav:aria.closeMenu")}
+            className={`absolute top-4 end-4 p-2 rounded-full transition-colors ${
               isDark ? "hover:bg-white/10" : "hover:bg-gray-100"
             }`}
           >
@@ -87,8 +92,13 @@ export default function MoreOpenIcon({
         </div>
 
         <h2 id="more-menu-title" className="sr-only">
-          More navigation options
+          {t("nav:aria.moreOptions")}
         </h2>
+
+        {/* مبدّل اللغة متاح على الجوال هنا لأن الـ Header لا يعرضه في الشاشات الصغيرة */}
+        <div className="mb-4">
+          <LanguageSwitcher variant="inline" />
+        </div>
 
         {/* Switch area action (Admin <-> User) */}
         {switchAction && (
@@ -97,9 +107,15 @@ export default function MoreOpenIcon({
             onClick={() => handleNav(switchAction.path, onClose)}
             className="flex items-center gap-3 w-full p-4 mb-4 rounded-2xl text-white bg-gradient-to-r from-[#404293] to-[#2376BB] shadow-md shadow-[#404293]/25 active:scale-[0.98] transition-transform"
           >
-            <switchAction.icon className="w-5 h-5 flex-shrink-0" />
-            <span className="flex-1 text-sm font-semibold text-left">{switchAction.label}</span>
-            <ChevronRight className="w-4 h-4 flex-shrink-0 opacity-80" />
+            <switchAction.icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+            <span className="flex-1 text-sm font-semibold text-start">
+              {t(switchAction.labelKey)}
+            </span>
+            {/* سهم "المتابعة" اتجاهي – يشير لليسار في RTL */}
+            <ChevronRight
+              aria-hidden="true"
+              className={`w-4 h-4 flex-shrink-0 opacity-80 ${isRTL ? "rotate-180" : ""}`}
+            />
           </Link>
         )}
 
@@ -111,7 +127,7 @@ export default function MoreOpenIcon({
               const Icon = item.icon;
               return (
                 <Link
-                  key={item.label}
+                  key={item.path}
                   to={item.path}
                   onClick={() => handleNav(item.path, onClose)}
                   aria-current={active ? "page" : undefined}
@@ -124,6 +140,7 @@ export default function MoreOpenIcon({
                   }`}
                 >
                   <Icon
+                    aria-hidden="true"
                     className={`w-6 h-6 ${
                       active ? "text-[#404293]" : isDark ? "text-gray-400" : "text-gray-500"
                     }`}
@@ -133,7 +150,7 @@ export default function MoreOpenIcon({
                       active ? "text-[#404293]" : isDark ? "text-gray-300" : "text-gray-600"
                     }`}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </span>
                 </Link>
               );

@@ -171,7 +171,6 @@ export default function AcademicTaskFormModal({
         <form
           onSubmit={handleSubmit}
           className="max-h-[70vh] space-y-5 overflow-y-auto px-7 py-6"
-          dir="rtl"
         >
           <label className="block text-sm font-bold text-gray-700">
             عنوان التاسك <span className="text-red-400">*</span>

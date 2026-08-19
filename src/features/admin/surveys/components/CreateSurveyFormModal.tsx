@@ -84,7 +84,6 @@ export default function CreateSurveyFormModal({
         exit={{ scale: 0.94 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
         onClick={(event) => event.stopPropagation()}
-        dir="rtl"
         className={`w-full max-w-md rounded-3xl p-7 shadow-2xl ${
           isDark ? "bg-[#202121] ring-1 ring-white/10" : "bg-white"
         }`}

@@ -29,7 +29,7 @@ export default function TasksHubPage() {
   const progress = totalTasks > 0 ? Math.round((totalDone / totalTasks) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-6" dir="rtl">
+    <div className="flex flex-col gap-6">
       <div>
         <h1 className={`text-xl font-black tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}>
           مهامي

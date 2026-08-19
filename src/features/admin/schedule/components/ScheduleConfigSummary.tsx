@@ -69,7 +69,6 @@ export default function ScheduleConfigSummary({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      dir="rtl"
       className="space-y-5 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
     >
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 pb-4">

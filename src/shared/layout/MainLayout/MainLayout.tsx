@@ -1,6 +1,7 @@
 // src/shared/layout/MainLayout/MainLayout.tsx
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+import type { NavKey } from "../../i18n/types";
 import Header from "../../components/Header/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import BottomBar from "../../components/BottomBar/BottomBar";
@@ -8,14 +9,14 @@ import ProfileDrawer from "../../../features/profile/components/ProfileDrawer";
 
 export interface NavItem {
   icon: React.ElementType;
-  label: string;
+  /** مفتاح ترجمة داخل namespace الـ `nav` – يُترجَم عند العرض لا عند التعريف */
+  labelKey: NavKey;
   path: string;
 }
 
 export interface UserProfile {
   name: string;
-  roleLabel: string; // للعرض فقط (Student, Admin, etc.)
-  role: string;      // ✨ جديد: الدور الخام للمقارنة (USER, ADMIN, SUPER_ADMIN)
+  role: string;      // الدور الخام للمقارنة (USER, ADMIN, SUPER_ADMIN)
   initials: string;
   profile_image?: string;
 }

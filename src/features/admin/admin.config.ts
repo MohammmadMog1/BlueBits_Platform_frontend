@@ -15,34 +15,27 @@ import {
 } from "lucide-react";
 import type { NavItem } from "../../shared/layout/MainLayout/MainLayout";
 
+/** انظر التعليق في user.config.ts بخصوص استخدام المفاتيح بدل النصوص. */
 export const adminNavItems: NavItem[] = [
-  { icon: LayoutDashboard, label: "Admin Dashboard", path: "/admin/dashboard" },
-  { icon: Users, label: "Manage Users", path: "/admin/users" },
-  { icon: GraduationCap, label: "Academic Structure", path: "/admin/academic" },
-  { icon: BookMarked, label: "Manage Subjects", path: "/admin/subjects" },
-  { icon: FileText, label: "Manage Lectures", path: "/admin/lectures" },
-  { icon: BrainCircuit, label: "Question Banks", path: "/admin/question-banks" },
-  { icon: ClipboardList, label: "Academic Tasks", path: "/admin/academic-tasks" },
-  { icon: Megaphone, label: "Announcements", path: "/admin/announcements" },
-  {
-    icon: ClipboardCheck,
-    label: "Schedule Survey",
-    path: "/admin/surveys",
-  },
-  {
-    icon: BarChart3,
-    label: "Survey Stats",
-    path: "/admin/survey-stats",
-  },
+  { icon: LayoutDashboard, labelKey: "nav:admin.dashboard", path: "/admin/dashboard" },
+  { icon: Users, labelKey: "nav:admin.users", path: "/admin/users" },
+  { icon: GraduationCap, labelKey: "nav:admin.academic", path: "/admin/academic" },
+  { icon: BookMarked, labelKey: "nav:admin.subjects", path: "/admin/subjects" },
+  { icon: FileText, labelKey: "nav:admin.lectures", path: "/admin/lectures" },
+  { icon: BrainCircuit, labelKey: "nav:admin.questionBanks", path: "/admin/question-banks" },
+  { icon: ClipboardList, labelKey: "nav:admin.academicTasks", path: "/admin/academic-tasks" },
+  { icon: Megaphone, labelKey: "nav:admin.announcements", path: "/admin/announcements" },
+  { icon: ClipboardCheck, labelKey: "nav:admin.surveys", path: "/admin/surveys" },
+  { icon: BarChart3, labelKey: "nav:admin.surveyStats", path: "/admin/survey-stats" },
   {
     icon: CalendarClock,
-    label: "Schedule Settings",
+    labelKey: "nav:admin.scheduleSettings",
     path: "/admin/schedule-settings",
   },
   {
     icon: CalendarCheck,
-    label: "Exam Schedule",
+    labelKey: "nav:admin.scheduleGenerate",
     path: "/admin/schedule-generate",
   },
-  { icon: Sparkles, label: "AI Assistant", path: "/admin/assistant" },
+  { icon: Sparkles, labelKey: "nav:admin.assistant", path: "/admin/assistant" },
 ];

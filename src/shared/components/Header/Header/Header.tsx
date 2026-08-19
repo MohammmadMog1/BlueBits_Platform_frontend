@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Search, Sun, Moon, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
 import imge from "../../../../app/assets/Logo.png"
 import { Link } from "react-router-dom";
 import  type { UserProfile } from "../../../layout/MainLayout/MainLayout";
 import { getProfileImageUrl } from "../../../utils/user";
-
-// import type { UserProfile } from "../../layout/MainLayout/MainLayout";
-
+import LanguageSwitcher from "../../LanguageSwitcher/LanguageSwitcher";
 
 interface HeaderProps {
   userProfile: UserProfile;
@@ -19,6 +18,7 @@ export default function Header({ userProfile, onOpenProfile, isProfileOpen }: He
   const [notifications, setNotifications] = useState(3);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
   const isDark = theme === "dark";
 
   useEffect(() => {
@@ -51,11 +51,13 @@ export default function Header({ userProfile, onOpenProfile, isProfileOpen }: He
           }`}
         >
           <Search
+            aria-hidden="true"
             className={`w-4 h-4 flex-shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`}
           />
           <input
-            type="text"
-            placeholder="Search..."
+            type="search"
+            aria-label={t("actions.search")}
+            placeholder={t("actions.searchPlaceholder")}
             className={`bg-transparent text-sm w-full outline-none ${
               isDark
                 ? "text-white placeholder-gray-600"
@@ -67,6 +69,7 @@ export default function Header({ userProfile, onOpenProfile, isProfileOpen }: He
 
       <div className="flex items-center gap-2">
         <button
+          aria-label={t("actions.search")}
           className={`md:hidden p-2.5 rounded-xl transition-colors ${
             isDark
               ? "hover:bg-white/10 text-gray-400"
@@ -76,8 +79,11 @@ export default function Header({ userProfile, onOpenProfile, isProfileOpen }: He
           <Search className="w-[18px] h-[18px]" />
         </button>
 
+        <LanguageSwitcher />
+
         <button
           onClick={() => setTheme(isDark ? "light" : "dark")}
+          aria-label={t(isDark ? "theme.switchToLight" : "theme.switchToDark")}
           className={`p-2.5 rounded-xl transition-all ${
             isDark
               ? "bg-white/8 hover:bg-white/15 text-yellow-400"
@@ -93,21 +99,24 @@ export default function Header({ userProfile, onOpenProfile, isProfileOpen }: He
 
         <button
           onClick={() => setNotifications(0)}
+          /* صيغ الجمع العربية الست يتكفّل بها i18next عبر مفاتيح count_* */
+          aria-label={t("notifications.count", { count: notifications })}
           className={`relative p-2.5 rounded-xl transition-all ${
             isDark
               ? "bg-white/8 hover:bg-white/15 text-gray-400"
               : "bg-gray-100 hover:bg-gray-200 text-gray-500"
           }`}
         >
-          <Bell className="w-[18px] h-[18px]" />
+          <Bell className="w-[18px] h-[18px]" aria-hidden="true" />
           {notifications > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-[#1a1b1e]" />
+            /* end-1.5 منطقي: أعلى اليسار في RTL وأعلى اليمين في LTR */
+            <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-[#1a1b1e]" />
           )}
         </button>
 
         <button
           onClick={onOpenProfile}
-          aria-label="Open profile"
+          aria-label={t("profile.open")}
           aria-pressed={isProfileOpen}
           className={`w-9 h-9 rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md flex-shrink-0 ring-2 transition-all hover:scale-105 overflow-hidden ${
             isProfileOpen ? "ring-[#404293]/40" : "ring-transparent hover:ring-[#404293]/30"

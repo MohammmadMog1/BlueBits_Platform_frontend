@@ -120,7 +120,7 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
         ) : undefined
       }
     >
-      <div className="space-y-5" dir="rtl">
+      <div className="space-y-5">
         {submission && (
           <div className={`rounded-2xl border p-4 ${isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50"}`}>
             <div className="mb-2 flex items-center justify-between">

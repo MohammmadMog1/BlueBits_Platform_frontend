@@ -89,7 +89,7 @@ export default function SurveyFormsManagementPage() {
   const isOpening = pendingAction?.type === "open";
 
   return (
-    <div className="mx-auto flex max-w-[1300px] flex-col gap-6" dir="rtl">
+    <div className="mx-auto flex max-w-[1300px] flex-col gap-6">
       {/* ── الترويسة ─────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-3">
@@ -311,7 +311,6 @@ export default function SurveyFormsManagementPage() {
               exit={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(event) => event.stopPropagation()}
-              dir="rtl"
               className={`w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl ${
                 isDark ? "bg-[#202121] ring-1 ring-white/10" : "bg-white"
               }`}

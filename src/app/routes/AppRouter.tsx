@@ -12,37 +12,34 @@ import GlobalError from "../../shared/components/ErrorBoundary/GlobalError";
 import { userRoutes } from "../../features/user/user.routes";
 import { adminRoutes } from "../../features/admin/admin.routes";
 
-// استيراد النوع فقط للتحقق (لن نستخدمه كقيمة)
-// import type { UserRole } from "../../features/auth/types/auth.types"; 
-
 const router = createBrowserRouter([
   ...landingRoutes,
   ...authRoutes,
 
   // --- مسارات الطالب/المستخدم ---
   {
-    path: "/user", 
+    path: "/user",
     element: (
-      // ✅ الحل: استخدم النصوص الحرفية المطابقة للـ Type
-      <ProtectedRoute >
+      <ProtectedRoute>
         <UserLayout />
       </ProtectedRoute>
     ),
-    errorElement: <GlobalError title="خطأ" message="حدث خطأ في منطقة المستخدم." />,
-    children: userRoutes, 
+    // مفاتيح ترجمة لا نصوص: الراوتر يُبنى مرّة واحدة عند تحميل الوحدة،
+    // فالنصّ المترجَم هنا سيتجمّد على لغة الإقلاع. GlobalError يترجم بنفسه.
+    errorElement: <GlobalError messageKey="errors.userArea" />,
+    children: userRoutes,
   },
 
   // --- مسارات الإدارة ---
   {
     path: "/admin",
     element: (
-      // ✅ الحل: استخدم النصوص الحرفية المطابقة للـ Type
       <ProtectedRoute allowedRoles={["ADMIN", "SUPER_ADMIN"]}>
         <AdminLayout />
       </ProtectedRoute>
     ),
-    errorElement: <GlobalError title="خطأ" message="حدث خطأ في منطقة الإدارة." />,
-    children: adminRoutes, 
+    errorElement: <GlobalError messageKey="errors.adminArea" />,
+    children: adminRoutes,
   },
 ]);
 
@@ -51,52 +48,3 @@ const AppRouter = () => {
 };
 
 export default AppRouter;
-
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-// // استيراد الـ Layouts ومصفوفات المسارات من الميزات
-// import MainLayout from "../../shared/layout/MainLayout/MainLayout";
-// import { landingRoutes } from "../../features/landing/landing.routes";
-// import { authRoutes } from "../../features/auth/auth.routes";
-// import { adminRoutes } from "../../features/admin/admin.routes";
-// import { userRoutes } from "../../features/user/user.routes";
-// import ProtectedRoute from "../../features/auth/components/ProtectedRoute";
-// import GlobalError from "../../shared/components/ErrorBoundary/GlobalError";
-// // import { studentDashboardRoutes } from "../../features/studentDashboard/student.routes";
-// // import { adminDashboardRoutes } from "../../features/adminDashboard/admin.routes";
-
-// const router = createBrowserRouter([
-//   // دمج مسارات الواجهة الرئيسية
-//   ...landingRoutes,
-
-//   // دمج مسارات تسجيل الدخول وإنشاء الحساب
-//   ...authRoutes,
-
-//   ...userRoutes,
-//   ...adminRoutes,
-
-//   {
-//     path: "/dashboard",
-//     element: (
-//       <ProtectedRoute>
-//         <MainLayout />
-//       </ProtectedRoute>
-//     ),
-//     errorElement: (
-//       <GlobalError
-//         title="Page not found"
-//         message="The page you are looking for does not exist."
-//       />
-//     ),
-//     children: [
-//       // ...studentDashboardRoutes,
-//       // ...adminDashboardRoutes,
-//     ],
-//   },
-// ]);
-
-// const AppRouter = () => {
-//   return <RouterProvider router={router} />;
-// };
-
-// export default AppRouter;

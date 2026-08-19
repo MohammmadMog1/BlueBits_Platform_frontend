@@ -33,7 +33,6 @@ function SemesterModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
-      dir="rtl"
     >
       <motion.form
         initial={{ opacity: 0, scale: 0.96 }}
@@ -97,7 +96,6 @@ function DeleteConfirm({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
-      dir="rtl"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
@@ -170,7 +168,7 @@ export default function SemestersPanel() {
     }
   };
   return (
-    <div dir="rtl">
+    <div>
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-gray-500">
           {semesters.length} فصل مسجّل

@@ -78,7 +78,7 @@ export default function ScheduleGeneratorPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6" dir="rtl">
+    <div className="flex flex-col gap-6">
       {/* ── الترويسة ─────────────────────────── */}
       <div>
         <div className="mb-1 flex items-center gap-2.5">
@@ -264,7 +264,6 @@ export default function ScheduleGeneratorPage() {
               exit={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(event) => event.stopPropagation()}
-              dir="rtl"
               className="w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl"
             >
               <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#404293]/10">

@@ -242,7 +242,7 @@ export default function TaskSubmissionsModal({ task, onClose }: TaskSubmissionsM
           </div>
         </div>
 
-        <div className="max-h-[65vh] space-y-3 overflow-y-auto px-7 py-6" dir="rtl">
+        <div className="max-h-[65vh] space-y-3 overflow-y-auto px-7 py-6">
           {submissionsQuery.isError && (
             <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
               <AlertCircle className="h-4 w-4 shrink-0" />

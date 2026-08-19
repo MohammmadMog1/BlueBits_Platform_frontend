@@ -71,7 +71,6 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
-      dir="rtl"
     >
       <div className="flex items-center gap-2">
         <Database className="h-4 w-4 text-[#2376BB]" />
