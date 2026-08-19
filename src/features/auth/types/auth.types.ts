@@ -35,6 +35,8 @@ export interface IUser {
   isBanned: boolean;
 
   year?: string;
+  /** معرّف السنة الدراسية كما يرجّعه الباك (/users/me) */
+  yearId?: string | null;
   number?: string;
 
   createdAt: string;

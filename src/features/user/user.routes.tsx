@@ -24,6 +24,8 @@ import { AiChatPage } from "../ai";
 import { StudentAnnouncementsPage } from "../studentAnnouncements";
 import TasksHubPage from "./pages/TasksHubPage";
 import { UserLectureManager } from "./Lectures";
+import { McqPracticePage } from "./mcq";
+import { SurveyPage } from "./survey";
 // import UserDashboardPage from "./pages/UserDashboardPage"; // مثال
 
 export const userRoutes: RouteObject[] = [
@@ -46,6 +48,14 @@ export const userRoutes: RouteObject[] = [
   {
     path: "lectures", // هذا يعني /user/lectures
     element: <UserLectureManager />,
+  },
+  {
+    path: "mcq", // هذا يعني /user/mcq
+    element: <McqPracticePage />,
+  },
+  {
+    path: "survey", // هذا يعني /user/survey — استبيان برنامج الفحص
+    element: <SurveyPage />,
   },
   // أضف باقي صفحات المستخدم هنا
 ];

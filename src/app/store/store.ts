@@ -24,6 +24,9 @@ import { personalTasksApi } from "../../features/personalTasks/api/personalTasks
 import { announcementsApi } from "../../features/admin/announcements/api/announcementsApi";
 import { commentsApi } from "../../features/user/Lectures/interactions/api/commentsApi";
 import { reactionsApi } from "../../features/user/Lectures/interactions/api/reactionsApi";
+import { questionBanksApi } from "../../features/admin/questionBanks/api/questionBanksApi";
+import { scheduleApi } from "../../features/admin/schedule/api/scheduleApi";
+import { surveysApi } from "../../features/admin/surveys/api/surveysApi";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -54,6 +57,9 @@ const rootReducer = combineReducers({
   [announcementsApi.reducerPath]: announcementsApi.reducer,
   [commentsApi.reducerPath]: commentsApi.reducer,
   [reactionsApi.reducerPath]: reactionsApi.reducer,
+  [questionBanksApi.reducerPath]: questionBanksApi.reducer,
+  [scheduleApi.reducerPath]: scheduleApi.reducer,
+  [surveysApi.reducerPath]: surveysApi.reducer,
 });
 
 const persistConfig = {
@@ -83,6 +89,9 @@ export const store = configureStore({
       announcementsApi.middleware,
       commentsApi.middleware,
       reactionsApi.middleware,
+      questionBanksApi.middleware,
+      scheduleApi.middleware,
+      surveysApi.middleware,
     ),
 });
 

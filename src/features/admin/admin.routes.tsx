@@ -24,8 +24,11 @@ import UsersManagementPage from "../users/pages/UsersManagementPage";
 import { AcademicPage } from "./academic";
 import SubjectManagementPage from "./subjects/pages/SubjectManagementPage";
 import { LectureManagementPage } from "./lectures";
+import { QuestionBanksManagementPage } from "./questionBanks";
 import { AcademicTasksManagementPage } from "./tasks";
 import { AnnouncementsManagementPage } from "./announcements";
+import { ScheduleGeneratorPage, ScheduleSettingsPage } from "./schedule";
+import { SurveyFormsManagementPage, SurveyStatsPage } from "./surveys";
 import { AiChatPage } from "../ai";
 
 
@@ -51,12 +54,32 @@ export const adminRoutes: RouteObject[] = [
     element: <LectureManagementPage />,
   },
   {
+    path: "question-banks", // هذا يعني /admin/question-banks
+    element: <QuestionBanksManagementPage />,
+  },
+  {
     path: "academic-tasks",
     element: <AcademicTasksManagementPage />,
   },
   {
     path: "announcements",
     element: <AnnouncementsManagementPage />,
+  },
+  {
+    path: "surveys", // هذا يعني /admin/surveys
+    element: <SurveyFormsManagementPage />,
+  },
+  {
+    path: "survey-stats", // هذا يعني /admin/survey-stats
+    element: <SurveyStatsPage />,
+  },
+  {
+    path: "schedule-settings", // هذا يعني /admin/schedule-settings
+    element: <ScheduleSettingsPage />,
+  },
+  {
+    path: "schedule-generate", // هذا يعني /admin/schedule-generate
+    element: <ScheduleGeneratorPage />,
   },
   {
     path: "assistant", // هذا يعني /admin/assistant
