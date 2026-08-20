@@ -29,7 +29,7 @@ function BottomBarLink({ item, active, isDark, label }: BottomBarLinkProps) {
       to={item.path}
       aria-current={active ? "page" : undefined}
       aria-label={label}
-      className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[56px] relative transition-all duration-200 active:scale-95 ${
+      className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2.5 min-h-14 relative transition-all duration-200 active:scale-95 ${
         active
           ? "text-[#404293]"
           : isDark
@@ -47,7 +47,9 @@ function BottomBarLink({ item, active, isDark, label }: BottomBarLinkProps) {
           className={`w-5 h-5 transition-transform ${active ? "scale-110" : ""}`}
         />
       </div>
-      <span className="text-[10px] font-semibold tracking-tight">{label}</span>
+      <span className="w-full max-w-full text-center text-[10px] font-semibold leading-[1.15] tracking-tight [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
+        {label}
+      </span>
     </Link>
   );
 }
@@ -98,7 +100,7 @@ export default function BottomBar({ navItems, userProfile, maxVisible = 4 }: Bot
             aria-expanded={moreOpen}
             aria-controls="more-menu"
             aria-label={t("nav:aria.moreOptions")}
-            className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 min-h-[56px] relative transition-all duration-200 active:scale-95 ${
+            className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2.5 min-h-14 relative transition-all duration-200 active:scale-95 ${
               isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
             }`}
           >
@@ -108,7 +110,7 @@ export default function BottomBar({ navItems, userProfile, maxVisible = 4 }: Bot
                 <span className="absolute top-0.5 end-0.5 w-2 h-2 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] ring-2 ring-white dark:ring-[#1a1b1e]" />
               )}
             </div>
-            <span className="text-[10px] font-semibold tracking-tight">
+            <span className="w-full max-w-full text-center text-[10px] font-semibold leading-[1.15] tracking-tight [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
               {t("actions.more")}
             </span>
           </button>
