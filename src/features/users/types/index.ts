@@ -65,26 +65,12 @@ export const ROLE_COLORS: Record<UserRole, string> = {
   SUPER_ADMIN: "bg-rose-100 text-rose-700",
 };
 
-export interface PermissionMeta {
-  key: Permission;
-  label: string;
-  description: string;
-}
-
-export const PERMISSIONS_LIST: PermissionMeta[] = [
-  {
-    key: "CREATE_QUESTION_BANK",
-    label: "إنشاء بنك أسئلة",
-    description: "إنشاء بنك من خلال رفع ملف الوورد أو الجيسون",
-  },
-  {
-    key: "UPDATE_QUESTION",
-    label: "تعديل سؤال",
-    description: "تعديل سؤال معين من بنك معين",
-  },
-  {
-    key: "DELETE_QUESTION",
-    label: "حذف سؤال",
-    description: "حذف سؤال معين من بنك معين",
-  },
+/**
+ * قائمة الصلاحيات – نخزّن المفتاح فقط، والتسمية والوصف يُترجَمان عند العرض
+ * عبر `users:permissions.<key>.label` و `.description`.
+ */
+export const PERMISSIONS_LIST: Permission[] = [
+  "CREATE_QUESTION_BANK",
+  "UPDATE_QUESTION",
+  "DELETE_QUESTION",
 ];

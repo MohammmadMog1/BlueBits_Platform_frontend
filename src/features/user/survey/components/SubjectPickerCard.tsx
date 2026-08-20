@@ -1,5 +1,6 @@
 import { Check, Plus, Repeat2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { difficultyLevel } from "../../../admin/surveys/utils/surveyTheme";
 import type { AnswerRowState } from "../hooks/useSurveyResponse";
 
@@ -20,6 +21,7 @@ export default function SubjectPickerCard({
   isDark,
   onToggle,
 }: SubjectPickerCardProps) {
+  const { t } = useTranslation(["survey", "admin"]);
   const level = difficultyLevel(row.difficultyRating);
   const LevelIcon = level.icon;
 
@@ -32,7 +34,7 @@ export default function SubjectPickerCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: Math.min(index * 0.03, 0.3), duration: 0.2 }}
       onClick={onToggle}
-      className={`group relative w-full rounded-2xl border-2 p-4 text-right transition-all duration-200 ${
+      className={`group relative w-full rounded-2xl border-2 p-4 text-start transition-all duration-200 ${
         row.isSelected
           ? `border-[#2376BB] shadow-lg shadow-[#404293]/10 ${
               isDark ? "bg-[#2376BB]/12" : "bg-[#404293]/5"
@@ -82,7 +84,7 @@ export default function SubjectPickerCard({
             <span
               className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-black ${level.chip(isDark)}`}
             >
-              <LevelIcon className="h-3 w-3" /> {level.label}
+              <LevelIcon className="h-3 w-3" /> {t(`admin:${level.labelKey}`)}
             </span>
             <span
               className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
@@ -91,7 +93,7 @@ export default function SubjectPickerCard({
                   : "bg-[#2376BB]/10 text-[#2376BB]"
               }`}
             >
-              {row.preferredDaysBefore} يوم راحة
+              {t("picker.restDays", { count: row.preferredDaysBefore })}
             </span>
             {row.isCarrying && (
               <span
@@ -101,7 +103,7 @@ export default function SubjectPickerCard({
                     : "bg-amber-50 text-amber-600"
                 }`}
               >
-                <Repeat2 className="h-3 w-3" /> حملة
+                <Repeat2 className="h-3 w-3" /> {t("summary.carrying")}
               </span>
             )}
           </>
@@ -111,7 +113,7 @@ export default function SubjectPickerCard({
               isDark ? "text-gray-500" : "text-gray-400"
             }`}
           >
-            اضغط للتضمين في إجابتك
+            {t("picker.tapToInclude")}
           </span>
         )}
       </div>

@@ -1,0 +1,88 @@
+{
+  "greetingTitle": "{{greeting}}، {{name}}",
+  "defaultName": "بك",
+  "subtitleWithYear": "{{year}} — إليك ملخّص يومك",
+  "subtitle": "إليك ملخّص يومك على المنصّة",
+  "stats": {
+    "upcoming": "مواعيد قادمة",
+    "overdueHint_zero": "لا شيء متأخر",
+    "overdueHint_one": "واحدة متأخرة",
+    "overdueHint_two": "اثنتان متأخرتان",
+    "overdueHint_few": "{{count}} متأخرة",
+    "overdueHint_many": "{{count}} متأخرة",
+    "overdueHint_other": "{{count}} متأخرة",
+    "personalTasks": "مهام شخصية",
+    "doneHint": "{{count}} منجزة",
+    "academicOpen": "مهام أكاديمية مفتوحة",
+    "totalHint": "{{count}} إجمالاً",
+    "announcements": "إعلانات دفعتك"
+  },
+  "surveyCallout": {
+    "title": "استبيان جدول الامتحانات مفتوح",
+    "subtitle": "{{semester}} · {{year}} — رأيك يحدّد ترتيب الامتحانات",
+    "currentSemester": "الفصل الحالي",
+    "cta": "عبّئ الاستبيان"
+  },
+  "progress": {
+    "title": "التقدّم الإجمالي",
+    "hint": "المهام الشخصية والأكاديمية معاً",
+    "personalDone": "مهام شخصية منجزة",
+    "academicOpen": "مهام أكاديمية مفتوحة",
+    "overdue": "متأخرة",
+    "openTasksPage": "فتح صفحة المهام"
+  },
+  "deadlines": {
+    "title": "أقرب المواعيد",
+    "hint": "مرتّبة من الأقرب للأبعد",
+    "emptyTitle": "لا توجد مواعيد قادمة",
+    "emptyHint": "أنجزت كل ما عليك — أضف مهمة جديدة عند الحاجة",
+    "personalFallback": "مهمة شخصية",
+    "academicFallback": "مهمة أكاديمية"
+  },
+  "latestLectures": {
+    "title": "أحدث المحاضرات",
+    "hint": "آخر ما نُشر على المنصّة",
+    "emptyTitle": "لا توجد محاضرات منشورة",
+    "emptyHint": "ستظهر هنا فور رفعها"
+  },
+  "announcements": {
+    "title": "إعلانات دفعتك",
+    "hint": "آخر ما نشره الفريق الأكاديمي",
+    "emptyTitle": "لا توجد إعلانات",
+    "emptyHint": "سنعلمك فور نشر أي إعلان لدفعتك"
+  },
+  "focusTimer": {
+    "title": "مؤقت التركيز",
+    "minutesOption": "{{minutes}} د",
+    "durationLabel": "مدّة الجلسة",
+    "start": "بدء",
+    "pause": "إيقاف مؤقّت",
+    "reset": "إعادة ضبط"
+  },
+  "quickActions": {
+    "lectures": {
+      "label": "المحاضرات",
+      "hint": "تصفّح وحمّل"
+    },
+    "mcq": {
+      "label": "تدرّب MCQ",
+      "hint": "بنوك الأسئلة"
+    },
+    "tasks": {
+      "label": "مهامي",
+      "hint": "شخصية وأكاديمية"
+    },
+    "survey": {
+      "label": "الاستبيان",
+      "hint": "جدول الامتحانات"
+    },
+    "announcements": {
+      "label": "الإعلانات",
+      "hint": "أخبار دفعتك"
+    },
+    "assistant": {
+      "label": "المساعد الذكي",
+      "hint": "اسأل واستذكر"
+    }
+  }
+}

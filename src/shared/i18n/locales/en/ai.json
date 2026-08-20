@@ -1,0 +1,36 @@
+{
+  "title": "AI assistant",
+  "poweredBy": "Powered by AI • BlueBits",
+  "openConversations": "Open conversations",
+  "loadingConversation": "Loading conversation...",
+  "unknownInitial": "?",
+  "input": {
+    "placeholder": "Type your question here... (Enter to send, Shift+Enter for a new line)",
+    "send": "Send"
+  },
+  "sidebar": {
+    "newConversation": "New conversation",
+    "empty": "No previous conversations yet",
+    "untitled": "Untitled conversation",
+    "deleteConversation": "Delete conversation",
+    "confirmDelete": "Delete this conversation permanently?"
+  },
+  "empty": {
+    "heading": "How can I help you today?",
+    "subtitle": "Ask me anything about your studies, your projects, or using the BlueBits platform.",
+    "suggestions": {
+      "summarize": "Summarise the key points of this lecture for me",
+      "explain": "Explain this programming concept in simple terms",
+      "studyPlan": "Help me build a study plan for this week",
+      "reviewQuestions": "Suggest revision questions for this subject"
+    }
+  },
+  "message": {
+    "typing": "The assistant is typing...",
+    "renderFailed": "This reply could not be displayed."
+  },
+  "errors": {
+    "replyFailed": "Could not get a reply from the AI assistant. Please try again.",
+    "loadConversationFailed": "Failed to load the conversation."
+  }
+}

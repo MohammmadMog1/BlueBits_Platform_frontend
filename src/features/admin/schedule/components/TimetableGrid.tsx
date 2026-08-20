@@ -1,6 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import type { DayGroup } from "../types";
-import { dayOfWeekLabel, formatDate } from "../utils/schedule";
+import { useTranslation } from "react-i18next";
+import { useScheduleDates } from "../hooks/useScheduleDates";
 
 interface TimetableGridProps {
   days: DayGroup[];
@@ -12,20 +13,22 @@ interface TimetableGridProps {
  * الخلية التي تحوي أكثر من مادة تعني تصادماً فتُبرز بالأحمر.
  */
 export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
+  const { t } = useTranslation("admin");
+  const { dayOfWeekLabel, formatDate } = useScheduleDates();
   return (
     <div className="overflow-x-auto rounded-2xl border border-gray-100">
       <table className="w-full min-w-[640px] border-collapse text-right">
         <thead>
           <tr className="bg-gradient-to-l from-[#404293] to-[#2376BB] text-white">
             <th className="sticky right-0 z-10 bg-[#404293] px-4 py-3 text-xs font-black">
-              اليوم
+              {t("schedule.timetable.dayHeader")}
             </th>
             {timeslots.map((timeslot) => (
               <th
                 key={timeslot}
                 className="border-r border-white/15 px-4 py-3 text-center text-xs font-black"
               >
-                الفترة {timeslot}
+                {t("schedule.timetable.slotHeader", { number: timeslot })}
               </th>
             ))}
           </tr>
@@ -72,7 +75,7 @@ export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
                         {isClash && (
                           <span className="flex items-center gap-1 text-[10px] font-black text-red-600">
                             <AlertTriangle size={10} />
-                            تصادم ({entries.length})
+                            {t("schedule.timetable.clash", { count: entries.length })}
                           </span>
                         )}
                         {entries.map((entry) => (

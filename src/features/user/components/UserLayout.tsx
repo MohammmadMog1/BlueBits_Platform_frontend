@@ -1,4 +1,5 @@
 // src/features/user/components/UserLayout.tsx
+import { useTranslation } from "react-i18next";
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
 import { useAppSelector } from "../../../app/store/hooks";
@@ -6,6 +7,7 @@ import { getUserInitials } from "../../../shared/utils/user";
 import { userNavItems } from "../user.config";
 
 export default function UserLayout() {
+  const { t } = useTranslation("common");
   const userFromStore = useAppSelector((state) => state.auth.user);
 
   // roleLabel لم يعد جزءاً من الـ profile – يُترجَم عند العرض من common:roles.*
@@ -16,7 +18,7 @@ export default function UserLayout() {
         initials: getUserInitials(userFromStore.name),
         profile_image: userFromStore.profile_image,
       }
-    : { name: "Guest", role: "GUEST", initials: "G" };
+    : { name: t("roles.GUEST"), role: "GUEST", initials: "G" };
 
   return <MainLayout navItems={userNavItems} userProfile={userProfile} />;
 }

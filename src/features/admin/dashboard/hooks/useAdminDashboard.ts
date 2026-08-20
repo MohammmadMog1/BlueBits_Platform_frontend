@@ -14,15 +14,6 @@ import type {
   SubjectLoadItem,
 } from "../types";
 
-const ROLE_LABELS: Record<UserRole, string> = {
-  USER: "طالب",
-  DOCTOR: "دكتور",
-  LECTURER: "محاضر",
-  BLUE: "فريق بلو",
-  ADMIN: "أدمن",
-  SUPER_ADMIN: "سوبر أدمن",
-};
-
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const CLOSING_SOON_LIMIT = 5;
 const TOP_SUBJECTS_LIMIT = 5;
@@ -103,7 +94,6 @@ export function useAdminDashboard(): AdminDashboardState {
 
     const breakdown: RoleBreakdownItem[] = USER_ROLES.map((role) => ({
       role,
-      label: ROLE_LABELS[role],
       count: counts[role] ?? 0,
       percentage: percent(counts[role] ?? 0, total),
     }))

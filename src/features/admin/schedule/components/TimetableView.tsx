@@ -10,23 +10,25 @@ import {
   Table2,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import type { AdminKey } from "../../../../shared/i18n/types";
 import type { GeneratedSchedule, TimetableViewMode } from "../types";
 import {
   countClashes,
-  formatDate,
   groupTimetableByDay,
   listTimeslots,
 } from "../utils/schedule";
+import { useScheduleDates } from "../hooks/useScheduleDates";
 import TimetableDayCards from "./TimetableDayCards";
 import TimetableGrid from "./TimetableGrid";
 
 const VIEW_OPTIONS: {
   mode: TimetableViewMode;
-  label: string;
+  labelKey: AdminKey;
   icon: typeof Table2;
 }[] = [
-  { mode: "grid", label: "جدول", icon: Table2 },
-  { mode: "cards", label: "بطاقات", icon: LayoutGrid },
+  { mode: "grid", labelKey: "schedule.timetable.viewGrid", icon: Table2 },
+  { mode: "cards", labelKey: "schedule.timetable.viewCards", icon: LayoutGrid },
 ];
 
 interface TimetableViewProps {
@@ -42,6 +44,8 @@ export default function TimetableView({
   publishError,
   onPublish,
 }: TimetableViewProps) {
+  const { t } = useTranslation("admin");
+  const { formatDate } = useScheduleDates();
   const [viewMode, setViewMode] = useState<TimetableViewMode>("grid");
 
   const days = useMemo(
@@ -60,13 +64,17 @@ export default function TimetableView({
 
   const stats = [
     {
-      label: "مواد مجدولة",
+      label: t("schedule.timetable.scheduledSubjects"),
       value: schedule.timetable?.length ?? 0,
       color: "#404293",
     },
-    { label: "أيام الفحص", value: days.length, color: "#2376BB" },
     {
-      label: "فترات متصادمة",
+      label: t("schedule.timetable.examDays"),
+      value: days.length,
+      color: "#2376BB",
+    },
+    {
+      label: t("schedule.timetable.clashingSlots"),
       value: clashes,
       color: clashes ? "#EF4444" : "#059669",
     },
@@ -92,7 +100,9 @@ export default function TimetableView({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-black text-gray-900">برنامج الفحص</h2>
+              <h2 className="text-base font-black text-gray-900">
+                {t("schedule.timetable.heading")}
+              </h2>
               <span
                 className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
                   isPublished
@@ -100,11 +110,18 @@ export default function TimetableView({
                     : "bg-amber-50 text-amber-600"
                 }`}
               >
-                {isPublished ? "منشور" : "مسودة"}
+                {t(
+                  isPublished
+                    ? "schedule.timetable.published"
+                    : "schedule.timetable.draft",
+                )}
               </span>
             </div>
             <p className="mt-0.5 text-xs font-semibold text-gray-400">
-              {schedule.academicYear} · آخر تحديث: {formatDate(schedule.updatedAt)}
+              {t("schedule.timetable.yearAndUpdated", {
+                year: schedule.academicYear,
+                date: formatDate(schedule.updatedAt),
+              })}
             </p>
           </div>
         </div>
@@ -127,7 +144,7 @@ export default function TimetableView({
                   }`}
                 >
                   <option.icon size={13} />
-                  {option.label}
+                  {t(option.labelKey)}
                 </button>
               );
             })}
@@ -145,10 +162,10 @@ export default function TimetableView({
           >
             <Send size={13} />
             {isPublishing
-              ? "جاري النشر..."
+              ? t("schedule.timetable.publishing")
               : isPublished
-                ? "إعادة النشر"
-                : "نشر الجدول"}
+                ? t("schedule.timetable.republish")
+                : t("schedule.timetable.publish")}
           </button>
         </div>
       </div>
@@ -180,9 +197,11 @@ export default function TimetableView({
                 hasHardViolations ? "text-red-500" : "text-emerald-600"
               }`}
             >
-              {hasHardViolations
-                ? "قيود صارمة مخروقة"
-                : "لا خروقات في القيود الصارمة"}
+              {t(
+                hasHardViolations
+                  ? "schedule.timetable.hardViolated"
+                  : "schedule.timetable.hardSatisfied",
+              )}
             </p>
             <p
               className={`text-sm font-black ${
@@ -224,14 +243,14 @@ export default function TimetableView({
       {clashes > 0 && (
         <p className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-700">
           <AlertTriangle size={13} className="shrink-0" />
-          {clashes} فترة فيها أكثر من مادة في نفس الوقت – مُبرزة بالأحمر أدناه.
+          {t("schedule.timetable.clashesNotice", { count: clashes })}
         </p>
       )}
 
       {/* ── الجدول ───────────────────────────── */}
       {days.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center text-xs font-bold text-gray-400">
-          الجدول فارغ
+          {t("schedule.timetable.empty")}
         </p>
       ) : viewMode === "grid" ? (
         <TimetableGrid days={days} timeslots={timeslots} />
@@ -242,7 +261,7 @@ export default function TimetableView({
       {isPublished && (
         <p className="flex items-center gap-2 text-[11px] font-bold text-emerald-600">
           <CheckCircle2 size={12} />
-          هذا الجدول منشور ومرئي للطلاب.
+          {t("schedule.timetable.publishedNotice")}
         </p>
       )}
     </motion.div>

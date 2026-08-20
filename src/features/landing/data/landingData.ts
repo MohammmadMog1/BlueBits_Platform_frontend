@@ -111,21 +111,26 @@ export const BATCHES: Batch[] = [
   },
 ];
 
+/**
+ * ملاحظة i18n: نخزّن مُعرّف الميزة (`id`) لا نصّها المترجَم، لأن الثابت يُقيَّم
+ * مرّة واحدة عند تحميل الملف فيتجمّد على لغة الإقلاع. الترجمة تتمّ عند العرض
+ * عبر `t("features.items.<id>.title")`.
+ */
 export const featuresData = [
-  { icon: BookOpen,      title: 'Smart Lectures',    desc: 'Access recorded lectures by subject. Available free — no login required.',   accent: '#404293', num: '01', free: true,  path: '/app/lectures' },
-  { icon: Calendar,      title: 'Exam Scheduling',   desc: 'Build a personalized exam schedule from the official timetable.',              accent: '#33529F', num: '02', free: false, path: '/app/exams/official' },
-  { icon: BrainCircuit,  title: 'MCQ Practice',      desc: 'Adaptive multiple-choice questions with instant feedback and tracking.',       accent: '#2376BB', num: '03', free: false, path: '/app/mcq' },
-  { icon: MessageSquare, title: 'AI Assistant',      desc: 'Your personal academic assistant, available 24/7 to answer any question.',    accent: '#404293', num: '04', free: false, path: '/app/chatbot' },
-  { icon: ClipboardList, title: 'Task Manager',      desc: 'Organize tasks with a built-in to-do list and Pomodoro timer.',               accent: '#33529F', num: '05', free: false, path: '/app/todo' },
-  { icon: TrendingUp,    title: 'Progress Tracking', desc: 'Visualize your learning journey with detailed performance analytics.',        accent: '#2376BB', num: '06', free: false, path: '/app' },
-];
+  { id: 'lectures', icon: BookOpen,      accent: '#404293', num: '01', free: true,  path: '/app/lectures' },
+  { id: 'exams',    icon: Calendar,      accent: '#33529F', num: '02', free: false, path: '/app/exams/official' },
+  { id: 'mcq',      icon: BrainCircuit,  accent: '#2376BB', num: '03', free: false, path: '/app/mcq' },
+  { id: 'ai',       icon: MessageSquare, accent: '#404293', num: '04', free: false, path: '/app/chatbot' },
+  { id: 'tasks',    icon: ClipboardList, accent: '#33529F', num: '05', free: false, path: '/app/todo' },
+  { id: 'progress', icon: TrendingUp,    accent: '#2376BB', num: '06', free: false, path: '/app' },
+] as const;
 
 export const statsData = [
-  { value: '2,500+', label: 'Active Students', icon: Users      },
-  { value: '150+',   label: 'Lectures',        icon: BookOpen   },
-  { value: '5,000+', label: 'MCQ Questions',   icon: BrainCircuit },
-  { value: '98%',    label: 'Satisfaction',    icon: Star       },
-];
+  { id: 'students',     value: '2,500+', icon: Users        },
+  { id: 'lectures',     value: '150+',   icon: BookOpen     },
+  { id: 'questions',    value: '5,000+', icon: BrainCircuit },
+  { id: 'satisfaction', value: '98%',    icon: Star         },
+] as const;
 
 export const ROLE_CONFIG = [
   { key: 'yearManager',      label: 'مسؤول السنة',       icon: GraduationCap, color: '#404293', bg: '#EEF2FF', single: true  },

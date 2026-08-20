@@ -2,26 +2,16 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import { AlertCircle, GraduationCap, RefreshCcw, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../shared/i18n/useErrorMessage";
 import StudentAcademicTaskCard from "../components/StudentAcademicTaskCard";
 import SubmissionModal from "../components/SubmissionModal";
 import { useGetAcademicTasksQuery } from "../../admin/tasks";
 import type { AcademicTask } from "../../admin/tasks";
 
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    )
-      return (data as { message: string }).message;
-  }
-  return "تعذّر تحميل المهام الأكاديمية.";
-};
-
 export default function StudentAcademicTasksPage() {
+  const { t } = useTranslation(["tasks", "common"]);
+  const errorMessage = useErrorMessage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -63,13 +53,13 @@ export default function StudentAcademicTasksPage() {
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="بحث عن مهمة..."
+            placeholder={t("searchPlaceholder")}
             className={`flex-1 bg-transparent text-sm outline-none placeholder-gray-400 ${
               isDark ? "text-gray-200" : "text-gray-700"
             }`}
           />
           {search && (
-            <button type="button" onClick={() => setSearch("")} aria-label="مسح البحث">
+            <button type="button" onClick={() => setSearch("")} aria-label={t("clearSearch")}>
               <X size={13} className="text-gray-400 hover:text-gray-500" />
             </button>
           )}
@@ -77,7 +67,8 @@ export default function StudentAcademicTasksPage() {
         <button
           type="button"
           onClick={() => tasksQuery.refetch()}
-          title="تحديث"
+          title={t("common:actions.refresh")}
+          aria-label={t("common:actions.refresh")}
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all ${
             isDark
               ? "border-white/10 bg-white/5 text-gray-400 hover:border-[#2376BB]/40 hover:text-[#2376BB]"
@@ -95,7 +86,7 @@ export default function StudentAcademicTasksPage() {
           className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3.5 text-sm font-semibold text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400"
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
-          {errorMessage(tasksQuery.error)}
+          {errorMessage(tasksQuery.error, t("academic.loadFailed"))}
         </motion.div>
       )}
 
@@ -126,10 +117,10 @@ export default function StudentAcademicTasksPage() {
             <GraduationCap className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
           <p className={`mb-1 font-bold ${isDark ? "text-gray-400" : "text-gray-400"}`}>
-            {search ? "لا توجد نتائج" : "لا توجد مهام أكاديمية بعد"}
+            {t(search ? "academic.emptyNoResults" : "academic.emptyNone")}
           </p>
           <p className={`text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
-            {search ? "جرّب مصطلح بحث مختلف" : "ستظهر هنا المهام التي ينشئها فريقك الأكاديمي"}
+            {t(search ? "academic.emptySearchHint" : "academic.emptyHint")}
           </p>
         </div>
       ) : (
@@ -137,7 +128,7 @@ export default function StudentAcademicTasksPage() {
           {openTasks.length > 0 && (
             <motion.div key="open-group" layout>
               <p className={`mb-2 text-xs font-bold uppercase tracking-wide ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-                مفتوحة — {openTasks.length}
+                {t("academic.groupOpen", { count: openTasks.length })}
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {openTasks.map(renderCard)}
@@ -147,7 +138,7 @@ export default function StudentAcademicTasksPage() {
           {closedTasks.length > 0 && (
             <motion.div key="closed-group" layout>
               <p className={`mb-2 mt-5 text-xs font-bold uppercase tracking-wide ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-                مغلقة — {closedTasks.length}
+                {t("academic.groupClosed", { count: closedTasks.length })}
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {closedTasks.map(renderCard)}

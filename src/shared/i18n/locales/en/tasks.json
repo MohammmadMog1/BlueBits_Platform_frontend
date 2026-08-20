@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "My tasks",
+    "subtitle": "Organise your personal and academic tasks in one place",
+    "overallProgress": "Overall progress",
+    "personalCount": "{{count}} personal",
+    "academicCount": "{{count}} academic",
+    "tabPersonal": "Personal tasks",
+    "tabAcademic": "Academic tasks"
+  },
+  "searchPlaceholder": "Search tasks...",
+  "clearSearch": "Clear search",
+  "personal": {
+    "filterAll": "All tasks",
+    "filterPending": "In progress",
+    "filterCompleted": "Done",
+    "new": "New task",
+    "emptyNoResults": "No results",
+    "emptyNone": "No tasks yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "Add your first personal task now",
+    "addFirst": "Add task",
+    "groupPending": "In progress — {{count}}",
+    "groupCompleted": "Done — {{count}}",
+    "completed": "Completed",
+    "markDone": "Mark as done",
+    "messages": {
+      "created": "Task created successfully ✓",
+      "updated": "Task updated successfully ✓",
+      "deleted": "Task deleted",
+      "completed": "Task marked as done ✅"
+    },
+    "confirmDelete": {
+      "title": "Confirm delete",
+      "body": "You are about to delete the task:",
+      "irreversible": "This action cannot be undone.",
+      "working": "Working...",
+      "yes": "Yes, delete"
+    },
+    "form": {
+      "createTitle": "New task",
+      "editTitle": "Edit task",
+      "createSubtitle": "Add a task to your personal list",
+      "editSubtitle": "Update your task's details",
+      "titleLabel": "Task title",
+      "titlePlaceholder": "e.g. Revise the networks module",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short description of the task...",
+      "dueDateLabel": "Due date",
+      "titleRequired": "The task title is required",
+      "dueDateRequired": "Please pick a due date",
+      "saving": "Saving...",
+      "create": "Add task",
+      "save": "Save changes"
+    }
+  },
+  "academic": {
+    "loadFailed": "Failed to load academic tasks.",
+    "emptyNoResults": "No results",
+    "emptyNone": "No academic tasks yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "Tasks created by your academic team will appear here",
+    "groupOpen": "Open — {{count}}",
+    "groupClosed": "Closed — {{count}}",
+    "statusOpen": "Open",
+    "statusClosed": "Closed",
+    "closesAt": "closes {{date}}",
+    "opensAtLabel": "Opens: {{date}}",
+    "closesAtLabel": "Closes: {{date}}",
+    "viewSubmission": "View submission",
+    "submitSolution": "Submit solution"
+  },
+  "submissionStatus": {
+    "pending": "Awaiting review",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "submission": {
+    "title": "Submit solution",
+    "current": "Your current submission",
+    "viewFile": "View the submitted file",
+    "rejectionReason": "Reason for rejection: {{reason}}",
+    "closedNotice": "This task is closed and no new solution can be submitted.",
+    "fileLabel": "Solution file",
+    "chooseFile": "Choose a file to upload",
+    "noteLabel": "Note",
+    "notePlaceholder": "Optional note...",
+    "fileRequired": "Please attach the solution file",
+    "uploading": "Uploading...",
+    "resubmit": "Resubmit",
+    "submit": "Submit solution"
+  }
+}

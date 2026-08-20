@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../../app/store/hooks";
 import { useGetPersonalTasksQuery } from "../../../personalTasks/api/personalTasksApi";
 import { useGetAcademicTasksQuery } from "../../../admin/tasks/api/academicTasksApi";
@@ -21,6 +22,7 @@ const percent = (part: number, whole: number): number =>
  * كل الـ endpoints مستخدمة أصلاً في صفحات الطالب، فالكاش يمنع تكرار الطلبات.
  */
 export function useUserDashboard(): UserDashboardState {
+  const { t } = useTranslation("dashboard");
   const now = useNow();
   const studentName = useAppSelector((state) => state.auth.user?.name ?? "");
   const studentYearId = useAppSelector((state) => state.auth.user?.yearId ?? "");
@@ -92,7 +94,7 @@ export function useUserDashboard(): UserDashboardState {
       .map((task) => ({
         id: task._id,
         title: task.title,
-        subtitle: task.description?.trim() || "مهمة شخصية",
+        subtitle: task.description?.trim() || t("deadlines.personalFallback"),
         dueDate: task.dueDate,
         source: "personal" as const,
         to: "/user/todo",
@@ -103,7 +105,7 @@ export function useUserDashboard(): UserDashboardState {
       .map((task) => ({
         id: task._id,
         title: task.title,
-        subtitle: task.subjectId?.name ?? "مهمة أكاديمية",
+        subtitle: task.subjectId?.name ?? t("deadlines.academicFallback"),
         dueDate: task.closesAt,
         source: "academic" as const,
         to: "/user/todo",
@@ -115,7 +117,7 @@ export function useUserDashboard(): UserDashboardState {
         (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
       )
       .slice(0, UPCOMING_LIMIT);
-  }, [personalTasksData, academicTasksData]);
+  }, [personalTasksData, academicTasksData, t]);
 
   const announcements = useMemo(() => {
     return [...(announcementsData ?? [])]

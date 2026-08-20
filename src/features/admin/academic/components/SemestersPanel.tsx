@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import {
   AlertCircle,
   Edit3,
@@ -29,7 +30,9 @@ function SemesterModal({
   onSubmit: (name: string) => void;
   submitting: boolean;
 }) {
+  const { t } = useTranslation(["admin", "common"]);
   const [name, setName] = useState(initial);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -49,16 +52,16 @@ function SemesterModal({
           </div>
           <div>
             <h2 className="font-black text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-400">أدخل اسم الفصل الدراسي</p>
+            <p className="text-sm text-gray-400">{t("academic.semesters.modalHint")}</p>
           </div>
         </div>
         <label className="mb-5 block text-sm font-bold text-gray-600">
-          اسم الفصل
+          {t("academic.semesters.nameLabel")}
           <input
             required
             value={name}
             onChange={(event) => setName(event.target.value)}
-            placeholder="مثال: Semester 1"
+            placeholder={t("academic.semesters.namePlaceholder")}
             className="mt-1.5 w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-[#33529F]"
           />
         </label>
@@ -68,13 +71,13 @@ function SemesterModal({
             onClick={onClose}
             className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-bold text-gray-500"
           >
-            إلغاء
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={submitting}
             className="flex-1 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
-            {submitting ? "جارٍ الحفظ..." : "حفظ"}
+            {t(submitting ? "academic.saving" : "academic.save")}
           </button>
         </div>
       </motion.form>
@@ -93,6 +96,8 @@ function DeleteConfirm({
   onConfirm: () => void;
   deleting: boolean;
 }) {
+  const { t } = useTranslation(["admin", "common"]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -103,23 +108,25 @@ function DeleteConfirm({
         className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
       >
         <Trash2 className="mx-auto mb-3 text-red-500" />
-        <h2 className="font-black text-gray-900">حذف الفصل الدراسي؟</h2>
+        <h2 className="font-black text-gray-900">
+          {t("academic.semesters.deleteTitle")}
+        </h2>
         <p className="mt-2 text-sm text-gray-500">
-          سيتم حذف «{label}» نهائياً.
+          {t("academic.semesters.deleteBody", { name: label })}
         </p>
         <div className="mt-5 flex gap-2">
           <button
             onClick={onClose}
             className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-bold text-gray-500"
           >
-            إلغاء
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={deleting}
             onClick={onConfirm}
             className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
-            {deleting ? "جارٍ الحذف..." : "حذف"}
+            {t(deleting ? "academic.deleting" : "academic.delete")}
           </button>
         </div>
       </motion.div>
@@ -128,6 +135,7 @@ function DeleteConfirm({
 }
 
 export default function SemestersPanel() {
+  const { t } = useTranslation(["admin", "common"]);
   const {
     data: semesters = [],
     isLoading,
@@ -150,33 +158,34 @@ export default function SemestersPanel() {
       if (modal === "add") await addSemester({ name }).unwrap();
       else if (modal) await updateSemester({ id: modal._id, name }).unwrap();
       showToast(
-        modal === "add" ? "تم إنشاء الفصل بنجاح ✓" : "تم حفظ التعديلات ✓",
+        t(modal === "add" ? "academic.semesters.created" : "academic.saved"),
       );
       setModal(null);
     } catch {
-      showToast("تعذّر تنفيذ العملية");
+      showToast(t("academic.actionFailed"));
     }
   };
   const remove = async () => {
     if (!deletingItem) return;
     try {
       await deleteSemester(deletingItem._id).unwrap();
-      showToast("تم الحذف");
+      showToast(t("academic.deleted"));
       setDeletingItem(null);
     } catch {
-      showToast("تعذّر حذف الفصل");
+      showToast(t("academic.semesters.deleteFailed"));
     }
   };
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-gray-500">
-          {semesters.length} فصل مسجّل
+          {t("academic.semesters.count", { count: semesters.length })}
         </p>
         <div className="flex gap-2">
           <button
             onClick={refetch}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm hover:text-[#404293]"
           >
             <RefreshCcw
@@ -187,13 +196,13 @@ export default function SemestersPanel() {
             onClick={() => setModal("add")}
             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white shadow-md hover:-translate-y-0.5"
           >
-            <Plus size={15} /> إضافة فصل
+            <Plus size={15} /> {t("academic.semesters.add")}
           </button>
         </div>
       </div>
       {isError && (
         <div className="mb-4 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
-          <AlertCircle size={15} /> تعذّر الاتصال بالخادم
+          <AlertCircle size={15} /> {t("academic.connectionFailed")}
         </div>
       )}
       {isLoading ? (
@@ -208,12 +217,12 @@ export default function SemestersPanel() {
       ) : semesters.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-gray-100 bg-white py-20 text-center">
           <Layers className="mb-3 h-10 w-10 text-gray-200" />
-          <p className="font-bold text-gray-400">لا توجد فصول بعد</p>
+          <p className="font-bold text-gray-400">{t("academic.semesters.empty")}</p>
           <button
             onClick={() => setModal("add")}
             className="mt-4 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white"
           >
-            <Plus size={14} /> إضافة فصل
+            <Plus size={14} /> {t("academic.semesters.add")}
           </button>
         </div>
       ) : (
@@ -243,14 +252,14 @@ export default function SemestersPanel() {
                       className="flex-1 rounded-xl py-1.5 text-[11px] font-semibold text-gray-500 hover:bg-[#404293]/[.06] hover:text-[#404293]"
                     >
                       <Edit3 size={11} className="mx-1 inline" />
-                      تعديل
+                      {t("academic.edit")}
                     </button>
                     <button
                       onClick={() => setDeletingItem(semester)}
                       className="flex-1 rounded-xl py-1.5 text-[11px] font-semibold text-gray-400 hover:bg-red-50 hover:text-red-500"
                     >
                       <Trash2 size={11} className="mx-1 inline" />
-                      حذف
+                      {t("academic.delete")}
                     </button>
                   </div>
                 </div>
@@ -262,7 +271,11 @@ export default function SemestersPanel() {
       <AnimatePresence>
         {modal && (
           <SemesterModal
-            title={modal === "add" ? "إضافة فصل دراسي" : "تعديل الفصل الدراسي"}
+            title={t(
+              modal === "add"
+                ? "academic.semesters.addTitle"
+                : "academic.semesters.editTitle",
+            )}
             initial={modal === "add" ? "" : modal.name}
             onClose={() => setModal(null)}
             onSubmit={submit}

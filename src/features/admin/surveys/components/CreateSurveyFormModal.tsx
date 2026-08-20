@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, CalendarDays, FilePlus2, X } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import type { AcademicYear, Semester } from "../../academic/types";
 import type { SurveyForm, SurveyFormValues } from "../types";
 import { defaultAcademicYear, isValidAcademicYear } from "../utils/survey";
@@ -37,6 +38,7 @@ export default function CreateSurveyFormModal({
   onCancel,
   onSubmit,
 }: CreateSurveyFormModalProps) {
+  const { t } = useTranslation(["admin", "common"]);
   const [values, setValues] = useState<SurveyFormValues>({
     yearId: "",
     semesterId: "",
@@ -96,10 +98,10 @@ export default function CreateSurveyFormModal({
             </div>
             <div>
               <h3 className={`text-base font-black ${headingClass(isDark)}`}>
-                إنشاء فورم استبيان
+                {t("surveys.create.title")}
               </h3>
               <p className={`mt-0.5 text-xs font-medium ${mutedClass(isDark)}`}>
-                فورم واحد لكل سنة في كل فصل دراسي
+                {t("surveys.create.subtitle")}
               </p>
             </div>
           </div>
@@ -107,7 +109,7 @@ export default function CreateSurveyFormModal({
             type="button"
             onClick={onCancel}
             disabled={isSubmitting}
-            aria-label="إغلاق"
+            aria-label={t("common:actions.close")}
             className={`transition-colors disabled:opacity-40 ${
               isDark
                 ? "text-gray-500 hover:text-gray-300"
@@ -121,7 +123,7 @@ export default function CreateSurveyFormModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* ── السنة ──────────────────────────── */}
           <div>
-            <label className={labelClass}>السنة الدراسية</label>
+            <label className={labelClass}>{t("surveys.create.yearLabel")}</label>
             <select
               value={values.yearId}
               onChange={(event) => patch({ yearId: event.target.value })}
@@ -129,7 +131,11 @@ export default function CreateSurveyFormModal({
               className={input}
             >
               <option value="">
-                {yearsLoading ? "جاري التحميل..." : "اختر السنة..."}
+                {t(
+                  yearsLoading
+                    ? "surveys.create.loading"
+                    : "surveys.create.chooseYear",
+                )}
               </option>
               {years.map((year) => (
                 <option key={year._id} value={year._id}>
@@ -139,14 +145,16 @@ export default function CreateSurveyFormModal({
             </select>
             {touched && yearMissing && (
               <p className="mt-1.5 text-[11px] font-bold text-red-500">
-                اختر السنة الدراسية
+                {t("surveys.create.yearRequired")}
               </p>
             )}
           </div>
 
           {/* ── الفصل ──────────────────────────── */}
           <div>
-            <label className={labelClass}>الفصل الدراسي</label>
+            <label className={labelClass}>
+              {t("surveys.create.semesterLabel")}
+            </label>
             <select
               value={values.semesterId}
               onChange={(event) => patch({ semesterId: event.target.value })}
@@ -154,7 +162,11 @@ export default function CreateSurveyFormModal({
               className={input}
             >
               <option value="">
-                {semestersLoading ? "جاري التحميل..." : "اختر الفصل..."}
+                {t(
+                  semestersLoading
+                    ? "surveys.create.loading"
+                    : "surveys.create.chooseSemester",
+                )}
               </option>
               {semesters.map((semester) => (
                 <option key={semester._id} value={semester._id}>
@@ -164,17 +176,19 @@ export default function CreateSurveyFormModal({
             </select>
             {touched && semesterMissing && (
               <p className="mt-1.5 text-[11px] font-bold text-red-500">
-                اختر الفصل الدراسي
+                {t("surveys.create.semesterRequired")}
               </p>
             )}
           </div>
 
           {/* ── السنة الأكاديمية ───────────────── */}
           <div>
-            <label className={labelClass}>السنة الأكاديمية</label>
+            <label className={labelClass}>
+              {t("surveys.create.academicYearLabel")}
+            </label>
             <div className="relative">
               <CalendarDays
-                className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+                className={`pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
               />
               <input
                 type="text"
@@ -182,12 +196,12 @@ export default function CreateSurveyFormModal({
                 onChange={(event) => patch({ academicYear: event.target.value })}
                 placeholder="2026-2027"
                 dir="ltr"
-                className={`${input} pr-11 text-right`}
+                className={`${input} pe-11 text-start`}
               />
             </div>
             {touched && academicYearInvalid && (
               <p className="mt-1.5 text-[11px] font-bold text-red-500">
-                الصيغة المطلوبة: 2026-2027 (سنتان متتاليتان)
+                {t("surveys.create.academicYearInvalid")}
               </p>
             )}
           </div>
@@ -202,8 +216,9 @@ export default function CreateSurveyFormModal({
               }`}
             >
               <AlertCircle size={13} className="mt-0.5 shrink-0" />
-              يوجد فورم بهذه السنة والفصل والسنة الأكاديمية بالفعل (حالته:{" "}
-              {duplicate.status}). عدّل أحد الحقول أو استخدم الفورم الموجود.
+              {t("surveys.create.duplicate", {
+                status: t(`surveys.filters.${duplicate.status}`),
+              })}
             </p>
           )}
 
@@ -232,14 +247,18 @@ export default function CreateSurveyFormModal({
                   : "border-gray-200 text-gray-600 hover:bg-gray-50"
               }`}
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting || (touched && isInvalid)}
               className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-3 text-sm font-bold text-white shadow-md shadow-[#404293]/25 transition-all disabled:opacity-60"
             >
-              {isSubmitting ? "جاري الإنشاء..." : "إنشاء المسودة"}
+              {t(
+                isSubmitting
+                  ? "surveys.create.submitting"
+                  : "surveys.create.submit",
+              )}
             </button>
           </div>
         </form>

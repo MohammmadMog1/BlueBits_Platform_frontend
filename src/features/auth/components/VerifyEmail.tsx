@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Mail, RefreshCcw, ChevronLeft, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../shared/i18n/useLanguage";
 import apiClient from "../../../shared/api/apiClient"; // استيراد الـ Client الخاص بك لطلبات الـ API المباشرة
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 };
 
 export default function VerifyEmail({ onNavigate }: Props) {
+  const { t } = useTranslation("auth");
+  const { isRTL } = useLanguage();
   const [countdown, setCountdown] = useState(30);
   const [isResending, setIsResending] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
@@ -30,9 +34,7 @@ export default function VerifyEmail({ onNavigate }: Props) {
 
       setCountdown(30); // إعادة تعيين العداد التنازلي بعد النجاح
     } catch (err: any) {
-      setResendError(
-        err.response?.data?.message || "Failed to resend verification email",
-      );
+      setResendError(err.response?.data?.message || t("verify.resendFailed"));
     } finally {
       setIsResending(false);
     }
@@ -54,18 +56,18 @@ export default function VerifyEmail({ onNavigate }: Props) {
       </div>
 
       <h2 className="text-3xl font-bold text-[#202121] mb-5">
-        Verify Your Email
+        {t("verify.title")}
       </h2>
 
       <p className="text-gray-600 mb-12 leading-relaxed text-base">
-        We have sent a confirmation link to your email.
+        {t("verify.descriptionLine1")}
         <br className="hidden sm:block" />
-        Please check your inbox and click the link to activate your account.
+        {t("verify.descriptionLine2")}
       </p>
 
       {/* عرض الخطأ في حال فشل إعادة الإرسال */}
       {resendError && (
-        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2 text-red-600 text-sm mb-5 text-left">
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-2 text-red-600 text-sm mb-5 text-start">
           <AlertCircle className="w-4 h-4 shrink-0" /> {resendError}
         </div>
       )}
@@ -81,15 +83,17 @@ export default function VerifyEmail({ onNavigate }: Props) {
           ) : (
             <Mail className="w-5 h-5" />
           )}
-          {countdown > 0 ? `Resend Email in ${countdown}s` : "Resend Email"}
+          {countdown > 0
+            ? t("verify.resendIn", { seconds: countdown })
+            : t("verify.resend")}
         </button>
 
         <button
           onClick={goToLogin}
           className="w-full text-gray-600 font-medium py-4 flex items-center justify-center gap-2 hover:text-[#202121] transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
-          Back to Login
+          <ChevronLeft className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`} />
+          {t("backToLogin")}
         </button>
       </div>
     </div>

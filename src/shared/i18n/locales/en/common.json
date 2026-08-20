@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "BlueBits",
-    "tagline": "Your University Life, Organized"
+    "tagline": "Your university life, organized"
   },
   "actions": {
     "save": "Save",
@@ -15,11 +15,28 @@
     "searchPlaceholder": "Search...",
     "retry": "Retry",
     "back": "Back",
-    "more": "More"
+    "more": "More",
+    "add": "Add",
+    "update": "Update",
+    "refresh": "Refresh data",
+    "viewAll": "View all",
+    "download": "Download",
+    "upload": "Upload",
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "reset": "Reset",
+    "clear": "Clear",
+    "apply": "Apply",
+    "copy": "Copy",
+    "select": "Select",
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "sending": "Sending..."
   },
   "profile": {
     "open": "Open profile",
-    "myProfile": "My Profile",
+    "myProfile": "My profile",
     "logout": "Log out"
   },
   "theme": {
@@ -29,7 +46,7 @@
   },
   "notifications": {
     "label": "Notifications",
-    "count_one": "{{count}} notification",
+    "count_one": "1 notification",
     "count_other": "{{count}} notifications"
   },
   "language": {
@@ -49,11 +66,35 @@
     "title": "Error",
     "userArea": "Something went wrong in the user area.",
     "adminArea": "Something went wrong in the admin area.",
-    "generic": "An unexpected error occurred."
+    "generic": "An unexpected error occurred.",
+    "loadFailed": "Failed to load data.",
+    "saveFailed": "Failed to save changes.",
+    "deleteFailed": "Failed to delete.",
+    "partialLoad": "Some data could not be loaded. Try refreshing."
   },
   "states": {
     "loading": "Loading...",
     "empty": "No data",
-    "noResults": "No results"
+    "noResults": "No results",
+    "unavailable": "Unavailable"
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "deadline": {
+    "none": "No due date",
+    "passed": "Past due",
+    "minutes_one": "1 minute left",
+    "minutes_other": "{{count}} minutes left",
+    "hours_one": "1 hour left",
+    "hours_other": "{{count}} hours left",
+    "days_one": "1 day left",
+    "days_other": "{{count}} days left"
+  },
+  "dashboard": {
+    "quickActions": "Quick actions",
+    "quickActionsHint": "Shortcuts to what you use most"
   }
 }

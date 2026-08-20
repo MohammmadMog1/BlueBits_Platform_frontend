@@ -21,6 +21,8 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import { BankCard } from "../components/BankCard";
 import { BankReviewPanel } from "../components/BankReviewPanel";
 import { UploadQuestionsModal } from "../components/UploadQuestionsModal";
@@ -29,6 +31,8 @@ import { useQuestionBankPermissions } from "../hooks/useQuestionBankPermissions"
 import { getLectureId } from "../utils/bank";
 
 export default function QuestionBanksManagementPage() {
+  const { t } = useTranslation(["admin", "common"]);
+  const { isRTL } = useLanguage();
   const permissions = useQuestionBankPermissions();
   const {
     years,
@@ -68,12 +72,14 @@ export default function QuestionBanksManagementPage() {
   } = useQuestionBankManager();
 
   const selectedYearName =
-    years.find((year) => year._id === selectedYearId)?.name ?? "Year";
+    years.find((year) => year._id === selectedYearId)?.name ??
+    t("banks.breadcrumb.year");
   const selectedSemesterName =
     semesters.find((semester) => semester._id === selectedSemesterId)?.name ??
-    "Semester";
+    t("banks.breadcrumb.semester");
   const selectedSubjectName =
-    subjects.find((subject) => subject._id === selectedSubjectId)?.name ?? "Subject";
+    subjects.find((subject) => subject._id === selectedSubjectId)?.name ??
+    t("banks.breadcrumb.subject");
 
   const canUpload = Boolean(selectedSubjectId) && permissions.canCreate;
 
@@ -89,12 +95,14 @@ export default function QuestionBanksManagementPage() {
         }`}
       >
         <GraduationCap className="w-4 h-4" />
-        {selectedYearId ? selectedYearName : "Year"}
+        {selectedYearId ? selectedYearName : t("banks.breadcrumb.year")}
       </button>
 
       {selectedYearId && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+          <ChevronRight
+            className={`w-3.5 h-3.5 text-gray-300 ${isRTL ? "rotate-180" : ""}`}
+          />
           <button
             onClick={() => navTo("semester")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
@@ -104,14 +112,18 @@ export default function QuestionBanksManagementPage() {
             }`}
           >
             <Layers className="w-4 h-4" />
-            {selectedSemesterId ? selectedSemesterName : "Semester"}
+            {selectedSemesterId
+              ? selectedSemesterName
+              : t("banks.breadcrumb.semester")}
           </button>
         </>
       )}
 
       {selectedSemesterId && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+          <ChevronRight
+            className={`w-3.5 h-3.5 text-gray-300 ${isRTL ? "rotate-180" : ""}`}
+          />
           <button
             onClick={() => navTo("subject")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
@@ -121,14 +133,18 @@ export default function QuestionBanksManagementPage() {
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            {selectedSubjectId ? selectedSubjectName : "Subject"}
+            {selectedSubjectId
+              ? selectedSubjectName
+              : t("banks.breadcrumb.subject")}
           </button>
         </>
       )}
 
       {selectedSubjectId && (step === "banks" || step === "bank") && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+          <ChevronRight
+            className={`w-3.5 h-3.5 text-gray-300 ${isRTL ? "rotate-180" : ""}`}
+          />
           <button
             onClick={() => navTo("banks")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
@@ -137,16 +153,18 @@ export default function QuestionBanksManagementPage() {
                 : "text-gray-400 hover:text-[#404293] hover:bg-[#404293]/5"
             }`}
           >
-            <Book className="w-4 h-4" /> Banks
+            <Book className="w-4 h-4" /> {t("banks.breadcrumb.banks")}
           </button>
         </>
       )}
 
       {step === "bank" && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+          <ChevronRight
+            className={`w-3.5 h-3.5 text-gray-300 ${isRTL ? "rotate-180" : ""}`}
+          />
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600">
-            <ListChecks className="w-4 h-4" /> Review
+            <ListChecks className="w-4 h-4" /> {t("banks.breadcrumb.review")}
           </span>
         </>
       )}
@@ -163,20 +181,22 @@ export default function QuestionBanksManagementPage() {
               <BrainCircuit className="w-[18px] h-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black text-gray-900 tracking-tight">
-              Question Banks (MCQ)
+              {t("banks.title")}
             </h1>
           </div>
-          <p className="text-sm text-gray-400 font-medium ml-0.5">
-            Navigate by year → semester → subject to upload, review and publish banks
+          <p className="text-sm text-gray-400 font-medium ms-0.5">
+            {t("banks.subtitle")}
           </p>
         </div>
         <button
           onClick={openUpload}
           disabled={!canUpload}
-          title={permissions.canCreate ? undefined : "لا تملك صلاحية إنشاء بنك أسئلة"}
+          title={
+            permissions.canCreate ? undefined : t("banks.noCreatePermission")
+          }
           className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-xl shadow-[#404293]/30 hover:shadow-[#404293]/45 hover:-translate-y-0.5 active:scale-[0.98] transition-all flex-shrink-0 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Plus size={17} /> Upload Questions
+          <Plus size={17} /> {t("banks.upload.title")}
         </button>
       </div>
 
@@ -214,7 +234,10 @@ export default function QuestionBanksManagementPage() {
               onClick={goBack}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-600 hover:text-[#404293] hover:border-[#404293]/30 shadow-sm transition-all flex-shrink-0"
             >
-              <ArrowLeft className="w-4 h-4" /> Back
+              <ArrowLeft
+                className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`}
+              />{" "}
+              {t("common:actions.back")}
             </button>
           )}
         </div>
@@ -233,12 +256,12 @@ export default function QuestionBanksManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <GraduationCap className="w-5 h-5 text-gray-400" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Academic Year
+                    {t("banks.steps.selectYear")}
                   </h2>
                 </div>
 
                 {yearsLoading ? (
-                  <LoadingPlaceholder label="Loading years…" />
+                  <LoadingPlaceholder label={t("banks.loading.years")} />
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {years.map((year) => (
@@ -270,13 +293,14 @@ export default function QuestionBanksManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <Layers className="w-5 h-5 text-[#33529F]" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Semester —{" "}
-                    <span className="text-[#404293]">{selectedYearName}</span>
+                    {t("banks.steps.selectSemester", {
+                      year: selectedYearName,
+                    })}
                   </h2>
                 </div>
 
                 {semestersLoading ? (
-                  <LoadingPlaceholder label="Loading semesters…" />
+                  <LoadingPlaceholder label={t("banks.loading.semesters")} />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
                     {semesters.map((semester) => (
@@ -306,18 +330,19 @@ export default function QuestionBanksManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <Book className="w-5 h-5 text-[#2376BB]" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Subject —{" "}
-                    <span className="text-[#33529F]">{selectedSemesterName}</span>
+                    {t("banks.steps.selectSubject", {
+                      semester: selectedSemesterName,
+                    })}
                   </h2>
                 </div>
 
                 {subjectsLoading ? (
-                  <LoadingPlaceholder label="Loading subjects…" />
+                  <LoadingPlaceholder label={t("banks.loading.subjects")} />
                 ) : subjects.length === 0 ? (
                   <EmptyState
                     icon={<FolderOpen className="w-7 h-7 text-gray-300" />}
-                    title="No subjects found"
-                    message="No subjects exist for this year and semester."
+                    title={t("banks.empty.noSubjectsTitle")}
+                    message={t("banks.empty.noSubjectsMessage")}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -325,7 +350,7 @@ export default function QuestionBanksManagementPage() {
                       <button
                         key={subject._id}
                         onClick={() => selectSubject(subject._id)}
-                        className="group p-5 rounded-2xl border-2 border-gray-100 bg-gray-50 text-left flex flex-col gap-3 hover:border-[#2376BB]/40 hover:bg-gradient-to-br hover:from-[#2376BB] hover:to-[#33529F] hover:text-white hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#2376BB]/20 transition-all duration-300"
+                        className="group p-5 rounded-2xl border-2 border-gray-100 bg-gray-50 text-start flex flex-col gap-3 hover:border-[#2376BB]/40 hover:bg-gradient-to-br hover:from-[#2376BB] hover:to-[#33529F] hover:text-white hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#2376BB]/20 transition-all duration-300"
                       >
                         <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                           <FileText className="w-5 h-5 text-[#2376BB] group-hover:text-white transition-colors" />
@@ -356,7 +381,7 @@ export default function QuestionBanksManagementPage() {
                       {selectedSubjectName}
                     </h2>
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#404293]/10 text-[#404293]">
-                      {banks.length} bank{banks.length !== 1 ? "s" : ""}
+                      {t("banks.bankCount", { count: banks.length })}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -365,11 +390,14 @@ export default function QuestionBanksManagementPage() {
                       <input
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder="Search..."
+                        placeholder={t("banks.searchPlaceholder")}
                         className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-36"
                       />
                       {search && (
-                        <button onClick={() => setSearch("")}>
+                        <button
+                          onClick={() => setSearch("")}
+                          aria-label={t("banks.clearSearch")}
+                        >
                           <X size={13} className="text-gray-300 hover:text-gray-500" />
                         </button>
                       )}
@@ -379,7 +407,7 @@ export default function QuestionBanksManagementPage() {
                         onClick={openUpload}
                         className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-xs font-bold shadow-md hover:-translate-y-0.5 transition-all flex-shrink-0"
                       >
-                        <Plus size={14} /> Upload
+                        <Plus size={14} /> {t("banks.uploadShort")}
                       </button>
                     )}
                   </div>
@@ -392,16 +420,14 @@ export default function QuestionBanksManagementPage() {
                 )}
 
                 {banksLoading ? (
-                  <LoadingPlaceholder label="Loading question banks…" />
+                  <LoadingPlaceholder label={t("banks.loading.banks")} />
                 ) : banks.length === 0 ? (
                   <EmptyState
                     icon={<FolderOpen className="w-7 h-7 text-gray-300" />}
-                    title="No question banks yet"
-                    message={
-                      search
-                        ? "No matches found."
-                        : "ارفع أول بنك أسئلة لمحاضرات هذه المادة."
-                    }
+                    title={t("banks.empty.noBanksTitle")}
+                    message={t(
+                      search ? "banks.empty.noMatches" : "banks.empty.uploadFirst",
+                    )}
                     action={
                       !search &&
                       permissions.canCreate && (
@@ -409,7 +435,7 @@ export default function QuestionBanksManagementPage() {
                           onClick={openUpload}
                           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-sm font-bold shadow-md"
                         >
-                          <Plus size={14} /> Upload Questions
+                          <Plus size={14} /> {t("banks.upload.title")}
                         </button>
                       )
                     }
@@ -446,12 +472,12 @@ export default function QuestionBanksManagementPage() {
                 transition={{ type: "tween", ease: "easeOut", duration: 0.22 }}
               >
                 {bankLoading && !bank ? (
-                  <LoadingPlaceholder label="Loading bank…" />
+                  <LoadingPlaceholder label={t("banks.loading.bank")} />
                 ) : !bank ? (
                   <EmptyState
                     icon={<FolderOpen className="w-7 h-7 text-gray-300" />}
-                    title="Bank not found"
-                    message="قد يكون البنك محذوفاً — ارجع لقائمة البنوك."
+                    title={t("banks.empty.bankNotFoundTitle")}
+                    message={t("banks.empty.bankNotFoundMessage")}
                   />
                 ) : (
                   <BankReviewPanel

@@ -10,7 +10,9 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
-import { getRefName, formatDate } from "../../surveys/utils/survey";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
+import { getRefName } from "../../surveys/utils/survey";
 import { statusBadgeClass } from "../../surveys/utils/surveyTheme";
 import type { SurveysMetrics } from "../types";
 
@@ -26,26 +28,31 @@ export default function SurveyStatusPanel({
   isDark,
   isLoading,
 }: SurveyStatusPanelProps) {
+  const { t } = useTranslation("admin");
+  const { formatLongDateOrDash } = useFormatters();
   const activeForm = surveys.activeForm;
   const badge = activeForm ? statusBadgeClass(isDark, activeForm.status) : null;
 
   return (
     <SectionCard
       icon={ClipboardCheck}
-      title="استبيان الجدول"
-      hint={`${surveys.total} فورم — ${surveys.open} مفتوح`}
+      title={t("surveyStatus.title")}
+      hint={t("surveyStatus.hint", {
+        total: surveys.total,
+        open: surveys.open,
+      })}
       tone="emerald"
       isDark={isDark}
       to="/admin/surveys"
-      toLabel="إدارة الاستبيانات"
+      toLabel={t("surveyStatus.manageSurveys")}
     >
       {isLoading ? (
         <div className={`h-28 w-full ${skeletonClass(isDark)}`} />
       ) : surveys.total === 0 ? (
         <SectionEmpty
           icon={ClipboardCheck}
-          title="لا توجد استبيانات"
-          hint="أنشئ فورم استبيان لبدء جمع تفضيلات الطلاب"
+          title={t("surveyStatus.emptyTitle")}
+          hint={t("surveyStatus.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -60,42 +67,48 @@ export default function SurveyStatusPanel({
                   className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-2 py-0.5 text-[10px] font-black ${badge.badge}`}
                 >
                   <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
-                  {badge.label}
+                  {t(badge.labelKey)}
                 </span>
               </div>
               <p className={`text-[11px] font-semibold ${bodyClass(isDark)}`}>
-                السنة الأكاديمية {activeForm.academicYear}
+                {t("surveyStatus.academicYear", {
+                  year: activeForm.academicYear,
+                })}
               </p>
               <p className={`mt-0.5 text-[11px] ${faintClass(isDark)}`}>
-                فُتح في {formatDate(activeForm.openedAt)}
+                {t("surveyStatus.openedOn", {
+                  date: formatLongDateOrDash(activeForm.openedAt),
+                })}
               </p>
             </div>
           ) : (
             <div className={`p-3.5 ${softBoxClass(isDark)}`}>
               <p className={`text-xs font-bold ${bodyClass(isDark)}`}>
-                لا يوجد استبيان مفتوح حالياً
+                {t("surveyStatus.noOpenForm")}
               </p>
               <p className={`mt-0.5 text-[11px] ${faintClass(isDark)}`}>
-                افتح فورماً ليتمكّن الطلاب من إرسال تفضيلاتهم
+                {t("surveyStatus.noOpenFormHint")}
               </p>
             </div>
           )}
 
           <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: "مفتوح", value: surveys.open },
-              { label: "مسودة", value: surveys.draft },
-              { label: "مغلق", value: surveys.closed },
-            ].map((item) => (
+            {(
+              [
+                { key: "open", value: surveys.open },
+                { key: "draft", value: surveys.draft },
+                { key: "closed", value: surveys.closed },
+              ] as const
+            ).map((item) => (
               <div
-                key={item.label}
+                key={item.key}
                 className={`px-2 py-2.5 text-center ${softBoxClass(isDark)}`}
               >
                 <p className={`text-base font-black ${headingClass(isDark)}`}>
                   {item.value}
                 </p>
                 <p className={`text-[10px] font-bold ${mutedClass(isDark)}`}>
-                  {item.label}
+                  {t(`surveyStatus.${item.key}`)}
                 </p>
               </div>
             ))}
@@ -110,7 +123,7 @@ export default function SurveyStatusPanel({
             }`}
           >
             <BarChart3 className="h-3.5 w-3.5" />
-            عرض إحصاءات الاستبيان
+            {t("surveyStatus.viewStats")}
           </Link>
         </div>
       )}

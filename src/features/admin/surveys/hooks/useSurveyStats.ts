@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useGetYearsQuery } from "../../academic/api/academicApi";
 import {
   useGetSubjectsStatsAllYearsQuery,
@@ -6,13 +7,14 @@ import {
   useGetSurveyFormsQuery,
 } from "../api/surveysApi";
 import type { StatsScope, SubjectStatsSortKey, YearStats } from "../types";
-import { errorMessage, getRefId, sortSubjectStats } from "../utils/survey";
+import { getRefId, sortSubjectStats } from "../utils/survey";
 
 /**
  * إحصاءات الاستبيان: سنة واحدة (مع إمكانية تقييدها بفورم معيّن)
  * أو كل السنوات دفعة واحدة.
  */
 export function useSurveyStats() {
+  const errorMessage = useErrorMessage();
   const [scope, setScope] = useState<StatsScope>("year");
   const [pickedYearId, setPickedYearId] = useState("");
   const [formId, setFormId] = useState("");

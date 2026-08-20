@@ -1,0 +1,54 @@
+{
+  "drawer": {
+    "ariaLabel": "ملفي الشخصي",
+    "title": "ملفي الشخصي",
+    "subtitle": "إدارة معلوماتك الشخصية وإعدادات الحساب",
+    "loading": "جارِ تحميل ملفك الشخصي...",
+    "errorTitle": "فشل تحميل الملف الشخصي",
+    "errorSubtitle": "حدث خطأ أثناء تحميل بياناتك."
+  },
+  "imageUploader": {
+    "previewAlt": "معاينة",
+    "changePicture": "تغيير الصورة الشخصية"
+  },
+  "editForm": {
+    "title": "تعديل الملف الشخصي",
+    "subtitle": "تحديث معلوماتك الشخصية",
+    "nameLabel": "الاسم الكامل",
+    "namePlaceholder": "اسمك",
+    "yearLabel": "السنة الدراسية",
+    "selectYear": "اختر السنة",
+    "saveChanges": "حفظ التغييرات",
+    "savedSuccess": "تم الحفظ بنجاح"
+  },
+  "headerCard": {
+    "verified": "موثّق",
+    "joined": "انضم في {{date}}"
+  },
+  "dangerZone": {
+    "title": "منطقة الخطر",
+    "description": "حذف حسابك وجميع البيانات المرتبطة به نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+    "deleteAccount": "حذف الحساب",
+    "confirmTitle": "حذف الحساب نهائياً؟",
+    "confirmDescription": "سيتم حذف جميع بياناتك وتقدّمك وملفاتك نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+    "confirmLabel": "حذف نهائياً",
+    "typeToConfirmPrefix": "اكتب",
+    "typeToConfirmSuffix": "للتأكيد"
+  },
+  "accountStatus": {
+    "title": "تعطيل الحساب",
+    "description": "تعطيل حسابك مؤقتاً. سيتم تسجيل خروجك فوراً ولن تتمكن من الوصول إلى المنصة حتى إعادة التفعيل.",
+    "deactivateButton": "تعطيل الحساب",
+    "confirmTitle": "تعطيل حسابك؟",
+    "confirmDescription": "سيتم تعطيل حسابك وتسجيل خروجك فوراً. تواصل مع أحد المشرفين لإعادة تفعيله لاحقاً.",
+    "confirmLabel": "تعطيل"
+  },
+  "accountInfo": {
+    "title": "معلومات الحساب",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "memberSince": "عضو منذ",
+    "lastUpdated": "آخر تحديث",
+    "passwordChanged": "تغيير كلمة المرور"
+  }
+}

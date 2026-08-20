@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import { useLatestLectures } from "../hooks/useLatestLectures";
 import { LatestLectureCard } from "./LatestLectureCard";
 import type { LecturePopulated } from "../types";
@@ -10,6 +12,8 @@ interface LatestLecturesSectionProps {
 }
 
 export function LatestLecturesSection({ onOpenLecture }: LatestLecturesSectionProps) {
+  const { t } = useTranslation("lectures");
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [showAll, setShowAll] = useState(false);
@@ -27,18 +31,19 @@ export function LatestLecturesSection({ onOpenLecture }: LatestLecturesSectionPr
           className={`text-base sm:text-lg md:text-xl font-semibold flex items-center gap-1.5 sm:gap-2 ${isDark ? "text-gray-200" : "text-gray-800"}`}
         >
           <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-500" />
-          Latest Lectures
+          {t("latest.title")}
         </h2>
         {latestLectures.length > 5 && (
           <button
             onClick={() => setShowAll((prev) => !prev)}
             className={`text-xs sm:text-sm md:text-base font-medium hover:underline flex items-center gap-1 sm:gap-1.5 ${isDark ? "text-[#33529F]" : "text-[#404293]"}`}
           >
-            {showAll ? "Show Less" : "View All"}
-            {showAll ? (
-              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            ) : (
+            {t(showAll ? "latest.showLess" : "latest.viewAll")}
+            {/* السهم اتجاهي: ينقلب في RTL */}
+            {showAll === isRTL ? (
               <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+            ) : (
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
             )}
           </button>
         )}

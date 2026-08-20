@@ -1,5 +1,6 @@
 // src/features/profile/components/ProfileImageUploader.tsx
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Camera, Check, Loader2, X } from "lucide-react";
 import { useUpdateMeAndUploadMutation } from "../api/profileApi";
 import { getUserInitials, getProfileImageUrl } from "../../../shared/utils/user";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function ProfileImageUploader({ user, onUpdated }: Props) {
+  const { t } = useTranslation(["profile", "common"]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -56,7 +58,7 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
       {/* Avatar */}
       <div className="w-24 h-24 rounded-full ring-4 ring-white shadow-lg overflow-hidden bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center">
         {preview ? (
-          <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+          <img src={preview} alt={t("profile:imageUploader.previewAlt")} className="w-full h-full object-cover" />
         ) : imageUrl ? (
           <img
             src={imageUrl}
@@ -76,7 +78,7 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
         <button
           onClick={() => inputRef.current?.click()}
           disabled={isLoading}
-          title="Change profile picture"
+          title={t("profile:imageUploader.changePicture")}
           className="absolute bottom-0 right-0 p-2 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md shadow-[#404293]/30 hover:scale-110 transition-transform"
         >
           {isLoading ? (
@@ -93,7 +95,7 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
           <button
             onClick={handleSave}
             disabled={isLoading}
-            title="Save"
+            title={t("common:actions.save")}
             className="p-2 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md hover:scale-110 transition-transform"
           >
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
@@ -101,7 +103,7 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
           <button
             onClick={cancelPreview}
             disabled={isLoading}
-            title="Cancel"
+            title={t("common:actions.cancel")}
             className="p-2 rounded-full bg-white border border-gray-200 text-gray-500 shadow-md hover:scale-110 hover:text-red-500 transition-all"
           >
             <X className="w-4 h-4" />

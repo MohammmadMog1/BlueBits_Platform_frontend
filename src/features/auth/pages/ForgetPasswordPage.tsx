@@ -2,16 +2,18 @@ import { motion } from "motion/react";
 import { Mail, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { useLanguage } from "../../../shared/i18n/useLanguage";
 import { forgotPasswordThunk } from "../redux/authThunk";
-// import { navigate } from "react-router";
-// import { useNavigate } from "react-router";
 
 // استوردي نفس الصور المستخدمة في صفحة Login
 import bgImage from "../../../app/assets/Logo notext.png";
 import logoImage from "../../../app/assets/Logo.png";
 
 export const ForgetPasswordPage = () => {
+  const { t } = useTranslation("auth");
+  const { isRTL } = useLanguage();
   const [email, setEmail] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ export const ForgetPasswordPage = () => {
   const handleSubmit = async () => {
     if (!email.trim()) return;
 
-    // await dispatch(forgotPasswordThunk(email));
     const result = await dispatch(forgotPasswordThunk(email));
 
     if (forgotPasswordThunk.fulfilled.match(result)) {
@@ -58,29 +59,28 @@ export const ForgetPasswordPage = () => {
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#202121]">
-              Forgot Password
+              {t("forgot.title")}
             </h1>
 
-            <p className="text-gray-500 mt-3 leading-7">
-              Enter your email address and we'll send you a password reset link.
-            </p>
+            <p className="text-gray-500 mt-3 leading-7">{t("forgot.subtitle")}</p>
           </div>
 
           {/* Email */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              {t("forgot.emailLabel")}
             </label>
 
             <div className="relative">
-              <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute start-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
 
               <input
                 type="email"
+                dir="ltr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 pl-14 pr-4 focus:outline-none focus:ring-2 focus:ring-[#33529F] transition"
+                placeholder={t("forgot.emailPlaceholder")}
+                className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 ps-14 pe-4 text-start focus:outline-none focus:ring-2 focus:ring-[#33529F] transition"
               />
             </div>
           </div>
@@ -93,8 +93,7 @@ export const ForgetPasswordPage = () => {
             text-white font-semibold rounded-2xl py-4
             hover:scale-[1.02] hover:opacity-90 transition-all"
           >
-            {isLoading ? "Sending..." : "Send Reset Link"}
-            {/* Send Reset Link */}
+            {isLoading ? t("forgot.submitting") : t("forgot.submit")}
           </button>
 
           {/* Back */}
@@ -103,8 +102,8 @@ export const ForgetPasswordPage = () => {
               to="/auth/login"
               className="flex items-center gap-2 text-gray-500 hover:text-[#404293] transition"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Login
+              <ArrowLeft className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`} />
+              {t("backToLogin")}
             </Link>
           </div>
         </motion.div>

@@ -11,22 +11,30 @@ export * from "../../../../shared/utils/theme";
 // ==============================
 // شارات حالة الفورم
 // ==============================
-export const STATUS_LABELS: Record<SurveyFormStatus, string> = {
-  draft: "مسودة",
-  open: "مفتوح",
-  closed: "مغلق",
-};
+/**
+ * ملاحظة i18n: نُرجع مفتاح ترجمة لا نصّاً – الوحدة تُقيَّم مرّة واحدة عند
+ * التحميل فلا تعرف اللغة الحالية، والمكوّن يترجم المفتاح عند العرض.
+ * المفاتيح بلا بادئة لأنها تُستهلك داخل namespace `admin` حصراً.
+ */
+export const STATUS_LABEL_KEYS = {
+  draft: "surveyStatus.draft",
+  open: "surveyStatus.open",
+  closed: "surveyStatus.closed",
+} as const satisfies Record<SurveyFormStatus, string>;
 
-export const statusLabel = (status: SurveyFormStatus): string =>
-  STATUS_LABELS[status] ?? STATUS_LABELS.draft;
+export type StatusLabelKey =
+  (typeof STATUS_LABEL_KEYS)[keyof typeof STATUS_LABEL_KEYS];
+
+export const statusLabelKey = (status: SurveyFormStatus): StatusLabelKey =>
+  STATUS_LABEL_KEYS[status] ?? STATUS_LABEL_KEYS.draft;
 
 export const statusBadgeClass = (
   isDark: boolean,
   status: SurveyFormStatus,
-): { badge: string; dot: string; label: string } => {
+): { badge: string; dot: string; labelKey: StatusLabelKey } => {
   if (status === "open") {
     return {
-      label: STATUS_LABELS.open,
+      labelKey: STATUS_LABEL_KEYS.open,
       dot: "bg-emerald-500",
       badge: isDark
         ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
@@ -35,7 +43,7 @@ export const statusBadgeClass = (
   }
   if (status === "closed") {
     return {
-      label: STATUS_LABELS.closed,
+      labelKey: STATUS_LABEL_KEYS.closed,
       dot: "bg-red-500",
       badge: isDark
         ? "border-red-500/30 bg-red-500/10 text-red-400"
@@ -43,7 +51,7 @@ export const statusBadgeClass = (
     };
   }
   return {
-    label: STATUS_LABELS.draft,
+    labelKey: STATUS_LABEL_KEYS.draft,
     dot: "bg-gray-400",
     badge: isDark
       ? "border-white/12 bg-white/5 text-gray-400"
@@ -56,7 +64,8 @@ export const statusBadgeClass = (
 // ==============================
 export interface DifficultyLevel {
   value: number;
-  label: string;
+  /** مفتاح داخل `admin:difficulty.*` – انظر ملاحظة i18n أعلاه */
+  labelKey: `difficulty.${1 | 2 | 3 | 4 | 5}`;
   icon: typeof Smile;
   /** الزر النشط */
   active: string;
@@ -69,7 +78,7 @@ export interface DifficultyLevel {
 export const DIFFICULTY_SCALE: DifficultyLevel[] = [
   {
     value: 1,
-    label: "سهلة جداً",
+    labelKey: "difficulty.1",
     icon: Smile,
     active: "bg-emerald-500 text-white shadow-emerald-500/30",
     chip: (isDark) =>
@@ -80,7 +89,7 @@ export const DIFFICULTY_SCALE: DifficultyLevel[] = [
   },
   {
     value: 2,
-    label: "سهلة",
+    labelKey: "difficulty.2",
     icon: Meh,
     active: "bg-teal-500 text-white shadow-teal-500/30",
     chip: (isDark) =>
@@ -89,7 +98,7 @@ export const DIFFICULTY_SCALE: DifficultyLevel[] = [
   },
   {
     value: 3,
-    label: "متوسطة",
+    labelKey: "difficulty.3",
     icon: Zap,
     active: "bg-amber-500 text-white shadow-amber-500/30",
     chip: (isDark) =>
@@ -98,7 +107,7 @@ export const DIFFICULTY_SCALE: DifficultyLevel[] = [
   },
   {
     value: 4,
-    label: "صعبة",
+    labelKey: "difficulty.4",
     icon: Flame,
     active: "bg-orange-500 text-white shadow-orange-500/30",
     chip: (isDark) =>
@@ -109,7 +118,7 @@ export const DIFFICULTY_SCALE: DifficultyLevel[] = [
   },
   {
     value: 5,
-    label: "صعبة جداً",
+    labelKey: "difficulty.5",
     icon: Skull,
     active: "bg-red-500 text-white shadow-red-500/30",
     chip: (isDark) =>

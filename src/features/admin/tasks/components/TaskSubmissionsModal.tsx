@@ -12,6 +12,9 @@ import {
   XCircle,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import {
   useGetTaskSubmissionsQuery,
   useReviewSubmissionMutation,
@@ -23,33 +26,17 @@ interface TaskSubmissionsModalProps {
   onClose: () => void;
 }
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" });
-
-const statusMeta: Record<
-  SubmissionStatus,
-  { label: string; className: string }
-> = {
-  pending: { label: "بانتظار المراجعة", className: "bg-amber-50 text-amber-600" },
-  approved: { label: "مقبول", className: "bg-emerald-50 text-emerald-600" },
-  rejected: { label: "مرفوض", className: "bg-red-50 text-red-500" },
-};
-
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    )
-      return (data as { message: string }).message;
-  }
-  return "تعذّر تنفيذ الطلب. حاول مرة أخرى.";
+/** أنماط الشارة فقط – التسمية تُترجَم عند العرض عبر `tasks:submissionStatus.*` */
+const statusClassName: Record<SubmissionStatus, string> = {
+  pending: "bg-amber-50 text-amber-600",
+  approved: "bg-emerald-50 text-emerald-600",
+  rejected: "bg-red-50 text-red-500",
 };
 
 function SubmissionRow({ submission }: { submission: TaskSubmission }) {
+  const { t } = useTranslation(["admin", "tasks", "common"]);
+  const errorMessage = useErrorMessage();
+  const { formatDateTimeOrDash } = useFormatters();
   const [rejecting, setRejecting] = useState(false);
   const [reviewNote, setReviewNote] = useState("");
   const [reviewSubmission, reviewState] = useReviewSubmissionMutation();
@@ -76,7 +63,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
     }
   };
 
-  const meta = statusMeta[submission.status];
+  const badgeClass = statusClassName[submission.status];
 
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
@@ -91,9 +78,9 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
           </div>
         </div>
         <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${meta.className}`}
+          className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${badgeClass}`}
         >
-          {meta.label}
+          {t(`tasks:submissionStatus.${submission.status}`)}
         </span>
       </div>
 
@@ -109,16 +96,16 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
         rel="noreferrer"
         className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-[#2376BB] hover:underline"
       >
-        <FileText className="h-3.5 w-3.5" /> عرض الملف المرفوع
+        <FileText className="h-3.5 w-3.5" /> {t("tasks.submissions.viewFile")}
       </a>
 
       <p className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-gray-400">
-        <Clock className="h-3 w-3" /> {formatDate(submission.createdAt)}
+        <Clock className="h-3 w-3" /> {formatDateTimeOrDash(submission.createdAt)}
       </p>
 
       {submission.status !== "pending" && submission.reviewNote && (
         <p className="mb-2 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-500">
-          ملاحظة المراجعة: {submission.reviewNote}
+          {t("tasks.submissions.reviewNote", { note: submission.reviewNote })}
         </p>
       )}
 
@@ -136,7 +123,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
               <textarea
                 value={reviewNote}
                 onChange={(event) => setReviewNote(event.target.value)}
-                placeholder="سبب الرفض (اختياري)..."
+                placeholder={t("tasks.submissions.rejectReasonPlaceholder")}
                 rows={2}
                 className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
               />
@@ -147,7 +134,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
                   disabled={reviewState.isLoading}
                   className="flex-1 rounded-xl border border-gray-200 py-2 text-xs font-semibold text-gray-500 hover:bg-gray-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -165,7 +152,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
                   ) : (
                     <XCircle size={12} />
                   )}
-                  تأكيد الرفض
+                  {t("tasks.submissions.confirmReject")}
                 </button>
               </div>
             </div>
@@ -177,7 +164,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
                 disabled={reviewState.isLoading}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-red-100 py-2 text-xs font-bold text-red-500 hover:bg-red-50 disabled:opacity-60"
               >
-                <ThumbsDown size={13} /> رفض
+                <ThumbsDown size={13} /> {t("tasks.submissions.reject")}
               </button>
               <button
                 type="button"
@@ -195,7 +182,7 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
                 ) : (
                   <ThumbsUp size={13} />
                 )}
-                قبول
+                {t("tasks.submissions.approve")}
               </button>
             </div>
           )}
@@ -206,6 +193,8 @@ function SubmissionRow({ submission }: { submission: TaskSubmission }) {
 }
 
 export default function TaskSubmissionsModal({ task, onClose }: TaskSubmissionsModalProps) {
+  const { t } = useTranslation(["admin", "common"]);
+  const errorMessage = useErrorMessage();
   const submissionsQuery = useGetTaskSubmissionsQuery(task._id);
   const submissions = submissionsQuery.data ?? [];
 
@@ -228,14 +217,16 @@ export default function TaskSubmissionsModal({ task, onClose }: TaskSubmissionsM
         <div className="border-b border-gray-100 px-7 pb-5 pt-7">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-gray-900">حلول الطلاب</h3>
+              <h3 className="text-base font-bold text-gray-900">
+                {t("tasks.submissions.title")}
+              </h3>
               <p className="mt-0.5 text-xs text-gray-400">"{task.title}"</p>
             </div>
             <button
               type="button"
               onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200"
-              aria-label="إغلاق"
+              aria-label={t("common:actions.close")}
             >
               <X size={15} className="text-gray-500" />
             </button>
@@ -267,7 +258,9 @@ export default function TaskSubmissionsModal({ task, onClose }: TaskSubmissionsM
               <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100">
                 <CheckCircle2 className="h-6 w-6 text-gray-300" />
               </div>
-              <p className="font-bold text-gray-400">لا توجد حلول مُسلَّمة بعد</p>
+              <p className="font-bold text-gray-400">
+                {t("tasks.submissions.empty")}
+              </p>
             </div>
           ) : (
             submissions.map((submission) => (

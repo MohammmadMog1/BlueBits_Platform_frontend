@@ -1,0 +1,76 @@
+{
+  "title": "المحاضرات",
+  "subtitle": "تصفّح محتواك الأكاديمي بسهولة",
+  "type": {
+    "theoretical": "نظري",
+    "practical": "عملي"
+  },
+  "breadcrumb": {
+    "selectYear": "اختر السنة",
+    "year": "السنة",
+    "semester": "الفصل",
+    "subject": "المادة",
+    "type": "النوع",
+    "lectures": "المحاضرات"
+  },
+  "steps": {
+    "selectYear": "اختر السنة",
+    "selectSemester": "اختر الفصل",
+    "selectSubject": "اختر المادة",
+    "selectType": "اختر النوع"
+  },
+  "loading": {
+    "years": "جارِ تحميل السنوات...",
+    "semesters": "جارِ تحميل الفصول...",
+    "subjects": "جارِ تحميل المواد...",
+    "lectures": "جارِ تحميل المحاضرات..."
+  },
+  "empty": {
+    "noSubjectsTitle": "لا توجد مواد",
+    "noSubjectsMessage": "لم تُضَف أي مادة لهذه السنة وهذا الفصل بعد.",
+    "noLecturesTitle": "لا توجد محاضرات بعد",
+    "noLecturesMessage": "لم تُنشر أي محاضرة لهذه المادة بعد.",
+    "noMatches": "لا توجد نتائج مطابقة."
+  },
+  "lecturesFor": "محاضرات {{subject}}",
+  "totalCount": "{{count}} إجمالاً",
+  "searchPlaceholder": "ابحث...",
+  "clearSearch": "مسح البحث",
+  "card": {
+    "view": "عرض",
+    "download": "تحميل",
+    "badgeLab": "عملي",
+    "badgePdf": "PDF"
+  },
+  "latest": {
+    "title": "أحدث المحاضرات",
+    "viewAll": "عرض الكل",
+    "showLess": "عرض أقل"
+  },
+  "recentDownloads": {
+    "title": "آخر ما حمّلت"
+  },
+  "interactions": {
+    "like": "إعجاب",
+    "dislike": "عدم إعجاب",
+    "comments": "التعليقات",
+    "loadingComments": "جارِ تحميل التعليقات...",
+    "noComments": "لا توجد تعليقات بعد، كن أول من يعلّق",
+    "composerPlaceholder": "اكتب تعليقك...",
+    "sendComment": "إرسال التعليق",
+    "updating": "جارِ التحديث...",
+    "requestFailed": "تعذّر تنفيذ الطلب، حاول مرة أخرى."
+  },
+  "comment": {
+    "unknownUser": "مستخدم",
+    "edited": "(معدّل)",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "confirmDelete": "تأكيد الحذف؟",
+    "yes": "نعم",
+    "saveFailed": "تعذّر حفظ التعديل، حاول مرة أخرى.",
+    "deleteFailed": "تعذّر حذف التعليق، حاول مرة أخرى."
+  }
+}

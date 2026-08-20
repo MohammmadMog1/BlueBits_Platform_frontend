@@ -16,12 +16,14 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import ConflictsPanel from "../components/ConflictsPanel";
 import SemesterPicker from "../components/SemesterPicker";
 import TimetableView from "../components/TimetableView";
 import { useScheduleGenerator } from "../hooks/useScheduleGenerator";
 
 export default function ScheduleGeneratorPage() {
+  const { t } = useTranslation(["admin", "common"]);
   const {
     semesters,
     semestersLoading,
@@ -57,22 +59,28 @@ export default function ScheduleGeneratorPage() {
   const steps = [
     {
       number: 1,
-      title: "تجميع البيانات",
-      description: "يجمع ردود الطلاب مع إعدادات الجدولة ويحسب التعارضات",
+      title: t("schedule.generator.collectTitle"),
+      description: t("schedule.generator.collectDescription"),
       icon: Database,
       action: runGenerateData,
       loading: isGenerating,
-      label: hasGeneratedData ? "إعادة التجميع" : "تجميع البيانات",
+      label: t(
+        hasGeneratedData
+          ? "schedule.generator.recollect"
+          : "schedule.generator.collect",
+      ),
       done: hasGeneratedData,
     },
     {
       number: 2,
-      title: "توليد الجدول",
-      description: "يرسل البيانات إلى المحرك ويعيد أفضل توزيع ممكن",
+      title: t("schedule.generator.solveTitle"),
+      description: t("schedule.generator.solveDescription"),
       icon: Wand2,
       action: runSolve,
       loading: isSolving,
-      label: schedule ? "إعادة التوليد" : "توليد الجدول",
+      label: t(
+        schedule ? "schedule.generator.resolve" : "schedule.generator.solve",
+      ),
       done: Boolean(schedule),
     },
   ];
@@ -86,11 +94,11 @@ export default function ScheduleGeneratorPage() {
             <Sparkles className="h-[18px] w-[18px] text-white" />
           </div>
           <h1 className="text-xl font-black tracking-tight text-gray-900">
-            توليد برنامج الفحص
+            {t("schedule.generator.title")}
           </h1>
         </div>
         <p className="text-sm font-medium text-gray-400">
-          جمّع البيانات، ولّد الجدول، راجع التعارضات، ثم انشره للطلاب
+          {t("schedule.generator.subtitle")}
         </p>
       </div>
 
@@ -106,14 +114,15 @@ export default function ScheduleGeneratorPage() {
         <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4">
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
           <p className="flex-1 text-sm font-semibold text-amber-700">
-            لا توجد إعدادات جدولة لفصل "{semesterLabel}" – لا يمكن توليد الجدول
-            قبل ضبطها.
+            {t("schedule.generator.noConfigWarning", {
+              semester: semesterLabel,
+            })}
           </p>
           <Link
             to="/admin/schedule-settings"
             className="flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-amber-700"
           >
-            <Settings2 size={13} /> اذهب للإعدادات
+            <Settings2 size={13} /> {t("schedule.generator.goToSettings")}
           </Link>
         </div>
       )}
@@ -162,7 +171,7 @@ export default function ScheduleGeneratorPage() {
                   >
                     <step.icon size={13} />
                   </motion.div>
-                  جاري التنفيذ...
+                  {t("schedule.generator.running")}
                 </>
               ) : (
                 <>
@@ -177,8 +186,7 @@ export default function ScheduleGeneratorPage() {
       {isSolving && (
         <p className="flex items-center gap-2 rounded-2xl border border-[#404293]/20 bg-[#404293]/5 px-5 py-3.5 text-sm font-semibold text-[#404293]">
           <Sparkles className="h-4 w-4 shrink-0 animate-pulse" />
-          المحرك يبحث عن أفضل توزيع – قد تستغرق العملية دقيقة أو أكثر، لا تغلق
-          الصفحة.
+          {t("schedule.generator.solvingHint")}
         </p>
       )}
 
@@ -193,7 +201,11 @@ export default function ScheduleGeneratorPage() {
           >
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span className="flex-1">{successMessage}</span>
-            <button type="button" onClick={dismissSuccess} aria-label="إغلاق">
+            <button
+              type="button"
+              onClick={dismissSuccess}
+              aria-label={t("common:actions.close")}
+            >
               <X size={14} className="text-emerald-400 hover:text-emerald-600" />
             </button>
           </motion.div>
@@ -240,9 +252,11 @@ export default function ScheduleGeneratorPage() {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
               <Wand2 className="h-7 w-7 text-gray-300" />
             </div>
-            <p className="mb-1 font-bold text-gray-400">لا يوجد جدول بعد</p>
+            <p className="mb-1 font-bold text-gray-400">
+              {t("schedule.generator.emptyTitle")}
+            </p>
             <p className="text-sm text-gray-300">
-              نفّذ الخطوتين أعلاه لتوليد برنامج الفحص
+              {t("schedule.generator.emptyHint")}
             </p>
           </div>
         )
@@ -270,10 +284,10 @@ export default function ScheduleGeneratorPage() {
                 <Send className="h-6 w-6 text-[#404293]" />
               </div>
               <h3 className="mb-2 text-lg font-black text-gray-900">
-                تأكيد النشر
+                {t("schedule.generator.confirmPublish.title")}
               </h3>
               <p className="mb-1 text-sm text-gray-500">
-                سيصبح برنامج الفحص مرئياً للطلاب في فصل:
+                {t("schedule.generator.confirmPublish.body")}
               </p>
               <p className="mb-6 text-sm font-black text-[#404293]">
                 "{semesterLabel}"
@@ -293,7 +307,7 @@ export default function ScheduleGeneratorPage() {
                   disabled={isPublishing}
                   className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -301,7 +315,9 @@ export default function ScheduleGeneratorPage() {
                   disabled={isPublishing}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-3 text-sm font-bold text-white shadow-md shadow-[#404293]/25 transition-all disabled:opacity-60"
                 >
-                  {isPublishing ? "جاري النشر..." : "نعم، انشر"}
+                  {isPublishing
+                    ? t("schedule.generator.confirmPublish.publishing")
+                    : t("schedule.generator.confirmPublish.yes")}
                 </button>
               </div>
             </motion.div>

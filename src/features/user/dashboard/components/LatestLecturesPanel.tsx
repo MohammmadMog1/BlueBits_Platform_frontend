@@ -8,7 +8,8 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
-import { formatShortDate } from "../../../../shared/utils/datetime";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { LecturePopulated } from "../../Lectures/types";
 
 interface LatestLecturesPanelProps {
@@ -17,19 +18,20 @@ interface LatestLecturesPanelProps {
   isLoading: boolean;
 }
 
-const typeLabel = (type: string) => (type === "practical" ? "عملي" : "نظري");
-
 /** آخر المحاضرات المنشورة — الدخول للتفاصيل يتم من صفحة المحاضرات */
 export default function LatestLecturesPanel({
   lectures,
   isDark,
   isLoading,
 }: LatestLecturesPanelProps) {
+  const { t } = useTranslation(["dashboard", "lectures"]);
+  const { formatShortDate } = useFormatters();
+
   return (
     <SectionCard
       icon={BookOpen}
-      title="أحدث المحاضرات"
-      hint="آخر ما نُشر على المنصّة"
+      title={t("latestLectures.title")}
+      hint={t("latestLectures.hint")}
       tone="violet"
       isDark={isDark}
       to="/user/lectures"
@@ -43,8 +45,8 @@ export default function LatestLecturesPanel({
       ) : lectures.length === 0 ? (
         <SectionEmpty
           icon={FileText}
-          title="لا توجد محاضرات منشورة"
-          hint="ستظهر هنا فور رفعها"
+          title={t("latestLectures.emptyTitle")}
+          hint={t("latestLectures.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -61,7 +63,12 @@ export default function LatestLecturesPanel({
                     {lecture.title}
                   </p>
                   <p className={`mt-0.5 truncate text-[11px] font-semibold ${faintClass(isDark)}`}>
-                    {lecture.subjectId?.name ?? "—"} · {typeLabel(lecture.type)}
+                    {lecture.subjectId?.name ?? "—"} ·{" "}
+                    {t(
+                      lecture.type === "practical"
+                        ? "lectures:type.practical"
+                        : "lectures:type.theoretical",
+                    )}
                   </p>
                 </div>
                 <span className={`shrink-0 text-[10px] font-bold ${faintClass(isDark)}`}>

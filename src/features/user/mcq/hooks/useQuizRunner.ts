@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   useGetBankQuery,
   useGetMyAttemptsQuery,
@@ -57,6 +58,7 @@ export interface UseQuizRunnerReturn {
 }
 
 export function useQuizRunner(bankId: string): UseQuizRunnerReturn {
+  const { t } = useTranslation("common");
   const { data: detail, isFetching: isLoading } = useGetBankQuery(bankId, {
     skip: !bankId,
   });
@@ -207,9 +209,11 @@ export function useQuizRunner(bankId: string): UseQuizRunnerReturn {
       });
       setPhase("result");
     } catch (submitError) {
-      setError(getApiErrorMessage(submitError, "تعذّر إرسال الإجابات."));
+      setError(
+        getApiErrorMessage(submitError) ?? t("errors.saveFailed"),
+      );
     }
-  }, [bankId, correctIndexes, questions, selectedIndexes, submitAnswers]);
+  }, [bankId, correctIndexes, questions, selectedIndexes, submitAnswers, t]);
 
   const restart = useCallback(() => {
     setSelectedIndexes({});

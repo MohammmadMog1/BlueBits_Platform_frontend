@@ -1,5 +1,6 @@
 import { GraduationCap, Layers, Edit3, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import type { Subject } from "../types";
 
 interface SubjectCardProps {
@@ -17,6 +18,8 @@ export default function SubjectCard({
   onEdit,
   onDelete,
 }: SubjectCardProps) {
+  const { t } = useTranslation("admin");
+
   return (
     <motion.div
       layout
@@ -49,14 +52,14 @@ export default function SubjectCard({
             onClick={() => onEdit(subject)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-500 transition-all hover:border-[#404293]/15 hover:bg-[#404293]/6 hover:text-[#404293]"
           >
-            <Edit3 size={12} /> تعديل
+            <Edit3 size={12} /> {t("subjects.card.edit")}
           </button>
           <button
             type="button"
             onClick={() => onDelete(subject)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-400 transition-all hover:border-red-100 hover:bg-red-50 hover:text-red-500"
           >
-            <Trash2 size={12} /> حذف
+            <Trash2 size={12} /> {t("subjects.card.delete")}
           </button>
         </div>
       </div>

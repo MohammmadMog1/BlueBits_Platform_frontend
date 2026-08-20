@@ -1,4 +1,5 @@
 import { Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import SectionCard from "../../../../shared/components/Dashboard/SectionCard";
 import SectionEmpty from "../../../../shared/components/Dashboard/SectionEmpty";
 import {
@@ -24,14 +25,19 @@ export default function RoleBreakdownPanel({
   isDark,
   isLoading,
 }: RoleBreakdownPanelProps) {
+  const { t } = useTranslation("admin");
+
   return (
     <SectionCard
       icon={Users}
-      title="توزيع المستخدمين"
-      hint={`${users.total} حساب — ${users.verifiedRate}% مفعّل`}
+      title={t("roleBreakdown.title")}
+      hint={t("roleBreakdown.hint", {
+        total: users.total,
+        rate: users.verifiedRate,
+      })}
       isDark={isDark}
       to="/admin/users"
-      toLabel="إدارة المستخدمين"
+      toLabel={t("roleBreakdown.manageUsers")}
     >
       {isLoading ? (
         <div className="space-y-3">
@@ -42,8 +48,8 @@ export default function RoleBreakdownPanel({
       ) : users.total === 0 ? (
         <SectionEmpty
           icon={Users}
-          title="لا يوجد مستخدمون بعد"
-          hint="ستظهر هنا نسب الأدوار فور تسجيل أول حساب"
+          title={t("roleBreakdown.emptyTitle")}
+          hint={t("roleBreakdown.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -51,7 +57,7 @@ export default function RoleBreakdownPanel({
           <div className={`flex items-center justify-between p-3.5 ${softBoxClass(isDark)}`}>
             <div>
               <p className={`text-[11px] font-bold ${mutedClass(isDark)}`}>
-                حسابات مفعّلة
+                {t("roleBreakdown.verifiedAccounts")}
               </p>
               <p className={`text-lg font-black ${headingClass(isDark)}`}>
                 {users.verified}
@@ -72,8 +78,10 @@ export default function RoleBreakdownPanel({
                   style={{ width: `${users.verifiedRate}%` }}
                 />
               </div>
-              <p className={`mt-1 text-left text-[10px] font-bold ${mutedClass(isDark)}`}>
-                {users.unverified} بانتظار التفعيل
+              <p className={`mt-1 text-start text-[10px] font-bold ${mutedClass(isDark)}`}>
+                {t("roleBreakdown.awaitingVerification", {
+                  count: users.unverified,
+                })}
               </p>
             </div>
           </div>
@@ -82,7 +90,9 @@ export default function RoleBreakdownPanel({
             {users.breakdown.map((item) => (
               <li key={item.role}>
                 <div className="mb-1 flex items-center justify-between text-xs">
-                  <span className={`font-bold ${bodyClass(isDark)}`}>{item.label}</span>
+                  <span className={`font-bold ${bodyClass(isDark)}`}>
+                    {t(`roles.${item.role}`)}
+                  </span>
                   <span className={`font-black ${mutedClass(isDark)}`}>
                     {item.count}
                     <span className={faintClass(isDark)}> · {item.percentage}%</span>

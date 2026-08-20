@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, GraduationCap, Megaphone, RefreshCcw, X } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { useGetYearsQuery } from "../../academic/api/academicApi";
 import type { AnnouncementFormData } from "../types";
 
@@ -21,6 +22,7 @@ export default function AnnouncementFormModal({
   onClose,
   onSubmit,
 }: AnnouncementFormModalProps) {
+  const { t } = useTranslation(["announcements", "common"]);
   const [title, setTitle] = useState(initial?.title ?? "");
   const [content, setContent] = useState(initial?.content ?? "");
   const [yearId, setYearId] = useState(initial?.yearId ?? "");
@@ -31,9 +33,9 @@ export default function AnnouncementFormModal({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!title.trim()) return setFormError("عنوان الإعلان مطلوب");
-    if (!content.trim()) return setFormError("محتوى الإعلان مطلوب");
-    if (!isEdit && !yearId) return setFormError("يرجى اختيار السنة الدراسية");
+    if (!title.trim()) return setFormError(t("admin.form.titleRequired"));
+    if (!content.trim()) return setFormError(t("admin.form.contentRequired"));
+    if (!isEdit && !yearId) return setFormError(t("admin.form.yearRequired"));
     setFormError("");
     onSubmit({
       title: title.trim(),
@@ -66,10 +68,10 @@ export default function AnnouncementFormModal({
               </div>
               <div>
                 <h3 className="text-base font-bold text-gray-900">
-                  {isEdit ? "تعديل الإعلان" : "إنشاء إعلان جديد"}
+                  {t(isEdit ? "admin.form.editTitle" : "admin.form.createTitle")}
                 </h3>
                 <p className="mt-0.5 text-xs text-gray-400">
-                  {isEdit ? "عدّل بيانات الإعلان" : "أدخل بيانات الإعلان الجديد"}
+                  {t(isEdit ? "admin.form.editSubtitle" : "admin.form.createSubtitle")}
                 </p>
               </div>
             </div>
@@ -77,7 +79,7 @@ export default function AnnouncementFormModal({
               type="button"
               onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200"
-              aria-label="إغلاق"
+              aria-label={t("common:actions.close")}
             >
               <X size={15} className="text-gray-500" />
             </button>
@@ -88,45 +90,45 @@ export default function AnnouncementFormModal({
           className="max-h-[70vh] space-y-5 overflow-y-auto px-7 py-6"
         >
           <label className="block text-sm font-bold text-gray-700">
-            عنوان الإعلان <span className="text-red-400">*</span>
+            {t("admin.form.titleLabel")} <span className="text-red-400">*</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              placeholder="مثال: إعلان مهم لطلاب السنة الأولى"
+              placeholder={t("admin.form.titlePlaceholder")}
               className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <label className="block text-sm font-bold text-gray-700">
-            المحتوى <span className="text-red-400">*</span>
+            {t("admin.form.contentLabel")} <span className="text-red-400">*</span>
             <textarea
               value={content}
               onChange={(event) => setContent(event.target.value)}
-              placeholder="اكتب محتوى الإعلان..."
+              placeholder={t("admin.form.contentPlaceholder")}
               rows={5}
               className="mt-1.5 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <label className="block text-sm font-bold text-gray-700">
-            السنة الدراسية {!isEdit && <span className="text-red-400">*</span>}
+            {t("admin.form.yearLabel")} {!isEdit && <span className="text-red-400">*</span>}
             <div className="relative mt-1.5">
               <select
                 value={yearId}
                 onChange={(event) => setYearId(event.target.value)}
                 disabled={isEdit}
-                className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
               >
-                <option value="">اختر السنة...</option>
+                <option value="">{t("admin.form.chooseYear")}</option>
                 {yearOptions.map((option) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
                   </option>
                 ))}
               </select>
-              <GraduationCap className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             </div>
             {isEdit && (
               <span className="mt-1 block text-xs font-normal text-gray-400">
-                لا يمكن تغيير السنة الدراسية بعد الإنشاء
+                {t("admin.form.yearLocked")}
               </span>
             )}
           </label>
@@ -142,7 +144,7 @@ export default function AnnouncementFormModal({
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
@@ -157,12 +159,12 @@ export default function AnnouncementFormModal({
                   >
                     <RefreshCcw size={15} />
                   </motion.div>
-                  جاري الحفظ...
+                  {t("admin.form.saving")}
                 </>
               ) : (
                 <>
                   <CheckCircle2 size={15} />
-                  {isEdit ? "حفظ التعديلات" : "إنشاء الإعلان"}
+                  {t(isEdit ? "admin.form.save" : "admin.form.create")}
                 </>
               )}
             </button>

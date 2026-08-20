@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { resetPasswordThunk } from "../redux/authThunk";
 
@@ -11,88 +12,80 @@ import { resetPasswordThunk } from "../redux/authThunk";
 import bgImage from "../../../app/assets/Logo.png";
 import logoImage from "../../../app/assets/Logo notext.png";
 
+/** ترتيب المستويات مطابق لناتج getPasswordStrength (0..4) */
+const STRENGTH_LABEL_KEYS = [
+  "strength.veryWeak",
+  "strength.weak",
+  "strength.medium",
+  "strength.strong",
+  "strength.veryStrong",
+] as const;
+
 export const ResetPasswordPage = () => {
+  const { t } = useTranslation("auth");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmError, setConfirmError] = useState("");
+  const [confirmError, setConfirmError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [searchParams] = useSearchParams();
 
-const token = searchParams.get("token");
+  const token = searchParams.get("token");
 
   const dispatch = useAppDispatch();
-  const { isLoading,error } = useAppSelector((state) => state.auth);
+  const { isLoading, error } = useAppSelector((state) => state.auth);
 
-const handleSubmit = async () => {
-  console.log("Button clicked");
+  const handleSubmit = async () => {
+    if (!password.trim()) return;
 
-  console.log("password:", password);
-  console.log("confirmPassword:", confirmPassword);
-  console.log("token:", token);
+    if (password !== confirmPassword) {
+      setConfirmError(true);
+      return;
+    }
 
-  if (!password.trim()) {
-    console.log("Password is empty");
-    return;
-  }
+    if (!token) return;
 
-  if (password !== confirmPassword) {
-    console.log("Passwords don't match");
-    setConfirmError("Passwords do not match");
-    return;
-  }
+    const result = await dispatch(
+      resetPasswordThunk({
+        token,
+        password,
+      })
+    );
 
-  console.log("Passed validation");
+    if (resetPasswordThunk.fulfilled.match(result)) {
+      navigate("/auth/login", { replace: true });
+    }
+  };
 
-  if (!token) {
-    console.log("Token is undefined");
-    return;
-  }
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
 
-  console.log("Before dispatch");
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-  const result = await dispatch(
-    resetPasswordThunk({
-      token,
-      password,
-    })
-  );
+    return strength;
+  };
 
-  console.log("Result:", result);
+  const getStrengthColor = (level: number) => {
+    switch (level) {
+      case 1:
+        return "bg-red-500";
+      case 2:
+        return "bg-yellow-400";
+      case 3:
+        return "bg-blue-500";
+      case 4:
+        return "bg-green-500";
+      default:
+        return "bg-gray-200";
+    }
+  };
 
-  if (resetPasswordThunk.fulfilled.match(result)) {
-    console.log("Navigate");
-    navigate("/auth/login", { replace: true });
-  }
-};
+  const passwordStrength = getPasswordStrength(password);
 
-const getPasswordStrength = (password: string) => {
-  let strength = 0;
-
-  if (password.length >= 8) strength++;
-  if (/[A-Z]/.test(password)) strength++;
-  if (/[0-9]/.test(password)) strength++;
-  if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-  return strength;
-};
-const getStrengthColor = (level: number) => {
-  switch (level) {
-    case 1:
-      return "bg-red-500";
-    case 2:
-      return "bg-yellow-400";
-    case 3:
-      return "bg-blue-500";
-    case 4:
-      return "bg-green-500";
-    default:
-      return "bg-gray-200";
-  }
-};
-
-const passwordStrength = getPasswordStrength(password);
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
       {/* Background */}
@@ -106,11 +99,7 @@ const passwordStrength = getPasswordStrength(password);
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <img
-            src={logoImage}
-            alt="BlueBits"
-            className="h-14 object-contain"
-          />
+          <img src={logoImage} alt="BlueBits" className="h-14 object-contain" />
         </div>
 
         <motion.div
@@ -129,158 +118,141 @@ const passwordStrength = getPasswordStrength(password);
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#202121]">
-              Reset Password
+              {t("reset.title")}
             </h1>
 
-            <p className="text-gray-500 mt-3 leading-7">
-              Create a new password for your account.
-            </p>
+            <p className="text-gray-500 mt-3 leading-7">{t("reset.subtitle")}</p>
           </div>
 
           {/* New Password */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              New Password
+              {t("reset.newPasswordLabel")}
             </label>
 
             <div className="relative">
-              <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute start-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
 
               <input
-                // type="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter new password"
-                className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 pl-14 pr-14 focus:outline-none focus:ring-2 focus:ring-[#33529F]"
+                placeholder={t("reset.newPasswordPlaceholder")}
+                className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 ps-14 pe-14 focus:outline-none focus:ring-2 focus:ring-[#33529F]"
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"
+                aria-label={t(showPassword ? "hidePassword" : "showPassword")}
+                className="absolute end-5 top-1/2 -translate-y-1/2 text-gray-400"
               >
-          {showPassword ? (
-    <EyeOff className="w-5 h-5" />
-  ) : (
-    <Eye className="w-5 h-5" />
-  )}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
 
-{/* Password Strength */}
-<div className="mb-6">
-  <div className="flex gap-2">
-    {[1, 2, 3, 4].map((level) => (
-      <div
-        key={level}
-        className={`h-2 flex-1 rounded-full transition-all duration-300 ${
-          passwordStrength >= level
-            ? getStrengthColor(passwordStrength)
-            : "bg-gray-200"
-        }`}
-      />
-    ))}
-  </div>
+          {/* Password Strength */}
+          <div className="mb-6">
+            <div className="flex gap-2">
+              {[1, 2, 3, 4].map((level) => (
+                <div
+                  key={level}
+                  className={`h-2 flex-1 rounded-full transition-all duration-300 ${
+                    passwordStrength >= level
+                      ? getStrengthColor(passwordStrength)
+                      : "bg-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
 
-  <p
-    className={`text-xs mt-2 font-medium ${
-      passwordStrength === 1
-        ? "text-red-500"
-        : passwordStrength === 2
-        ? "text-yellow-500"
-        : passwordStrength === 3
-        ? "text-blue-500"
-        : passwordStrength === 4
-        ? "text-green-500"
-        : "text-gray-500"
-    }`}
-  >
-    {passwordStrength === 0 && "Very Weak"}
-    {passwordStrength === 1 && "Weak"}
-    {passwordStrength === 2 && "Medium"}
-    {passwordStrength === 3 && "Strong"}
-    {passwordStrength === 4 && "Very Strong"}
-  </p>
-</div>
-
-            <p className="text-xs text-gray-500 mt-2">
-               {passwordStrength === 0 && "Very Weak"}
-    {passwordStrength === 1 && "Weak"}
-    {passwordStrength === 2 && "Medium"}
-    {passwordStrength === 3 && "Strong"}
-    {passwordStrength === 4 && "Very Strong"}
+            <p
+              className={`text-xs mt-2 font-medium ${
+                passwordStrength === 1
+                  ? "text-red-500"
+                  : passwordStrength === 2
+                    ? "text-yellow-500"
+                    : passwordStrength === 3
+                      ? "text-blue-500"
+                      : passwordStrength === 4
+                        ? "text-green-500"
+                        : "text-gray-500"
+              }`}
+            >
+              {t(STRENGTH_LABEL_KEYS[passwordStrength])}
             </p>
-          {/* </div> */}
+          </div>
 
           {/* Confirm Password */}
           <div className="mb-8">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Confirm Password
+              {t("reset.confirmPasswordLabel")}
             </label>
 
             <div className="relative">
-              <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute start-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
 
               <input
-                // type="password"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
-                onChange={(e) => {setConfirmPassword(e.target.value);
-                  if (confirmError) {setConfirmError("");}
-}}
-                placeholder="Confirm password"
-                className={`w-full rounded-2xl 
-                  border border-gray-200
-                   bg-gray-50 py-4 pl-14 pr-14 
-                   focus:outline-none focus:ring-2 focus:ring-[#33529F]${
-                 confirmError
-    ? "border-red-500 focus:ring-red-500"
-    : "border-gray-200 focus:ring-[#33529F]"
-}`}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (confirmError) setConfirmError(false);
+                }}
+                placeholder={t("reset.confirmPasswordPlaceholder")}
+                className={`w-full rounded-2xl border bg-gray-50 py-4 ps-14 pe-14 focus:outline-none focus:ring-2 ${
+                  confirmError
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-200 focus:ring-[#33529F]"
+                }`}
               />
-              {confirmError && (
-  <p className="mt-2 text-sm text-red-500">
-    {confirmError}
-  </p>
-)}
+
               <button
-  type="button"
-  onClick={() =>
-    setShowConfirmPassword(!showConfirmPassword)
-  }
-  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#404293]"
->
-  {showConfirmPassword ? (
-    <EyeOff className="w-5 h-5" />
-  ) : (
-    <Eye className="w-5 h-5" />
-  )}
-</button>
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={t(
+                  showConfirmPassword ? "hidePassword" : "showPassword"
+                )}
+                className="absolute end-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#404293]"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
+
+            {confirmError && (
+              <p className="mt-2 text-sm text-red-500">
+                {t("validation.passwordsMismatch")}
+              </p>
+            )}
           </div>
+
           {/* Button */}
           <button
             className="w-full bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold rounded-2xl py-4 hover:scale-[1.02] hover:opacity-90 transition-all"
             onClick={handleSubmit}
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Reset Password"}
-            {/* Reset Password */}
+            {isLoading ? t("reset.submitting") : t("reset.submit")}
           </button>
-          {error && (
-  <p className="mt-3 text-red-500 text-sm">
-    {error}
-  </p>
-)}
+
+          {error && <p className="mt-3 text-red-500 text-sm">{error}</p>}
+
           {/* Back */}
           <div className="mt-8 text-center">
             <Link
               to="/auth/login"
               className="text-[#404293] font-medium hover:underline"
             >
-              Back to Login
+              {t("backToLogin")}
             </Link>
           </div>
         </motion.div>

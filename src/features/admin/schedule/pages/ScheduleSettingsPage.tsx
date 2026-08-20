@@ -16,12 +16,14 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import ScheduleConfigForm from "../components/ScheduleConfigForm";
 import ScheduleConfigSummary from "../components/ScheduleConfigSummary";
 import SemesterPicker from "../components/SemesterPicker";
 import { useScheduleConfigManager } from "../hooks/useScheduleConfigManager";
 
 export default function ScheduleSettingsPage() {
+  const { t } = useTranslation(["admin", "common"]);
   const {
     semesters,
     semestersLoading,
@@ -64,18 +66,18 @@ export default function ScheduleSettingsPage() {
               <CalendarClock className="h-[18px] w-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black tracking-tight text-gray-900">
-              إعدادات الجدولة
+              {t("schedule.settings.title")}
             </h1>
           </div>
           <p className="text-sm font-medium text-gray-400">
-            اضبط مدى الامتحانات والعطل والفترات وإعدادات المواد لكل فصل دراسي
+            {t("schedule.settings.subtitle")}
           </p>
         </div>
         <button
           type="button"
           onClick={refetch}
           disabled={!selectedSemesterId}
-          title="تحديث"
+          title={t("common:actions.update")}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-[#404293]/30 hover:text-[#404293] disabled:opacity-40"
         >
           <RefreshCcw
@@ -103,7 +105,11 @@ export default function ScheduleSettingsPage() {
           >
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span className="flex-1">{successMessage}</span>
-            <button type="button" onClick={dismissSuccess} aria-label="إغلاق">
+            <button
+              type="button"
+              onClick={dismissSuccess}
+              aria-label={t("common:actions.close")}
+            >
               <X size={14} className="text-emerald-400 hover:text-emerald-600" />
             </button>
           </motion.div>
@@ -123,9 +129,11 @@ export default function ScheduleSettingsPage() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
             <Layers className="h-7 w-7 text-gray-300" />
           </div>
-          <p className="mb-1 font-bold text-gray-400">اختر فصلاً دراسياً</p>
+          <p className="mb-1 font-bold text-gray-400">
+            {t("schedule.settings.pickSemester")}
+          </p>
           <p className="text-sm text-gray-300">
-            لعرض أو ضبط إعدادات الجدولة الخاصة به
+            {t("schedule.settings.pickSemesterHint")}
           </p>
         </div>
       ) : configLoading ? (
@@ -168,17 +176,17 @@ export default function ScheduleSettingsPage() {
             <CalendarClock className="h-7 w-7 text-gray-300" />
           </div>
           <p className="mb-1 font-bold text-gray-400">
-            لا توجد إعدادات جدولة لفصل "{semesterLabel}"
+            {t("schedule.settings.noConfig", { semester: semesterLabel })}
           </p>
           <p className="mb-4 text-sm text-gray-300">
-            أنشئ الإعدادات ليتمكن النظام من توليد برنامج الفحص
+            {t("schedule.settings.noConfigHint")}
           </p>
           <button
             type="button"
             onClick={startCreate}
             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#404293]/25 transition-all hover:-translate-y-0.5"
           >
-            <Plus size={15} /> إنشاء الإعدادات
+            <Plus size={15} /> {t("schedule.settings.createConfig")}
           </button>
         </div>
       )}
@@ -205,16 +213,16 @@ export default function ScheduleSettingsPage() {
                 <Trash2 className="h-7 w-7 text-red-500" />
               </div>
               <h3 className="mb-2 text-lg font-black text-gray-900">
-                تأكيد الحذف
+                {t("schedule.settings.confirmDelete.title")}
               </h3>
               <p className="mb-1 text-sm text-gray-500">
-                ستُحذف إعدادات الجدولة لفصل:
+                {t("schedule.settings.confirmDelete.body")}
               </p>
               <p className="mb-6 text-sm font-black text-[#404293]">
                 "{semesterLabel}"
               </p>
               <p className="mb-6 text-xs text-gray-400">
-                لا يمكن التراجع عن هذا الإجراء.
+                {t("schedule.settings.confirmDelete.irreversible")}
               </p>
 
               {deleteError && (
@@ -231,7 +239,7 @@ export default function ScheduleSettingsPage() {
                   disabled={isDeleting}
                   className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -251,10 +259,10 @@ export default function ScheduleSettingsPage() {
                       >
                         <RefreshCcw size={14} />
                       </motion.div>
-                      جاري...
+                      {t("schedule.settings.confirmDelete.working")}
                     </>
                   ) : (
-                    "نعم، احذف"
+                    t("schedule.settings.confirmDelete.yes")
                   )}
                 </button>
               </div>

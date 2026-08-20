@@ -1,0 +1,87 @@
+{
+  "title": "MCQ Practice",
+  "subtitle": "Work through lecture question banks and measure your level",
+  "breadcrumb": {
+    "selectYear": "Select Year",
+    "year": "Year",
+    "semester": "Semester",
+    "subject": "Subject",
+    "banks": "Banks",
+    "quiz": "Quiz"
+  },
+  "steps": {
+    "selectYear": "Select Year",
+    "selectSemester": "Select Semester",
+    "selectSubject": "Select Subject"
+  },
+  "loading": {
+    "years": "Loading years...",
+    "semesters": "Loading semesters...",
+    "subjects": "Loading subjects...",
+    "banks": "Loading question banks...",
+    "bank": "Loading question bank…",
+    "generic": "Loading…"
+  },
+  "empty": {
+    "noSubjectsTitle": "No subjects found",
+    "noSubjectsMessage": "No subjects exist for this year and semester yet.",
+    "noBanksTitle": "No question banks available",
+    "noMatches": "No matches found.",
+    "unpublishedHint": "There are {{count}} question banks for this subject, but they are not published yet — they'll appear once an admin publishes them.",
+    "noBanksPublished": "No question bank has been published for this subject yet."
+  },
+  "banksFor": "Question banks — {{subject}}",
+  "totalCount": "{{count}} total",
+  "searchPlaceholder": "Search...",
+  "clearSearch": "Clear search",
+  "card": {
+    "questionsCount": "questions",
+    "start": "Start",
+    "noQuestions": "No questions"
+  },
+  "intro": {
+    "subjectAndCount": "{{subject}} · {{count}} questions",
+    "start": "Start",
+    "emptyBank": "This bank has no questions yet.",
+    "bestScore": "Your best score:",
+    "outOfAttempts": "out of {{count}} attempts",
+    "previousAttempts": "My previous attempts",
+    "noAttempts": "You haven't taken this bank yet — start your first attempt!",
+    "correctOfTotal": "{{correct}} / {{total}} correct"
+  },
+  "unavailable": {
+    "title": "This question bank is unavailable",
+    "back": "Back"
+  },
+  "session": {
+    "backToBank": "Back to bank details",
+    "total": "Total",
+    "done": "Done",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "submit": "Submit result",
+    "submitting": "Submitting…",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "question": {
+    "typeTrueFalse": "True / False",
+    "typeMcq": "Multiple choice",
+    "correctAnswer": "Correct answer",
+    "wrongAnswer": "Wrong answer",
+    "yourAnswer": "Your answer"
+  },
+  "result": {
+    "outOf100": "out of 100",
+    "excellent": "Excellent result! 🎉",
+    "good": "Good result, with room to improve",
+    "needsReview": "You need to review the lecture",
+    "summary": "You answered {{correct}} of {{total}} questions correctly.",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "unanswered": "Unanswered",
+    "retry": "Try again",
+    "backToBanks": "Bank list",
+    "reviewHeading": "Answer review"
+  }
+}

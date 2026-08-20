@@ -1,5 +1,6 @@
 // src/features/profile/components/ConfirmModal.tsx
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { AlertTriangle, Loader2, X } from "lucide-react";
 
 interface ConfirmModalProps {
@@ -27,6 +28,7 @@ export default function ConfirmModal({
   onClose,
   children,
 }: ConfirmModalProps) {
+  const { t } = useTranslation("common");
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -58,7 +60,7 @@ export default function ConfirmModal({
           </div>
           <button
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("actions.close")}
             className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -75,7 +77,7 @@ export default function ConfirmModal({
             onClick={onClose}
             className="flex-1 py-2.5 rounded-xl text-[13px] font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
           >
-            Cancel
+            {t("actions.cancel")}
           </button>
           <button
             onClick={onConfirm}

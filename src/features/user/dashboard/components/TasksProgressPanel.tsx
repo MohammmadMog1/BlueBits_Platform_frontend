@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { AlertTriangle, CheckSquare, GraduationCap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   brandGradient,
   cardClass,
@@ -23,24 +24,29 @@ export default function TasksProgressPanel({
   isDark,
   isLoading,
 }: TasksProgressPanelProps) {
+  const { t } = useTranslation("dashboard");
+
   if (isLoading) {
     return <div className={`h-44 w-full ${skeletonClass(isDark)}`} />;
   }
 
   const items = [
     {
+      id: "personalDone",
       icon: CheckSquare,
-      label: "مهام شخصية منجزة",
+      label: t("progress.personalDone"),
       value: `${tasks.personalDone}/${tasks.personalTotal}`,
     },
     {
+      id: "academicOpen",
       icon: GraduationCap,
-      label: "مهام أكاديمية مفتوحة",
+      label: t("progress.academicOpen"),
       value: tasks.academicOpen,
     },
     {
+      id: "overdue",
       icon: AlertTriangle,
-      label: "متأخرة",
+      label: t("progress.overdue"),
       value: tasks.personalOverdue,
     },
   ];
@@ -49,9 +55,11 @@ export default function TasksProgressPanel({
     <div className={`p-5 ${cardClass(isDark)}`}>
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <p className={`text-sm font-black ${headingClass(isDark)}`}>التقدّم الإجمالي</p>
+          <p className={`text-sm font-black ${headingClass(isDark)}`}>
+            {t("progress.title")}
+          </p>
           <p className={`text-[11px] font-semibold ${mutedClass(isDark)}`}>
-            المهام الشخصية والأكاديمية معاً
+            {t("progress.hint")}
           </p>
         </div>
         <span className="text-2xl font-black text-[#2376BB]">{tasks.progress}%</span>
@@ -72,7 +80,7 @@ export default function TasksProgressPanel({
         {items.map((item) => {
           const Icon = item.icon;
           return (
-            <div key={item.label} className={`px-2.5 py-3 text-center ${softBoxClass(isDark)}`}>
+            <div key={item.id} className={`px-2.5 py-3 text-center ${softBoxClass(isDark)}`}>
               <Icon className={`mx-auto mb-1 h-4 w-4 ${faintClass(isDark)}`} />
               <p className={`text-base font-black leading-none ${headingClass(isDark)}`}>
                 {item.value}
@@ -93,7 +101,7 @@ export default function TasksProgressPanel({
             : "border-gray-200 bg-white text-gray-600 hover:border-[#404293]/30 hover:text-[#404293]"
         }`}
       >
-        فتح صفحة المهام
+        {t("progress.openTasksPage")}
       </Link>
     </div>
   );

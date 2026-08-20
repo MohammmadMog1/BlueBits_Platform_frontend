@@ -9,12 +9,14 @@ import type {
   ConversationSummary,
 } from "../types/ai.types";
 
-const DEFAULT_ERROR_MESSAGE =
-  "تعذّر الحصول على رد من المساعد الذكي، حاول مرة أخرى.";
-
-/** رسائل الخطأ من هذا الـ endpoint أحياناً تكون JSON متداخل (خطأ من مزوّد النموذج) */
-function extractErrorMessage(rawMessage: string, fallback = DEFAULT_ERROR_MESSAGE) {
-  if (!rawMessage) return fallback;
+/**
+ * رسائل الخطأ من هذا الـ endpoint أحياناً تكون JSON متداخل (خطأ من مزوّد النموذج).
+ *
+ * ملاحظة i18n: عند غياب رسالة الخادم نُرجع مفتاح ترجمة داخل `ai:errors.*`
+ * بدل نصّ جاهز – الطبقة العليا (`useAiChat`) هي التي تترجمه.
+ */
+function extractErrorMessage(rawMessage: string, fallbackKey: string) {
+  if (!rawMessage) return fallbackKey;
   try {
     const parsed = JSON.parse(rawMessage);
     return parsed?.error?.message ?? rawMessage;
@@ -39,7 +41,9 @@ export const aiApi = createApi({
       query: (body) => ({ url: "/ai/ask", method: "POST", body }),
       transformResponse: (response: ApiEnvelope<AskAiResult>) => {
         if (!response.isSuccess || !response.data) {
-          throw new Error(extractErrorMessage(response.message));
+          throw new Error(
+            extractErrorMessage(response.message, "ai:errors.replyFailed"),
+          );
         }
         return response.data;
       },
@@ -70,7 +74,7 @@ export const aiApi = createApi({
       transformResponse: (response: ApiEnvelope<ConversationDetail>) => {
         if (!response.isSuccess || !response.data) {
           throw new Error(
-            extractErrorMessage(response.message, "تعذّر تحميل المحادثة."),
+            extractErrorMessage(response.message, "ai:errors.loadConversationFailed"),
           );
         }
         return response.data;

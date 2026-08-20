@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Shield, LogIn, UserPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface AuthModalProps {
   onClose: () => void;
@@ -7,6 +8,8 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
+  const { t } = useTranslation(["landing", "common"]);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -31,12 +34,12 @@ export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
               <Shield className="w-8 h-8 text-[#404293]" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              تسجيل الدخول مطلوب
+              {t("authModal.title")}
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-7">
-              هذه الميزة متاحة للمستخدمين المسجلين فقط.
+              {t("authModal.descriptionLine1")}
               <br />
-              سجل دخولك أو أنشئ حساباً مجانياً للوصول إليها.
+              {t("authModal.descriptionLine2")}
             </p>
             <div className="flex gap-3">
               <button
@@ -47,7 +50,7 @@ export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
               >
                 <LogIn className="w-4 h-4" />
-                تسجيل الدخول
+                {t("authModal.login")}
               </button>
               <button
                 onClick={() => {
@@ -57,14 +60,14 @@ export function AuthModal({ onClose, onNavigate }: AuthModalProps) {
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border-2 border-[#404293] text-[#404293] dark:text-[#9fa8e8] dark:border-[#404293]/40 font-bold text-sm hover:bg-[#404293]/5 dark:hover:bg-[#404293]/10 transition-all"
               >
                 <UserPlus className="w-4 h-4" />
-                إنشاء حساب
+                {t("authModal.register")}
               </button>
             </div>
             <button
               onClick={onClose}
               className="mt-4 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
-              إغلاق
+              {t("common:actions.close")}
             </button>
           </div>
         </motion.div>

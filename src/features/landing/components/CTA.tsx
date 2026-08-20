@@ -1,5 +1,7 @@
 import { Zap, ChevronRight, BookOpen } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../shared/i18n/useLanguage";
 import { HexGrid, DiagonalBands } from "./shared/VisualHelpers";
 
 interface CTAProps {
@@ -7,6 +9,9 @@ interface CTAProps {
 }
 
 export function CTA({ navigate }: CTAProps) {
+  const { t } = useTranslation("landing");
+  const { isRTL } = useLanguage();
+
   return (
     <section className="relative py-20 sm:py-32 overflow-hidden">
       <div
@@ -39,19 +44,18 @@ export function CTA({ navigate }: CTAProps) {
       >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold mb-6 sm:mb-8">
           <Zap className="w-3.5 h-3.5" />
-          Start your academic journey
+          {t("cta.badge")}
         </div>
         <h2
           className="text-white mb-5 leading-tight"
           style={{ fontSize: "clamp(1.8rem,5vw,3.5rem)", fontWeight: 800 }}
         >
-          Ready to Transform
+          {t("cta.titleLine1")}
           <br />
-          Your Learning?
+          {t("cta.titleLine2")}
         </h2>
         <p className="text-white/75 text-base sm:text-lg mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed">
-          Join thousands of students already using BlueBits to ace their
-          courses, stay organized, and learn smarter every day.
+          {t("cta.subtitle")}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button
@@ -59,8 +63,10 @@ export function CTA({ navigate }: CTAProps) {
             className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-12 py-3.5 sm:py-4 rounded-2xl bg-white font-bold shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-300"
             style={{ color: "#404293", fontSize: "0.95rem" }}
           >
-            Get Started for Free
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            {t("cta.primary")}
+            <ChevronRight
+              className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""}`}
+            />
           </button>
           <button
             onClick={() => navigate("/user/lectures")}
@@ -68,7 +74,7 @@ export function CTA({ navigate }: CTAProps) {
             style={{ fontSize: "0.95rem" }}
           >
             <BookOpen className="w-4 h-4" />
-            استعرض المحاضرات
+            {t("cta.secondary")}
           </button>
         </div>
       </motion.div>

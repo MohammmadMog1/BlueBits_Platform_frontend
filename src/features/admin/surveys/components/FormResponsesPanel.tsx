@@ -11,9 +11,12 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import { useGetFormResponsesQuery } from "../api/surveysApi";
 import type { SurveyResponse } from "../types";
-import { errorMessage, formatDateTime, getRefName } from "../utils/survey";
+import { getRefName } from "../utils/survey";
 import {
   difficultyLevel,
   dividerClass,
@@ -45,8 +48,13 @@ function ResponseRow({
   response: SurveyResponse;
   isDark: boolean;
 }) {
+  const { t } = useTranslation("admin");
+  const { formatDateTimeOrDash } = useFormatters();
   const [isExpanded, setExpanded] = useState(false);
-  const studentName = getRefName(response.userId, "طالب غير معروف");
+  const studentName = getRefName(
+    response.userId,
+    t("surveys.responses.unknownStudent"),
+  );
   const email =
     typeof response.userId === "object" && response.userId
       ? (response.userId.email ?? "")
@@ -65,7 +73,7 @@ function ResponseRow({
         type="button"
         onClick={() => setExpanded((current) => !current)}
         aria-expanded={isExpanded}
-        className={`flex w-full items-center gap-3 px-4 py-3 text-right transition-colors ${
+        className={`flex w-full items-center gap-3 px-4 py-3 text-start transition-colors ${
           isDark ? "hover:bg-white/5" : "hover:bg-gray-50"
         }`}
       >
@@ -80,7 +88,7 @@ function ResponseRow({
             className={`truncate text-[11px] font-semibold ${faintClass(isDark)}`}
             dir="ltr"
           >
-            {email || formatDateTime(response.submittedAt)}
+            {email || formatDateTimeOrDash(response.submittedAt)}
           </p>
         </div>
 
@@ -92,7 +100,7 @@ function ResponseRow({
                 : "bg-amber-50 text-amber-600"
             }`}
           >
-            {carryingCount} حملة
+            {t("surveys.responses.carryingCount", { count: carryingCount })}
           </span>
         )}
         <span
@@ -100,7 +108,9 @@ function ResponseRow({
             isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-500"
           }`}
         >
-          {response.subjectResponses.length} مادة
+          {t("surveys.responses.subjectsCount", {
+            count: response.subjectResponses.length,
+          })}
         </span>
         <ChevronDown
           size={16}
@@ -122,7 +132,9 @@ function ResponseRow({
           >
             <div className="space-y-2 p-3">
               <p className={`px-1 text-[11px] font-bold ${faintClass(isDark)}`}>
-                أُرسلت في {formatDateTime(response.submittedAt)}
+                {t("surveys.responses.submittedAt", {
+                  date: formatDateTimeOrDash(response.submittedAt),
+                })}
               </p>
               {response.subjectResponses.map((entry, index) => {
                 const level = difficultyLevel(entry.difficultyRating);
@@ -137,7 +149,10 @@ function ResponseRow({
                         isDark ? "text-gray-100" : "text-gray-800"
                       }`}
                     >
-                      {getRefName(entry.subjectId, "مادة غير معروفة")}
+                      {getRefName(
+                        entry.subjectId,
+                        t("surveys.responses.unknownSubject"),
+                      )}
                     </span>
                     {entry.isCarrying && (
                       <span
@@ -147,7 +162,7 @@ function ResponseRow({
                             : "bg-amber-50 text-amber-600"
                         }`}
                       >
-                        <Repeat2 size={11} /> حملة
+                        <Repeat2 size={11} /> {t("surveys.responses.carrying")}
                       </span>
                     )}
                     <span
@@ -157,12 +172,15 @@ function ResponseRow({
                           : "bg-[#2376BB]/10 text-[#2376BB]"
                       }`}
                     >
-                      <Clock size={11} /> {entry.preferredDaysBefore} يوم
+                      <Clock size={11} />{" "}
+                      {t("surveys.responses.daysBefore", {
+                        count: entry.preferredDaysBefore,
+                      })}
                     </span>
                     <span
                       className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-black ${level.chip(isDark)}`}
                     >
-                      <LevelIcon size={11} /> {level.label}
+                      <LevelIcon size={11} /> {t(level.labelKey)}
                     </span>
                   </div>
                 );
@@ -182,6 +200,8 @@ export default function FormResponsesPanel({
   isDark,
   onClose,
 }: FormResponsesPanelProps) {
+  const { t } = useTranslation(["admin", "common"]);
+  const errorMessage = useErrorMessage();
   const { data, isLoading, isFetching, isError, error, refetch } =
     useGetFormResponsesQuery(formId);
 
@@ -204,7 +224,10 @@ export default function FormResponsesPanel({
               className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}
             />
             <h2 className={`text-sm font-black ${headingClass(isDark)}`}>
-              ردود {yearName} — {semesterName}
+              {t("surveys.responses.title", {
+                year: yearName,
+                semester: semesterName,
+              })}
             </h2>
             {data?.form && (
               <SurveyStatusBadge status={data.form.status} isDark={isDark} />
@@ -215,8 +238,10 @@ export default function FormResponsesPanel({
           >
             <Users size={12} />
             {isLoading
-              ? "جاري تحميل الردود..."
-              : `${data?.totalResponses ?? 0} رد من الطلاب`}
+              ? t("surveys.responses.loading")
+              : t("surveys.responses.count", {
+                  count: data?.totalResponses ?? 0,
+                })}
           </p>
         </div>
 
@@ -224,7 +249,8 @@ export default function FormResponsesPanel({
           <button
             type="button"
             onClick={() => void refetch()}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className={`${iconButtonClass(isDark)} h-9 w-9`}
           >
             <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
@@ -232,7 +258,8 @@ export default function FormResponsesPanel({
           <button
             type="button"
             onClick={onClose}
-            title="إغلاق"
+            title={t("common:actions.close")}
+            aria-label={t("common:actions.close")}
             className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-colors ${
               isDark
                 ? "border-white/10 bg-white/5 text-gray-400 hover:border-red-500/40 hover:text-red-400"
@@ -263,14 +290,14 @@ export default function FormResponsesPanel({
           >
             <Inbox className={`mb-3 h-7 w-7 ${faintClass(isDark)}`} />
             <p className={`mb-1 text-sm font-bold ${mutedClass(isDark)}`}>
-              لا توجد ردود بعد
+              {t("surveys.responses.emptyTitle")}
             </p>
             <p className={`text-xs ${faintClass(isDark)}`}>
-              ستظهر الردود هنا فور بدء الطلاب بتعبئة الفورم
+              {t("surveys.responses.emptyHint")}
             </p>
           </div>
         ) : (
-          <div className="custom-scrollbar max-h-[560px] space-y-2 overflow-y-auto pl-1">
+          <div className="custom-scrollbar max-h-[560px] space-y-2 overflow-y-auto pe-1">
             {responses.map((response) => (
               <ResponseRow
                 key={response._id}

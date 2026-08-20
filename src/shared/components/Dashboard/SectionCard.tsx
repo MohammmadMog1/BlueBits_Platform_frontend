@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../i18n/useLanguage";
 import {
   accentIconClass,
   cardClass,
@@ -29,10 +31,13 @@ export default function SectionCard({
   tone = "brand",
   isDark,
   to,
-  toLabel = "عرض الكل",
+  toLabel,
   className = "",
   children,
 }: SectionCardProps) {
+  const { t } = useTranslation();
+  const { isRTL } = useLanguage();
+
   return (
     <section className={`flex flex-col p-5 ${cardClass(isDark)} ${className}`}>
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -62,8 +67,8 @@ export default function SectionCard({
             to={to}
             className="flex shrink-0 items-center gap-1 text-[11px] font-bold text-[#2376BB] transition-opacity hover:opacity-75"
           >
-            {toLabel}
-            <ArrowLeft className="h-3 w-3" />
+            {toLabel ?? t("actions.viewAll")}
+            <ArrowLeft className={`h-3 w-3 ${isRTL ? "" : "rotate-180"}`} />
           </Link>
         )}
       </div>

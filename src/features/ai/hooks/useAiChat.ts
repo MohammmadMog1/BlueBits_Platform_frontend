@@ -1,5 +1,6 @@
 // src/features/ai/hooks/useAiChat.ts
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAskAiMutation, useGetConversationByIdQuery } from "../api/aiApi";
 import type { ChatMessage, RawConversationMessage } from "../types/ai.types";
 
@@ -39,7 +40,7 @@ function normalizeMessages(raw: RawConversationMessage[] | undefined): ChatMessa
   return out;
 }
 
-function getErrorMessage(err: unknown): string {
+function getErrorMessage(err: unknown): string | null {
   if (err && typeof err === "object") {
     const anyErr = err as Record<string, unknown>;
     if (typeof anyErr.error === "string") return anyErr.error;
@@ -48,10 +49,11 @@ function getErrorMessage(err: unknown): string {
     if (data?.message) return data.message;
     if (typeof anyErr.message === "string") return anyErr.message;
   }
-  return "تعذّر الحصول على رد من المساعد الذكي. حاول مرة أخرى.";
+  return null;
 }
 
 export function useAiChat() {
+  const { t } = useTranslation("ai");
   const [activeConversationId, setActiveConversationId] = useState<string | undefined>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sendError, setSendError] = useState<string | null>(null);
@@ -130,10 +132,10 @@ export function useAiChat() {
         }
       } catch (err) {
         setMessages((prev) => prev.filter((m) => m.id !== pendingId));
-        setSendError(getErrorMessage(err));
+        setSendError(getErrorMessage(err) ?? t("errors.replyFailed"));
       }
     },
-    [askAi, activeConversationId, isSending],
+    [askAi, activeConversationId, isSending, t],
   );
 
   return {

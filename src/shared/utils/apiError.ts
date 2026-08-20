@@ -1,11 +1,11 @@
 /**
  * رسالة الخطأ القادمة من الباك (envelope فيه message).
- * نفس منطق `errorMessage` المكرّر في صفحات الإدارة — الصفحات الجديدة تستورده من هنا.
+ *
+ * تُرجع `null` عند غياب الرسالة بدل نصّ بديل جاهز: النصّ البديل مترجَم،
+ * والترجمة تحتاج اللغة الحالية التي لا تعرفها دالة عادية خارج شجرة React.
+ * استخدم `useErrorMessage` في المكوّنات والـ hooks للحصول على البديل المترجَم.
  */
-export const errorMessage = (
-  error: unknown,
-  fallback = "تعذّر تنفيذ الطلب. حاول مرة أخرى.",
-): string => {
+export const serverMessage = (error: unknown): string | null => {
   if (typeof error === "object" && error !== null && "data" in error) {
     const data = (error as { data: unknown }).data;
     if (
@@ -17,5 +17,5 @@ export const errorMessage = (
       return (data as { message: string }).message;
     }
   }
-  return fallback;
+  return null;
 };

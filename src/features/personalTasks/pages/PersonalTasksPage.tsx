@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import { AlertCircle, CheckSquare, Plus, RefreshCcw, Search, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../shared/i18n/useErrorMessage";
 import PersonalTaskCard from "../components/PersonalTaskCard";
 import PersonalTaskFormModal from "../components/PersonalTaskFormModal";
 import {
@@ -17,21 +19,9 @@ const toastDuration = 3000;
 
 type StatusFilter = "all" | "completed" | "pending";
 
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    )
-      return (data as { message: string }).message;
-  }
-  return "تعذّر تنفيذ الطلب. حاول مرة أخرى.";
-};
-
 export default function PersonalTasksPage() {
+  const { t } = useTranslation(["tasks", "common"]);
+  const errorMessage = useErrorMessage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -82,11 +72,11 @@ export default function PersonalTasksPage() {
       if (editTask) {
         await updateTask({ id: editTask._id, data }).unwrap();
         setEditTask(null);
-        showToast("تم تعديل المهمة بنجاح ✓", "success");
+        showToast(t("personal.messages.updated"), "success");
       } else {
         await createTask(data).unwrap();
         setShowModal(false);
-        showToast("تم إنشاء المهمة بنجاح ✓", "success");
+        showToast(t("personal.messages.created"), "success");
       }
     } catch (error) {
       showToast(errorMessage(error), "error");
@@ -98,7 +88,7 @@ export default function PersonalTasksPage() {
     try {
       await deleteTask(deletingTask._id).unwrap();
       setDeletingTask(null);
-      showToast("تم حذف المهمة", "success");
+      showToast(t("personal.messages.deleted"), "success");
     } catch (error) {
       showToast(errorMessage(error), "error");
     }
@@ -108,7 +98,7 @@ export default function PersonalTasksPage() {
     setCompletingId(task._id);
     try {
       await completeTask(task._id).unwrap();
-      showToast("تم تحديد المهمة كمنجزة ✅", "success");
+      showToast(t("personal.messages.completed"), "success");
     } catch (error) {
       showToast(errorMessage(error), "error");
     } finally {
@@ -140,13 +130,13 @@ export default function PersonalTasksPage() {
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="بحث عن مهمة..."
+            placeholder={t("searchPlaceholder")}
             className={`flex-1 bg-transparent text-sm outline-none placeholder-gray-400 ${
               isDark ? "text-gray-200" : "text-gray-700"
             }`}
           />
           {search && (
-            <button type="button" onClick={() => setSearch("")} aria-label="مسح البحث">
+            <button type="button" onClick={() => setSearch("")} aria-label={t("clearSearch")}>
               <X size={13} className="text-gray-400 hover:text-gray-500" />
             </button>
           )}
@@ -154,18 +144,19 @@ export default function PersonalTasksPage() {
         <select
           value={statusFilter}
           onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-          className={`appearance-none rounded-xl border py-2.5 pl-4 pr-4 text-sm font-semibold outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
+          className={`appearance-none rounded-xl border py-2.5 px-4 text-sm font-semibold outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
             isDark ? "border-white/10 bg-white/5 text-gray-200" : "border-gray-200 bg-gray-50 text-gray-700"
           }`}
         >
-          <option value="all">كل المهام</option>
-          <option value="pending">قيد الإنجاز</option>
-          <option value="completed">منجزة</option>
+          <option value="all">{t("personal.filterAll")}</option>
+          <option value="pending">{t("personal.filterPending")}</option>
+          <option value="completed">{t("personal.filterCompleted")}</option>
         </select>
         <button
           type="button"
           onClick={() => tasksQuery.refetch()}
-          title="تحديث"
+          title={t("common:actions.refresh")}
+          aria-label={t("common:actions.refresh")}
           className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
             isDark
               ? "border-white/10 bg-white/5 text-gray-400 hover:border-[#2376BB]/40 hover:text-[#2376BB]"
@@ -181,7 +172,7 @@ export default function PersonalTasksPage() {
           onClick={() => setShowModal(true)}
           className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-[#404293]/30 transition-all hover:-translate-y-0.5 hover:shadow-[#404293]/45 active:scale-[0.98]"
         >
-          <Plus size={17} /> مهمة جديدة
+          <Plus size={17} /> {t("personal.new")}
         </button>
       </div>
 
@@ -220,10 +211,10 @@ export default function PersonalTasksPage() {
             <CheckSquare className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
           <p className={`mb-1 font-bold ${isDark ? "text-gray-400" : "text-gray-400"}`}>
-            {search ? "لا توجد نتائج" : "لا توجد مهام بعد"}
+            {t(search ? "personal.emptyNoResults" : "personal.emptyNone")}
           </p>
           <p className={`mb-4 text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
-            {search ? "جرّب مصطلح بحث مختلف" : "أضف أول مهمة شخصية الآن"}
+            {t(search ? "personal.emptySearchHint" : "personal.emptyHint")}
           </p>
           {!search && (
             <button
@@ -231,7 +222,7 @@ export default function PersonalTasksPage() {
               onClick={() => setShowModal(true)}
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white shadow-md"
             >
-              <Plus size={14} /> إضافة مهمة
+              <Plus size={14} /> {t("personal.addFirst")}
             </button>
           )}
         </div>
@@ -240,7 +231,7 @@ export default function PersonalTasksPage() {
           {pendingTasks.length > 0 && (
             <motion.div key="pending-group" layout>
               <p className={`mb-2 text-xs font-bold uppercase tracking-wide ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-                قيد الإنجاز — {pendingTasks.length}
+                {t("personal.groupPending", { count: pendingTasks.length })}
               </p>
               <div className="space-y-2">{pendingTasks.map(renderCard)}</div>
             </motion.div>
@@ -248,7 +239,7 @@ export default function PersonalTasksPage() {
           {completedTasks.length > 0 && (
             <motion.div key="completed-group" layout>
               <p className={`mb-2 mt-5 text-xs font-bold uppercase tracking-wide ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-                منجزة — {completedTasks.length}
+                {t("personal.groupCompleted", { count: completedTasks.length })}
               </p>
               <div className="space-y-2">{completedTasks.map(renderCard)}</div>
             </motion.div>
@@ -304,16 +295,16 @@ export default function PersonalTasksPage() {
                 <Trash2 className="h-7 w-7 text-red-500" />
               </div>
               <h3 className={`mb-2 text-lg font-black ${isDark ? "text-white" : "text-gray-900"}`}>
-                تأكيد الحذف
+                {t("personal.confirmDelete.title")}
               </h3>
               <p className={`mb-1 text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                ستحذف المهمة:
+                {t("personal.confirmDelete.body")}
               </p>
               <p className="mb-6 text-sm font-black text-[#404293] dark:text-[#6b8fd6]">
                 "{deletingTask.title}"
               </p>
               <p className={`mb-6 text-xs ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-                لا يمكن التراجع عن هذا الإجراء.
+                {t("personal.confirmDelete.irreversible")}
               </p>
               <div className="flex gap-3">
                 <button
@@ -326,7 +317,7 @@ export default function PersonalTasksPage() {
                       : "border-gray-200 text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -342,10 +333,10 @@ export default function PersonalTasksPage() {
                       >
                         <RefreshCcw size={14} />
                       </motion.div>
-                      جاري...
+                      {t("personal.confirmDelete.working")}
                     </>
                   ) : (
-                    "نعم، احذف"
+                    t("personal.confirmDelete.yes")
                   )}
                 </button>
               </div>

@@ -1,5 +1,6 @@
 // src/features/ai/components/MessageBubble.tsx
 import { AlertCircle, Bot, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import type { ChatMessage } from "../types/ai.types";
 import { MarkdownText } from "../utils/markdown";
@@ -10,6 +11,7 @@ interface MessageBubbleProps {
 }
 
 export default function MessageBubble({ message, userInitials }: MessageBubbleProps) {
+  const { t } = useTranslation("ai");
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const isUser = message.role === "user";
@@ -41,7 +43,7 @@ export default function MessageBubble({ message, userInitials }: MessageBubblePr
         {message.pending ? (
           <span className="flex items-center gap-2 opacity-70">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            <span className="text-[13px]">المساعد يكتب الآن...</span>
+            <span className="text-[13px]">{t("message.typing")}</span>
           </span>
         ) : isUser ? (
           <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
@@ -50,7 +52,7 @@ export default function MessageBubble({ message, userInitials }: MessageBubblePr
         ) : (
           <span className="flex items-center gap-2 text-red-400">
             <AlertCircle className="w-3.5 h-3.5" />
-            تعذّر عرض هذا الرد.
+            {t("message.renderFailed")}
           </span>
         )}
       </div>

@@ -1,0 +1,828 @@
+{
+  "dashboard": {
+    "title": "Admin panel",
+    "subtitle": "An overview of users, content and tasks",
+    "loadError": "Some data could not be loaded. The figures shown may be incomplete — try refreshing."
+  },
+  "stats": {
+    "users": "Users",
+    "usersHint": "+{{count}} this week",
+    "verifiedAccounts": "Verified accounts",
+    "unverifiedHint": "{{count}} awaiting verification",
+    "lectures": "Lectures",
+    "lecturesHint": "{{theoretical}} theoretical / {{practical}} practical",
+    "subjects": "Subjects",
+    "years": "Academic years",
+    "openTasks": "Open tasks",
+    "totalHint": "{{count}} total"
+  },
+  "roles": {
+    "USER": "Student",
+    "DOCTOR": "Doctor",
+    "LECTURER": "Lecturer",
+    "BLUE": "Blue team",
+    "ADMIN": "Admin",
+    "SUPER_ADMIN": "Super admin"
+  },
+  "closingTasks": {
+    "title": "Tasks closing soon",
+    "hint": "{{open}} open out of {{total}}",
+    "emptyTitle": "No open tasks",
+    "emptyHint": "Every task is currently closed",
+    "closedCount": "{{count}} closed tasks"
+  },
+  "roleBreakdown": {
+    "title": "User breakdown",
+    "hint": "{{total}} accounts — {{rate}}% verified",
+    "manageUsers": "Manage users",
+    "emptyTitle": "No users yet",
+    "emptyHint": "Role shares will appear here once the first account signs up",
+    "verifiedAccounts": "Verified accounts",
+    "awaitingVerification": "{{count}} awaiting verification"
+  },
+  "subjectsLoad": {
+    "title": "Subjects with the most content",
+    "hint": "{{lectures}} lectures — {{theoretical}} theoretical / {{practical}} practical",
+    "manageLectures": "Manage lectures",
+    "emptyTitle": "No lectures uploaded",
+    "emptyHint": "Upload the first lecture to see the statistics",
+    "typeSplit": "({{theoretical}}T / {{practical}}P)"
+  },
+  "surveyStatus": {
+    "title": "Schedule survey",
+    "hint": "{{total}} forms — {{open}} open",
+    "manageSurveys": "Manage surveys",
+    "emptyTitle": "No surveys",
+    "emptyHint": "Create a survey form to start collecting student preferences",
+    "academicYear": "Academic year {{year}}",
+    "openedOn": "Opened on {{date}}",
+    "noOpenForm": "No survey is currently open",
+    "noOpenFormHint": "Open a form so students can submit their preferences",
+    "open": "Open",
+    "draft": "Draft",
+    "closed": "Closed",
+    "viewStats": "View survey statistics"
+  },
+  "latestAnnouncements": {
+    "title": "Latest announcements",
+    "hint": "The most recent posts for students",
+    "emptyTitle": "No announcements",
+    "emptyHint": "Create the first announcement to reach students",
+    "allYears": "All years"
+  },
+  "difficulty": {
+    "1": "Very easy",
+    "2": "Easy",
+    "3": "Medium",
+    "4": "Hard",
+    "5": "Very hard"
+  },
+  "surveys": {
+    "title": "Scheduling survey",
+    "subtitle": "Create a form for each year in each semester, open it for students, then close it before generating the timetable",
+    "newForm": "New form",
+    "searchPlaceholder": "Search by year, semester or academic year...",
+    "filters": {
+      "all": "All",
+      "draft": "Drafts",
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "emptyNoFormsTitle": "No forms yet",
+    "emptyNoFormsHint": "Create a form for each year in the semester so students can start answering",
+    "emptyNoMatchTitle": "No matching results",
+    "emptyNoMatchHint": "Try another filter or clear the search term",
+    "createFirst": "Create the first form",
+    "unknownYear": "Unspecified year",
+    "unknownSemester": "Unspecified semester",
+    "messages": {
+      "created": "The form was created as a draft — open it so students can start answering",
+      "opened": "The form is now open for students",
+      "closed": "The form is closed — it cannot be reopened"
+    },
+    "confirm": {
+      "openTitle": "Confirm opening",
+      "closeTitle": "Confirm permanent closure",
+      "openBody": "Students of this year will be able to fill in the survey:",
+      "closeBody": "Responses will stop permanently for the form:",
+      "cannotReopen": "A form cannot be reopened once closed.",
+      "running": "Working...",
+      "yesOpen": "Yes, open it",
+      "yesClose": "Yes, close it"
+    },
+    "create": {
+      "title": "Create a survey form",
+      "subtitle": "One form per year in each semester",
+      "yearLabel": "Academic level",
+      "semesterLabel": "Semester",
+      "academicYearLabel": "Academic year",
+      "loading": "Loading...",
+      "chooseYear": "Choose a year...",
+      "chooseSemester": "Choose a semester...",
+      "yearRequired": "Choose the academic level",
+      "semesterRequired": "Choose the semester",
+      "academicYearInvalid": "Expected format: 2026-2027 (two consecutive years)",
+      "duplicate": "A form already exists for this year, semester and academic year (status: {{status}}). Change one of the fields or use the existing form.",
+      "submit": "Create draft",
+      "submitting": "Creating..."
+    },
+    "card": {
+      "openedAt": "Opened on",
+      "closedAt": "Closed on",
+      "createdBy": "Created by: {{name}}",
+      "systemCreator": "System",
+      "openForStudents": "Open for students",
+      "closeFinal": "Close permanently",
+      "responsesShown": "Responses shown",
+      "viewResponses": "View responses"
+    },
+    "responses": {
+      "title": "Responses — {{year}} — {{semester}}",
+      "loading": "Loading responses...",
+      "count": "{{count}} student responses",
+      "emptyTitle": "No responses yet",
+      "emptyHint": "Responses will appear here as soon as students start filling in the form",
+      "submittedAt": "Submitted on {{date}}",
+      "carryingCount": "{{count}} retaken",
+      "subjectsCount": "{{count}} subjects",
+      "unknownStudent": "Unknown student",
+      "unknownSubject": "Unknown subject",
+      "carrying": "Retaken",
+      "daysBefore": "{{count}} days"
+    },
+    "stats": {
+      "title": "Survey statistics",
+      "subtitle": "Average difficulty, requested rest days and retake counts per subject",
+      "scopeYear": "A specific year",
+      "scopeAll": "All years",
+      "yearHeading": "Academic level",
+      "noYears": "No academic years — add them from the academic structure page first.",
+      "formLabel": "Form (leave empty for this year's current form)",
+      "currentForm": "Current form",
+      "searchPlaceholder": "Search by subject name...",
+      "sorts": {
+        "difficulty": "Hardest first",
+        "days": "Most rest needed",
+        "responses": "Most answers",
+        "carrying": "Most retakes",
+        "name": "Alphabetical"
+      },
+      "emptyTitle": "No statistics",
+      "emptyYearHint": "There is no form for this year, or no student has answered yet",
+      "emptyAllHint": "No forms have been created, or no responses have arrived yet",
+      "studentsAnswered": "Students answered",
+      "subjectsAppeared": "Subjects covered",
+      "coreSubjects": "Core subjects",
+      "coreSubjectsHint": "Answered by ≥ half of participants",
+      "hardest": "Hardest",
+      "noMatchingSubjects": "No matching subjects",
+      "carrying": "Retakes",
+      "rest": "Rest",
+      "daysValue": "{{count}} days"
+    }
+  },
+  "schedule": {
+    "semesterHeading": "Semester",
+    "noSemesters": "No semesters — add them from the academic structure page first.",
+    "capacity": {
+      "examDays": "Available exam days",
+      "excludedDays": "Excluded days",
+      "totalSlots": "Total slots",
+      "configuredSubjects": "Configured subjects"
+    },
+    "settings": {
+      "title": "Scheduling settings",
+      "subtitle": "Set the exam window, holidays, slots and subject settings for each semester",
+      "pickSemester": "Pick a semester",
+      "pickSemesterHint": "to view or set its scheduling settings",
+      "noConfig": "No scheduling settings for the \"{{semester}}\" semester",
+      "noConfigHint": "Create the settings so the system can generate the exam timetable",
+      "createConfig": "Create settings",
+      "updated": "Scheduling settings updated successfully",
+      "created": "Scheduling settings created successfully",
+      "deleted": "Scheduling settings deleted",
+      "confirmDelete": {
+        "title": "Confirm delete",
+        "body": "The scheduling settings will be deleted for the semester:",
+        "irreversible": "This action cannot be undone.",
+        "working": "Working...",
+        "yes": "Yes, delete"
+      }
+    },
+    "form": {
+      "editTitle": "Edit scheduling settings",
+      "createTitle": "Create scheduling settings",
+      "semesterLabel": "Semester: {{semester}}",
+      "academicYearLabel": "Academic year",
+      "timeslotsLabel": "Slots per day",
+      "examPeriod": "Exam window",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "capacityWarning": "The number of subjects ({{subjects}}) exceeds the available slots ({{slots}}) — widen the window or add daily slots.",
+      "excludedWeekdays": "Excluded weekdays",
+      "excludedWeekdaysHint": "Days marked in red will have no exams scheduled.",
+      "excludedDates": "Excluded dates (public holidays)",
+      "addDate": "Add",
+      "outOfRange": "Outside the exam window",
+      "removeDate": "Remove {{date}}",
+      "saving": "Saving...",
+      "save": "Save changes",
+      "create": "Create settings",
+      "footerHint": "These settings are combined with student responses to generate the exam timetable.",
+      "errors": {
+        "academicYearRequired": "The academic year is required",
+        "academicYearFormat": "The academic year must look like 2025-2026",
+        "startRequired": "The exam start date is required",
+        "endRequired": "The exam end date is required",
+        "endBeforeStart": "The end date must be after the start date",
+        "timeslotsMin": "There must be at least 1 slot per day",
+        "noExamDays": "No exam days available — review the date range and excluded days",
+        "subjectRequired": "Pick a subject in every row, or remove the empty rows",
+        "duplicateSubject": "The same subject cannot be repeated",
+        "invalidSubjectNumbers": "Make sure the retaking count is ≥ 0 and the exam duration is ≥ 1 minute"
+      }
+    },
+    "summary": {
+      "configured": "Settings are in place",
+      "semesterAndUpdated": "Semester: {{semester}} · last updated: {{date}}",
+      "edit": "Edit",
+      "deleteConfig": "Delete settings",
+      "examPeriod": "Exam window",
+      "dailySlots": "Daily slots",
+      "slotsPerDay": "{{count}} slots / day",
+      "capacityWarning": "The number of subjects ({{subjects}}) exceeds the available slots ({{slots}}) — generation may fail.",
+      "excludedWeekdays": "Excluded weekdays",
+      "noExcludedWeekdays": "No excluded days",
+      "excludedDates": "Excluded dates",
+      "noExcludedDates": "No excluded dates",
+      "subjectsConfig": "Subject settings",
+      "noSubjectsConfigured": "No subject configured — press edit to add subjects",
+      "colSubject": "Subject",
+      "colCarried": "Retaking students",
+      "colDuration": "Exam duration",
+      "minutes": "{{count}} minutes",
+      "deletedSubject": "Deleted subject",
+      "unknownSubject": "Subject ({{id}}…)"
+    },
+    "subjectsEditor": {
+      "title": "Subject settings",
+      "addAll": "Add all subjects ({{count}})",
+      "addSubject": "Add subject",
+      "empty": "No subject added yet",
+      "emptyHint": "Add the subjects the exam timetable covers, with the retaking student count and exam duration",
+      "chooseSubject": "Choose a subject...",
+      "unknownSubject": "Unknown subject ({{id}}…)",
+      "carriedPlaceholder": "Retaking",
+      "carriedTitle": "Number of retaking students",
+      "minutes": "minutes",
+      "durationPlaceholder": "Duration",
+      "durationTitle": "Exam duration in minutes",
+      "removeSubject": "Remove subject",
+      "duplicateWarning": "This subject is duplicated — remove one of the rows",
+      "notInSemesterWarning": "This subject is not among the current semester's subjects"
+    },
+    "generator": {
+      "title": "Generate the exam timetable",
+      "subtitle": "Collect the data, generate the timetable, review conflicts, then publish it to students",
+      "noConfigWarning": "No scheduling settings for the \"{{semester}}\" semester — the timetable cannot be generated until they are set.",
+      "goToSettings": "Go to settings",
+      "collectTitle": "Collect data",
+      "collectDescription": "Combines student responses with the scheduling settings and computes conflicts",
+      "collect": "Collect data",
+      "recollect": "Re-collect",
+      "solveTitle": "Generate timetable",
+      "solveDescription": "Sends the data to the solver and returns the best possible arrangement",
+      "solve": "Generate timetable",
+      "resolve": "Regenerate",
+      "running": "Working...",
+      "solvingHint": "The solver is searching for the best arrangement — this can take a minute or more, don't close the page.",
+      "collected": "Scheduling data collected — {{count}} conflicts",
+      "generated": "Timetable generated successfully",
+      "published": "Timetable published",
+      "emptyTitle": "No timetable yet",
+      "emptyHint": "Run the two steps above to generate the exam timetable",
+      "confirmPublish": {
+        "title": "Confirm publishing",
+        "body": "The exam timetable will become visible to students in the semester:",
+        "publishing": "Publishing...",
+        "yes": "Yes, publish"
+      }
+    },
+    "conflicts": {
+      "title": "Conflicts between subjects",
+      "strict": "Strict",
+      "medium": "Medium",
+      "soft": "Soft",
+      "searchPlaceholder": "Search by subject name...",
+      "clearSearch": "Clear search",
+      "noMatches": "No matching conflicts",
+      "showMore": "Show more ({{count}} remaining)"
+    },
+    "timetable": {
+      "viewGrid": "Grid",
+      "viewCards": "Cards",
+      "scheduledSubjects": "Scheduled subjects",
+      "examDays": "Exam days",
+      "clashingSlots": "Clashing slots",
+      "heading": "Exam timetable",
+      "published": "Published",
+      "draft": "Draft",
+      "yearAndUpdated": "{{year}} · last updated: {{date}}",
+      "publishing": "Publishing...",
+      "republish": "Republish",
+      "publish": "Publish timetable",
+      "hardViolated": "Hard constraints violated",
+      "hardSatisfied": "No hard-constraint violations",
+      "clashesNotice": "{{count}} slots hold more than one subject at the same time — highlighted in red below.",
+      "empty": "The timetable is empty",
+      "publishedNotice": "This timetable is published and visible to students.",
+      "dayHeader": "Day",
+      "slotHeader": "Slot {{number}}",
+      "slotLabel": "Slot {{number}}",
+      "clash": "Clash ({{count}})",
+      "subjectsCount": "{{count}} subjects"
+    }
+  },
+  "tasks": {
+    "title": "Manage academic tasks",
+    "subtitle": "Create, edit and close academic tasks for students",
+    "new": "New task",
+    "searchPlaceholder": "Search tasks...",
+    "clearSearch": "Clear search",
+    "allYears": "All years",
+    "allSubjects": "All subjects",
+    "allStatuses": "All statuses",
+    "statusOpen": "Open",
+    "statusClosed": "Closed",
+    "clearFilters": "Clear filters",
+    "totalTasks": "Total tasks",
+    "emptyNoResults": "No results",
+    "emptyNone": "No tasks yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "Create your first academic task now",
+    "createFirst": "Create task",
+    "messages": {
+      "created": "Task created and opened for students ✓",
+      "updated": "Task updated successfully ✓",
+      "deleted": "Task deleted",
+      "closed": "Task closed"
+    },
+    "confirmDelete": {
+      "title": "Confirm delete",
+      "body": "You are about to delete the task:",
+      "irreversible": "This action cannot be undone.",
+      "working": "Working...",
+      "yes": "Yes, delete"
+    },
+    "confirmClose": {
+      "title": "Confirm closing",
+      "body": "The task will be closed:",
+      "note": "Students will not be able to submit once it's closed.",
+      "yes": "Yes, close it"
+    },
+    "card": {
+      "open": "Open",
+      "closed": "Closed",
+      "opensAt": "Opens: {{date}}",
+      "closesAt": "Closes: {{date}}",
+      "submissions": "Submissions",
+      "edit": "Edit",
+      "close": "Close",
+      "delete": "Delete"
+    },
+    "form": {
+      "createTitle": "Create an academic task",
+      "editTitle": "Edit task",
+      "createSubtitle": "Enter the new task's details",
+      "editSubtitle": "Update the task's details",
+      "titleLabel": "Task title",
+      "titlePlaceholder": "e.g. Solve chapter one exercises",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short description of the task...",
+      "yearLabel": "Year",
+      "chooseYear": "Choose a year...",
+      "subjectLabel": "Subject",
+      "chooseSubject": "Choose a subject...",
+      "lectureTypeLabel": "Lecture type",
+      "chooseType": "Choose a type...",
+      "lectureLabel": "Lecture",
+      "chooseLecture": "Choose a lecture...",
+      "durationLabel": "Task duration",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "titleRequired": "The task title is required",
+      "yearRequired": "Please choose the academic year",
+      "subjectRequired": "Please choose the subject",
+      "lectureTypeRequired": "Please choose the lecture type",
+      "lectureRequired": "Please choose the lecture",
+      "durationRequired": "Please set the task duration",
+      "saving": "Saving...",
+      "create": "Create task",
+      "save": "Save changes"
+    },
+    "submissions": {
+      "title": "Student submissions",
+      "empty": "No submissions yet",
+      "viewFile": "View the uploaded file",
+      "reviewNote": "Review note: {{note}}",
+      "rejectReasonPlaceholder": "Reason for rejection (optional)...",
+      "confirmReject": "Confirm rejection",
+      "reject": "Reject",
+      "approve": "Approve"
+    }
+  },
+  "subjects": {
+    "title": "Manage subjects",
+    "subtitle": "Create, edit and delete academic subjects",
+    "new": "New subject",
+    "searchPlaceholder": "Search subjects...",
+    "clearSearch": "Clear search",
+    "allYears": "All years",
+    "allSemesters": "All semesters",
+    "clearFilters": "Clear filters",
+    "totalSubjects": "Total subjects",
+    "emptyNoResults": "No results",
+    "emptyNone": "No subjects yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "Add your first subject now",
+    "addFirst": "Add subject",
+    "confirmDelete": {
+      "title": "Confirm delete",
+      "body": "You are about to delete the subject:",
+      "irreversible": "This action cannot be undone.",
+      "working": "Working...",
+      "yes": "Yes, delete"
+    },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "createTitle": "Add a new subject",
+      "editTitle": "Edit subject",
+      "createSubtitle": "Enter the new subject's details",
+      "editSubtitle": "Update the subject's details",
+      "nameLabel": "Subject name",
+      "namePlaceholder": "e.g. Modelling and Simulation",
+      "descriptionLabel": "Subject description",
+      "descriptionPlaceholder": "A short description of the subject...",
+      "yearLabel": "Academic year",
+      "chooseYear": "Choose a year...",
+      "semesterLabel": "Semester",
+      "chooseSemester": "Choose a semester...",
+      "nameRequired": "The subject name is required",
+      "yearRequired": "Please choose the academic year",
+      "semesterRequired": "Please choose the semester",
+      "saving": "Saving...",
+      "create": "Create subject",
+      "save": "Save changes"
+    }
+  },
+  "academic": {
+    "title": "Academic structure",
+    "subtitle": "Manage academic years and semesters",
+    "tabYears": "Academic years",
+    "tabSemesters": "Semesters",
+    "connectionFailed": "Could not reach the server",
+    "years": {
+      "count_one": "{{count}} year registered",
+      "count_other": "{{count}} years registered",
+      "add": "Add year",
+      "empty": "No years yet",
+      "orderLabel": "Order: {{order}}",
+      "addTitle": "Add an academic year",
+      "editTitle": "Edit academic year",
+      "modalHint": "Enter the academic year's details",
+      "nameLabel": "Year name",
+      "namePlaceholder": "e.g. Year 1",
+      "orderInputLabel": "Order",
+      "orderPlaceholder": "e.g. 1",
+      "deleteTitle": "Delete this academic year?",
+      "deleteBody": "“{{name}}” will be permanently deleted.",
+      "created": "Year created successfully ✓",
+      "deleteFailed": "Failed to delete the year"
+    },
+    "semesters": {
+      "count_one": "{{count}} semester registered",
+      "count_other": "{{count}} semesters registered",
+      "add": "Add semester",
+      "empty": "No semesters yet",
+      "addTitle": "Add a semester",
+      "editTitle": "Edit semester",
+      "modalHint": "Enter the semester's name",
+      "nameLabel": "Semester name",
+      "namePlaceholder": "e.g. Semester 1",
+      "deleteTitle": "Delete this semester?",
+      "deleteBody": "“{{name}}” will be permanently deleted.",
+      "created": "Semester created successfully ✓",
+      "deleteFailed": "Failed to delete the semester"
+    },
+    "saved": "Changes saved ✓",
+    "deleted": "Deleted",
+    "actionFailed": "The operation failed",
+    "saving": "Saving...",
+    "save": "Save",
+    "deleting": "Deleting...",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "banks": {
+    "title": "Question Banks (MCQ)",
+    "subtitle": "Navigate by year → semester → subject to upload, review and publish banks",
+    "upload": "Upload Questions",
+    "uploadShort": "Upload",
+    "noCreatePermission": "You don't have permission to create a question bank",
+    "noPublishPermission": "You don't have permission to publish",
+    "stats": {
+      "totalBanks": "Total banks",
+      "published": "Published",
+      "drafts": "Drafts",
+      "totalQuestions": "Total questions"
+    },
+    "breadcrumb": {
+      "year": "Year",
+      "semester": "Semester",
+      "subject": "Subject",
+      "banks": "Banks",
+      "review": "Review"
+    },
+    "steps": {
+      "selectYear": "Select academic year",
+      "selectSemester": "Select semester — {{year}}",
+      "selectSubject": "Select subject — {{semester}}"
+    },
+    "loading": {
+      "years": "Loading years…",
+      "semesters": "Loading semesters…",
+      "subjects": "Loading subjects…",
+      "banks": "Loading question banks…",
+      "bank": "Loading bank…",
+      "questions": "Loading questions…",
+      "results": "Loading results…",
+      "lectures": "Loading lectures…"
+    },
+    "empty": {
+      "noSubjectsTitle": "No subjects found",
+      "noSubjectsMessage": "No subjects exist for this year and semester.",
+      "noBanksTitle": "No question banks yet",
+      "noMatches": "No matches found.",
+      "uploadFirst": "Upload the first question bank for this subject's lectures.",
+      "bankNotFoundTitle": "Bank not found",
+      "bankNotFoundMessage": "The bank may have been deleted — go back to the bank list."
+    },
+    "searchPlaceholder": "Search...",
+    "clearSearch": "Clear search",
+    "bankCount_one": "{{count}} bank",
+    "bankCount_other": "{{count}} banks",
+    "card": {
+      "questions": "questions",
+      "published": "Published",
+      "draft": "Draft",
+      "review": "Review",
+      "delete": "Delete",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "review": {
+      "questionsCount": "{{count}} questions",
+      "publishedOn": "Published {{date}}",
+      "createdOn": "Created {{date}}",
+      "addQuestions": "Add questions",
+      "publish": "Publish to students",
+      "unpublish": "Unpublish",
+      "confirmDeleteBank": "Confirm delete",
+      "deleteBank": "Delete bank",
+      "tabQuestions": "Questions",
+      "tabResults": "Student results",
+      "noQuestionsTitle": "This bank has no questions",
+      "noQuestionsHint": "Upload questions via a JSON file or a Word document."
+    },
+    "results": {
+      "loadFailed": "Failed to fetch student results.",
+      "emptyTitle": "No attempts yet",
+      "emptyHint": "Student results will appear here once they take the bank.",
+      "attempts": "Attempts",
+      "students": "Students",
+      "averageScore": "Average score",
+      "colStudent": "Student",
+      "colScore": "Score",
+      "colCorrect": "Correct",
+      "colSubmitted": "Submitted"
+    },
+    "question": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "editor": {
+      "title": "Edit question",
+      "subtitle": "Changes apply directly to the question bank",
+      "typeLabel": "Question type",
+      "typeMcq": "Multiple choice",
+      "typeTrueFalse": "True / False",
+      "questionTextLabel": "Question text",
+      "optionsLabel": "Options",
+      "addOption": "Add option",
+      "optionPlaceholder": "Option {{index}}",
+      "markCorrect": "Mark as the correct answer",
+      "removeOption": "Remove option",
+      "correctAnswerLabel": "Correct answer",
+      "true": "True",
+      "false": "False",
+      "explanationLabel": "Explanation (optional)",
+      "explanationPlaceholder": "Why this answer is correct",
+      "save": "Save changes",
+      "errors": {
+        "textRequired": "Question text is required.",
+        "needTwoOptions": "The question needs at least two options.",
+        "optionWithoutText": "An option cannot be left empty.",
+        "oneCorrect": "Mark exactly one correct answer."
+      }
+    },
+    "upload": {
+      "title": "Upload Questions",
+      "lectureLabel": "Lecture",
+      "noLectures": "This subject has no lectures",
+      "chooseLecture": "Choose a lecture",
+      "lectureHint": "If the lecture already has a bank, the questions are added to it.",
+      "modeJson": "JSON",
+      "modeDocx": "Word (.docx)",
+      "dropJson": "Drop the questions file (.json) here",
+      "dropDocx": "Drop the Word file (.docx) here",
+      "or": "or",
+      "chooseFile": "pick a file from your device",
+      "removeFile": "Remove file",
+      "pasteLabel": "Or paste the questions as JSON",
+      "insertTemplate": "Insert template",
+      "validQuestions": "{{count}} valid questions",
+      "mcqCount": "{{count}} multiple choice",
+      "trueFalseCount": "{{count}} true / false",
+      "errorsCount": "{{count}} errors",
+      "docxHint": "The Word file must follow the format agreed with the server (a question, then its options, marking the correct answer). If the server cannot recognise the questions, you'll see a message warning that the file doesn't follow the required format.",
+      "submit": "Upload questions",
+      "submitting": "Uploading…",
+      "successCount": "{{count}} questions uploaded successfully",
+      "successHint": "The bank is saved as a draft — review the questions, then publish it to students.",
+      "done": "Done",
+      "sample": {
+        "mcqQuestion": "What is 2 + 2?",
+        "mcqExplanation": "Because 2+2=4",
+        "trueFalseQuestion": "The Earth is spherical"
+      },
+      "errors": {
+        "jsonExtension": "The file must be a .json file",
+        "readFailed": "Could not read the file.",
+        "docxExtension": "The file must be a .docx file",
+        "lectureRequired": "Choose the lecture this question bank belongs to.",
+        "noValidQuestions": "There are no valid questions to upload.",
+        "fixErrors": "Fix the errors shown below before uploading.",
+        "docxRequired": "Choose the Word file first.",
+        "uploadFailed": "Failed to upload the questions."
+      }
+    },
+    "parseErrors": {
+      "empty": "The file / text is empty.",
+      "invalidJson": "Invalid JSON (check the brackets and commas).",
+      "notArray": "The content must be an array of questions, or an object with a \"questions\" key.",
+      "noQuestions": "The file contains no questions.",
+      "notObject": "Question {{position}}: must be an object.",
+      "missingText": "Question {{position}}: questionText is required.",
+      "missingCorrectAnswer": "Question {{position}}: true/false questions need correctAnswer set to true or false.",
+      "needTwoOptions": "Question {{position}}: needs at least two entries in options.",
+      "optionWithoutText": "Question {{position}}: one option has no text.",
+      "needExactlyOneCorrect": "Question {{position}}: exactly one correct answer is required (isCorrect: true)."
+    },
+    "actionErrors": {
+      "publishFailed": "Failed to publish the question bank.",
+      "unpublishFailed": "Failed to unpublish the question bank.",
+      "deleteBankFailed": "Failed to delete the question bank.",
+      "deleteQuestionFailed": "Failed to delete the question.",
+      "updateQuestionFailed": "Failed to update the question.",
+      "lecturesFailed": "Failed to fetch the subject's lectures."
+    }
+  },
+  "lectureManagement": {
+    "title": "Lecture Management",
+    "subtitle": "Navigate by year → semester → subject → type to manage lectures",
+    "uploadLecture": "Upload Lecture",
+    "uploadShort": "Upload",
+    "back": "Back",
+    "stats": {
+      "totalLectures": "Total Lectures",
+      "published": "Published",
+      "theoretical": "Theoretical",
+      "practical": "Practical"
+    },
+    "breadcrumb": {
+      "year": "Year",
+      "semester": "Semester",
+      "subject": "Subject",
+      "lectures": "Lectures"
+    },
+    "steps": {
+      "selectYear": "Select Academic Year",
+      "selectSemester": "Select Semester — {{year}}",
+      "selectSubject": "Select Subject — {{semester}}",
+      "selectType": "Select Type — {{subject}}"
+    },
+    "types": {
+      "theoretical": "Theoretical",
+      "practical": "Practical"
+    },
+    "loading": {
+      "years": "Loading years…",
+      "semesters": "Loading semesters…",
+      "subjects": "Loading subjects…",
+      "lectures": "Loading lectures…"
+    },
+    "empty": {
+      "noSubjectsTitle": "No subjects found",
+      "noSubjectsMessage": "No subjects exist for this year and semester.",
+      "noLecturesTitle": "No lectures yet",
+      "noMatches": "No matches found.",
+      "uploadFirst": "Upload the first lecture for this subject."
+    },
+    "searchPlaceholder": "Search...",
+    "lectureCount_one": "{{count}} lecture",
+    "lectureCount_other": "{{count}} lectures",
+    "card": {
+      "labBadge": "LAB",
+      "pdfBadge": "PDF",
+      "save": "Save",
+      "renameHint": "Double-click title to rename",
+      "published": "Published",
+      "draft": "Draft",
+      "view": "View",
+      "download": "Download",
+      "rename": "Rename",
+      "delete": "Delete"
+    },
+    "upload": {
+      "title": "Upload Lecture",
+      "subjectAndType": "{{subject}} · {{type}}",
+      "dropzone": {
+        "releaseToUpload": "Release to upload",
+        "dropTitle": "Drop your PDF here",
+        "or": "or",
+        "browseFiles": "browse files",
+        "hint": "PDF / video · Max 200 MB"
+      },
+      "removeFile": "Remove file",
+      "successTitle": "Upload Successful!",
+      "successMessage": "\"{{title}}\" has been uploaded successfully.",
+      "done": "Done",
+      "titleLabel": "Lecture Title",
+      "titlePlaceholder": "e.g. Introduction to Neural Networks",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional description for the lecture",
+      "publishCheckbox": "Publish lecture",
+      "publishedHint": "Visible to users after upload",
+      "draftHint": "Saved as draft",
+      "uploading": "Uploading...",
+      "cancel": "Cancel",
+      "submit": "Upload Lecture",
+      "failed": "Upload failed.",
+      "errors": {
+        "fileTooLarge": "File exceeds the 200 MB limit.",
+        "invalidFileType": "Only PDF or video files are accepted.",
+        "missingFields": "Please select a file and enter a title."
+      }
+    }
+  },
+  "quickActions": {
+    "users": {
+      "label": "Users",
+      "hint": "Roles and permissions"
+    },
+    "uploadLecture": {
+      "label": "Upload lecture",
+      "hint": "Manage lectures"
+    },
+    "subjects": {
+      "label": "Subjects",
+      "hint": "Add and edit"
+    },
+    "academicTask": {
+      "label": "Academic task",
+      "hint": "Create and track"
+    },
+    "announcement": {
+      "label": "New announcement",
+      "hint": "Notify students"
+    },
+    "questionBanks": {
+      "label": "Question banks",
+      "hint": "Upload and review"
+    },
+    "generateSchedule": {
+      "label": "Generate schedule",
+      "hint": "Exam timetable"
+    },
+    "assistant": {
+      "label": "AI assistant",
+      "hint": "Ask about your data"
+    }
+  }
+}

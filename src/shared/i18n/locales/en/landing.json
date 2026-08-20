@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "features": "Features",
+    "about": "About",
+    "lectures": "Lectures",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "getStarted": "Get Started",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "loggingOut": "Logging out...",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "hero": {
+    "badge": "Academic Year 2025 / 2026",
+    "titleLead": "Your University Life,",
+    "titleHighlight": "Organized",
+    "subtitle": "BlueBits is the all-in-one academic platform — lectures, exam scheduling, MCQ practice, AI tutoring, and smart task management in one elegant space.",
+    "ctaPrimary": "Start Learning Free",
+    "ctaSecondary": "Browse Lectures for Free",
+    "note": "✓ Lectures available without login · ✓ Completely free"
+  },
+  "stats": {
+    "students": "Active Students",
+    "lectures": "Lectures",
+    "questions": "MCQ Questions",
+    "satisfaction": "Satisfaction"
+  },
+  "features": {
+    "badge": "Platform Features",
+    "title": "Everything You Need to Excel",
+    "subtitle": "From interactive lectures to AI-powered tutoring, BlueBits gives you the complete academic toolkit.",
+    "free": "Free",
+    "browseFree": "Browse for free",
+    "loginToAccess": "Login to access",
+    "items": {
+      "lectures": {
+        "title": "Smart Lectures",
+        "desc": "Access recorded lectures by subject. Available free — no login required."
+      },
+      "exams": {
+        "title": "Exam Scheduling",
+        "desc": "Build a personalized exam schedule from the official timetable."
+      },
+      "mcq": {
+        "title": "MCQ Practice",
+        "desc": "Adaptive multiple-choice questions with instant feedback and tracking."
+      },
+      "ai": {
+        "title": "AI Assistant",
+        "desc": "Your personal academic assistant, available 24/7 to answer any question."
+      },
+      "tasks": {
+        "title": "Task Manager",
+        "desc": "Organize tasks with a built-in to-do list and Pomodoro timer."
+      },
+      "progress": {
+        "title": "Progress Tracking",
+        "desc": "Visualize your learning journey with detailed performance analytics."
+      }
+    }
+  },
+  "about": {
+    "badge": "About BlueBits",
+    "titleLead": "Built by Students,",
+    "titleHighlight": "for Students",
+    "paragraph1": "BlueBits was born from a real challenge — managing lectures, assignments, and exam prep in a fragmented academic environment. Our team built the platform we always wished we had.",
+    "paragraph2": "Every feature feels like a natural extension of your academic routine — clean, precise, and reliable.",
+    "highlights": {
+      "fast": {
+        "label": "Lightning Fast",
+        "desc": "Instant access to resources"
+      },
+      "secure": {
+        "label": "Secure & Private",
+        "desc": "Your data stays protected"
+      },
+      "community": {
+        "label": "Community",
+        "desc": "Collaborative environment"
+      },
+      "improving": {
+        "label": "Always Improving",
+        "desc": "Regular updates"
+      }
+    },
+    "join": "Join BlueBits",
+    "imageAlt": "Students studying",
+    "satisfactionValue": "98% Satisfaction",
+    "satisfactionCaption": "2,500+ students",
+    "academicYearValue": "2025 / 2026",
+    "academicYearLabel": "Academic Year"
+  },
+  "cta": {
+    "badge": "Start your academic journey",
+    "titleLine1": "Ready to Transform",
+    "titleLine2": "Your Learning?",
+    "subtitle": "Join thousands of students already using BlueBits to ace their courses, stay organized, and learn smarter every day.",
+    "primary": "Get Started for Free",
+    "secondary": "Browse Lectures"
+  },
+  "footer": {
+    "tagline": "Empowering university students with smart, elegant academic tools.",
+    "status": "Platform Online",
+    "columns": {
+      "platform": "Platform",
+      "company": "Company",
+      "support": "Support"
+    },
+    "links": {
+      "dashboard": "Dashboard",
+      "lectures": "Lectures",
+      "mcq": "MCQ Practice",
+      "chatbot": "AI Chatbot",
+      "examSchedule": "Exam Schedule",
+      "about": "About Us",
+      "team": "Our Team",
+      "blog": "Blog",
+      "careers": "Careers",
+      "help": "Help Center",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "copyright": "© 2026 BlueBits. All rights reserved."
+  },
+  "authModal": {
+    "title": "Login Required",
+    "descriptionLine1": "This feature is available to registered users only.",
+    "descriptionLine2": "Log in or create a free account to access it.",
+    "login": "Login",
+    "register": "Create Account"
+  }
+}

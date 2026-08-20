@@ -1,20 +1,14 @@
 import { Shield, ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { TabLabel, PageCorner } from "./shared/VisualHelpers";
+import type { featuresData } from "../data/landingData";
 
-interface Feature {
-  icon: any;
-  title: string;
-  desc: string;
-  accent: string;
-  num: string;
-  free: boolean;
-  path: string;
-}
+type Feature = (typeof featuresData)[number];
 
 interface FeaturesProps {
   isDark: boolean;
-  features: Feature[];
+  features: typeof featuresData;
   handleFeatureClick: (f: Feature) => void;
 }
 
@@ -23,6 +17,8 @@ export function Features({
   features,
   handleFeatureClick,
 }: FeaturesProps) {
+  const { t } = useTranslation("landing");
+
   return (
     <section id="features" className="relative py-20 sm:py-32 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
@@ -35,26 +31,25 @@ export function Features({
         >
           <TabLabel className="mb-4 sm:mb-6">
             <Shield className="w-3 h-3" />
-            Platform Features
+            {t("features.badge")}
           </TabLabel>
           <h2
             className={`leading-tight mb-4 ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
             style={{ fontSize: "clamp(1.7rem, 4vw, 3rem)", fontWeight: 800 }}
           >
-            Everything You Need to Excel
+            {t("features.title")}
           </h2>
           <p
             className={`text-base sm:text-lg leading-relaxed max-w-2xl ${isDark ? "text-gray-400" : "text-gray-600"}`}
           >
-            From interactive lectures to AI-powered tutoring, BlueBits gives you
-            the complete academic toolkit.
+            {t("features.subtitle")}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {features.map((f, idx) => (
             <motion.div
-              key={f.title}
+              key={f.id}
               onClick={() => handleFeatureClick(f)}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -67,18 +62,18 @@ export function Features({
               }`}
             >
               {f.free && (
-                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 text-[10px] font-black uppercase tracking-wide">
-                  مجاني
+                <div className="absolute top-4 start-4 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 text-[10px] font-black uppercase tracking-wide">
+                  {t("features.free")}
                 </div>
               )}
               <div
-                className="absolute top-4 right-5 font-black opacity-5 select-none pointer-events-none"
+                className="absolute top-4 end-5 font-black opacity-5 select-none pointer-events-none"
                 style={{ fontSize: "3.5rem", color: f.accent, fontWeight: 900 }}
               >
                 {f.num}
               </div>
               <div
-                className="absolute top-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-3xl"
+                className="absolute top-0 start-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-3xl"
                 style={{
                   background: `linear-gradient(90deg,${f.accent},#2376BB)`,
                 }}
@@ -98,18 +93,20 @@ export function Features({
               <h3
                 className={`font-bold text-base sm:text-lg mb-2.5 ${isDark ? "text-gray-100" : "text-[#1a1b2e]"}`}
               >
-                {f.title}
+                {t(`features.items.${f.id}.title`)}
               </h3>
               <p
                 className={`text-sm leading-relaxed ${isDark ? "text-gray-400" : "text-gray-600"}`}
               >
-                {f.desc}
+                {t(`features.items.${f.id}.desc`)}
               </p>
               <div
                 className="mt-5 flex items-center gap-1.5 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity"
                 style={{ color: f.accent }}
               >
-                {f.free ? "استعرض مجاناً" : "سجل دخولك للوصول"}{" "}
+                {f.free
+                  ? t("features.browseFree")
+                  : t("features.loginToAccess")}{" "}
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </div>
               <PageCorner num={f.num} />

@@ -19,6 +19,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import SubjectAnswerCard from "../components/SubjectAnswerCard";
 import SubjectPickerCard from "../components/SubjectPickerCard";
 import SurveyResponseSummary from "../components/SurveyResponseSummary";
@@ -37,13 +39,11 @@ import {
   skeletonClass,
 } from "../../../admin/surveys/utils/surveyTheme";
 
-const STEPS = [
-  "اختر المواد التي ستتقدّم لامتحانها",
-  "حدّد صعوبة كل مادة وأيام الراحة",
-  "أرسل إجابتك ونحن نتكفّل بالباقي",
-];
+const STEP_KEYS = ["steps.pick", "steps.configure", "steps.send"] as const;
 
 export default function SurveyPage() {
+  const { t } = useTranslation(["survey", "common"]);
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -102,10 +102,10 @@ export default function SurveyPage() {
     );
   }
 
-  const tabs: { value: PickerTab; label: string; count: number }[] = [
-    { value: "all", label: "كل المواد", count: rows.length },
-    { value: "selected", label: "المحددة", count: selectedCount },
-    { value: "carrying", label: "الحملة", count: carryingCount },
+  const tabs: { value: PickerTab; count: number }[] = [
+    { value: "all", count: rows.length },
+    { value: "selected", count: selectedCount },
+    { value: "carrying", count: carryingCount },
   ];
 
   return (
@@ -116,18 +116,18 @@ export default function SurveyPage() {
           <h1
             className={`mb-1.5 text-2xl font-black tracking-tight sm:text-3xl ${headingClass(isDark)}`}
           >
-            استبيان برنامج الفحص
+            {t("title")}
           </h1>
           <p className={`text-sm font-medium sm:text-base ${mutedClass(isDark)}`}>
-            رأيك يحدّد ترتيب امتحاناتك — حدّد لكل مادة صعوبتها وأيام الراحة التي
-            تحتاجها
+            {t("subtitle")}
           </p>
         </div>
 
         <button
           type="button"
           onClick={refetch}
-          title="تحديث"
+          title={t("common:actions.refresh")}
+          aria-label={t("common:actions.refresh")}
           className={iconButtonClass(isDark)}
         >
           <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
@@ -137,9 +137,9 @@ export default function SurveyPage() {
       {/* ── كيف يعمل ─────────────────────────── */}
       {form && !alreadySubmitted && (
         <div className={`flex flex-wrap gap-2.5 text-sm ${mutedClass(isDark)}`}>
-          {STEPS.map((text, index) => (
+          {STEP_KEYS.map((key, index) => (
             <div
-              key={text}
+              key={key}
               className={`flex items-center gap-2.5 rounded-2xl border px-4 py-2.5 text-xs font-medium sm:text-sm ${
                 isDark
                   ? "border-white/10 bg-white/5"
@@ -149,9 +149,11 @@ export default function SurveyPage() {
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#404293] to-[#2376BB] text-[10px] font-black text-white">
                 {index + 1}
               </span>
-              {text}
-              {index < STEPS.length - 1 && (
-                <ArrowLeft className="h-3.5 w-3.5 shrink-0 opacity-40" />
+              {t(key)}
+              {index < STEP_KEYS.length - 1 && (
+                <ArrowLeft
+                  className={`h-3.5 w-3.5 shrink-0 opacity-40 ${isRTL ? "" : "rotate-180"}`}
+                />
               )}
             </div>
           ))}
@@ -185,10 +187,10 @@ export default function SurveyPage() {
               <Lock className={`h-9 w-9 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
             </div>
             <h2 className={`mb-2 text-xl font-black ${headingClass(isDark)}`}>
-              لا يوجد استبيان مفتوح حالياً
+              {t("closed.title")}
             </h2>
             <p className={`max-w-md text-sm ${mutedClass(isDark)}`}>
-              سيظهر الاستبيان هنا فور فتحه لسنتك الدراسية من قِبل الإدارة.
+              {t("closed.hint")}
             </p>
           </div>
 
@@ -196,8 +198,8 @@ export default function SurveyPage() {
             <SurveyResponseSummary
               response={lastResponse}
               isDark={isDark}
-              title="آخر إجابة عبّأتها"
-              hint="محفوظة من استبيان سابق"
+              title={t("summary.lastTitle")}
+              hint={t("summary.lastHint")}
             />
           )}
         </>
@@ -208,8 +210,8 @@ export default function SurveyPage() {
           <SurveyResponseSummary
             response={myResponse}
             isDark={isDark}
-            title="تم استلام إجابتك على هذا الاستبيان"
-            hint="لا يمكن تعديل الإجابة بعد إرسالها"
+            title={t("summary.currentTitle")}
+            hint={t("summary.currentHint")}
           />
         ) : (
           <div
@@ -223,10 +225,10 @@ export default function SurveyPage() {
             <p
               className={`mb-1 text-lg font-black ${isDark ? "text-emerald-400" : "text-emerald-700"}`}
             >
-              أجبت على هذا الاستبيان مسبقاً
+              {t("alreadyAnswered.title")}
             </p>
             <p className={isDark ? "text-emerald-500" : "text-emerald-600"}>
-              شكراً لمشاركتك
+              {t("alreadyAnswered.hint")}
             </p>
           </div>
         )
@@ -236,14 +238,21 @@ export default function SurveyPage() {
           <div className={infoAlertClass(isDark)}>
             <CalendarClock className="h-4 w-4 shrink-0" />
             <p className="flex-1 text-sm font-bold">
-              استبيان {yearName} — {semesterName} — {form.academicYear}
+              {t("formInfo", {
+                year: yearName,
+                semester: semesterName,
+                academicYear: form.academicYear,
+              })}
             </p>
             <span
               className={`rounded-full px-3 py-1 text-[11px] font-black ${
                 isDark ? "bg-white/10 text-white" : "bg-white text-[#404293]"
               }`}
             >
-              {selectedCount} من {subjectsCount} مادة
+              {t("selectedOfTotal", {
+                selected: selectedCount,
+                total: subjectsCount,
+              })}
             </span>
           </div>
 
@@ -253,7 +262,7 @@ export default function SurveyPage() {
               <div className={`border-b px-6 pb-0 pt-6 ${dividerClass(isDark)}`}>
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                   <h2 className={`text-base font-black ${headingClass(isDark)}`}>
-                    اختر موادك
+                    {t("picker.heading")}
                   </h2>
                   <div className="flex gap-2">
                     <button
@@ -265,7 +274,7 @@ export default function SurveyPage() {
                           : "text-gray-400 hover:text-[#404293]"
                       }`}
                     >
-                      تحديد الكل
+                      {t("picker.selectAll")}
                     </button>
                     <span className={faintClass(isDark)}>·</span>
                     <button
@@ -277,7 +286,7 @@ export default function SurveyPage() {
                           : "text-gray-400 hover:text-red-500"
                       }`}
                     >
-                      إلغاء الكل
+                      {t("picker.clearAll")}
                     </button>
                   </div>
                 </div>
@@ -300,10 +309,10 @@ export default function SurveyPage() {
                               }`
                         }`}
                       >
-                        {item.label}
+                        {t(`picker.tabs.${item.value}`)}
                         {item.count > 0 && (
                           <span
-                            className={`mr-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-black ${
+                            className={`ms-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-black ${
                               isActive
                                 ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white"
                                 : isDark
@@ -323,14 +332,14 @@ export default function SurveyPage() {
               <div className="p-6">
                 <div className="relative mb-4">
                   <Search
-                    className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+                    className={`pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
                   />
                   <input
                     type="text"
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="ابحث عن مادة..."
-                    className={`${fieldClass(isDark)} py-2.5 pr-11`}
+                    placeholder={t("picker.searchPlaceholder")}
+                    className={`${fieldClass(isDark)} py-2.5 pe-11`}
                   />
                 </div>
 
@@ -350,14 +359,18 @@ export default function SurveyPage() {
                   >
                     <Inbox className={`mb-3 h-7 w-7 ${faintClass(isDark)}`} />
                     <p className={`text-sm font-bold ${mutedClass(isDark)}`}>
-                      {rows.length === 0
-                        ? "لا توجد مواد لسنتك في هذا الفصل"
-                        : "لا نتائج مطابقة"}
+                      {t(
+                        rows.length === 0
+                          ? "picker.emptyNoSubjects"
+                          : "picker.emptyNoMatch",
+                      )}
                     </p>
                     <p className={`mt-1 text-xs ${faintClass(isDark)}`}>
-                      {rows.length === 0
-                        ? "راجع الإدارة لإضافة مواد الفصل قبل تعبئة الاستبيان"
-                        : "جرّب تبويباً آخر أو امسح كلمة البحث"}
+                      {t(
+                        rows.length === 0
+                          ? "picker.emptyNoSubjectsHint"
+                          : "picker.emptyNoMatchHint",
+                      )}
                     </p>
                   </div>
                 ) : (
@@ -395,7 +408,7 @@ export default function SurveyPage() {
                       }`}
                     />
                     <span className={`text-sm font-black ${headingClass(isDark)}`}>
-                      إجابتك
+                      {t("answer.heading")}
                     </span>
                     {selectedCount > 0 && (
                       <motion.span
@@ -418,7 +431,7 @@ export default function SurveyPage() {
                           : "text-gray-400 hover:text-red-500"
                       }`}
                     >
-                      مسح الكل
+                      {t("answer.clearAll")}
                     </button>
                   )}
                 </div>
@@ -441,9 +454,9 @@ export default function SurveyPage() {
                           <BookOpen className={`h-7 w-7 ${faintClass(isDark)}`} />
                         </div>
                         <p className={`text-sm font-medium ${mutedClass(isDark)}`}>
-                          لم تختر أي مادة بعد.
+                          {t("answer.emptyHintLine1")}
                           <br />
-                          اختر من القائمة على اليسار.
+                          {t("answer.emptyHintLine2")}
                         </p>
                       </motion.div>
                     ) : (
@@ -481,7 +494,7 @@ export default function SurveyPage() {
                 }`}
               >
                 <Send className="h-5 w-5" />
-                إرسال الإجابة
+                {t("submit.cta")}
                 {selectedCount > 0 && (
                   <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-black">
                     {selectedCount}
@@ -490,9 +503,11 @@ export default function SurveyPage() {
               </motion.button>
 
               <p className={`text-center text-xs font-medium ${faintClass(isDark)}`}>
-                {selectedCount === 0
-                  ? "اختر مادة واحدة على الأقل لتتمكّن من الإرسال"
-                  : "راجع إعداداتك جيداً — لا يمكن تعديل الإجابة بعد إرسالها"}
+                {t(
+                  selectedCount === 0
+                    ? "submit.hintEmpty"
+                    : "submit.hintReady",
+                )}
               </p>
             </div>
           </div>
@@ -529,19 +544,23 @@ export default function SurveyPage() {
                 />
               </div>
               <h3 className={`mb-2 text-lg font-black ${headingClass(isDark)}`}>
-                تأكيد الإرسال
+                {t("submit.confirmTitle")}
               </h3>
               <p className={`mb-1 text-sm ${mutedClass(isDark)}`}>
-                ستُرسل إجابتك على {selectedCount} مادة
-                {carryingCount > 0 ? ` (منها ${carryingCount} حملة)` : ""}.
+                {carryingCount > 0
+                  ? t("submit.confirmBodyWithCarrying", {
+                      count: selectedCount,
+                      carrying: carryingCount,
+                    })
+                  : t("submit.confirmBody", { count: selectedCount })}
               </p>
               <p className="mb-6 text-xs font-bold text-amber-600">
-                لا يمكن تعديل الإجابة بعد إرسالها.
+                {t("submit.cannotEdit")}
               </p>
 
               {submitError && (
                 <p
-                  className={`mb-4 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-right text-xs font-bold ${
+                  className={`mb-4 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-start text-xs font-bold ${
                     isDark
                       ? "border-red-500/25 bg-red-500/10 text-red-400"
                       : "border-red-200 bg-red-50 text-red-600"
@@ -563,7 +582,7 @@ export default function SurveyPage() {
                       : "border-gray-200 text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  مراجعة
+                  {t("submit.review")}
                 </button>
                 <button
                   type="button"
@@ -582,11 +601,11 @@ export default function SurveyPage() {
                         }}
                         className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white"
                       />
-                      جاري الإرسال...
+                      {t("submit.sending")}
                     </>
                   ) : (
                     <>
-                      <Send size={14} /> نعم، أرسل
+                      <Send size={14} /> {t("submit.yesSend")}
                     </>
                   )}
                 </button>

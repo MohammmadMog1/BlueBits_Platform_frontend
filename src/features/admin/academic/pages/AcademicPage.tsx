@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { GraduationCap, Layers } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import YearsPanel from "../components/YearsPanel";
 import SemestersPanel from "../components/SemestersPanel";
 
 export default function AcademicPage() {
+  const { t } = useTranslation("admin");
   const [activeTab, setActiveTab] = useState<"years" | "semesters">("years");
   return (
     <div className="flex flex-col gap-6">
@@ -14,11 +16,11 @@ export default function AcademicPage() {
             <GraduationCap className="h-[18px] w-[18px] text-white" />
           </div>
           <h1 className="text-xl font-black tracking-tight text-gray-900">
-            الهيكل الأكاديمي
+            {t("academic.title")}
           </h1>
         </div>
         <p className="text-sm font-medium text-gray-400">
-          إدارة السنوات والفصول الدراسية
+          {t("academic.subtitle")}
         </p>
       </div>
       <div className="flex w-fit gap-1 rounded-2xl bg-gray-100 p-1">
@@ -30,11 +32,11 @@ export default function AcademicPage() {
           >
             {tab === "years" ? (
               <>
-                <GraduationCap size={15} /> السنوات الدراسية
+                <GraduationCap size={15} /> {t("academic.tabYears")}
               </>
             ) : (
               <>
-                <Layers size={15} /> الفصول الدراسية
+                <Layers size={15} /> {t("academic.tabSemesters")}
               </>
             )}
           </button>

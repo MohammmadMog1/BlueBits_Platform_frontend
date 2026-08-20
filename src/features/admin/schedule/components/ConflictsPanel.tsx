@@ -1,26 +1,28 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeftRight, Database, Search, X } from "lucide-react";
 import { motion } from "motion/react";
+import type { AdminKey } from "../../../../shared/i18n/types";
 import type { ConflictType, ScheduleConflict } from "../types";
 
 const PAGE_SIZE = 60;
 
 const CONFLICT_META: Record<
   ConflictType,
-  { label: string; badge: string; dot: string }
+  { labelKey: AdminKey; badge: string; dot: string }
 > = {
   HARD: {
-    label: "صارم",
+    labelKey: "schedule.conflicts.strict",
     badge: "border-red-200 bg-red-50 text-red-600",
     dot: "#EF4444",
   },
   MEDIUM: {
-    label: "متوسط",
+    labelKey: "schedule.conflicts.medium",
     badge: "border-amber-200 bg-amber-50 text-amber-700",
     dot: "#F59E0B",
   },
   SOFT: {
-    label: "مرن",
+    labelKey: "schedule.conflicts.soft",
     badge: "border-sky-200 bg-sky-50 text-sky-700",
     dot: "#0EA5E9",
   },
@@ -33,6 +35,7 @@ interface ConflictsPanelProps {
 }
 
 export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
+  const { t } = useTranslation("admin");
   const [typeFilter, setTypeFilter] = useState<ConflictType | "">("");
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -74,7 +77,9 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
     >
       <div className="flex items-center gap-2">
         <Database className="h-4 w-4 text-[#2376BB]" />
-        <h3 className="text-sm font-black text-gray-900">التعارضات بين المواد</h3>
+        <h3 className="text-sm font-black text-gray-900">
+          {t("schedule.conflicts.title")}
+        </h3>
         <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-500">
           {conflicts.length}
         </span>
@@ -107,7 +112,7 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
                   {counts[type] ?? 0}
                 </p>
                 <p className="mt-0.5 text-[10px] font-bold text-gray-400">
-                  {meta.label}
+                  {t(meta.labelKey)}
                 </p>
               </div>
             </button>
@@ -123,11 +128,11 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
             setSearch(event.target.value);
             setVisible(PAGE_SIZE);
           }}
-          placeholder="بحث باسم المادة..."
+          placeholder={t("schedule.conflicts.searchPlaceholder")}
           className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
         />
         {search && (
-          <button type="button" onClick={() => setSearch("")} aria-label="مسح البحث">
+          <button type="button" onClick={() => setSearch("")} aria-label={t("schedule.conflicts.clearSearch")}>
             <X size={13} className="text-gray-300 hover:text-gray-500" />
           </button>
         )}
@@ -135,7 +140,7 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
 
       {filtered.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-8 text-center text-xs font-bold text-gray-400">
-          لا توجد تعارضات مطابقة
+          {t("schedule.conflicts.noMatches")}
         </p>
       ) : (
         <>
@@ -150,7 +155,7 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
                   <span
                     className={`rounded-lg border px-2 py-0.5 text-[10px] font-black ${meta.badge}`}
                   >
-                    {meta.label}
+                    {t(meta.labelKey)}
                   </span>
                   <span className="text-xs font-bold text-gray-800">
                     {conflict.examAName}
@@ -170,7 +175,9 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
               onClick={() => setVisible((current) => current + PAGE_SIZE)}
               className="w-full rounded-xl border border-gray-200 py-2.5 text-xs font-bold text-gray-500 transition-colors hover:border-[#404293]/30 hover:text-[#404293]"
             >
-              عرض المزيد ({filtered.length - visible} متبقٍ)
+              {t("schedule.conflicts.showMore", {
+                count: filtered.length - visible,
+              })}
             </button>
           )}
         </>

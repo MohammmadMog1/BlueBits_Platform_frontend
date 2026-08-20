@@ -1,11 +1,14 @@
 import { GraduationCap, ChevronRight, BookOpen } from "lucide-react";
 import { motion, type Variants } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../shared/i18n/useLanguage";
 import { HexGrid, HeroPreview } from "./shared/VisualHelpers";
+import type { statsData } from "../data/landingData";
 
 interface HeroProps {
   isDark: boolean;
   navigate: (path: string) => void;
-  stats: any[];
+  stats: typeof statsData;
 }
 
 const fadeUp: Variants = {
@@ -18,6 +21,9 @@ const fadeUp: Variants = {
 };
 
 export function Hero({ isDark, navigate, stats }: HeroProps) {
+  const { t } = useTranslation("landing");
+  const { isRTL } = useLanguage();
+
   return (
     <section className="relative flex items-center overflow-hidden pt-28 sm:pt-32">
       {/* Subtle hex texture - very light */}
@@ -44,7 +50,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             }`}
           >
             <GraduationCap className="w-3.5 h-3.5 flex-shrink-0" />
-            Academic Year 2025 / 2026
+            {t("hero.badge")}
           </motion.div>
 
           <motion.h1
@@ -55,13 +61,13 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             className={`mb-5 leading-[1.12] tracking-tight ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
             style={{ fontSize: "clamp(2rem, 8vw, 5rem)", fontWeight: 800 }}
           >
-            Your University Life,{" "}
+            {t("hero.titleLead")}{" "}
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-[#404293] via-[#33529F] to-[#2376BB] bg-clip-text text-transparent">
-                Organized
+                {t("hero.titleHighlight")}
               </span>
               <svg
-                className="absolute -bottom-1 sm:-bottom-2 left-0 w-full"
+                className="absolute -bottom-1 sm:-bottom-2 start-0 w-full"
                 height="5"
                 viewBox="0 0 200 6"
                 preserveAspectRatio="none"
@@ -90,9 +96,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             custom={2}
             className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed ${isDark ? "text-gray-400" : "text-gray-600"}`}
           >
-            BlueBits is the all-in-one academic platform — lectures, exam
-            scheduling, MCQ practice, AI tutoring, and smart task management in
-            one elegant space.
+            {t("hero.subtitle")}
           </motion.p>
 
           <motion.div
@@ -107,8 +111,10 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
               className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-xl shadow-[#404293]/20 hover:shadow-[#404293]/35 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300"
               style={{ fontSize: "0.95rem" }}
             >
-              Start Learning Free
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {t("hero.ctaPrimary")}
+              <ChevronRight
+                className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""}`}
+              />
             </button>
 
             <button
@@ -121,7 +127,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
               style={{ fontSize: "0.95rem" }}
             >
               <BookOpen className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              استعرض المحاضرات مجاناً
+              {t("hero.ctaSecondary")}
             </button>
           </motion.div>
 
@@ -132,7 +138,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             custom={4}
             className={`text-xs mb-10 sm:mb-14 font-medium ${isDark ? "text-gray-600" : "text-gray-400"}`}
           >
-            ✓ المحاضرات متاحة بدون تسجيل دخول · ✓ مجاني تماماً
+            {t("hero.note")}
           </motion.p>
 
           <motion.div
@@ -144,14 +150,14 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
           >
             {stats.map((s) => (
               <div
-                key={s.label}
+                key={s.id}
                 className={`relative p-4 sm:p-6 rounded-2xl border group overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
                   isDark
                     ? "bg-white/3 border-white/5 hover:bg-white/5 hover:border-[#404293]/40 shadow-xl shadow-black/10"
                     : "bg-white/80 border-slate-100 shadow-sm hover:border-[#404293]/35 hover:shadow-lg hover:shadow-[#404293]/5 hover:bg-white"
                 }`}
               >
-                <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#404293] to-[#2376BB] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-0 start-0 w-full h-[3px] bg-gradient-to-r from-[#404293] to-[#2376BB] opacity-0 group-hover:opacity-100 transition-opacity" />
                 {s.icon && (
                   <s.icon
                     className={`w-4 h-4 mb-2 ${isDark ? "text-[#9fa8e8]" : "text-[#404293]"}`}
@@ -163,7 +169,7 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
                 <div
                   className={`text-[11px] sm:text-xs font-semibold ${isDark ? "text-gray-500" : "text-slate-500"}`}
                 >
-                  {s.label}
+                  {t(`stats.${s.id}`)}
                 </div>
               </div>
             ))}

@@ -1,4 +1,5 @@
 import { Layers } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Semester } from "../../academic/types";
 
 interface SemesterPickerProps {
@@ -14,11 +15,14 @@ export default function SemesterPicker({
   selectedId,
   onSelect,
 }: SemesterPickerProps) {
+  const { t } = useTranslation("admin");
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center gap-2">
         <Layers className="h-4 w-4 text-[#404293]" />
-        <h2 className="text-sm font-black text-gray-900">الفصل الدراسي</h2>
+        <h2 className="text-sm font-black text-gray-900">
+          {t("schedule.semesterHeading")}
+        </h2>
       </div>
 
       {isLoading ? (
@@ -32,7 +36,7 @@ export default function SemesterPicker({
         </div>
       ) : semesters.length === 0 ? (
         <p className="text-xs font-semibold text-gray-400">
-          لا توجد فصول دراسية – أضفها من صفحة الهيكل الأكاديمي أولاً.
+          {t("schedule.noSemesters")}
         </p>
       ) : (
         <div className="flex flex-wrap gap-2">

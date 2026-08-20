@@ -1,0 +1,824 @@
+{
+  "dashboard": {
+    "title": "لوحة الإدارة",
+    "subtitle": "نظرة عامة على المستخدمين والمحتوى والمهام",
+    "loadError": "تعذّر تحميل بعض البيانات. الأرقام المعروضة قد تكون ناقصة — جرّب التحديث."
+  },
+  "stats": {
+    "users": "المستخدمون",
+    "usersHint": "+{{count}} هذا الأسبوع",
+    "verifiedAccounts": "حسابات مفعّلة",
+    "unverifiedHint": "{{count}} بانتظار التفعيل",
+    "lectures": "المحاضرات",
+    "lecturesHint": "{{theoretical}} نظري / {{practical}} عملي",
+    "subjects": "المواد",
+    "years": "السنوات الدراسية",
+    "openTasks": "مهام مفتوحة",
+    "totalHint": "{{count}} إجمالاً"
+  },
+  "roles": {
+    "USER": "طالب",
+    "DOCTOR": "دكتور",
+    "LECTURER": "محاضر",
+    "BLUE": "فريق بلو",
+    "ADMIN": "أدمن",
+    "SUPER_ADMIN": "سوبر أدمن"
+  },
+  "closingTasks": {
+    "title": "مهام تقترب من الإغلاق",
+    "hint": "{{open}} مفتوحة من أصل {{total}}",
+    "emptyTitle": "لا توجد مهام مفتوحة",
+    "emptyHint": "كل المهام مغلقة حالياً",
+    "closedCount": "{{count}} مهمة مغلقة"
+  },
+  "roleBreakdown": {
+    "title": "توزيع المستخدمين",
+    "hint": "{{total}} حساب — {{rate}}% مفعّل",
+    "manageUsers": "إدارة المستخدمين",
+    "emptyTitle": "لا يوجد مستخدمون بعد",
+    "emptyHint": "ستظهر هنا نسب الأدوار فور تسجيل أول حساب",
+    "verifiedAccounts": "حسابات مفعّلة",
+    "awaitingVerification": "{{count}} بانتظار التفعيل"
+  },
+  "subjectsLoad": {
+    "title": "المواد الأكثر محتوى",
+    "hint": "{{lectures}} محاضرة — {{theoretical}} نظري / {{practical}} عملي",
+    "manageLectures": "إدارة المحاضرات",
+    "emptyTitle": "لا توجد محاضرات مرفوعة",
+    "emptyHint": "ابدأ برفع أول محاضرة لتظهر الإحصاءات",
+    "typeSplit": "({{theoretical}}ن / {{practical}}ع)"
+  },
+  "surveyStatus": {
+    "title": "استبيان الجدول",
+    "hint": "{{total}} فورم — {{open}} مفتوح",
+    "manageSurveys": "إدارة الاستبيانات",
+    "emptyTitle": "لا توجد استبيانات",
+    "emptyHint": "أنشئ فورم استبيان لبدء جمع تفضيلات الطلاب",
+    "academicYear": "السنة الأكاديمية {{year}}",
+    "openedOn": "فُتح في {{date}}",
+    "noOpenForm": "لا يوجد استبيان مفتوح حالياً",
+    "noOpenFormHint": "افتح فورماً ليتمكّن الطلاب من إرسال تفضيلاتهم",
+    "open": "مفتوح",
+    "draft": "مسودة",
+    "closed": "مغلق",
+    "viewStats": "عرض إحصاءات الاستبيان"
+  },
+  "latestAnnouncements": {
+    "title": "أحدث الإعلانات",
+    "hint": "آخر ما نُشر للطلاب",
+    "emptyTitle": "لا توجد إعلانات",
+    "emptyHint": "أنشئ أول إعلان لتصل الطلاب",
+    "allYears": "كل السنوات"
+  },
+  "difficulty": {
+    "1": "سهلة جداً",
+    "2": "سهلة",
+    "3": "متوسطة",
+    "4": "صعبة",
+    "5": "صعبة جداً"
+  },
+  "surveys": {
+    "title": "استبيان الجدولة",
+    "subtitle": "أنشئ فورماً لكل سنة في كل فصل، افتحه للطلاب، ثم أغلقه قبل توليد الجدول",
+    "newForm": "فورم جديد",
+    "searchPlaceholder": "ابحث بالسنة أو الفصل أو السنة الأكاديمية...",
+    "filters": {
+      "all": "الكل",
+      "draft": "مسودات",
+      "open": "مفتوحة",
+      "closed": "مغلقة"
+    },
+    "emptyNoFormsTitle": "لا توجد فورمات بعد",
+    "emptyNoFormsHint": "أنشئ فورماً لكل سنة في الفصل المطلوب ليبدأ الطلاب بالإجابة",
+    "emptyNoMatchTitle": "لا نتائج مطابقة",
+    "emptyNoMatchHint": "جرّب فلتراً آخر أو امسح كلمة البحث",
+    "createFirst": "إنشاء أول فورم",
+    "unknownYear": "سنة غير محددة",
+    "unknownSemester": "فصل غير محدد",
+    "messages": {
+      "created": "تم إنشاء الفورم كمسودة – افتحه ليبدأ الطلاب بالإجابة",
+      "opened": "تم فتح الفورم للطلاب",
+      "closed": "تم إغلاق الفورم – لا يمكن إعادة فتحه"
+    },
+    "confirm": {
+      "openTitle": "تأكيد الفتح",
+      "closeTitle": "تأكيد الإغلاق النهائي",
+      "openBody": "سيتمكن طلاب هذه السنة من تعبئة الاستبيان:",
+      "closeBody": "سيتوقف استقبال الردود نهائياً لفورم:",
+      "cannotReopen": "لا يمكن إعادة فتح الفورم بعد إغلاقه.",
+      "running": "جاري التنفيذ...",
+      "yesOpen": "نعم، افتح",
+      "yesClose": "نعم، أغلق"
+    },
+    "create": {
+      "title": "إنشاء فورم استبيان",
+      "subtitle": "فورم واحد لكل سنة في كل فصل دراسي",
+      "yearLabel": "السنة الدراسية",
+      "semesterLabel": "الفصل الدراسي",
+      "academicYearLabel": "السنة الأكاديمية",
+      "loading": "جاري التحميل...",
+      "chooseYear": "اختر السنة...",
+      "chooseSemester": "اختر الفصل...",
+      "yearRequired": "اختر السنة الدراسية",
+      "semesterRequired": "اختر الفصل الدراسي",
+      "academicYearInvalid": "الصيغة المطلوبة: 2026-2027 (سنتان متتاليتان)",
+      "duplicate": "يوجد فورم بهذه السنة والفصل والسنة الأكاديمية بالفعل (حالته: {{status}}). عدّل أحد الحقول أو استخدم الفورم الموجود.",
+      "submit": "إنشاء المسودة",
+      "submitting": "جاري الإنشاء..."
+    },
+    "card": {
+      "openedAt": "فُتح في",
+      "closedAt": "أُغلق في",
+      "createdBy": "أنشأه: {{name}}",
+      "systemCreator": "النظام",
+      "openForStudents": "فتح للطلاب",
+      "closeFinal": "إغلاق نهائي",
+      "responsesShown": "الردود معروضة",
+      "viewResponses": "عرض الردود"
+    },
+    "responses": {
+      "title": "ردود {{year}} — {{semester}}",
+      "loading": "جاري تحميل الردود...",
+      "count": "{{count}} رد من الطلاب",
+      "emptyTitle": "لا توجد ردود بعد",
+      "emptyHint": "ستظهر الردود هنا فور بدء الطلاب بتعبئة الفورم",
+      "submittedAt": "أُرسلت في {{date}}",
+      "carryingCount": "{{count}} حملة",
+      "subjectsCount": "{{count}} مادة",
+      "unknownStudent": "طالب غير معروف",
+      "unknownSubject": "مادة غير معروفة",
+      "carrying": "حملة",
+      "daysBefore": "{{count}} يوم"
+    },
+    "stats": {
+      "title": "إحصاءات الاستبيان",
+      "subtitle": "متوسط الصعوبة وأيام الراحة المطلوبة وعدد الحملة لكل مادة",
+      "scopeYear": "سنة محددة",
+      "scopeAll": "كل السنوات",
+      "yearHeading": "السنة الدراسية",
+      "noYears": "لا توجد سنوات دراسية – أضفها من صفحة الهيكل الأكاديمي أولاً.",
+      "formLabel": "الفورم (اتركه فارغاً لفورم السنة الحالي)",
+      "currentForm": "الفورم الحالي",
+      "searchPlaceholder": "ابحث باسم المادة...",
+      "sorts": {
+        "difficulty": "الأصعب أولاً",
+        "days": "الأكثر حاجة لراحة",
+        "responses": "الأكثر إجابات",
+        "carrying": "الأكثر حملة",
+        "name": "أبجدياً"
+      },
+      "emptyTitle": "لا توجد إحصاءات",
+      "emptyYearHint": "لا يوجد فورم لهذه السنة، أو لم يُجب أي طالب بعد",
+      "emptyAllHint": "لم تُنشأ فورمات أو لم تصل ردود بعد",
+      "studentsAnswered": "طلاب أجابوا",
+      "subjectsAppeared": "مواد ظهرت",
+      "coreSubjects": "مواد أساسية",
+      "coreSubjectsHint": "أجاب عليها ≥ نصف المشاركين",
+      "hardest": "الأصعب",
+      "noMatchingSubjects": "لا توجد مواد مطابقة",
+      "carrying": "حملة",
+      "rest": "راحة",
+      "daysValue": "{{count}} يوم"
+    }
+  },
+  "schedule": {
+    "semesterHeading": "الفصل الدراسي",
+    "noSemesters": "لا توجد فصول دراسية – أضفها من صفحة الهيكل الأكاديمي أولاً.",
+    "capacity": {
+      "examDays": "أيام الفحص المتاحة",
+      "excludedDays": "أيام مستبعدة",
+      "totalSlots": "إجمالي الفترات",
+      "configuredSubjects": "المواد المهيأة"
+    },
+    "settings": {
+      "title": "إعدادات الجدولة",
+      "subtitle": "اضبط مدى الامتحانات والعطل والفترات وإعدادات المواد لكل فصل دراسي",
+      "pickSemester": "اختر فصلاً دراسياً",
+      "pickSemesterHint": "لعرض أو ضبط إعدادات الجدولة الخاصة به",
+      "noConfig": "لا توجد إعدادات جدولة لفصل \"{{semester}}\"",
+      "noConfigHint": "أنشئ الإعدادات ليتمكّن النظام من توليد برنامج الفحص",
+      "createConfig": "إنشاء الإعدادات",
+      "updated": "تم تعديل إعدادات الجدولة بنجاح",
+      "created": "تم إنشاء إعدادات الجدولة بنجاح",
+      "deleted": "تم حذف إعدادات الجدولة",
+      "confirmDelete": {
+        "title": "تأكيد الحذف",
+        "body": "ستُحذف إعدادات الجدولة لفصل:",
+        "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+        "working": "جارٍ...",
+        "yes": "نعم، احذف"
+      }
+    },
+    "form": {
+      "editTitle": "تعديل إعدادات الجدولة",
+      "createTitle": "إنشاء إعدادات الجدولة",
+      "semesterLabel": "الفصل: {{semester}}",
+      "academicYearLabel": "السنة الأكاديمية",
+      "timeslotsLabel": "عدد الفترات في اليوم",
+      "examPeriod": "فترة الامتحانات",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "capacityWarning": "عدد المواد ({{subjects}}) أكبر من الفترات المتاحة ({{slots}}) – وسّع المدى أو زد الفترات اليومية.",
+      "excludedWeekdays": "أيام الأسبوع المستبعدة",
+      "excludedWeekdaysHint": "الأيام المحدّدة بالأحمر لن تُجدول فيها أي امتحانات.",
+      "excludedDates": "تواريخ مستبعدة (عطل رسمية)",
+      "addDate": "إضافة",
+      "outOfRange": "خارج مدى فترة الامتحانات",
+      "removeDate": "حذف {{date}}",
+      "saving": "جاري الحفظ...",
+      "save": "حفظ التعديلات",
+      "create": "إنشاء الإعدادات",
+      "footerHint": "تُستخدم هذه الإعدادات مع ردود الطلاب لتوليد برنامج الفحص.",
+      "errors": {
+        "academicYearRequired": "السنة الأكاديمية مطلوبة",
+        "academicYearFormat": "صيغة السنة الأكاديمية يجب أن تكون مثل 2025-2026",
+        "startRequired": "تاريخ بداية الامتحانات مطلوب",
+        "endRequired": "تاريخ نهاية الامتحانات مطلوب",
+        "endBeforeStart": "تاريخ النهاية يجب أن يكون بعد تاريخ البداية",
+        "timeslotsMin": "عدد الفترات اليومية يجب أن يكون 1 على الأقل",
+        "noExamDays": "لا توجد أيام فحص متاحة – راجع مدى التواريخ والأيام المستبعدة",
+        "subjectRequired": "اختر المادة في كل صف أو احذف الصفوف الفارغة",
+        "duplicateSubject": "لا يمكن تكرار المادة نفسها أكثر من مرة",
+        "invalidSubjectNumbers": "تأكّد من أن عدد المحمّلين ≥ 0 وأن مدة الامتحان ≥ 1 دقيقة"
+      }
+    },
+    "summary": {
+      "configured": "الإعدادات مضبوطة",
+      "semesterAndUpdated": "الفصل: {{semester}} · آخر تحديث: {{date}}",
+      "edit": "تعديل",
+      "deleteConfig": "حذف الإعدادات",
+      "examPeriod": "فترة الامتحانات",
+      "dailySlots": "الفترات اليومية",
+      "slotsPerDay": "{{count}} فترات / يوم",
+      "capacityWarning": "عدد المواد ({{subjects}}) أكبر من الفترات المتاحة ({{slots}}) – قد يفشل توليد الجدول.",
+      "excludedWeekdays": "أيام الأسبوع المستبعدة",
+      "noExcludedWeekdays": "لا توجد أيام مستبعدة",
+      "excludedDates": "تواريخ مستبعدة",
+      "noExcludedDates": "لا توجد تواريخ مستبعدة",
+      "subjectsConfig": "إعدادات المواد",
+      "noSubjectsConfigured": "لم تُضبط أي مادة – اضغط تعديل لإضافة المواد",
+      "colSubject": "المادة",
+      "colCarried": "الطلاب المحمّلون",
+      "colDuration": "مدّة الامتحان",
+      "minutes": "{{count}} دقيقة",
+      "deletedSubject": "مادة محذوفة",
+      "unknownSubject": "مادة ({{id}}…)"
+    },
+    "subjectsEditor": {
+      "title": "إعدادات المواد",
+      "addAll": "إضافة كل المواد ({{count}})",
+      "addSubject": "إضافة مادة",
+      "empty": "لم تُضف أي مادة بعد",
+      "emptyHint": "أضف المواد التي سيشملها برنامج الفحص مع عدد الطلاب المحمّلين ومدّة الامتحان",
+      "chooseSubject": "اختر المادة...",
+      "unknownSubject": "مادة غير معروفة ({{id}}…)",
+      "carriedPlaceholder": "محمّلون",
+      "carriedTitle": "عدد الطلاب المحمّلين",
+      "minutes": "دقيقة",
+      "durationPlaceholder": "المدّة",
+      "durationTitle": "مدّة الامتحان بالدقائق",
+      "removeSubject": "حذف المادة",
+      "duplicateWarning": "هذه المادة مكرّرة – احذف أحد الصفّين",
+      "notInSemesterWarning": "هذه المادة غير موجودة ضمن مواد الفصل الحالي"
+    },
+    "generator": {
+      "title": "توليد برنامج الفحص",
+      "subtitle": "جمّع البيانات، ولّد الجدول، راجع التعارضات، ثم انشره للطلاب",
+      "noConfigWarning": "لا توجد إعدادات جدولة لفصل \"{{semester}}\" – لا يمكن توليد الجدول قبل ضبطها.",
+      "goToSettings": "اذهب للإعدادات",
+      "collectTitle": "تجميع البيانات",
+      "collectDescription": "يجمع ردود الطلاب مع إعدادات الجدولة ويحسب التعارضات",
+      "collect": "تجميع البيانات",
+      "recollect": "إعادة التجميع",
+      "solveTitle": "توليد الجدول",
+      "solveDescription": "يرسل البيانات إلى المحرّك ويعيد أفضل توزيع ممكن",
+      "solve": "توليد الجدول",
+      "resolve": "إعادة التوليد",
+      "running": "جاري التنفيذ...",
+      "solvingHint": "المحرّك يبحث عن أفضل توزيع – قد تستغرق العملية دقيقة أو أكثر، لا تغلق الصفحة.",
+      "collected": "تم تجميع بيانات الجدولة – {{count}} تعارض",
+      "generated": "تم توليد الجدول بنجاح",
+      "published": "تم نشر الجدول",
+      "emptyTitle": "لا يوجد جدول بعد",
+      "emptyHint": "نفّذ الخطوتين أعلاه لتوليد برنامج الفحص",
+      "confirmPublish": {
+        "title": "تأكيد النشر",
+        "body": "سيصبح برنامج الفحص مرئياً للطلاب في فصل:",
+        "publishing": "جاري النشر...",
+        "yes": "نعم، انشر"
+      }
+    },
+    "conflicts": {
+      "title": "التعارضات بين المواد",
+      "strict": "صارم",
+      "medium": "متوسط",
+      "soft": "مرن",
+      "searchPlaceholder": "بحث باسم المادة...",
+      "clearSearch": "مسح البحث",
+      "noMatches": "لا توجد تعارضات مطابقة",
+      "showMore": "عرض المزيد ({{count}} متبقٍ)"
+    },
+    "timetable": {
+      "viewGrid": "جدول",
+      "viewCards": "بطاقات",
+      "scheduledSubjects": "مواد مجدولة",
+      "examDays": "أيام الفحص",
+      "clashingSlots": "فترات متصادمة",
+      "heading": "برنامج الفحص",
+      "published": "منشور",
+      "draft": "مسودة",
+      "yearAndUpdated": "{{year}} · آخر تحديث: {{date}}",
+      "publishing": "جاري النشر...",
+      "republish": "إعادة النشر",
+      "publish": "نشر الجدول",
+      "hardViolated": "قيود صارمة مخروقة",
+      "hardSatisfied": "لا خروقات في القيود الصارمة",
+      "clashesNotice": "{{count}} فترة فيها أكثر من مادة في نفس الوقت – مُبرزة بالأحمر أدناه.",
+      "empty": "الجدول فارغ",
+      "publishedNotice": "هذا الجدول منشور ومرئي للطلاب.",
+      "dayHeader": "اليوم",
+      "slotHeader": "الفترة {{number}}",
+      "slotLabel": "فترة {{number}}",
+      "clash": "تصادم ({{count}})",
+      "subjectsCount": "{{count}} مادة"
+    }
+  },
+  "tasks": {
+    "title": "إدارة المهام الأكاديمية",
+    "subtitle": "إنشاء وتعديل وإغلاق المهام الأكاديمية للطلاب",
+    "new": "مهمة جديدة",
+    "searchPlaceholder": "بحث عن مهمة...",
+    "clearSearch": "مسح البحث",
+    "allYears": "كل السنوات",
+    "allSubjects": "كل المواد",
+    "allStatuses": "كل الحالات",
+    "statusOpen": "مفتوحة",
+    "statusClosed": "مغلقة",
+    "clearFilters": "مسح الفلاتر",
+    "totalTasks": "إجمالي المهام",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyNone": "لا توجد مهام بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "أنشئ أول مهمة أكاديمية الآن",
+    "createFirst": "إنشاء مهمة",
+    "messages": {
+      "created": "تم إنشاء المهمة وفتحها للطلاب ✓",
+      "updated": "تم تعديل المهمة بنجاح ✓",
+      "deleted": "تم حذف المهمة",
+      "closed": "تم إغلاق المهمة"
+    },
+    "confirmDelete": {
+      "title": "تأكيد الحذف",
+      "body": "ستحذف المهمة:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "working": "جارٍ...",
+      "yes": "نعم، احذف"
+    },
+    "confirmClose": {
+      "title": "تأكيد الإغلاق",
+      "body": "سيتم إغلاق المهمة:",
+      "note": "لن يتمكّن الطلاب من التسليم بعد الإغلاق.",
+      "yes": "نعم، أغلق"
+    },
+    "card": {
+      "open": "مفتوح",
+      "closed": "مغلق",
+      "opensAt": "يفتح: {{date}}",
+      "closesAt": "يغلق: {{date}}",
+      "submissions": "الحلول",
+      "edit": "تعديل",
+      "close": "إغلاق",
+      "delete": "حذف"
+    },
+    "form": {
+      "createTitle": "إنشاء مهمة أكاديمية",
+      "editTitle": "تعديل المهمة",
+      "createSubtitle": "أدخل بيانات المهمة الجديدة",
+      "editSubtitle": "عدّل بيانات المهمة",
+      "titleLabel": "عنوان المهمة",
+      "titlePlaceholder": "مثال: حل تمارين الفصل الأول",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف مختصر للمهمة...",
+      "yearLabel": "السنة",
+      "chooseYear": "اختر السنة...",
+      "subjectLabel": "المادة",
+      "chooseSubject": "اختر المادة...",
+      "lectureTypeLabel": "نوع المحاضرة",
+      "chooseType": "اختر النوع...",
+      "lectureLabel": "المحاضرة",
+      "chooseLecture": "اختر المحاضرة...",
+      "durationLabel": "مدّة المهمة",
+      "days": "أيام",
+      "hours": "ساعات",
+      "minutes": "دقائق",
+      "titleRequired": "عنوان المهمة مطلوب",
+      "yearRequired": "يرجى اختيار السنة الدراسية",
+      "subjectRequired": "يرجى اختيار المادة",
+      "lectureTypeRequired": "يرجى اختيار نوع المحاضرة",
+      "lectureRequired": "يرجى اختيار المحاضرة",
+      "durationRequired": "يرجى تحديد مدّة المهمة",
+      "saving": "جاري الحفظ...",
+      "create": "إنشاء المهمة",
+      "save": "حفظ التعديلات"
+    },
+    "submissions": {
+      "title": "حلول الطلاب",
+      "empty": "لا توجد حلول مُسلَّمة بعد",
+      "viewFile": "عرض الملف المرفوع",
+      "reviewNote": "ملاحظة المراجعة: {{note}}",
+      "rejectReasonPlaceholder": "سبب الرفض (اختياري)...",
+      "confirmReject": "تأكيد الرفض",
+      "reject": "رفض",
+      "approve": "قبول"
+    }
+  },
+  "subjects": {
+    "title": "إدارة المواد",
+    "subtitle": "إنشاء وتعديل وحذف المواد الدراسية",
+    "new": "مادة جديدة",
+    "searchPlaceholder": "بحث عن مادة...",
+    "clearSearch": "مسح البحث",
+    "allYears": "كل السنوات",
+    "allSemesters": "كل الفصول",
+    "clearFilters": "مسح الفلاتر",
+    "totalSubjects": "إجمالي المواد",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyNone": "لا توجد مواد بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "أضف أول مادة دراسية الآن",
+    "addFirst": "إضافة مادة",
+    "confirmDelete": {
+      "title": "تأكيد الحذف",
+      "body": "ستحذف المادة:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "working": "جارٍ...",
+      "yes": "نعم، احذف"
+    },
+    "card": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "form": {
+      "createTitle": "إضافة مادة جديدة",
+      "editTitle": "تعديل المادة",
+      "createSubtitle": "أدخل بيانات المادة الجديدة",
+      "editSubtitle": "عدّل بيانات المادة",
+      "nameLabel": "اسم المادة",
+      "namePlaceholder": "مثال: نمذجة ومحاكاة",
+      "descriptionLabel": "وصف المادة",
+      "descriptionPlaceholder": "وصف مختصر للمادة...",
+      "yearLabel": "السنة الدراسية",
+      "chooseYear": "اختر السنة...",
+      "semesterLabel": "الفصل الدراسي",
+      "chooseSemester": "اختر الفصل...",
+      "nameRequired": "اسم المادة مطلوب",
+      "yearRequired": "يرجى اختيار السنة الدراسية",
+      "semesterRequired": "يرجى اختيار الفصل الدراسي",
+      "saving": "جاري الحفظ...",
+      "create": "إنشاء المادة",
+      "save": "حفظ التعديلات"
+    }
+  },
+  "academic": {
+    "title": "الهيكل الأكاديمي",
+    "subtitle": "إدارة السنوات والفصول الدراسية",
+    "tabYears": "السنوات الدراسية",
+    "tabSemesters": "الفصول الدراسية",
+    "connectionFailed": "تعذّر الاتصال بالخادم",
+    "years": {
+      "count": "{{count}} سنة مسجّلة",
+      "add": "إضافة سنة",
+      "empty": "لا توجد سنوات بعد",
+      "orderLabel": "الترتيب: {{order}}",
+      "addTitle": "إضافة سنة دراسية",
+      "editTitle": "تعديل السنة الدراسية",
+      "modalHint": "أدخل بيانات السنة الدراسية",
+      "nameLabel": "اسم السنة",
+      "namePlaceholder": "مثال: Year 1",
+      "orderInputLabel": "الترتيب",
+      "orderPlaceholder": "مثال: 1",
+      "deleteTitle": "حذف السنة الدراسية؟",
+      "deleteBody": "سيتم حذف «{{name}}» نهائياً.",
+      "created": "تم إنشاء السنة بنجاح ✓",
+      "deleteFailed": "تعذّر حذف السنة"
+    },
+    "semesters": {
+      "count": "{{count}} فصل مسجّل",
+      "add": "إضافة فصل",
+      "empty": "لا توجد فصول بعد",
+      "addTitle": "إضافة فصل دراسي",
+      "editTitle": "تعديل الفصل الدراسي",
+      "modalHint": "أدخل اسم الفصل الدراسي",
+      "nameLabel": "اسم الفصل",
+      "namePlaceholder": "مثال: Semester 1",
+      "deleteTitle": "حذف الفصل الدراسي؟",
+      "deleteBody": "سيتم حذف «{{name}}» نهائياً.",
+      "created": "تم إنشاء الفصل بنجاح ✓",
+      "deleteFailed": "تعذّر حذف الفصل"
+    },
+    "saved": "تم حفظ التعديلات ✓",
+    "deleted": "تم الحذف",
+    "actionFailed": "تعذّر تنفيذ العملية",
+    "saving": "جارٍ الحفظ...",
+    "save": "حفظ",
+    "deleting": "جارٍ الحذف...",
+    "delete": "حذف",
+    "edit": "تعديل"
+  },
+  "banks": {
+    "title": "بنوك الأسئلة (MCQ)",
+    "subtitle": "تنقّل بالسنة ← الفصل ← المادة لرفع البنوك ومراجعتها ونشرها",
+    "upload": "رفع أسئلة",
+    "uploadShort": "رفع",
+    "noCreatePermission": "لا تملك صلاحية إنشاء بنك أسئلة",
+    "noPublishPermission": "لا تملك صلاحية النشر",
+    "stats": {
+      "totalBanks": "إجمالي البنوك",
+      "published": "منشورة",
+      "drafts": "مسودات",
+      "totalQuestions": "إجمالي الأسئلة"
+    },
+    "breadcrumb": {
+      "year": "السنة",
+      "semester": "الفصل",
+      "subject": "المادة",
+      "banks": "البنوك",
+      "review": "مراجعة"
+    },
+    "steps": {
+      "selectYear": "اختر السنة الدراسية",
+      "selectSemester": "اختر الفصل — {{year}}",
+      "selectSubject": "اختر المادة — {{semester}}"
+    },
+    "loading": {
+      "years": "جارٍ تحميل السنوات…",
+      "semesters": "جارٍ تحميل الفصول…",
+      "subjects": "جارٍ تحميل المواد…",
+      "banks": "جارٍ تحميل بنوك الأسئلة…",
+      "bank": "جارٍ تحميل البنك…",
+      "questions": "جارٍ تحميل الأسئلة…",
+      "results": "جارٍ تحميل النتائج…",
+      "lectures": "جارٍ تحميل المحاضرات…"
+    },
+    "empty": {
+      "noSubjectsTitle": "لا توجد مواد",
+      "noSubjectsMessage": "لم تُضَف أي مادة لهذه السنة وهذا الفصل.",
+      "noBanksTitle": "لا توجد بنوك أسئلة بعد",
+      "noMatches": "لا نتائج مطابقة.",
+      "uploadFirst": "ارفع أول بنك أسئلة لمحاضرات هذه المادة.",
+      "bankNotFoundTitle": "البنك غير موجود",
+      "bankNotFoundMessage": "قد يكون البنك محذوفاً — ارجع لقائمة البنوك."
+    },
+    "searchPlaceholder": "ابحث...",
+    "clearSearch": "مسح البحث",
+    "bankCount": "{{count}} بنك",
+    "card": {
+      "questions": "سؤال",
+      "published": "منشور",
+      "draft": "مسودة",
+      "review": "مراجعة",
+      "delete": "حذف",
+      "confirm": "تأكيد",
+      "cancel": "إلغاء"
+    },
+    "review": {
+      "questionsCount": "{{count}} سؤال",
+      "publishedOn": "نُشر {{date}}",
+      "createdOn": "أُنشئ {{date}}",
+      "addQuestions": "إضافة أسئلة",
+      "publish": "نشر للطلاب",
+      "unpublish": "إلغاء النشر",
+      "confirmDeleteBank": "تأكيد الحذف",
+      "deleteBank": "حذف البنك",
+      "tabQuestions": "الأسئلة",
+      "tabResults": "نتائج الطلاب",
+      "noQuestionsTitle": "لا توجد أسئلة في هذا البنك",
+      "noQuestionsHint": "ارفع أسئلة عبر ملف JSON أو ملف وورد."
+    },
+    "results": {
+      "loadFailed": "تعذّر جلب نتائج الطلاب.",
+      "emptyTitle": "لا توجد محاولات بعد",
+      "emptyHint": "ستظهر نتائج الطلاب هنا بعد حل البنك.",
+      "attempts": "المحاولات",
+      "students": "الطلاب",
+      "averageScore": "متوسّط النتيجة",
+      "colStudent": "الطالب",
+      "colScore": "النتيجة",
+      "colCorrect": "الصحيحة",
+      "colSubmitted": "تاريخ الإرسال"
+    },
+    "question": {
+      "edit": "تعديل",
+      "delete": "حذف",
+      "confirm": "تأكيد",
+      "cancel": "إلغاء"
+    },
+    "editor": {
+      "title": "تعديل السؤال",
+      "subtitle": "التعديل يُطبَّق مباشرة على بنك الأسئلة",
+      "typeLabel": "نوع السؤال",
+      "typeMcq": "اختيار من متعدد",
+      "typeTrueFalse": "صح / خطأ",
+      "questionTextLabel": "نص السؤال",
+      "optionsLabel": "الخيارات",
+      "addOption": "إضافة خيار",
+      "optionPlaceholder": "الخيار {{index}}",
+      "markCorrect": "تحديد كإجابة صحيحة",
+      "removeOption": "حذف الخيار",
+      "correctAnswerLabel": "الإجابة الصحيحة",
+      "true": "صح",
+      "false": "خطأ",
+      "explanationLabel": "التفسير (اختياري)",
+      "explanationPlaceholder": "سبب كون الإجابة صحيحة",
+      "save": "حفظ التعديل",
+      "errors": {
+        "textRequired": "نص السؤال مطلوب.",
+        "needTwoOptions": "السؤال يحتاج خيارين على الأقل.",
+        "optionWithoutText": "لا يمكن ترك خيار بدون نص.",
+        "oneCorrect": "حدّد إجابة صحيحة واحدة."
+      }
+    },
+    "upload": {
+      "title": "رفع الأسئلة",
+      "lectureLabel": "المحاضرة",
+      "noLectures": "لا توجد محاضرات في هذه المادة",
+      "chooseLecture": "اختر المحاضرة",
+      "lectureHint": "إذا كان للمحاضرة بنك موجود، تُضاف الأسئلة إليه.",
+      "modeJson": "JSON",
+      "modeDocx": "Word (.docx)",
+      "dropJson": "أفلت ملف الأسئلة (.json) هنا",
+      "dropDocx": "أفلت ملف الوورد (.docx) هنا",
+      "or": "أو",
+      "chooseFile": "اختر ملفاً من جهازك",
+      "removeFile": "إزالة الملف",
+      "pasteLabel": "أو الصق الأسئلة كـ JSON",
+      "insertTemplate": "إدراج نموذج",
+      "validQuestions": "{{count}} سؤال صالح",
+      "mcqCount": "{{count}} اختيار من متعدد",
+      "trueFalseCount": "{{count}} صح / خطأ",
+      "errorsCount": "{{count}} خطأ",
+      "docxHint": "ملف الوورد يجب أن يلتزم بالصيغة المتفق عليها مع الخادم (سؤال ثم خياراته وتحديد الإجابة الصحيحة). إذا لم يتعرّف الخادم على الأسئلة ستظهر رسالة تنبّه إلى أن الملف لا يلتزم بالصيغة المطلوبة.",
+      "submit": "رفع الأسئلة",
+      "submitting": "جارٍ الرفع…",
+      "successCount": "تم رفع {{count}} سؤال بنجاح",
+      "successHint": "البنك محفوظ كمسودة — راجع الأسئلة ثم انشره للطلاب.",
+      "done": "تمّ",
+      "sample": {
+        "mcqQuestion": "ما هو ناتج 2 + 2؟",
+        "mcqExplanation": "لأن 2+2=4",
+        "trueFalseQuestion": "الأرض كروية الشكل"
+      },
+      "errors": {
+        "jsonExtension": "الملف يجب أن يكون بصيغة .json",
+        "readFailed": "تعذّر قراءة الملف.",
+        "docxExtension": "الملف يجب أن يكون بصيغة .docx",
+        "lectureRequired": "اختر المحاضرة التي سيُربط بها بنك الأسئلة.",
+        "noValidQuestions": "لا توجد أسئلة صالحة للرفع.",
+        "fixErrors": "صحّح الأخطاء الظاهرة أدناه قبل الرفع.",
+        "docxRequired": "اختر ملف الوورد أولاً.",
+        "uploadFailed": "تعذّر رفع الأسئلة."
+      }
+    },
+    "parseErrors": {
+      "empty": "الملف / النص فارغ.",
+      "invalidJson": "صيغة الـ JSON غير صحيحة (تأكّد من الأقواس والفواصل).",
+      "notArray": "يجب أن يكون المحتوى مصفوفة أسئلة أو كائناً يحتوي على المفتاح \"questions\".",
+      "noQuestions": "لا توجد أسئلة في الملف.",
+      "notObject": "السؤال {{position}}: يجب أن يكون كائناً.",
+      "missingText": "السؤال {{position}}: نصّ السؤال (questionText) مطلوب.",
+      "missingCorrectAnswer": "السؤال {{position}}: أسئلة صح/خطأ تحتاج correctAnswer بقيمة true أو false.",
+      "needTwoOptions": "السؤال {{position}}: يحتاج خيارين على الأقل في options.",
+      "optionWithoutText": "السؤال {{position}}: يوجد خيار بدون نصّ.",
+      "needExactlyOneCorrect": "السؤال {{position}}: يجب تحديد إجابة صحيحة واحدة بالضبط (isCorrect: true)."
+    },
+    "actionErrors": {
+      "publishFailed": "تعذّر نشر بنك الأسئلة.",
+      "unpublishFailed": "تعذّر إلغاء نشر بنك الأسئلة.",
+      "deleteBankFailed": "تعذّر حذف بنك الأسئلة.",
+      "deleteQuestionFailed": "تعذّر حذف السؤال.",
+      "updateQuestionFailed": "تعذّر تعديل السؤال.",
+      "lecturesFailed": "تعذّر جلب محاضرات المادة."
+    }
+  },
+  "lectureManagement": {
+    "title": "إدارة المحاضرات",
+    "subtitle": "تنقّل بالسنة ← الفصل ← المادة ← النوع لإدارة المحاضرات",
+    "uploadLecture": "رفع محاضرة",
+    "uploadShort": "رفع",
+    "back": "رجوع",
+    "stats": {
+      "totalLectures": "إجمالي المحاضرات",
+      "published": "منشورة",
+      "theoretical": "نظرية",
+      "practical": "عملية"
+    },
+    "breadcrumb": {
+      "year": "السنة",
+      "semester": "الفصل",
+      "subject": "المادة",
+      "lectures": "المحاضرات"
+    },
+    "steps": {
+      "selectYear": "اختر السنة الدراسية",
+      "selectSemester": "اختر الفصل — {{year}}",
+      "selectSubject": "اختر المادة — {{semester}}",
+      "selectType": "اختر النوع — {{subject}}"
+    },
+    "types": {
+      "theoretical": "نظري",
+      "practical": "عملي"
+    },
+    "loading": {
+      "years": "جارٍ تحميل السنوات…",
+      "semesters": "جارٍ تحميل الفصول…",
+      "subjects": "جارٍ تحميل المواد…",
+      "lectures": "جارٍ تحميل المحاضرات…"
+    },
+    "empty": {
+      "noSubjectsTitle": "لا توجد مواد",
+      "noSubjectsMessage": "لم تُضَف أي مادة لهذه السنة وهذا الفصل.",
+      "noLecturesTitle": "لا توجد محاضرات بعد",
+      "noMatches": "لا نتائج مطابقة.",
+      "uploadFirst": "ارفع أول محاضرة لهذه المادة."
+    },
+    "searchPlaceholder": "ابحث...",
+    "lectureCount": "{{count}} محاضرة",
+    "card": {
+      "labBadge": "عملي",
+      "pdfBadge": "PDF",
+      "save": "حفظ",
+      "renameHint": "انقر مرتين على العنوان لإعادة تسميته",
+      "published": "منشورة",
+      "draft": "مسودة",
+      "view": "عرض",
+      "download": "تنزيل",
+      "rename": "إعادة تسمية",
+      "delete": "حذف"
+    },
+    "upload": {
+      "title": "رفع محاضرة",
+      "subjectAndType": "{{subject}} · {{type}}",
+      "dropzone": {
+        "releaseToUpload": "أفلت للرفع",
+        "dropTitle": "أفلت ملف الـ PDF هنا",
+        "or": "أو",
+        "browseFiles": "تصفّح الملفات",
+        "hint": "PDF / فيديو · بحد أقصى 200 ميجابايت"
+      },
+      "removeFile": "إزالة الملف",
+      "successTitle": "تم الرفع بنجاح!",
+      "successMessage": "تم رفع «{{title}}» بنجاح.",
+      "done": "تمّ",
+      "titleLabel": "عنوان المحاضرة",
+      "titlePlaceholder": "مثال: مقدمة في الشبكات العصبية",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف اختياري للمحاضرة",
+      "publishCheckbox": "نشر المحاضرة",
+      "publishedHint": "مرئية للطلاب بعد الرفع",
+      "draftHint": "محفوظة كمسودة",
+      "uploading": "جارٍ الرفع...",
+      "cancel": "إلغاء",
+      "submit": "رفع المحاضرة",
+      "failed": "تعذّر الرفع.",
+      "errors": {
+        "fileTooLarge": "حجم الملف يتجاوز الحد الأقصى 200 ميجابايت.",
+        "invalidFileType": "يُقبل فقط ملفات PDF أو الفيديو.",
+        "missingFields": "يرجى اختيار ملف وإدخال عنوان."
+      }
+    }
+  },
+  "quickActions": {
+    "users": {
+      "label": "المستخدمون",
+      "hint": "أدوار وصلاحيات"
+    },
+    "uploadLecture": {
+      "label": "رفع محاضرة",
+      "hint": "إدارة المحاضرات"
+    },
+    "subjects": {
+      "label": "المواد",
+      "hint": "إضافة وتعديل"
+    },
+    "academicTask": {
+      "label": "مهمة أكاديمية",
+      "hint": "إنشاء ومتابعة"
+    },
+    "announcement": {
+      "label": "إعلان جديد",
+      "hint": "تبليغ الطلاب"
+    },
+    "questionBanks": {
+      "label": "بنوك الأسئلة",
+      "hint": "رفع ومراجعة"
+    },
+    "generateSchedule": {
+      "label": "توليد الجدول",
+      "hint": "جدول الامتحانات"
+    },
+    "assistant": {
+      "label": "المساعد الذكي",
+      "hint": "اسأل عن بياناتك"
+    }
+  }
+}

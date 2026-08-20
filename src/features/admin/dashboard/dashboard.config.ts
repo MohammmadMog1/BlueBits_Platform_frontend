@@ -10,61 +10,64 @@ import {
 } from "lucide-react";
 import type { QuickAction } from "../../../shared/components/Dashboard/QuickActionsPanel";
 
-/** اختصارات داشبورد الأدمن — نفس مسارات `adminNavItems` بلا تكرار للمنطق */
+/**
+ * اختصارات داشبورد الأدمن — نفس مسارات `adminNavItems` بلا تكرار للمنطق.
+ * نخزّن مفاتيح الترجمة لا النصّ، لأن الثابت يُقيَّم مرّة واحدة عند تحميل الملف.
+ */
 export const adminQuickActions: QuickAction[] = [
   {
     icon: Users,
-    label: "المستخدمون",
-    hint: "أدوار وصلاحيات",
+    labelKey: "admin:quickActions.users.label",
+    hintKey: "admin:quickActions.users.hint",
     to: "/admin/users",
     tone: "brand",
   },
   {
     icon: FileText,
-    label: "رفع محاضرة",
-    hint: "إدارة المحاضرات",
+    labelKey: "admin:quickActions.uploadLecture.label",
+    hintKey: "admin:quickActions.uploadLecture.hint",
     to: "/admin/lectures",
     tone: "violet",
   },
   {
     icon: BookMarked,
-    label: "المواد",
-    hint: "إضافة وتعديل",
+    labelKey: "admin:quickActions.subjects.label",
+    hintKey: "admin:quickActions.subjects.hint",
     to: "/admin/subjects",
     tone: "sky",
   },
   {
     icon: ClipboardList,
-    label: "مهمة أكاديمية",
-    hint: "إنشاء ومتابعة",
+    labelKey: "admin:quickActions.academicTask.label",
+    hintKey: "admin:quickActions.academicTask.hint",
     to: "/admin/academic-tasks",
     tone: "amber",
   },
   {
     icon: Megaphone,
-    label: "إعلان جديد",
-    hint: "تبليغ الطلاب",
+    labelKey: "admin:quickActions.announcement.label",
+    hintKey: "admin:quickActions.announcement.hint",
     to: "/admin/announcements",
     tone: "rose",
   },
   {
     icon: BrainCircuit,
-    label: "بنوك الأسئلة",
-    hint: "رفع ومراجعة",
+    labelKey: "admin:quickActions.questionBanks.label",
+    hintKey: "admin:quickActions.questionBanks.hint",
     to: "/admin/question-banks",
     tone: "emerald",
   },
   {
     icon: CalendarCheck,
-    label: "توليد الجدول",
-    hint: "جدول الامتحانات",
+    labelKey: "admin:quickActions.generateSchedule.label",
+    hintKey: "admin:quickActions.generateSchedule.hint",
     to: "/admin/schedule-generate",
     tone: "brand",
   },
   {
     icon: Sparkles,
-    label: "المساعد الذكي",
-    hint: "اسأل عن بياناتك",
+    labelKey: "admin:quickActions.assistant.label",
+    hintKey: "admin:quickActions.assistant.hint",
     to: "/admin/assistant",
     tone: "violet",
   },

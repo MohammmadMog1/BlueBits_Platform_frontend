@@ -1,8 +1,9 @@
 import { useTheme } from "next-themes";
 import { motion } from "motion/react";
 import { Check, CheckCircle2, Info, X, XCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Question } from "../../../admin/questionBanks/types";
-import { questionTypeLabel } from "../../../admin/questionBanks/utils/bank";
+import { questionTypeKey } from "../../../admin/questionBanks/utils/bank";
 
 interface QuizQuestionCardProps {
   question: Question;
@@ -22,6 +23,7 @@ export function QuizQuestionCard({
   correctIndex,
   onSelect,
 }: QuizQuestionCardProps) {
+  const { t } = useTranslation("mcq");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -74,7 +76,7 @@ export function QuizQuestionCard({
                 isDark ? "bg-white/10 text-gray-300" : "bg-[#2376BB]/10 text-[#2376BB]"
               }`}
             >
-              {questionTypeLabel(question)}
+              {t(questionTypeKey(question))}
             </span>
             {answered && (
               <span
@@ -85,7 +87,9 @@ export function QuizQuestionCard({
                 }`}
               >
                 {isCorrect ? <Check size={10} /> : <X size={10} />}
-                {isCorrect ? "إجابة صحيحة" : "إجابة خطأ"}
+                {t(
+                  isCorrect ? "question.correctAnswer" : "question.wrongAnswer",
+                )}
               </span>
             )}
           </div>
@@ -93,7 +97,7 @@ export function QuizQuestionCard({
       </div>
 
       {/* Options */}
-      <div className="space-y-2.5 sm:pl-11">
+      <div className="space-y-2.5 sm:ps-11">
         {question.options?.map((option, optionIndex) => {
           const isSelected = selectedIndex === optionIndex;
           const isRight = optionIndex === correctIndex;
@@ -105,7 +109,7 @@ export function QuizQuestionCard({
               key={`${option.text}-${optionIndex}`}
               onClick={() => onSelect(optionIndex)}
               disabled={answered}
-              className={`w-full flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border transition-all text-left ${
+              className={`w-full flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border transition-all text-start ${
                 revealRight
                   ? "bg-green-500/12 border-green-500/40"
                   : revealWrong
@@ -152,8 +156,8 @@ export function QuizQuestionCard({
                 {option.text}
               </span>
               {revealWrong && (
-                <span className="ml-auto text-[10px] font-bold text-red-500 flex-shrink-0">
-                  إجابتك
+                <span className="ms-auto text-[10px] font-bold text-red-500 flex-shrink-0">
+                  {t("question.yourAnswer")}
                 </span>
               )}
             </button>
@@ -169,7 +173,7 @@ export function QuizQuestionCard({
           className="overflow-hidden"
         >
           <div
-            className={`flex gap-2 mt-3.5 sm:ml-11 rounded-xl px-3.5 py-2.5 border ${
+            className={`flex gap-2 mt-3.5 sm:ms-11 rounded-xl px-3.5 py-2.5 border ${
               isDark
                 ? "bg-[#2376BB]/10 border-[#2376BB]/20"
                 : "bg-[#2376BB]/6 border-[#2376BB]/15"

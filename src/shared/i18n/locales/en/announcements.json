@@ -1,0 +1,63 @@
+{
+  "student": {
+    "title": "Announcements",
+    "subtitle": "Follow the latest announcements for your cohort and the others",
+    "tabAll": "All announcements",
+    "tabMine": "My cohort's announcements",
+    "loadFailed": "Failed to load announcements.",
+    "emptyNoResults": "No results",
+    "emptyMine": "Your cohort has no announcements yet",
+    "emptyAll": "No announcements yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "New announcements will appear here as soon as they're posted"
+  },
+  "admin": {
+    "title": "Manage announcements",
+    "subtitle": "Create, edit and delete announcements for each cohort",
+    "new": "New announcement",
+    "allYears": "All years",
+    "clearFilter": "Clear filter",
+    "emptyNoResults": "No results",
+    "emptyNone": "No announcements yet",
+    "emptySearchHint": "Try a different search term",
+    "emptyHint": "Create your first announcement now",
+    "createFirst": "Create announcement",
+    "messages": {
+      "created": "Announcement created successfully ✓",
+      "updated": "Announcement updated successfully ✓",
+      "deleted": "Announcement deleted"
+    },
+    "confirmDelete": {
+      "title": "Confirm delete",
+      "body": "You are about to delete the announcement:",
+      "irreversible": "This action cannot be undone.",
+      "working": "Working...",
+      "yes": "Yes, delete"
+    },
+    "form": {
+      "createTitle": "Create a new announcement",
+      "editTitle": "Edit announcement",
+      "createSubtitle": "Enter the new announcement's details",
+      "editSubtitle": "Update the announcement's details",
+      "titleLabel": "Announcement title",
+      "titlePlaceholder": "e.g. Important notice for first-year students",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the announcement content...",
+      "yearLabel": "Academic year",
+      "chooseYear": "Choose a year...",
+      "yearLocked": "The academic year cannot be changed after creation",
+      "titleRequired": "The announcement title is required",
+      "contentRequired": "The announcement content is required",
+      "yearRequired": "Please choose the academic year",
+      "saving": "Saving...",
+      "create": "Create announcement",
+      "save": "Save changes"
+    },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "searchPlaceholder": "Search announcements...",
+  "clearSearch": "Clear search"
+}

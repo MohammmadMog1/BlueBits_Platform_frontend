@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import { CheckSquare, GraduationCap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import FocusTimerCard from "../components/FocusTimerCard";
 import { PersonalTasksPage } from "../../personalTasks";
 import { useGetPersonalTasksQuery } from "../../personalTasks";
@@ -9,12 +10,17 @@ import { useGetAcademicTasksQuery } from "../../admin/tasks";
 
 type TasksTab = "personal" | "academic";
 
-const tabs: { id: TasksTab; label: string; icon: typeof CheckSquare }[] = [
-  { id: "personal", label: "المهام الشخصية", icon: CheckSquare },
-  { id: "academic", label: "المهام الأكاديمية", icon: GraduationCap },
-];
+const TABS = [
+  { id: "personal", labelKey: "hub.tabPersonal", icon: CheckSquare },
+  { id: "academic", labelKey: "hub.tabAcademic", icon: GraduationCap },
+] as const satisfies readonly {
+  id: TasksTab;
+  labelKey: string;
+  icon: typeof CheckSquare;
+}[];
 
 export default function TasksHubPage() {
+  const { t } = useTranslation("tasks");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -32,10 +38,10 @@ export default function TasksHubPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className={`text-xl font-black tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}>
-          مهامي
+          {t("hub.title")}
         </h1>
         <p className={`text-sm font-medium ${isDark ? "text-gray-400" : "text-gray-400"}`}>
-          نظّم مهامك الشخصية والأكاديمية في مكان واحد
+          {t("hub.subtitle")}
         </p>
       </div>
 
@@ -47,7 +53,7 @@ export default function TasksHubPage() {
         >
           <div className="mb-3 flex items-center justify-between">
             <span className={`text-sm font-semibold ${isDark ? "text-gray-300" : "text-gray-700"}`}>
-              التقدم الإجمالي
+              {t("hub.overallProgress")}
             </span>
             <span className="text-xl font-extrabold text-[#2376BB]">{progress}%</span>
           </div>
@@ -61,13 +67,13 @@ export default function TasksHubPage() {
             <div className="flex items-center gap-2 text-sm font-medium">
               <div className="h-2.5 w-2.5 rounded-full bg-[#404293]" />
               <span className={isDark ? "text-gray-400" : "text-gray-600"}>
-                {personalTasks.length} شخصية
+                {t("hub.personalCount", { count: personalTasks.length })}
               </span>
             </div>
             <div className="flex items-center gap-2 text-sm font-medium">
               <div className="h-2.5 w-2.5 rounded-full bg-[#2376BB]" />
               <span className={isDark ? "text-gray-400" : "text-gray-600"}>
-                {academicTasks.length} أكاديمية
+                {t("hub.academicCount", { count: academicTasks.length })}
               </span>
             </div>
           </div>
@@ -81,7 +87,7 @@ export default function TasksHubPage() {
           isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-white"
         }`}
       >
-        {tabs.map((tab) => {
+        {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           const count = tab.id === "personal" ? personalTasks.length : academicTasks.length;
@@ -98,7 +104,7 @@ export default function TasksHubPage() {
                     : "text-gray-500 hover:bg-gray-50"
               }`}
             >
-              <Icon size={15} /> {tab.label}
+              <Icon size={15} /> {t(tab.labelKey)}
               <span
                 className={`rounded-md px-1.5 py-0.5 text-[10px] ${
                   isActive ? "bg-white/20" : isDark ? "bg-white/10" : "bg-gray-100"

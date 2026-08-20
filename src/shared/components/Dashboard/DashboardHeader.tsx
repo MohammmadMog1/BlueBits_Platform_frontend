@@ -1,4 +1,5 @@
 import { RefreshCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   brandGradientBr,
   faintClass,
@@ -6,7 +7,7 @@ import {
   iconButtonClass,
   mutedClass,
 } from "../../utils/theme";
-import { formatFullDate } from "../../utils/datetime";
+import { useFormatters } from "../../i18n/useFormatters";
 
 interface DashboardHeaderProps {
   icon: React.ElementType;
@@ -29,6 +30,9 @@ export default function DashboardHeader({
   onRefresh,
   action,
 }: DashboardHeaderProps) {
+  const { t } = useTranslation();
+  const { formatFullDate } = useFormatters();
+
   return (
     <header className="flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
@@ -46,7 +50,7 @@ export default function DashboardHeader({
         </div>
         <p className={`text-sm font-medium ${mutedClass(isDark)}`}>{subtitle}</p>
         <p className={`mt-0.5 text-xs font-semibold ${faintClass(isDark)}`}>
-          {formatFullDate()}
+          {formatFullDate(new Date())}
         </p>
       </div>
 
@@ -55,8 +59,8 @@ export default function DashboardHeader({
         <button
           type="button"
           onClick={onRefresh}
-          title="تحديث البيانات"
-          aria-label="تحديث البيانات"
+          title={t("actions.refresh")}
+          aria-label={t("actions.refresh")}
           className={iconButtonClass(isDark)}
         >
           <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />

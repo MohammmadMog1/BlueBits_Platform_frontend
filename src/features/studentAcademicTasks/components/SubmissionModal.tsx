@@ -8,6 +8,8 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../shared/i18n/useErrorMessage";
 import BottomSheetModal from "../../../shared/components/BottomSheetModal/BottomSheetModal";
 import {
   useGetMySubmissionQuery,
@@ -21,36 +23,16 @@ interface SubmissionModalProps {
   onClose: () => void;
 }
 
-const statusMeta: Record<SubmissionStatus, { label: string; className: string }> = {
-  pending: {
-    label: "بانتظار المراجعة",
-    className: "border border-amber-500/20 bg-amber-500/10 text-amber-500",
-  },
-  approved: {
-    label: "مقبول",
-    className: "border border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
-  },
-  rejected: {
-    label: "مرفوض",
-    className: "border border-red-500/20 bg-red-500/10 text-red-500",
-  },
-};
-
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    )
-      return (data as { message: string }).message;
-  }
-  return "تعذّر تنفيذ الطلب. حاول مرة أخرى.";
+/** أنماط الشارة فقط – التسمية تُترجَم عند العرض عبر `tasks:submissionStatus.*` */
+const statusClassName: Record<SubmissionStatus, string> = {
+  pending: "border border-amber-500/20 bg-amber-500/10 text-amber-500",
+  approved: "border border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
+  rejected: "border border-red-500/20 bg-red-500/10 text-red-500",
 };
 
 export default function SubmissionModal({ task, isDark, onClose }: SubmissionModalProps) {
+  const { t } = useTranslation("tasks");
+  const errorMessage = useErrorMessage();
   const isOpen = task.status === "open";
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -65,7 +47,7 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!file) return setFormError("يرجى إرفاق ملف الحل");
+    if (!file) return setFormError(t("submission.fileRequired"));
     setFormError("");
     try {
       const formData = new FormData();
@@ -90,7 +72,7 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
       onClose={onClose}
       isDark={isDark}
       icon={<UploadCloud className="h-5 w-5 text-white" />}
-      title="تسليم الحل"
+      title={t("submission.title")}
       subtitle={`"${task.title}"`}
       footer={
         canResubmit ? (
@@ -108,12 +90,12 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
                 >
                   <RefreshCcw size={15} />
                 </motion.div>
-                جاري الرفع...
+                {t("submission.uploading")}
               </>
             ) : (
               <>
                 <CheckCircle2 size={15} />
-                {submission ? "إعادة التسليم" : "تسليم الحل"}
+                {t(submission ? "submission.resubmit" : "submission.submit")}
               </>
             )}
           </button>
@@ -124,9 +106,11 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
         {submission && (
           <div className={`rounded-2xl border p-4 ${isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50"}`}>
             <div className="mb-2 flex items-center justify-between">
-              <p className={`text-xs font-bold ${isDark ? "text-gray-400" : "text-gray-500"}`}>تسليمك الحالي</p>
-              <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${statusMeta[submission.status].className}`}>
-                {statusMeta[submission.status].label}
+              <p className={`text-xs font-bold ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+                {t("submission.current")}
+              </p>
+              <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${statusClassName[submission.status]}`}>
+                {t(`submissionStatus.${submission.status}`)}
               </span>
             </div>
             {submission.note && (
@@ -138,11 +122,13 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
               rel="noreferrer"
               className="flex items-center gap-1.5 text-xs font-semibold text-[#2376BB] hover:underline"
             >
-              <FileText className="h-3.5 w-3.5" /> عرض الملف المُسلَّم
+              <FileText className="h-3.5 w-3.5" /> {t("submission.viewFile")}
             </a>
             {submission.status === "rejected" && submission.reviewNote && (
               <p className="mt-2 rounded-xl bg-red-500/10 px-3 py-2 text-xs text-red-500">
-                سبب الرفض: {submission.reviewNote}
+                {t("submission.rejectionReason", {
+                  reason: submission.reviewNote,
+                })}
               </p>
             )}
           </div>
@@ -154,18 +140,19 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
               isDark ? "border-white/10 bg-white/5 text-gray-400" : "border-gray-200 bg-gray-50 text-gray-500"
             }`}
           >
-            <AlertCircle size={14} className="shrink-0" /> هذه المهمة مغلقة ولا يمكن تسليم حل جديد.
+            <AlertCircle size={14} className="shrink-0" />{" "}
+            {t("submission.closedNotice")}
           </div>
         )}
 
         {canResubmit && (
           <form id="submission-form" onSubmit={handleSubmit} className="space-y-4">
             <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-              ملف الحل <span className="text-red-400">*</span>
+              {t("submission.fileLabel")} <span className="text-red-400">*</span>
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className={`mt-1.5 flex w-full items-center gap-2 rounded-xl border-2 border-dashed px-4 py-3 text-right text-sm transition-colors ${
+                className={`mt-1.5 flex w-full items-center gap-2 rounded-xl border-2 border-dashed px-4 py-3 text-start text-sm transition-colors ${
                   isDark
                     ? "border-white/15 bg-white/5 text-gray-400 hover:border-[#2376BB]/50"
                     : "border-gray-200 bg-gray-50 text-gray-500 hover:border-[#404293]/40"
@@ -181,7 +168,7 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
                 ) : (
                   <>
                     <UploadCloud className={`h-4 w-4 shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
-                    اختر ملفاً لرفعه
+                    {t("submission.chooseFile")}
                   </>
                 )}
               </button>
@@ -193,11 +180,11 @@ export default function SubmissionModal({ task, isDark, onClose }: SubmissionMod
               />
             </label>
             <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-              ملاحظة
+              {t("submission.noteLabel")}
               <textarea
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
-                placeholder="ملاحظة اختيارية..."
+                placeholder={t("submission.notePlaceholder")}
                 rows={3}
                 className={inputClass}
               />

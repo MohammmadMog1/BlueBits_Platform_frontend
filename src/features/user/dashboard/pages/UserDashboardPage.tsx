@@ -7,12 +7,13 @@ import {
   Megaphone,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import DashboardHeader from "../../../../shared/components/Dashboard/DashboardHeader";
 import QuickActionsPanel from "../../../../shared/components/Dashboard/QuickActionsPanel";
 import StatTile from "../../../../shared/components/StatTile/StatTile";
 import { useIsDark } from "../../../../shared/hooks/useIsDark";
 import { errorAlertClass } from "../../../../shared/utils/theme";
-import { greetingByHour } from "../../../../shared/utils/datetime";
+import { greetingKeyByHour } from "../../../../shared/utils/datetime";
 import FocusTimerCard from "../../components/FocusTimerCard";
 import { useUserDashboard } from "../hooks/useUserDashboard";
 import { userQuickActions } from "../dashboard.config";
@@ -27,6 +28,7 @@ import AnnouncementsPanel from "../components/AnnouncementsPanel";
  * الترتيب: نداء عاجل (استبيان) ← أرقام ← تقدّم + تركيز ← مواعيد ومحتوى.
  */
 export default function UserDashboardPage() {
+  const { t } = useTranslation(["dashboard", "common"]);
   const isDark = useIsDark();
   const {
     studentName,
@@ -42,16 +44,19 @@ export default function UserDashboardPage() {
     refresh,
   } = useUserDashboard();
 
-  const firstName = studentName.split(" ")[0] || "بك";
+  const firstName = studentName.split(" ")[0] || t("defaultName");
   const subtitle = yearName
-    ? `${yearName} — إليك ملخّص يومك`
-    : "إليك ملخّص يومك على المنصّة";
+    ? t("subtitleWithYear", { year: yearName })
+    : t("subtitle");
 
   return (
     <div className="flex flex-col gap-5">
       <DashboardHeader
         icon={LayoutDashboard}
-        title={`${greetingByHour()}، ${firstName}`}
+        title={t("greetingTitle", {
+          greeting: t(`common:greeting.${greetingKeyByHour()}`),
+          name: firstName,
+        })}
         subtitle={subtitle}
         isDark={isDark}
         isFetching={isFetching}
@@ -67,16 +72,20 @@ export default function UserDashboardPage() {
           className={errorAlertClass(isDark)}
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
-          تعذّر تحميل بعض البيانات. جرّب التحديث.
+          {t("common:errors.partialLoad")}
         </motion.div>
       )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile
           icon={CalendarClock}
-          label="مواعيد قادمة"
+          label={t("stats.upcoming")}
           value={upcoming.length}
-          hint={tasks.personalOverdue > 0 ? `${tasks.personalOverdue} متأخرة` : undefined}
+          hint={
+            tasks.personalOverdue > 0
+              ? t("stats.overdueHint", { count: tasks.personalOverdue })
+              : undefined
+          }
           tone={tasks.personalOverdue > 0 ? "rose" : "amber"}
           isDark={isDark}
           isLoading={isLoading}
@@ -84,9 +93,9 @@ export default function UserDashboardPage() {
         />
         <StatTile
           icon={CheckSquare}
-          label="مهام شخصية"
+          label={t("stats.personalTasks")}
           value={tasks.personalTotal}
-          hint={`${tasks.personalDone} منجزة`}
+          hint={t("stats.doneHint", { count: tasks.personalDone })}
           tone="brand"
           isDark={isDark}
           isLoading={isLoading}
@@ -94,9 +103,9 @@ export default function UserDashboardPage() {
         />
         <StatTile
           icon={BookOpen}
-          label="مهام أكاديمية مفتوحة"
+          label={t("stats.academicOpen")}
           value={tasks.academicOpen}
-          hint={`${tasks.academicTotal} إجمالاً`}
+          hint={t("stats.totalHint", { count: tasks.academicTotal })}
           tone="violet"
           isDark={isDark}
           isLoading={isLoading}
@@ -104,7 +113,7 @@ export default function UserDashboardPage() {
         />
         <StatTile
           icon={Megaphone}
-          label="إعلانات دفعتك"
+          label={t("stats.announcements")}
           value={announcements.length}
           tone="sky"
           isDark={isDark}

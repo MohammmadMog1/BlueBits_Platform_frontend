@@ -1,4 +1,5 @@
 import { AlertCircle, BookMarked, ListPlus, Plus, Trash2, Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "motion/react";
 import type { Subject } from "../../subjects/types";
 import type { SubjectConfigRow } from "../types";
@@ -17,6 +18,7 @@ export default function SubjectsConfigEditor({
   isLoading,
   onChange,
 }: SubjectsConfigEditorProps) {
+  const { t } = useTranslation("admin");
   const usedIds = new Set(rows.map((row) => row.subjectId).filter(Boolean));
   const remaining = subjects.filter((subject) => !usedIds.has(subject._id));
 
@@ -40,7 +42,9 @@ export default function SubjectsConfigEditor({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <BookMarked className="h-4 w-4 text-[#2376BB]" />
-          <h3 className="text-sm font-black text-gray-900">إعدادات المواد</h3>
+          <h3 className="text-sm font-black text-gray-900">
+            {t("schedule.subjectsEditor.title")}
+          </h3>
           <span className="rounded-full bg-[#2376BB]/10 px-2 py-0.5 text-[11px] font-bold text-[#2376BB]">
             {rows.length}
           </span>
@@ -52,7 +56,8 @@ export default function SubjectsConfigEditor({
               onClick={addAllRemaining}
               className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold text-gray-500 transition-colors hover:border-[#404293]/30 hover:text-[#404293]"
             >
-              <ListPlus size={14} /> إضافة كل المواد ({remaining.length})
+              <ListPlus size={14} />{" "}
+              {t("schedule.subjectsEditor.addAll", { count: remaining.length })}
             </button>
           )}
           <button
@@ -60,7 +65,7 @@ export default function SubjectsConfigEditor({
             onClick={addRow}
             className="flex items-center gap-1.5 rounded-xl bg-[#404293]/10 px-3 py-2 text-xs font-bold text-[#404293] transition-colors hover:bg-[#404293]/20"
           >
-            <Plus size={14} /> إضافة مادة
+            <Plus size={14} /> {t("schedule.subjectsEditor.addSubject")}
           </button>
         </div>
       </div>
@@ -77,9 +82,11 @@ export default function SubjectsConfigEditor({
       ) : rows.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center">
           <BookMarked className="h-6 w-6 text-gray-300" />
-          <p className="text-sm font-bold text-gray-400">لم تُضف أي مادة بعد</p>
+          <p className="text-sm font-bold text-gray-400">
+            {t("schedule.subjectsEditor.empty")}
+          </p>
           <p className="text-xs text-gray-400">
-            أضف المواد التي سيشملها برنامج الفحص مع عدد الطلاب المحمّلين ومدة الامتحان
+            {t("schedule.subjectsEditor.emptyHint")}
           </p>
         </div>
       ) : (
@@ -112,10 +119,12 @@ export default function SubjectsConfigEditor({
                       }
                       className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                     >
-                      <option value="">اختر المادة...</option>
+                      <option value="">{t("schedule.subjectsEditor.chooseSubject")}</option>
                       {isUnknown && (
                         <option value={row.subjectId}>
-                          مادة غير معروفة ({row.subjectId.slice(0, 8)}…)
+                          {t("schedule.subjectsEditor.unknownSubject", {
+                            id: row.subjectId.slice(0, 8),
+                          })}
                         </option>
                       )}
                       {subjects.map((subject) => (
@@ -142,15 +151,15 @@ export default function SubjectsConfigEditor({
                             carriedStudentsCount: event.target.value,
                           })
                         }
-                        placeholder="محمّلون"
-                        title="عدد الطلاب المحمّلين"
+                        placeholder={t("schedule.subjectsEditor.carriedPlaceholder")}
+                        title={t("schedule.subjectsEditor.carriedTitle")}
                         className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-9 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                       />
                     </label>
 
                     <label className="relative block">
                       <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-300">
-                        دقيقة
+                        {t("schedule.subjectsEditor.minutes")}
                       </span>
                       <input
                         type="number"
@@ -162,8 +171,8 @@ export default function SubjectsConfigEditor({
                             examDurationOverride: event.target.value,
                           })
                         }
-                        placeholder="المدة"
-                        title="مدة الامتحان بالدقائق"
+                        placeholder={t("schedule.subjectsEditor.durationPlaceholder")}
+                        title={t("schedule.subjectsEditor.durationTitle")}
                         className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-12 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                       />
                     </label>
@@ -171,7 +180,7 @@ export default function SubjectsConfigEditor({
                     <button
                       type="button"
                       onClick={() => removeRow(row.key)}
-                      aria-label="حذف المادة"
+                      aria-label={t("schedule.subjectsEditor.removeSubject")}
                       className="flex h-10 w-10 items-center justify-center justify-self-end rounded-xl border border-transparent text-gray-300 transition-colors hover:border-red-100 hover:bg-red-50 hover:text-red-500"
                     >
                       <Trash2 size={15} />
@@ -182,8 +191,8 @@ export default function SubjectsConfigEditor({
                     <p className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-amber-600">
                       <AlertCircle size={12} />
                       {isDuplicate
-                        ? "هذه المادة مكرّرة – احذف أحد الصفين"
-                        : "هذه المادة غير موجودة ضمن مواد الفصل الحالي"}
+                        ? t("schedule.subjectsEditor.duplicateWarning")
+                        : t("schedule.subjectsEditor.notInSemesterWarning")}
                     </p>
                   )}
                 </motion.div>

@@ -1,56 +1,35 @@
 /**
- * أدوات التاريخ المشتركة بين صفحات الداشبورد.
- * (للماضي: `timeAgoArabic` في ميزة التفاعلات — هذه الأدوات للمواعيد القادمة والعناوين)
+ * أدوات المواعيد المشتركة بين صفحات الداشبورد.
+ *
+ * ملاحظة i18n: هذه الوحدة **لا تنتج نصّاً مترجَماً**. تُرجع وصفاً بنيوياً
+ * (مفتاح + عدد + درجة استعجال) والمكوّن يترجمه عبر `useDeadlineLabel`.
+ * السبب: النصّ هنا يُقيَّم خارج شجرة React فلا يعرف اللغة الحالية، وأي نصّ
+ * جاهز كان سيتجمّد على العربية. أمّا تنسيق التواريخ فمكانه `useFormatters`.
  */
-
-const arabicCount = (
-  count: number,
-  singular: string,
-  dual: string,
-  plural: string,
-): string => {
-  if (count === 1) return singular;
-  if (count === 2) return dual;
-  if (count >= 3 && count <= 10) return `${count} ${plural}`;
-  return `${count} ${singular}`;
-};
-
-/** "الثلاثاء، 19 أغسطس 2026" */
-export const formatFullDate = (value: Date | string = new Date()): string => {
-  const date = typeof value === "string" ? new Date(value) : value;
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString("ar-EG", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
-
-/** "19 أغسطس" — للقوائم المختصرة */
-export const formatShortDate = (value: Date | string): string => {
-  const date = typeof value === "string" ? new Date(value) : value;
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString("ar-EG", { day: "numeric", month: "short" });
-};
-
-/** تحية حسب ساعة اليوم */
-export const greetingByHour = (date: Date = new Date()): string => {
-  const hour = date.getHours();
-  if (hour < 12) return "صباح الخير";
-  if (hour < 17) return "طاب يومك";
-  return "مساء الخير";
-};
 
 export type DeadlineUrgency = "overdue" | "urgent" | "soon" | "later";
 
+/** مفتاح الرسالة داخل `common:deadline.*` */
+export type DeadlineKey = "none" | "passed" | "minutes" | "hours" | "days";
+
 export interface DeadlineInfo {
-  /** "متبقٍ 3 أيام" أو "انتهى الموعد" */
-  label: string;
+  key: DeadlineKey;
+  /** العدد المرتبط بالمفتاح (دقائق/ساعات/أيام) – 0 للمفاتيح بلا عدد */
+  count: number;
   urgency: DeadlineUrgency;
   /** موجب = باقي وقت، سالب = متأخر */
   hoursLeft: number;
 }
+
+/** تحية حسب ساعة اليوم – تُرجع مفتاحاً داخل `common:greeting.*` */
+export const greetingKeyByHour = (
+  date: Date = new Date(),
+): "morning" | "afternoon" | "evening" => {
+  const hour = date.getHours();
+  if (hour < 12) return "morning";
+  if (hour < 17) return "afternoon";
+  return "evening";
+};
 
 /**
  * يصف الوقت المتبقّي حتى موعد الإغلاق.
@@ -62,37 +41,30 @@ export const deadlineInfo = (
 ): DeadlineInfo => {
   const target = new Date(iso).getTime();
   if (Number.isNaN(target)) {
-    return { label: "بدون موعد", urgency: "later", hoursLeft: Infinity };
+    return { key: "none", count: 0, urgency: "later", hoursLeft: Infinity };
   }
 
   const diffMs = target - now;
   const hoursLeft = diffMs / (1000 * 60 * 60);
 
   if (diffMs <= 0) {
-    return { label: "انتهى الموعد", urgency: "overdue", hoursLeft };
+    return { key: "passed", count: 0, urgency: "overdue", hoursLeft };
   }
 
   const minutes = Math.floor(diffMs / (1000 * 60));
   if (minutes < 60) {
-    return {
-      label: `متبقٍ ${arabicCount(minutes, "دقيقة", "دقيقتان", "دقائق")}`,
-      urgency: "urgent",
-      hoursLeft,
-    };
+    return { key: "minutes", count: minutes, urgency: "urgent", hoursLeft };
   }
 
   const hours = Math.floor(hoursLeft);
   if (hours < 24) {
-    return {
-      label: `متبقٍ ${arabicCount(hours, "ساعة", "ساعتان", "ساعات")}`,
-      urgency: "urgent",
-      hoursLeft,
-    };
+    return { key: "hours", count: hours, urgency: "urgent", hoursLeft };
   }
 
   const days = Math.floor(hours / 24);
   return {
-    label: `متبقٍ ${arabicCount(days, "يوم", "يومان", "أيام")}`,
+    key: "days",
+    count: days,
     urgency: days <= 3 ? "soon" : "later",
     hoursLeft,
   };

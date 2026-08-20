@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../app/store/hooks";
 import {
   useGetYearsQuery,
@@ -58,6 +59,7 @@ export interface UseLectureManagerReturn {
 }
 
 export function useLectureManager(): UseLectureManagerReturn {
+  const { t } = useTranslation("admin");
   const dispatch = useAppDispatch();
   const { items: lectures, fetchStatus } = useAppSelector(
     (state) => state.lectures,
@@ -139,12 +141,28 @@ export function useLectureManager(): UseLectureManagerReturn {
     const publishedCount = lectures.filter((l) => l.isPublished).length;
 
     return [
-      { label: "Total Lectures", value: totalLectures, color: "#404293" },
-      { label: "Published", value: publishedCount, color: "#059669" },
-      { label: "Theoretical", value: theoreticalCount, color: "#2376BB" },
-      { label: "Practical", value: practicalCount, color: "#F59E0B" },
+      {
+        label: t("lectureManagement.stats.totalLectures"),
+        value: totalLectures,
+        color: "#404293",
+      },
+      {
+        label: t("lectureManagement.stats.published"),
+        value: publishedCount,
+        color: "#059669",
+      },
+      {
+        label: t("lectureManagement.stats.theoretical"),
+        value: theoreticalCount,
+        color: "#2376BB",
+      },
+      {
+        label: t("lectureManagement.stats.practical"),
+        value: practicalCount,
+        color: "#F59E0B",
+      },
     ];
-  }, [lectures, subjectStats, selectedSubjectId]);
+  }, [lectures, subjectStats, selectedSubjectId, t]);
 
   // ─────────────────────────────────────────
   // Navigation (تم تحديث الترتيب)

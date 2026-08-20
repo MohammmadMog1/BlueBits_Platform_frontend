@@ -1,0 +1,81 @@
+{
+  "title": "إدارة المستخدمين",
+  "subtitle": "عرض وإنشاء وتعديل حسابات المستخدمين",
+  "new": "مستخدم جديد",
+  "connectionFailed": "تعذّر الاتصال بالخادم — حاول إعادة التحميل",
+  "stats": {
+    "total": "إجمالي المستخدمين",
+    "verified": "مُوثّقون"
+  },
+  "messages": {
+    "roleUpdated": "تم تحديث الدور ✓",
+    "roleUpdateFailed": "فشل تحديث الدور. حاول مرة أخرى.",
+    "deleted": "تم حذف المستخدم",
+    "deleteFailed": "فشل حذف المستخدم. حاول مرة أخرى.",
+    "created": "تم إنشاء الحساب بنجاح ✓"
+  },
+  "confirmDelete": {
+    "title": "تأكيد الحذف",
+    "body": "هل تريد حذف المستخدم {{name}}؟",
+    "unknownUser": "غير معروف"
+  },
+  "filter": {
+    "searchPlaceholder": "بحث عن مستخدم...",
+    "allRoles": "كل الأدوار",
+    "allYears": "كل السنوات",
+    "clear": "مسح"
+  },
+  "table": {
+    "label": "جدول المستخدمين",
+    "noResults": "لا توجد نتائج",
+    "colUser": "المستخدم",
+    "colEmail": "البريد الإلكتروني",
+    "colYear": "السنة الدراسية",
+    "colStatus": "الحالة",
+    "colRole": "الدور",
+    "colPermissions": "الصلاحيات",
+    "colActions": "إجراءات",
+    "notSet": "غير محدد",
+    "verified": "✓ موثّق",
+    "unverified": "غير موثّق",
+    "roleOf": "دور {{name}}",
+    "noPermissions": "لا توجد",
+    "managePermissions": "إدارة الصلاحيات",
+    "managePermissionsOf": "إدارة صلاحيات {{name}}",
+    "delete": "حذف",
+    "deleteUser": "حذف {{name}}",
+    "count": "{{count}} مستخدم"
+  },
+  "create": {
+    "title": "إنشاء مستخدم جديد",
+    "subtitle": "أدخل بيانات الحساب الجديد",
+    "nameLabel": "الاسم",
+    "namePlaceholder": "اسم المستخدم الكامل",
+    "emailLabel": "البريد الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "كلمة مرور قوية",
+    "roleLabel": "الدور",
+    "requiredFields": "جميع الحقول المطلوبة يجب أن تُملأ",
+    "failed": "فشل إنشاء المستخدم. حاول مرة أخرى.",
+    "working": "جارٍ...",
+    "submit": "إنشاء الحساب"
+  },
+  "permissions": {
+    "title": "صلاحيات {{name}}",
+    "subtitle": "تحديد الصلاحيات الإضافية الممنوحة للمستخدم",
+    "autoSaveHint": "يتم حفظ كل تغيير فوراً على الخادم",
+    "updateFailed": "فشل تحديث الصلاحية. حاول مرة أخرى.",
+    "CREATE_QUESTION_BANK": {
+      "label": "إنشاء بنك أسئلة",
+      "description": "إنشاء بنك من خلال رفع ملف الوورد أو الجيسون"
+    },
+    "UPDATE_QUESTION": {
+      "label": "تعديل سؤال",
+      "description": "تعديل سؤال معيّن من بنك معيّن"
+    },
+    "DELETE_QUESTION": {
+      "label": "حذف سؤال",
+      "description": "حذف سؤال معيّن من بنك معيّن"
+    }
+  }
+}

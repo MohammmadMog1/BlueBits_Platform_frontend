@@ -36,33 +36,10 @@ export const getRefName = (
 // ==============================
 // التواريخ
 // ==============================
-const dateFormatter = new Intl.DateTimeFormat("ar-EG-u-ca-gregory-nu-latn", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-});
-
-const dateTimeFormatter = new Intl.DateTimeFormat("ar-EG-u-ca-gregory-nu-latn", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-export const formatDate = (value?: string | null): string => {
-  if (!value) return "—";
-  const time = Date.parse(value);
-  if (Number.isNaN(time)) return "—";
-  return dateFormatter.format(new Date(time));
-};
-
-export const formatDateTime = (value?: string | null): string => {
-  if (!value) return "—";
-  const time = Date.parse(value);
-  if (Number.isNaN(time)) return "—";
-  return dateTimeFormatter.format(new Date(time));
-};
+/**
+ * ملاحظة i18n: تنسيق التواريخ انتقل إلى `useFormatters`
+ * (`formatLongDateOrDash` / `formatDateTimeOrDash`) لأنه يتبع اللغة الحالية.
+ */
 
 /** السنة الأكاديمية الافتراضية: تبدأ من سبتمبر (2026-2027) */
 export const defaultAcademicYear = (): string => {
@@ -88,7 +65,11 @@ export const roundTo = (value: number, digits = 1): number => {
   return Math.round(value * factor) / factor;
 };
 
-const collator = new Intl.Collator("ar");
+/**
+ * مقارِن الترتيب الأبجدي.
+ * `undefined` = لغة المتصفّح، فيرتّب العربية والإنكليزية كلاً بقواعده.
+ */
+const collator = new Intl.Collator(undefined);
 
 /** ترتيب صفوف الإحصاءات – الاسم تصاعدي والأرقام تنازلية بشكل افتراضي */
 export const sortSubjectStats = (
@@ -120,21 +101,5 @@ export const responseShare = (row: SubjectStats, total: number): number => {
 // ==============================
 // الأخطاء
 // ==============================
-/** رسالة الخطأ القادمة من الباك (envelope فيه message) */
-export const errorMessage = (
-  error: unknown,
-  fallback = "تعذّر تنفيذ الطلب. حاول مرة أخرى.",
-): string => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    ) {
-      return (data as { message: string }).message;
-    }
-  }
-  return fallback;
-};
+/** رسالة الخطأ – المصدر الموحّد الآن `shared/i18n/useErrorMessage` */
+export { serverMessage } from "../../../../shared/utils/apiError";

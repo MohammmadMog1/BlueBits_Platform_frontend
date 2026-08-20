@@ -15,9 +15,10 @@ import {
 import { QuestionReviewCard } from "./QuestionReviewCard";
 import { QuestionEditorModal } from "./QuestionEditorModal";
 import { BankResultsPanel } from "./BankResultsPanel";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { Question, QuestionBank, QuestionOption, QuestionType } from "../types";
 import {
-  formatDateTime,
   getLectureTitle,
   getSubjectName,
   getYearName,
@@ -63,6 +64,8 @@ export function BankReviewPanel({
   onUpdateQuestion,
   onAddQuestions,
 }: BankReviewPanelProps) {
+  const { t } = useTranslation("admin");
+  const { formatDateTimeOrDash } = useFormatters();
   const [tab, setTab] = useState<ReviewTab>("questions");
   const [editing, setEditing] = useState<Question | null>(null);
   const [confirmDeleteBank, setConfirmDeleteBank] = useState(false);
@@ -90,7 +93,9 @@ export function BankReviewPanel({
                       : "bg-amber-500/12 text-amber-600"
                   }`}
                 >
-                  {isPublished ? "PUBLISHED" : "DRAFT"}
+                  {t(
+                    isPublished ? "banks.card.published" : "banks.card.draft",
+                  )}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-xs text-gray-400 font-medium">
@@ -100,13 +105,19 @@ export function BankReviewPanel({
                 </span>
                 <span className="flex items-center gap-1">
                   <ListChecks size={12} className="text-gray-300" />
-                  {bank.questionCount ?? questions.length} questions
+                  {t("banks.review.questionsCount", {
+                    count: bank.questionCount ?? questions.length,
+                  })}
                 </span>
                 <span className="flex items-center gap-1">
                   <CalendarCheck size={12} className="text-gray-300" />
                   {isPublished
-                    ? `نُشر ${formatDateTime(bank.publishedAt)}`
-                    : `أُنشئ ${formatDateTime(bank.createdAt)}`}
+                    ? t("banks.review.publishedOn", {
+                        date: formatDateTimeOrDash(bank.publishedAt),
+                      })
+                    : t("banks.review.createdOn", {
+                        date: formatDateTimeOrDash(bank.createdAt),
+                      })}
                 </span>
               </div>
             </div>
@@ -118,7 +129,7 @@ export function BankReviewPanel({
                 onClick={onAddQuestions}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white text-xs font-bold text-gray-600 hover:text-[#404293] hover:border-[#404293]/30 shadow-sm transition-all"
               >
-                <Plus size={14} /> إضافة أسئلة
+                <Plus size={14} /> {t("banks.review.addQuestions")}
               </button>
             )}
             <button
@@ -137,7 +148,9 @@ export function BankReviewPanel({
               ) : (
                 <Send size={14} />
               )}
-              {isPublished ? "إلغاء النشر" : "نشر للطلاب"}
+              {t(
+                isPublished ? "banks.review.unpublish" : "banks.review.publish",
+              )}
             </button>
             {confirmDeleteBank ? (
               <span className="flex items-center gap-1.5">
@@ -149,13 +162,13 @@ export function BankReviewPanel({
                   disabled={isMutating}
                   className="px-3 py-2 rounded-xl text-xs font-bold bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
                 >
-                  تأكيد الحذف
+                  {t("banks.review.confirmDeleteBank")}
                 </button>
                 <button
                   onClick={() => setConfirmDeleteBank(false)}
                   className="px-2 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-600"
                 >
-                  إلغاء
+                  {t("banks.card.cancel")}
                 </button>
               </span>
             ) : (
@@ -163,7 +176,7 @@ export function BankReviewPanel({
                 onClick={() => setConfirmDeleteBank(true)}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
               >
-                <Trash2 size={14} /> حذف البنك
+                <Trash2 size={14} /> {t("banks.review.deleteBank")}
               </button>
             )}
           </div>
@@ -180,8 +193,16 @@ export function BankReviewPanel({
       <div className="flex gap-2 p-1 rounded-2xl bg-gray-100 max-w-md">
         {(
           [
-            { value: "questions", label: "الأسئلة", icon: ListChecks },
-            { value: "results", label: "نتائج الطلاب", icon: Users },
+            {
+              value: "questions",
+              label: t("banks.review.tabQuestions"),
+              icon: ListChecks,
+            },
+            {
+              value: "results",
+              label: t("banks.review.tabResults"),
+              icon: Users,
+            },
           ] as { value: ReviewTab; label: string; icon: typeof ListChecks }[]
         ).map(({ value, label, icon: Icon }) => (
           <button
@@ -203,23 +224,27 @@ export function BankReviewPanel({
         isLoading ? (
           <div className="flex items-center justify-center gap-2 py-16 text-gray-400">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm font-medium">جارٍ تحميل الأسئلة…</span>
+            <span className="text-sm font-medium">
+              {t("banks.loading.questions")}
+            </span>
           </div>
         ) : questions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 text-center">
             <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
               <ListChecks className="w-7 h-7 text-gray-300" />
             </div>
-            <p className="font-bold text-gray-400 mb-1">لا توجد أسئلة في هذا البنك</p>
+            <p className="font-bold text-gray-400 mb-1">
+              {t("banks.review.noQuestionsTitle")}
+            </p>
             <p className="text-sm text-gray-300 mb-4">
-              ارفع أسئلة عبر ملف JSON أو ملف وورد.
+              {t("banks.review.noQuestionsHint")}
             </p>
             {permissions.canCreate && (
               <button
                 onClick={onAddQuestions}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-sm font-bold shadow-md"
               >
-                <Plus size={14} /> إضافة أسئلة
+                <Plus size={14} /> {t("banks.review.addQuestions")}
               </button>
             )}
           </div>

@@ -1,0 +1,82 @@
+{
+  "title": "Manage users",
+  "subtitle": "View, create and edit user accounts",
+  "new": "New user",
+  "connectionFailed": "Could not reach the server — try reloading",
+  "stats": {
+    "total": "Total users",
+    "verified": "Verified"
+  },
+  "messages": {
+    "roleUpdated": "Role updated ✓",
+    "roleUpdateFailed": "Failed to update the role. Please try again.",
+    "deleted": "User deleted",
+    "deleteFailed": "Failed to delete the user. Please try again.",
+    "created": "Account created successfully ✓"
+  },
+  "confirmDelete": {
+    "title": "Confirm delete",
+    "body": "Do you want to delete the user {{name}}?",
+    "unknownUser": "unknown"
+  },
+  "filter": {
+    "searchPlaceholder": "Search users...",
+    "allRoles": "All roles",
+    "allYears": "All years",
+    "clear": "Clear"
+  },
+  "table": {
+    "label": "Users table",
+    "noResults": "No results",
+    "colUser": "User",
+    "colEmail": "Email",
+    "colYear": "Academic year",
+    "colStatus": "Status",
+    "colRole": "Role",
+    "colPermissions": "Permissions",
+    "colActions": "Actions",
+    "notSet": "Not set",
+    "verified": "✓ Verified",
+    "unverified": "Unverified",
+    "roleOf": "{{name}}'s role",
+    "noPermissions": "None",
+    "managePermissions": "Manage permissions",
+    "managePermissionsOf": "Manage {{name}}'s permissions",
+    "delete": "Delete",
+    "deleteUser": "Delete {{name}}",
+    "count_one": "{{count}} user",
+    "count_other": "{{count}} users"
+  },
+  "create": {
+    "title": "Create a new user",
+    "subtitle": "Enter the new account's details",
+    "nameLabel": "Name",
+    "namePlaceholder": "The user's full name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "A strong password",
+    "roleLabel": "Role",
+    "requiredFields": "All required fields must be filled in",
+    "failed": "Failed to create the user. Please try again.",
+    "working": "Working...",
+    "submit": "Create account"
+  },
+  "permissions": {
+    "title": "{{name}}'s permissions",
+    "subtitle": "Choose the extra permissions granted to this user",
+    "autoSaveHint": "Every change is saved to the server immediately",
+    "updateFailed": "Failed to update the permission. Please try again.",
+    "CREATE_QUESTION_BANK": {
+      "label": "Create question bank",
+      "description": "Create a bank by uploading a Word or JSON file"
+    },
+    "UPDATE_QUESTION": {
+      "label": "Edit question",
+      "description": "Edit a specific question in a specific bank"
+    },
+    "DELETE_QUESTION": {
+      "label": "Delete question",
+      "description": "Delete a specific question from a specific bank"
+    }
+  }
+}

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Check, Loader2, Pencil, Trash2, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getProfileImageUrl, getUserInitials } from "../../../../../shared/utils/user";
-import { timeAgoArabic } from "../utils/timeAgo";
+import { useFormatters } from "../../../../../shared/i18n/useFormatters";
 import type { LectureComment } from "../types";
 
 interface CommentItemProps {
@@ -13,6 +14,8 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: CommentItemProps) {
+  const { t } = useTranslation("lectures");
+  const { formatRelative } = useFormatters();
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(comment.content);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -23,7 +26,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
   const author =
     typeof comment.userId === "object"
       ? comment.userId
-      : { _id: comment.userId, name: "مستخدم", profile_image: "" };
+      : { _id: comment.userId, name: t("comment.unknownUser"), profile_image: "" };
 
   const avatarUrl = getProfileImageUrl(author.profile_image);
 
@@ -36,7 +39,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
       await onSave(trimmed);
       setIsEditing(false);
     } catch {
-      setError("تعذّر حفظ التعديل، حاول مرة أخرى.");
+      setError(t("comment.saveFailed"));
     } finally {
       setIsSaving(false);
     }
@@ -47,7 +50,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
     try {
       await onDelete();
     } catch {
-      setError("تعذّر حذف التعليق، حاول مرة أخرى.");
+      setError(t("comment.deleteFailed"));
       setIsDeleting(false);
       setConfirmingDelete(false);
     }
@@ -65,7 +68,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
 
       <div className="min-w-0 flex-1">
         <div
-          className={`rounded-xl rounded-tr-sm px-3 py-2 sm:rounded-2xl sm:px-3.5 sm:py-2.5 ${
+          className={`rounded-xl rounded-se-sm px-3 py-2 sm:rounded-2xl sm:px-3.5 sm:py-2.5 ${
             isDark ? "bg-white/5" : "bg-gray-100"
           }`}
         >
@@ -74,8 +77,10 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
               {author.name}
             </span>
             <span className={`text-[10px] font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}>
-              {timeAgoArabic(comment.updatedAt)}
-              {comment.updatedAt !== comment.createdAt ? " (معدّل)" : ""}
+              {formatRelative(comment.updatedAt)}
+              {comment.updatedAt !== comment.createdAt
+                ? ` ${t("comment.edited")}`
+                : ""}
             </span>
           </div>
 
@@ -100,7 +105,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
                   className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#404293] to-[#2376BB] px-3 py-1.5 text-xs font-bold text-white disabled:opacity-50"
                 >
                   {isSaving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
-                  حفظ
+                  {t("comment.save")}
                 </button>
                 <button
                   type="button"
@@ -114,7 +119,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
                   }`}
                 >
                   <X className="h-3 w-3" />
-                  إلغاء
+                  {t("comment.cancel")}
                 </button>
               </div>
             </div>
@@ -137,26 +142,32 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
               }`}
             >
               <Pencil className="h-3 w-3" />
-              تعديل
+              {t("comment.edit")}
             </button>
 
             {confirmingDelete ? (
               <div className="flex items-center gap-2 text-[11px] font-bold">
-                <span className={isDark ? "text-gray-400" : "text-gray-500"}>تأكيد الحذف؟</span>
+                <span className={isDark ? "text-gray-400" : "text-gray-500"}>
+                  {t("comment.confirmDelete")}
+                </span>
                 <button
                   type="button"
                   onClick={handleDelete}
                   disabled={isDeleting}
                   className="text-red-500 hover:text-red-600 disabled:opacity-50"
                 >
-                  {isDeleting ? <Loader2 className="h-3 w-3 animate-spin" /> : "نعم"}
+                  {isDeleting ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    t("comment.yes")
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirmingDelete(false)}
                   className={isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"}
                 >
-                  إلغاء
+                  {t("comment.cancel")}
                 </button>
               </div>
             ) : (
@@ -168,7 +179,7 @@ export function CommentItem({ comment, isOwner, isDark, onSave, onDelete }: Comm
                 }`}
               >
                 <Trash2 className="h-3 w-3" />
-                حذف
+                {t("comment.delete")}
               </button>
             )}
           </div>

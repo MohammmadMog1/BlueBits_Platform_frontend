@@ -9,6 +9,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { AcademicTask } from "../types";
 
 interface AcademicTaskCardProps {
@@ -19,9 +21,6 @@ interface AcademicTaskCardProps {
   onViewSubmissions: (task: AcademicTask) => void;
 }
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" });
-
 export default function AcademicTaskCard({
   task,
   onEdit,
@@ -29,6 +28,8 @@ export default function AcademicTaskCard({
   onClose,
   onViewSubmissions,
 }: AcademicTaskCardProps) {
+  const { t } = useTranslation("admin");
+  const { formatDateTimeOrDash } = useFormatters();
   const isOpen = task.status === "open";
 
   return (
@@ -52,7 +53,7 @@ export default function AcademicTaskCard({
                 : "bg-gray-100 text-gray-500"
             }`}
           >
-            {isOpen ? "مفتوح" : "مغلق"}
+            {t(isOpen ? "tasks.card.open" : "tasks.card.closed")}
           </span>
         </div>
         {task.description && (
@@ -73,10 +74,16 @@ export default function AcademicTaskCard({
         </div>
         <div className="mb-4 space-y-1 text-[11px] font-semibold text-gray-400">
           <p className="flex items-center gap-1.5">
-            <Clock className="h-3 w-3" /> يفتح: {formatDate(task.opensAt)}
+            <Clock className="h-3 w-3" />{" "}
+            {t("tasks.card.opensAt", {
+              date: formatDateTimeOrDash(task.opensAt),
+            })}
           </p>
           <p className="flex items-center gap-1.5">
-            <Clock className="h-3 w-3" /> يغلق: {formatDate(task.closesAt)}
+            <Clock className="h-3 w-3" />{" "}
+            {t("tasks.card.closesAt", {
+              date: formatDateTimeOrDash(task.closesAt),
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
@@ -85,14 +92,14 @@ export default function AcademicTaskCard({
             onClick={() => onViewSubmissions(task)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-[#2376BB] transition-all hover:border-[#2376BB]/15 hover:bg-[#2376BB]/6"
           >
-            <FileSearch size={12} /> الحلول
+            <FileSearch size={12} /> {t("tasks.card.submissions")}
           </button>
           <button
             type="button"
             onClick={() => onEdit(task)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-500 transition-all hover:border-[#404293]/15 hover:bg-[#404293]/6 hover:text-[#404293]"
           >
-            <Edit3 size={12} /> تعديل
+            <Edit3 size={12} /> {t("tasks.card.edit")}
           </button>
           {isOpen && (
             <button
@@ -100,7 +107,7 @@ export default function AcademicTaskCard({
               onClick={() => onClose(task)}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-amber-500 transition-all hover:border-amber-100 hover:bg-amber-50"
             >
-              <Lock size={12} /> إغلاق
+              <Lock size={12} /> {t("tasks.card.close")}
             </button>
           )}
           <button
@@ -108,7 +115,7 @@ export default function AcademicTaskCard({
             onClick={() => onDelete(task)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-400 transition-all hover:border-red-100 hover:bg-red-50 hover:text-red-500"
           >
-            <Trash2 size={12} /> حذف
+            <Trash2 size={12} /> {t("tasks.card.delete")}
           </button>
         </div>
       </div>

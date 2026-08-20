@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchLecturesByFilter } from "../../lectures/api/lecturesService";
 import type { LecturePopulated, LectureType } from "../../lectures/types";
 
@@ -8,14 +9,15 @@ interface LecturesCache {
   subjectId: string;
   token: number;
   lectures: LecturePopulated[];
-  error: string | null;
+  /** `true` عند الفشل – النصّ المترجَم يُشتقّ عند العرض لا هنا */
+  failed: boolean;
 }
 
 const EMPTY_CACHE: LecturesCache = {
   subjectId: "",
   token: -1,
   lectures: [],
-  error: null,
+  failed: false,
 };
 
 export interface UseSubjectLecturesReturn {
@@ -33,6 +35,7 @@ export interface UseSubjectLecturesReturn {
  * ما دام الكاش لا يطابق المادة/الطلب الحالي فنحن في حالة تحميل.
  */
 export function useSubjectLectures(subjectId: string): UseSubjectLecturesReturn {
+  const { t } = useTranslation("admin");
   const [cache, setCache] = useState<LecturesCache>(EMPTY_CACHE);
   const [reloadToken, setReloadToken] = useState(0);
 
@@ -56,7 +59,7 @@ export function useSubjectLectures(subjectId: string): UseSubjectLecturesReturn 
           subjectId,
           token: reloadToken,
           lectures: [...merged.values()],
-          error: null,
+          failed: false,
         });
       })
       .catch(() => {
@@ -65,7 +68,7 @@ export function useSubjectLectures(subjectId: string): UseSubjectLecturesReturn 
           subjectId,
           token: reloadToken,
           lectures: [],
-          error: "تعذّر جلب محاضرات المادة.",
+          failed: true,
         });
       });
 
@@ -86,8 +89,11 @@ export function useSubjectLectures(subjectId: string): UseSubjectLecturesReturn 
     return {
       lectures: isCurrent ? cache.lectures : [],
       isLoading: Boolean(subjectId) && !isCurrent,
-      error: isCurrent ? cache.error : null,
+      error:
+        isCurrent && cache.failed
+          ? t("banks.actionErrors.lecturesFailed")
+          : null,
       reload,
     };
-  }, [cache, reloadToken, reload, subjectId]);
+  }, [cache, reloadToken, reload, subjectId, t]);
 }

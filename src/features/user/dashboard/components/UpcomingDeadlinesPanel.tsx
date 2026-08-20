@@ -8,11 +8,13 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
+import { useTranslation } from "react-i18next";
 import {
   deadlineInfo,
-  formatShortDate,
   urgencyBadgeClass,
 } from "../../../../shared/utils/datetime";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
+import { useDeadlineLabel } from "../../../../shared/i18n/useDeadlineLabel";
 import { useNow } from "../../../../shared/hooks/useNow";
 import type { DeadlineItem } from "../types";
 
@@ -28,13 +30,16 @@ export default function UpcomingDeadlinesPanel({
   isDark,
   isLoading,
 }: UpcomingDeadlinesPanelProps) {
+  const { t } = useTranslation("dashboard");
+  const { formatShortDate } = useFormatters();
+  const deadlineLabel = useDeadlineLabel();
   const now = useNow();
 
   return (
     <SectionCard
       icon={CalendarClock}
-      title="أقرب المواعيد"
-      hint="مرتّبة من الأقرب للأبعد"
+      title={t("deadlines.title")}
+      hint={t("deadlines.hint")}
       tone="amber"
       isDark={isDark}
       to="/user/todo"
@@ -48,8 +53,8 @@ export default function UpcomingDeadlinesPanel({
       ) : items.length === 0 ? (
         <SectionEmpty
           icon={CalendarClock}
-          title="لا توجد مواعيد قادمة"
-          hint="أنجزت كل ما عليك — أضف مهمة جديدة عند الحاجة"
+          title={t("deadlines.emptyTitle")}
+          hint={t("deadlines.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -78,7 +83,7 @@ export default function UpcomingDeadlinesPanel({
                       info.urgency,
                     )}`}
                   >
-                    {info.label}
+                    {deadlineLabel(info)}
                   </span>
                 </Link>
               </li>

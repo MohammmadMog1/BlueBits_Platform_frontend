@@ -1,5 +1,6 @@
 import { Minus, Plus, Repeat2, X } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import {
   MAX_DAYS_BEFORE,
   MIN_DAYS_BEFORE,
@@ -34,6 +35,7 @@ export default function SubjectAnswerCard({
   onDaysChange,
   onDifficultyChange,
 }: SubjectAnswerCardProps) {
+  const { t } = useTranslation(["survey", "admin"]);
   const daysPercent =
     ((row.preferredDaysBefore - MIN_DAYS_BEFORE) /
       (MAX_DAYS_BEFORE - MIN_DAYS_BEFORE)) *
@@ -72,14 +74,16 @@ export default function SubjectAnswerCard({
             }`}
           >
             <Repeat2 className="h-3 w-3" />
-            {row.isCarrying ? "مادة حملة" : "تحديدها كحملة"}
+            {t(
+              row.isCarrying ? "answer.isCarrying" : "answer.markAsCarrying",
+            )}
           </button>
         </div>
 
         <button
           type="button"
           onClick={onRemove}
-          aria-label="إزالة المادة من إجابتي"
+          aria-label={t("answer.removeSubject")}
           className={`shrink-0 rounded-lg p-1.5 transition-all ${
             isDark
               ? "text-gray-500 hover:bg-white/10 hover:text-red-400"
@@ -93,7 +97,7 @@ export default function SubjectAnswerCard({
       {/* ── مستوى الصعوبة ────────────────────── */}
       <div className="mb-4">
         <label className={`mb-2 block text-xs font-bold ${mutedClass(isDark)}`}>
-          مستوى الصعوبة بالنسبة إليك
+          {t("answer.difficultyLabel")}
         </label>
         <div className="flex gap-1.5">
           {DIFFICULTY_SCALE.map((level) => {
@@ -104,8 +108,8 @@ export default function SubjectAnswerCard({
                 key={level.value}
                 type="button"
                 onClick={() => onDifficultyChange(level.value)}
-                title={level.label}
-                aria-label={level.label}
+                title={t(`admin:${level.labelKey}`)}
+                aria-label={t(`admin:${level.labelKey}`)}
                 aria-pressed={isActive}
                 className={`flex flex-1 flex-col items-center gap-0.5 rounded-xl border-2 py-2 transition-all ${
                   isActive
@@ -126,23 +130,27 @@ export default function SubjectAnswerCard({
             isDark ? "text-gray-600" : "text-gray-300"
           }`}
         >
-          <span>سهلة جداً</span>
-          <span>{DIFFICULTY_SCALE[row.difficultyRating - 1]?.label}</span>
-          <span>صعبة جداً</span>
+          <span>{t("answer.easiest")}</span>
+          <span>
+            {t(
+              `admin:${DIFFICULTY_SCALE[row.difficultyRating - 1]?.labelKey ?? "difficulty.3"}`,
+            )}
+          </span>
+          <span>{t("answer.hardest")}</span>
         </div>
       </div>
 
       {/* ── أيام الراحة ──────────────────────── */}
       <div>
         <label className={`mb-2 block text-xs font-bold ${mutedClass(isDark)}`}>
-          أيام الراحة قبل الامتحان
+          {t("answer.restDaysLabel")}
         </label>
         <div className={`flex items-center gap-3 p-3 ${softBoxClass(isDark)}`}>
           <button
             type="button"
             onClick={() => onDaysChange(row.preferredDaysBefore - 1)}
             disabled={row.preferredDaysBefore <= MIN_DAYS_BEFORE}
-            aria-label="إنقاص يوم"
+            aria-label={t("answer.decreaseDay")}
             className={stepButtonClass}
           >
             <Minus className="h-3.5 w-3.5" />
@@ -162,7 +170,7 @@ export default function SubjectAnswerCard({
                 isDark ? "text-gray-500" : "text-gray-400"
               }`}
             >
-              {row.preferredDaysBefore === 1 ? "يوم للتحضير" : "أيام للتحضير"}
+              {t("answer.prepDays", { count: row.preferredDaysBefore })}
             </span>
           </div>
 
@@ -170,7 +178,7 @@ export default function SubjectAnswerCard({
             type="button"
             onClick={() => onDaysChange(row.preferredDaysBefore + 1)}
             disabled={row.preferredDaysBefore >= MAX_DAYS_BEFORE}
-            aria-label="زيادة يوم"
+            aria-label={t("answer.increaseDay")}
             className={stepButtonClass}
           >
             <Plus className="h-3.5 w-3.5" />

@@ -1,0 +1,36 @@
+{
+  "title": "المساعد الذكي",
+  "poweredBy": "مدعوم بالذكاء الاصطناعي • BlueBits",
+  "openConversations": "فتح المحادثات",
+  "loadingConversation": "جارِ تحميل المحادثة...",
+  "unknownInitial": "؟",
+  "input": {
+    "placeholder": "اكتب سؤالك هنا... (Enter للإرسال، Shift+Enter لسطر جديد)",
+    "send": "إرسال"
+  },
+  "sidebar": {
+    "newConversation": "محادثة جديدة",
+    "empty": "لا توجد محادثات سابقة بعد",
+    "untitled": "محادثة بدون عنوان",
+    "deleteConversation": "حذف المحادثة",
+    "confirmDelete": "حذف هذه المحادثة نهائياً؟"
+  },
+  "empty": {
+    "heading": "كيف أقدر أساعدك اليوم؟",
+    "subtitle": "اسألني أي شيء يخص دراستك أو مشاريعك أو استخدامك لمنصّة BlueBits.",
+    "suggestions": {
+      "summarize": "لخّص لي أهم النقاط في هذه المحاضرة",
+      "explain": "اشرح لي هذا المفهوم البرمجي بطريقة مبسّطة",
+      "studyPlan": "ساعدني أحضّر خطة مذاكرة لهذا الأسبوع",
+      "reviewQuestions": "اقترح عليّ أسئلة مراجعة لهذه المادة"
+    }
+  },
+  "message": {
+    "typing": "المساعد يكتب الآن...",
+    "renderFailed": "تعذّر عرض هذا الرد."
+  },
+  "errors": {
+    "replyFailed": "تعذّر الحصول على رد من المساعد الذكي. حاول مرة أخرى.",
+    "loadConversationFailed": "تعذّر تحميل المحادثة."
+  }
+}

@@ -10,9 +10,8 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Question, QuestionOption, QuestionType } from "../types";
-
-const TRUE_FALSE_LABELS = ["صح", "خطأ"] as const;
 
 interface QuestionEditorModalProps {
   question: Question;
@@ -34,6 +33,7 @@ export function QuestionEditorModal({
   onClose,
   onSave,
 }: QuestionEditorModalProps) {
+  const { t } = useTranslation(["admin", "common"]);
   const [type, setType] = useState<QuestionType>(question.type);
   const [questionText, setQuestionText] = useState(question.questionText);
   const [explanation, setExplanation] = useState(question.explanation ?? "");
@@ -87,16 +87,17 @@ export function QuestionEditorModal({
     setLocalError("");
 
     if (!questionText.trim()) {
-      setLocalError("نص السؤال مطلوب.");
+      setLocalError(t("banks.editor.errors.textRequired"));
       return;
     }
 
     let options: QuestionOption[];
 
     if (type === "true_false") {
+      // نصّ الخيارين يُخزَّن في قاعدة البيانات، فنستخدم اللغة الحالية للواجهة
       options = [
-        { text: TRUE_FALSE_LABELS[0], isCorrect: trueFalseAnswer },
-        { text: TRUE_FALSE_LABELS[1], isCorrect: !trueFalseAnswer },
+        { text: t("banks.editor.true"), isCorrect: trueFalseAnswer },
+        { text: t("banks.editor.false"), isCorrect: !trueFalseAnswer },
       ];
     } else {
       const cleaned = mcqOptions.map((option) => ({
@@ -104,15 +105,15 @@ export function QuestionEditorModal({
         isCorrect: option.isCorrect,
       }));
       if (cleaned.length < 2) {
-        setLocalError("السؤال يحتاج خيارين على الأقل.");
+        setLocalError(t("banks.editor.errors.needTwoOptions"));
         return;
       }
       if (cleaned.some((option) => !option.text)) {
-        setLocalError("لا يمكن ترك خيار بدون نص.");
+        setLocalError(t("banks.editor.errors.optionWithoutText"));
         return;
       }
       if (cleaned.filter((option) => option.isCorrect).length !== 1) {
-        setLocalError("حدّد إجابة صحيحة واحدة.");
+        setLocalError(t("banks.editor.errors.oneCorrect"));
         return;
       }
       options = cleaned;
@@ -153,9 +154,11 @@ export function QuestionEditorModal({
               <Pencil className="w-[18px] h-[18px] text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-base">تعديل السؤال</h3>
+              <h3 className="font-bold text-gray-900 text-base">
+                {t("banks.editor.title")}
+              </h3>
               <p className="text-xs text-gray-400 mt-0.5">
-                التعديل يُطبَّق مباشرة على بنك الأسئلة
+                {t("banks.editor.subtitle")}
               </p>
             </div>
           </div>
@@ -171,13 +174,16 @@ export function QuestionEditorModal({
           {/* Type */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              نوع السؤال
+              {t("banks.editor.typeLabel")}
             </label>
             <div className="flex gap-2 p-1 rounded-2xl bg-gray-100">
               {(
                 [
-                  { value: "mcq", label: "اختيار من متعدد" },
-                  { value: "true_false", label: "صح / خطأ" },
+                  { value: "mcq", label: t("banks.editor.typeMcq") },
+                  {
+                    value: "true_false",
+                    label: t("banks.editor.typeTrueFalse"),
+                  },
                 ] as { value: QuestionType; label: string }[]
               ).map(({ value, label }) => (
                 <button
@@ -198,7 +204,7 @@ export function QuestionEditorModal({
           {/* Question text */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              نص السؤال
+              {t("banks.editor.questionTextLabel")}
             </label>
             <textarea
               value={questionText}
@@ -213,13 +219,13 @@ export function QuestionEditorModal({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-semibold text-gray-700">
-                  الخيارات
+                  {t("banks.editor.optionsLabel")}
                 </label>
                 <button
                   onClick={addOption}
                   className="flex items-center gap-1.5 text-[11px] font-bold text-[#404293] hover:text-[#2376BB] transition-colors"
                 >
-                  <Plus size={12} /> إضافة خيار
+                  <Plus size={12} /> {t("banks.editor.addOption")}
                 </button>
               </div>
               <div className="space-y-2">
@@ -227,7 +233,8 @@ export function QuestionEditorModal({
                   <div key={index} className="flex items-center gap-2">
                     <button
                       onClick={() => setCorrectOption(index)}
-                      title="تحديد كإجابة صحيحة"
+                      title={t("banks.editor.markCorrect")}
+                      aria-label={t("banks.editor.markCorrect")}
                       className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 border transition-all ${
                         option.isCorrect
                           ? "bg-green-500/12 border-green-500/30 text-green-600"
@@ -239,12 +246,15 @@ export function QuestionEditorModal({
                     <input
                       value={option.text}
                       onChange={(event) => updateOptionText(index, event.target.value)}
-                      placeholder={`الخيار ${index + 1}`}
+                      placeholder={t("banks.editor.optionPlaceholder", {
+                        index: index + 1,
+                      })}
                       className={inputClass}
                     />
                     <button
                       onClick={() => removeOption(index)}
                       disabled={mcqOptions.length <= 2}
+                      aria-label={t("banks.editor.removeOption")}
                       className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-40 disabled:hover:text-gray-300 disabled:hover:bg-transparent transition-all"
                     >
                       <Trash2 size={15} />
@@ -256,7 +266,7 @@ export function QuestionEditorModal({
           ) : (
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                الإجابة الصحيحة
+                {t("banks.editor.correctAnswerLabel")}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {[true, false].map((value) => (
@@ -269,7 +279,7 @@ export function QuestionEditorModal({
                         : "bg-gray-50 border-gray-200 text-gray-500 hover:border-gray-300"
                     }`}
                   >
-                    {value ? "صح" : "خطأ"}
+                    {t(value ? "banks.editor.true" : "banks.editor.false")}
                   </button>
                 ))}
               </div>
@@ -279,13 +289,13 @@ export function QuestionEditorModal({
           {/* Explanation */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              التفسير (اختياري)
+              {t("banks.editor.explanationLabel")}
             </label>
             <textarea
               value={explanation}
               onChange={(event) => setExplanation(event.target.value)}
               rows={2}
-              placeholder="سبب كون الإجابة صحيحة"
+              placeholder={t("banks.editor.explanationPlaceholder")}
               className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400"
             />
           </div>
@@ -302,7 +312,7 @@ export function QuestionEditorModal({
               onClick={onClose}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               onClick={handleSave}
@@ -314,7 +324,7 @@ export function QuestionEditorModal({
               ) : (
                 <Save size={16} />
               )}
-              حفظ التعديل
+              {t("banks.editor.save")}
             </button>
           </div>
         </div>

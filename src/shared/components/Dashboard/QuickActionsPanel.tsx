@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import SectionCard from "./SectionCard";
+import type { AllNamespaces, TranslationKey } from "../../i18n/types";
 import {
   accentIconClass,
   faintClass,
@@ -11,8 +13,13 @@ import {
 
 export interface QuickAction {
   icon: React.ElementType;
-  label: string;
-  hint: string;
+  /**
+   * مفتاح الترجمة الكامل ("dashboard:quickActions.mcq.label").
+   * نخزّن المفتاح لا النصّ لأن قوائم الاختصارات ثوابت على مستوى الوحدة،
+   * فالنصّ المترجَم فيها يتجمّد على لغة الإقلاع.
+   */
+  labelKey: TranslationKey;
+  hintKey: TranslationKey;
   to: string;
   tone?: AccentTone;
 }
@@ -28,17 +35,41 @@ interface QuickActionsPanelProps {
 export default function QuickActionsPanel({
   actions,
   isDark,
-  title = "إجراءات سريعة",
-  hint = "اختصارات لأكثر ما تستخدمه",
+  title,
+  hint,
 }: QuickActionsPanelProps) {
+  // كل الـ namespaces مُحمَّلة هنا لأن مفاتيح الاختصارات تأتي مُسبَقة من الإعدادات
+  const { t } = useTranslation<AllNamespaces>([
+    "common",
+    "nav",
+    "auth",
+    "landing",
+    "dashboard",
+    "lectures",
+    "admin",
+    "survey",
+    "mcq",
+    "announcements",
+    "tasks",
+    "users",
+    "ai",
+    "profile",
+  ]);
+
   return (
-    <SectionCard icon={Zap} title={title} hint={hint} tone="amber" isDark={isDark}>
+    <SectionCard
+      icon={Zap}
+      title={title ?? t("dashboard.quickActions")}
+      hint={hint ?? t("dashboard.quickActionsHint")}
+      tone="amber"
+      isDark={isDark}
+    >
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
         {actions.map((action) => {
           const Icon = action.icon;
           return (
             <Link
-              key={action.to + action.label}
+              key={action.to + action.labelKey}
               to={action.to}
               className={`flex items-center gap-2.5 px-3 py-3 transition-all hover:-translate-y-0.5 hover:shadow-md ${softBoxClass(isDark)}`}
             >
@@ -52,10 +83,10 @@ export default function QuickActionsPanel({
               </div>
               <div className="min-w-0">
                 <p className={`truncate text-[11px] font-black ${headingClass(isDark)}`}>
-                  {action.label}
+                  {t(action.labelKey)}
                 </p>
                 <p className={`truncate text-[10px] font-semibold ${faintClass(isDark)}`}>
-                  {action.hint}
+                  {t(action.hintKey)}
                 </p>
               </div>
             </Link>

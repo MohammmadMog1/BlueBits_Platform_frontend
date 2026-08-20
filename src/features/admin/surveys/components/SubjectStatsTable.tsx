@@ -7,6 +7,7 @@ import {
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import type { SubjectStats, YearStats } from "../types";
 import { MAX_DIFFICULTY, responseShare, roundTo } from "../utils/survey";
 import {
@@ -67,6 +68,7 @@ function SubjectRow({
   isDark: boolean;
   index: number;
 }) {
+  const { t } = useTranslation("admin");
   const share = responseShare(row, total);
   const level = difficultyLevel(row.avgDifficultyRating);
   const LevelIcon = level.icon;
@@ -112,9 +114,11 @@ function SubjectRow({
       {/* الحملة */}
       <div className="flex items-center gap-1.5">
         <Repeat2 size={13} className="shrink-0 text-amber-500" />
-        <span className={`text-[11px] font-bold ${faintClass(isDark)}`}>حملة</span>
+        <span className={`text-[11px] font-bold ${faintClass(isDark)}`}>
+          {t("surveys.stats.carrying")}
+        </span>
         <span
-          className={`mr-auto rounded-full px-2 py-0.5 text-[11px] font-black ${
+          className={`ms-auto rounded-full px-2 py-0.5 text-[11px] font-black ${
             row.carryingCount > 0
               ? isDark
                 ? "bg-amber-500/15 text-amber-400"
@@ -131,15 +135,19 @@ function SubjectRow({
       {/* أيام الراحة المفضّلة */}
       <div className="flex items-center gap-1.5">
         <Clock size={13} className="shrink-0 text-[#2376BB]" />
-        <span className={`text-[11px] font-bold ${faintClass(isDark)}`}>راحة</span>
+        <span className={`text-[11px] font-bold ${faintClass(isDark)}`}>
+          {t("surveys.stats.rest")}
+        </span>
         <span
-          className={`mr-auto rounded-full px-2 py-0.5 text-[11px] font-black ${
+          className={`ms-auto rounded-full px-2 py-0.5 text-[11px] font-black ${
             isDark
               ? "bg-[#2376BB]/20 text-[#7fb5e4]"
               : "bg-[#2376BB]/10 text-[#2376BB]"
           }`}
         >
-          {roundTo(row.avgPreferredDaysBefore)} يوم
+          {t("surveys.stats.daysValue", {
+            count: roundTo(row.avgPreferredDaysBefore),
+          })}
         </span>
       </div>
 
@@ -148,10 +156,10 @@ function SubjectRow({
         <div className="mb-1 flex items-center gap-1.5">
           <LevelIcon size={13} className="shrink-0 opacity-70" />
           <span className={`text-[11px] font-bold ${faintClass(isDark)}`}>
-            {level.label}
+            {t(level.labelKey)}
           </span>
           <span
-            className={`mr-auto text-[11px] font-black ${
+            className={`ms-auto text-[11px] font-black ${
               isDark ? "text-gray-200" : "text-gray-700"
             }`}
           >
@@ -179,6 +187,7 @@ export default function SubjectStatsTable({
   block,
   isDark,
 }: SubjectStatsTableProps) {
+  const { t } = useTranslation("admin");
   const total = block.totalStudentsResponded;
 
   /** المواد الأساسية للسنة: أجاب عليها أكثر من نصف المشاركين */
@@ -220,26 +229,26 @@ export default function SubjectStatsTable({
         <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatTile
             icon={Users}
-            label="طلاب أجابوا"
+            label={t("surveys.stats.studentsAnswered")}
             value={total}
             isDark={isDark}
           />
           <StatTile
             icon={BookMarked}
-            label="مواد ظهرت"
+            label={t("surveys.stats.subjectsAppeared")}
             value={block.subjects.length}
             isDark={isDark}
           />
           <StatTile
             icon={BookMarked}
-            label="مواد أساسية"
+            label={t("surveys.stats.coreSubjects")}
             value={coreCount}
-            hint="أجاب عليها ≥ نصف المشاركين"
+            hint={t("surveys.stats.coreSubjectsHint")}
             isDark={isDark}
           />
           <StatTile
             icon={Gauge}
-            label="الأصعب"
+            label={t("surveys.stats.hardest")}
             value={hardest ? roundTo(hardest.avgDifficultyRating) : "—"}
             hint={hardest?.subjectName}
             isDark={isDark}
@@ -253,7 +262,7 @@ export default function SubjectStatsTable({
           >
             <BookMarked className={`mb-3 h-6 w-6 ${faintClass(isDark)}`} />
             <p className={`text-sm font-bold ${mutedClass(isDark)}`}>
-              لا توجد مواد مطابقة
+              {t("surveys.stats.noMatchingSubjects")}
             </p>
           </div>
         ) : (

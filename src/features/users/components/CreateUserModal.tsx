@@ -10,6 +10,7 @@ import {
   EyeOff,
   CheckCircle2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useCreateUserMutation } from "../api/usersApiSlice";
 import type { CreateUserPayload, User, UserRole } from "../types";
 import { USER_ROLES } from "../types";
@@ -20,6 +21,7 @@ interface CreateUserModalProps {
 }
 
 export default function CreateUserModal({ onClose, onCreated }: CreateUserModalProps) {
+  const { t } = useTranslation(["users", "admin", "common"]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,7 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
     event.preventDefault();
 
     if (!name.trim() || !email.trim() || !password.trim()) {
-      setFormErr("جميع الحقول المطلوبة يجب أن تُملأ");
+      setFormErr(t("create.requiredFields"));
       return;
     }
 
@@ -50,7 +52,7 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
       onCreated(created);
       onClose();
     } catch {
-      setFormErr("فشل إنشاء المستخدم. حاول مرة أخرى.");
+      setFormErr(t("create.failed"));
     }
   };
 
@@ -76,8 +78,8 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
               <Users className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-base">إنشاء مستخدم جديد</h3>
-              <p className="text-xs text-gray-400 mt-0.5">أدخل بيانات الحساب الجديد</p>
+              <h3 className="font-bold text-gray-900 text-base">{t("create.title")}</h3>
+              <p className="text-xs text-gray-400 mt-0.5">{t("create.subtitle")}</p>
             </div>
           </div>
           <button
@@ -91,19 +93,19 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
         <form onSubmit={handleSubmit} className="px-7 py-6 space-y-4">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1.5">
-              الاسم <span className="text-red-400">*</span>
+              {t("create.nameLabel")} <span className="text-red-400">*</span>
             </label>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="اسم المستخدم الكامل"
+              placeholder={t("create.namePlaceholder")}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400 transition-all"
             />
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1.5">
-              البريد الإلكتروني <span className="text-red-400">*</span>
+              {t("create.emailLabel")} <span className="text-red-400">*</span>
             </label>
             <input
               value={email}
@@ -116,14 +118,14 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1.5">
-              كلمة المرور <span className="text-red-400">*</span>
+              {t("create.passwordLabel")} <span className="text-red-400">*</span>
             </label>
             <div className="relative">
               <input
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 type={showPass ? "text" : "password"}
-                placeholder="كلمة مرور قوية"
+                placeholder={t("create.passwordPlaceholder")}
                 className="w-full px-4 py-3 pr-11 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400 transition-all"
               />
               <button
@@ -137,20 +139,22 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">الدور</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              {t("create.roleLabel")}
+            </label>
             <div className="relative">
               <select
                 value={role}
                 onChange={(event) => setRole(event.target.value as UserRole)}
-                className="w-full appearance-none pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] cursor-pointer"
+                className="w-full appearance-none ps-4 pe-10 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] cursor-pointer"
               >
                 {USER_ROLES.map((roleOption) => (
                   <option key={roleOption} value={roleOption}>
-                    {roleOption}
+                    {t(`admin:roles.${roleOption}`)}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
 
@@ -166,7 +170,7 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
               onClick={onClose}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
@@ -178,11 +182,11 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
                     <RefreshCcw size={15} />
                   </motion.div>
-                  جاري...
+                  {t("create.working")}
                 </>
               ) : (
                 <>
-                  <CheckCircle2 size={15} /> إنشاء الحساب
+                  <CheckCircle2 size={15} /> {t("create.submit")}
                 </>
               )}
             </button>

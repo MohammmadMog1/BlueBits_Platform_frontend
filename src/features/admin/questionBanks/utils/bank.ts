@@ -72,12 +72,13 @@ export const getStudentId = (attempt: Attempt): string => {
 // ==============================
 // Errors
 // ==============================
-/** يقرأ رسالة الخطأ القادمة من الـ Bluebits envelope أو من RTK Query */
-export function getApiErrorMessage(
-  error: unknown,
-  fallback = "حدث خطأ غير متوقع. حاول مرة أخرى.",
-): string {
-  if (!error) return fallback;
+/**
+ * يقرأ رسالة الخطأ القادمة من الـ Bluebits envelope أو من RTK Query.
+ * يُرجع `null` عند غياب الرسالة – النصّ البديل مترجَم ومكانه
+ * `useErrorMessage` لأنه يتبع اللغة الحالية.
+ */
+export function getApiErrorMessage(error: unknown): string | null {
+  if (!error) return null;
 
   if (typeof error === "object") {
     const anyError = error as Record<string, unknown>;
@@ -95,7 +96,7 @@ export function getApiErrorMessage(
     }
   }
 
-  return fallback;
+  return null;
 }
 
 // ==============================
@@ -104,19 +105,11 @@ export function getApiErrorMessage(
 export const getCorrectIndex = (question: Question): number =>
   question.options?.findIndex((option) => option.isCorrect) ?? -1;
 
-export const questionTypeLabel = (question: Pick<Question, "type">): string =>
-  question.type === "true_false" ? "صح / خطأ" : "اختيار من متعدد";
-
-export const formatDateTime = (iso?: string | null): string => {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+/** مفتاح داخل `mcq:question.*` – الترجمة تتمّ في المكوّن */
+export const questionTypeKey = (
+  question: Pick<Question, "type">,
+): "question.typeTrueFalse" | "question.typeMcq" =>
+  question.type === "true_false" ? "question.typeTrueFalse" : "question.typeMcq";
 
 export const scoreColor = (percentage: number): string => {
   if (percentage >= 80) return "#059669";
@@ -127,28 +120,53 @@ export const scoreColor = (percentage: number): string => {
 // ==============================
 // JSON upload parsing
 // ==============================
-export const QUESTIONS_JSON_TEMPLATE = `[
+/**
+ * قالب الـ JSON المعروض للمشرف.
+ * النصوص التوضيحية داخله تُمرَّر مترجَمة من المكوّن عبر `questionsJsonTemplate`.
+ */
+export const questionsJsonTemplate = (samples: {
+  mcqQuestion: string;
+  mcqExplanation: string;
+  trueFalseQuestion: string;
+}): string => `[
   {
     "type": "mcq",
-    "questionText": "ما هو ناتج 2 + 2؟",
+    "questionText": ${JSON.stringify(samples.mcqQuestion)},
     "options": [
       { "text": "3", "isCorrect": false },
       { "text": "4", "isCorrect": true },
       { "text": "5", "isCorrect": false },
       { "text": "6", "isCorrect": false }
     ],
-    "explanation": "لأن 2+2=4"
+    "explanation": ${JSON.stringify(samples.mcqExplanation)}
   },
   {
     "type": "true_false",
-    "questionText": "الأرض كروية الشكل",
+    "questionText": ${JSON.stringify(samples.trueFalseQuestion)},
     "correctAnswer": true
   }
 ]`;
 
+/**
+ * خطأ تحليل بصيغة بنيوية لا نصّية.
+ * السبب: الدالة نقيّة وتُستدعى خارج شجرة React فلا تعرف اللغة الحالية،
+ * والمكوّن يترجم `code` عبر `admin:banks.parseErrors.*`.
+ */
+export type QuestionParseError =
+  | { code: "empty" }
+  | { code: "invalidJson" }
+  | { code: "notArray" }
+  | { code: "noQuestions" }
+  | { code: "notObject"; position: number }
+  | { code: "missingText"; position: number }
+  | { code: "missingCorrectAnswer"; position: number }
+  | { code: "needTwoOptions"; position: number }
+  | { code: "optionWithoutText"; position: number }
+  | { code: "needExactlyOneCorrect"; position: number };
+
 export interface ParsedQuestionsResult {
   questions: QuestionInput[];
-  errors: string[];
+  errors: QuestionParseError[];
 }
 
 /**
@@ -156,17 +174,17 @@ export interface ParsedQuestionsResult {
  * ويتحقق من مطابقته للصيغة التي يتوقعها الباك.
  */
 export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
-  const errors: string[] = [];
+  const errors: QuestionParseError[] = [];
 
   if (!raw.trim()) {
-    return { questions: [], errors: ["الملف / النص فارغ."] };
+    return { questions: [], errors: [{ code: "empty" }] };
   }
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
   } catch {
-    return { questions: [], errors: ["صيغة الـ JSON غير صحيحة (تأكد من الأقواس والفواصل)."] };
+    return { questions: [], errors: [{ code: "invalidJson" }] };
   }
 
   let rawQuestions: unknown;
@@ -175,15 +193,12 @@ export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
   } else if (isObject(parsed) && Array.isArray(parsed.questions)) {
     rawQuestions = parsed.questions;
   } else {
-    return {
-      questions: [],
-      errors: ['يجب أن يكون المحتوى مصفوفة أسئلة أو كائن يحتوي على المفتاح "questions".'],
-    };
+    return { questions: [], errors: [{ code: "notArray" }] };
   }
 
   const list = rawQuestions as unknown[];
   if (list.length === 0) {
-    return { questions: [], errors: ["لا توجد أسئلة في الملف."] };
+    return { questions: [], errors: [{ code: "noQuestions" }] };
   }
 
   const questions: QuestionInput[] = [];
@@ -192,14 +207,14 @@ export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
     const position = index + 1;
 
     if (!isObject(item)) {
-      errors.push(`السؤال ${position}: يجب أن يكون كائناً.`);
+      errors.push({ code: "notObject", position });
       return;
     }
 
     const questionText =
       typeof item.questionText === "string" ? item.questionText.trim() : "";
     if (!questionText) {
-      errors.push(`السؤال ${position}: نص السؤال (questionText) مطلوب.`);
+      errors.push({ code: "missingText", position });
       return;
     }
 
@@ -223,9 +238,7 @@ export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
       }
 
       if (typeof correctAnswer !== "boolean") {
-        errors.push(
-          `السؤال ${position}: أسئلة صح/خطأ تحتاج correctAnswer بقيمة true أو false.`,
-        );
+        errors.push({ code: "missingCorrectAnswer", position });
         return;
       }
 
@@ -234,7 +247,7 @@ export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
     }
 
     if (!Array.isArray(item.options) || item.options.length < 2) {
-      errors.push(`السؤال ${position}: يحتاج خيارين على الأقل في options.`);
+      errors.push({ code: "needTwoOptions", position });
       return;
     }
 
@@ -249,15 +262,13 @@ export function parseQuestionsJson(raw: string): ParsedQuestionsResult {
     });
 
     if (options.some((option) => !option.text)) {
-      errors.push(`السؤال ${position}: يوجد خيار بدون نص.`);
+      errors.push({ code: "optionWithoutText", position });
       return;
     }
 
     const correctCount = options.filter((option) => option.isCorrect).length;
     if (correctCount !== 1) {
-      errors.push(
-        `السؤال ${position}: يجب تحديد إجابة صحيحة واحدة بالضبط (isCorrect: true).`,
-      );
+      errors.push({ code: "needExactlyOneCorrect", position });
       return;
     }
 

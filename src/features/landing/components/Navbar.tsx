@@ -1,11 +1,19 @@
 import { Sun, Moon, Menu, X, BookOpen, LayoutDashboard, LogOut, User, Settings, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 // ✅ 1. استيراد Redux
 import { useAppSelector, useAppDispatch } from "../../auth/redux/hooks";
 import { logoutThunk } from "../../auth/redux/authThunk";
 import { getProfileImageUrl } from "../../../shared/utils/user";
+import LanguageSwitcher from "../../../shared/components/LanguageSwitcher/LanguageSwitcher";
 import ProfileDrawer from "../../profile/components/ProfileDrawer";
+
+/** روابط التنقّل – نخزّن المفتاح لا النصّ حتى يتبدّل مع اللغة */
+const NAV_LINKS = [
+  { key: "features", href: "#features" },
+  { key: "about", href: "#about" },
+] as const;
 
 interface NavbarProps {
   scrolled: boolean;
@@ -26,6 +34,7 @@ export function Navbar({
   navigate,
   LogoImg,
 }: NavbarProps) {
+  const { t } = useTranslation(["landing", "common"]);
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   
@@ -74,7 +83,7 @@ export function Navbar({
   return (
     <>
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${
+      className={`fixed top-0 start-0 end-0 z-50 transition-all duration-500 border-b ${
         scrolled
           ? isDark
             ? "bg-[#08090d]/90 border-white/10 shadow-2xl backdrop-blur-xl"
@@ -92,28 +101,32 @@ export function Navbar({
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-8 lg:gap-10">
-          {[
-            ["Features", "#features"],
-            ["About", "#about"],
-          ].map(([l, h]) => (
+          {NAV_LINKS.map((link) => (
             <a
-              key={l}
-              href={h}
+              key={link.key}
+              href={link.href}
               className={`text-sm font-semibold transition-all duration-300 relative group ${
                 isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-[#404293]"
               }`}
             >
-              {l}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#404293] to-[#2376BB] group-hover:w-full transition-all duration-300"></span>
+              {t(`nav.${link.key}`)}
+              <span className="absolute -bottom-1 start-0 w-0 h-0.5 bg-gradient-to-r from-[#404293] to-[#2376BB] group-hover:w-full transition-all duration-300"></span>
             </a>
           ))}
         </div>
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {/* Theme Toggle */}
           <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
+            aria-label={t("common:theme.toggle")}
+            title={t(
+              isDark ? "common:theme.switchToLight" : "common:theme.switchToDark"
+            )}
             className={`p-2.5 rounded-xl transition-all duration-300 ${
               isDark
                 ? "bg-white/5 hover:bg-white/10 text-yellow-400 hover:scale-110"
@@ -133,7 +146,7 @@ export function Navbar({
             } hover:scale-105`}
           >
             <BookOpen className="w-4 h-4" />
-            Lectures
+            {t("nav.lectures")}
           </button>
 
           {/* ✅ زر الداشبورد بجانب زر المحاضرات (فقط عند تسجيل الدخول) */}
@@ -147,7 +160,7 @@ export function Navbar({
               } hover:scale-105`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              Dashboard
+              {t("nav.dashboard")}
             </button>
           )}
 
@@ -173,7 +186,7 @@ export function Navbar({
                     {user.name || user.email?.split("@")[0]}
                   </span>
                   <span className={`text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                    {user.role?.replace("_", " ")}
+                    {user.role ? t(`common:roles.${user.role}`) : ""}
                   </span>
                 </div>
 
@@ -187,7 +200,7 @@ export function Navbar({
               {/* Dropdown Menu - بدون زر Dashboard */}
               {profileDropdownOpen && (
                 <div
-                  className={`absolute right-0 mt-2 w-56 rounded-xl shadow-2xl overflow-hidden transition-all duration-300 ${
+                  className={`absolute end-0 mt-2 w-56 rounded-xl shadow-2xl overflow-hidden transition-all duration-300 ${
                     isDark
                       ? "bg-[#0f1015] border border-white/10"
                       : "bg-white border border-slate-200"
@@ -221,7 +234,7 @@ export function Navbar({
                       }`}
                     >
                       <User className="w-4 h-4" />
-                      Profile
+                      {t("nav.profile")}
                     </button>
 
                     <button
@@ -236,7 +249,7 @@ export function Navbar({
                       }`}
                     >
                       <Settings className="w-4 h-4" />
-                      Settings
+                      {t("nav.settings")}
                     </button>
                   </div>
 
@@ -248,7 +261,7 @@ export function Navbar({
                       className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-red-500 hover:bg-red-500/10 disabled:opacity-50`}
                     >
                       <LogOut className="w-4 h-4" />
-                      {isLoading ? "Logging out..." : "Logout"}
+                      {isLoading ? t("nav.loggingOut") : t("nav.logout")}
                     </button>
                   </div>
                 </div>
@@ -265,13 +278,13 @@ export function Navbar({
                     : "text-[#404293] hover:bg-[#404293]/5 border border-[#404293]/30"
                 } hover:scale-105`}
               >
-                Login
+                {t("nav.login")}
               </button>
               <button
                 onClick={() => navigate("/auth/register")}
                 className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg shadow-[#404293]/30 hover:shadow-xl hover:shadow-[#404293]/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
               >
-                Get Started
+                {t("nav.getStarted")}
               </button>
             </div>
           )}
@@ -279,6 +292,7 @@ export function Navbar({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={t(mobileMenuOpen ? "nav.closeMenu" : "nav.openMenu")}
             className={`md:hidden p-2 rounded-xl transition-all duration-300 ${
               isDark ? "hover:bg-white/10" : "hover:bg-slate-100"
             }`}
@@ -298,21 +312,21 @@ export function Navbar({
           }`}
         >
           {/* Navigation Links */}
-          {[
-            ["Features", "#features"],
-            ["About", "#about"],
-          ].map(([l, h]) => (
+          {NAV_LINKS.map((link) => (
             <a
-              key={l}
-              href={h}
+              key={link.key}
+              href={link.href}
               className={`block text-base font-semibold py-2.5 px-3 rounded-xl transition-all ${
                 isDark ? "text-gray-300 hover:bg-white/5" : "text-gray-700 hover:bg-slate-50"
               }`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              {l}
+              {t(`nav.${link.key}`)}
             </a>
           ))}
+
+          {/* Language Switcher */}
+          <LanguageSwitcher variant="inline" className="w-full" />
 
           {/* ✅ أزرار المحاضرات والداشبورد جنب بعض */}
           <div className="flex gap-2">
@@ -328,7 +342,7 @@ export function Navbar({
               }`}
             >
               <BookOpen className="w-4 h-4" />
-              Lectures
+              {t("nav.lectures")}
             </button>
 
             {isAuthenticated && user && (
@@ -344,7 +358,7 @@ export function Navbar({
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Dashboard
+                {t("nav.dashboard")}
               </button>
             )}
           </div>
@@ -367,7 +381,7 @@ export function Navbar({
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
                   {getAvatarContent()}
                 </div>
-                <div className="flex flex-col overflow-hidden flex-1 text-left">
+                <div className="flex flex-col overflow-hidden flex-1 text-start">
                   <span className={`text-sm font-bold truncate ${isDark ? "text-white" : "text-gray-800"}`}>
                     {user.name || user.email}
                   </span>
@@ -383,7 +397,7 @@ export function Navbar({
                 className="w-full flex items-center justify-center gap-2 text-sm font-bold py-2.5 px-3 rounded-xl transition-all text-red-500 hover:bg-red-500/10 disabled:opacity-50"
               >
                 <LogOut className="w-4 h-4" />
-                {isLoading ? "Logging out..." : "Logout"}
+                {isLoading ? t("nav.loggingOut") : t("nav.logout")}
               </button>
             </>
           ) : (
@@ -399,7 +413,7 @@ export function Navbar({
                     : "border border-[#404293]/30 text-[#404293] hover:bg-[#404293]/5"
                 }`}
               >
-                Login
+                {t("nav.login")}
               </button>
               <button
                 onClick={() => {
@@ -408,7 +422,7 @@ export function Navbar({
                 }}
                 className="flex-1 text-sm font-bold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg active:scale-[0.98] transition-all"
               >
-                Get Started
+                {t("nav.getStarted")}
               </button>
             </div>
           )}

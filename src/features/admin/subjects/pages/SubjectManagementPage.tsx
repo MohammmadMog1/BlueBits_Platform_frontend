@@ -11,6 +11,8 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useAppSelector } from "../../../../app/store/hooks";
 import {
   useGetSemestersQuery,
@@ -26,23 +28,11 @@ import {
 } from "../api/subjectsApi";
 import type { Subject, SubjectFormData } from "../types";
 
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = error.data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof data.message === "string"
-    )
-      return data.message;
-  }
-  return "تعذّر تنفيذ الطلب. حاول مرة أخرى.";
-};
-
 const getUserId = (user: { _id: string } | null) => user?._id ?? "";
 
 export default function SubjectManagementPage() {
+  const { t } = useTranslation(["admin", "common"]);
+  const errorMessage = useErrorMessage();
   const user = useAppSelector((state) => state.auth.user);
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
@@ -112,22 +102,22 @@ export default function SubjectManagementPage() {
   };
 
   const stats = [
-    { label: "إجمالي المواد", value: subjects.length, color: "#404293" },
+    { label: t("subjects.totalSubjects"), value: subjects.length, color: "#404293" },
     {
-      label: yearOptions[2]?.label ?? "السنة الثالثة",
+      label: yearOptions[2]?.label ?? "—",
       value: subjects.filter((subject) => subject.yearId === yearOptions[2]?.id)
         .length,
       color: "#33529F",
     },
     {
-      label: semesterOptions[0]?.label ?? "الفصل الأول",
+      label: semesterOptions[0]?.label ?? "—",
       value: subjects.filter(
         (subject) => subject.semesterId === semesterOptions[0]?.id,
       ).length,
       color: "#2376BB",
     },
     {
-      label: semesterOptions[1]?.label ?? "الفصل الثاني",
+      label: semesterOptions[1]?.label ?? "—",
       value: subjects.filter(
         (subject) => subject.semesterId === semesterOptions[1]?.id,
       ).length,
@@ -144,18 +134,19 @@ export default function SubjectManagementPage() {
               <BookMarked className="h-[18px] w-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black tracking-tight text-gray-900">
-              إدارة المواد
+              {t("subjects.title")}
             </h1>
           </div>
           <p className="text-sm font-medium text-gray-400">
-            إنشاء وتعديل وحذف المواد الدراسية
+            {t("subjects.subtitle")}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => subjectsQuery.refetch()}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-[#404293]/30 hover:text-[#404293]"
           >
             <RefreshCcw
@@ -167,7 +158,7 @@ export default function SubjectManagementPage() {
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-[#404293]/30 transition-all hover:-translate-y-0.5 hover:shadow-[#404293]/45 active:scale-[0.98]"
           >
-            <Plus size={17} /> مادة جديدة
+            <Plus size={17} /> {t("subjects.new")}
           </button>
         </div>
       </div>
@@ -202,14 +193,14 @@ export default function SubjectManagementPage() {
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="بحث عن مادة..."
+            placeholder={t("subjects.searchPlaceholder")}
             className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
           />
           {search && (
             <button
               type="button"
               onClick={() => setSearch("")}
-              aria-label="مسح البحث"
+              aria-label={t("subjects.clearSearch")}
             >
               <X size={13} className="text-gray-300 hover:text-gray-500" />
             </button>
@@ -219,31 +210,31 @@ export default function SubjectManagementPage() {
           <select
             value={filterYear}
             onChange={(event) => setFilterYear(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
           >
-            <option value="">كل السنوات</option>
+            <option value="">{t("subjects.allYears")}</option>
             {yearOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
               </option>
             ))}
           </select>
-          <GraduationCap className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         </div>
         <div className="relative">
           <select
             value={filterSemester}
             onChange={(event) => setFilterSemester(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
           >
-            <option value="">كل الفصول</option>
+            <option value="">{t("subjects.allSemesters")}</option>
             {semesterOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
               </option>
             ))}
           </select>
-          <Layers className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Layers className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         </div>
         {(filterYear || filterSemester) && (
           <button
@@ -254,7 +245,7 @@ export default function SubjectManagementPage() {
             }}
             className="flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold text-red-500 transition-colors hover:border-red-100 hover:bg-red-50"
           >
-            <X size={13} /> مسح الفلاتر
+            <X size={13} /> {t("subjects.clearFilters")}
           </button>
         )}
       </div>
@@ -300,10 +291,10 @@ export default function SubjectManagementPage() {
             <BookMarked className="h-7 w-7 text-gray-300" />
           </div>
           <p className="mb-1 font-bold text-gray-400">
-            {search ? "لا توجد نتائج" : "لا توجد مواد بعد"}
+            {t(search ? "subjects.emptyNoResults" : "subjects.emptyNone")}
           </p>
           <p className="mb-4 text-sm text-gray-300">
-            {search ? "جرّب مصطلح بحث مختلف" : "أضف أول مادة دراسية الآن"}
+            {t(search ? "subjects.emptySearchHint" : "subjects.emptyHint")}
           </p>
           {!search && (
             <button
@@ -311,7 +302,7 @@ export default function SubjectManagementPage() {
               onClick={() => setShowModal(true)}
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white shadow-md"
             >
-              <Plus size={14} /> إضافة مادة
+              <Plus size={14} /> {t("subjects.addFirst")}
             </button>
           )}
         </div>
@@ -379,14 +370,16 @@ export default function SubjectManagementPage() {
                 <Trash2 className="h-7 w-7 text-red-500" />
               </div>
               <h3 className="mb-2 text-lg font-black text-gray-900">
-                تأكيد الحذف
+                {t("subjects.confirmDelete.title")}
               </h3>
-              <p className="mb-1 text-sm text-gray-500">ستحذف المادة:</p>
+              <p className="mb-1 text-sm text-gray-500">
+                {t("subjects.confirmDelete.body")}
+              </p>
               <p className="mb-6 text-sm font-black text-[#404293]">
                 "{deletingSubject.name}"
               </p>
               <p className="mb-6 text-xs text-gray-400">
-                لا يمكن التراجع عن هذا الإجراء.
+                {t("subjects.confirmDelete.irreversible")}
               </p>
               <div className="flex gap-3">
                 <button
@@ -395,7 +388,7 @@ export default function SubjectManagementPage() {
                   disabled={deleteState.isLoading}
                   className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -415,10 +408,10 @@ export default function SubjectManagementPage() {
                       >
                         <RefreshCcw size={14} />
                       </motion.div>
-                      جاري...
+                      {t("subjects.confirmDelete.working")}
                     </>
                   ) : (
-                    "نعم، احذف"
+                    t("subjects.confirmDelete.yes")
                   )}
                 </button>
               </div>

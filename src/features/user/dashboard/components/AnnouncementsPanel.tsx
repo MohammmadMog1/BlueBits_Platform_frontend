@@ -8,7 +8,8 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
-import { formatShortDate } from "../../../../shared/utils/datetime";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { Announcement } from "../../../admin/announcements/types";
 
 interface AnnouncementsPanelProps {
@@ -23,11 +24,14 @@ export default function AnnouncementsPanel({
   isDark,
   isLoading,
 }: AnnouncementsPanelProps) {
+  const { t } = useTranslation("dashboard");
+  const { formatShortDate } = useFormatters();
+
   return (
     <SectionCard
       icon={Megaphone}
-      title="إعلانات دفعتك"
-      hint="آخر ما نشره الفريق الأكاديمي"
+      title={t("announcements.title")}
+      hint={t("announcements.hint")}
       tone="sky"
       isDark={isDark}
       to="/user/announcements"
@@ -41,8 +45,8 @@ export default function AnnouncementsPanel({
       ) : announcements.length === 0 ? (
         <SectionEmpty
           icon={Megaphone}
-          title="لا توجد إعلانات"
-          hint="سنعلمك فور نشر أي إعلان لدفعتك"
+          title={t("announcements.emptyTitle")}
+          hint={t("announcements.emptyHint")}
           isDark={isDark}
         />
       ) : (

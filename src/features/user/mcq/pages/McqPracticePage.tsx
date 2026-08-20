@@ -16,6 +16,8 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import { useMcqBrowser } from "../hooks/useMcqBrowser";
 import { McqBankCard } from "../components/McqBankCard";
 import { QuizSession } from "../components/QuizSession";
@@ -24,6 +26,8 @@ import type { McqStep } from "../hooks/useMcqBrowser";
 const STEP_ORDER: McqStep[] = ["year", "semester", "subject", "banks", "quiz"];
 
 export function McqPracticePage() {
+  const { t } = useTranslation(["mcq", "common"]);
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -96,14 +100,18 @@ export function McqPracticePage() {
     <div className="flex flex-wrap items-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm md:text-base font-semibold">
       <button onClick={() => navTo("year")} className={crumbClass(step === "year")}>
         <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        <span className="hidden sm:inline">{selectedYearName || "Select Year"}</span>
-        <span className="sm:hidden">{selectedYearName || "Year"}</span>
+        <span className="hidden sm:inline">
+          {selectedYearName || t("breadcrumb.selectYear")}
+        </span>
+        <span className="sm:hidden">
+          {selectedYearName || t("breadcrumb.year")}
+        </span>
       </button>
 
       {currentStepIndex >= 1 && (
         <>
           <ChevronRight
-            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`}
+            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`}
           />
           <button
             onClick={() => navTo("semester")}
@@ -111,7 +119,7 @@ export function McqPracticePage() {
             className={crumbClass(step === "semester", !selectedYearId)}
           >
             <Layers className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            {selectedSemesterName || "Semester"}
+            {selectedSemesterName || t("breadcrumb.semester")}
           </button>
         </>
       )}
@@ -119,7 +127,7 @@ export function McqPracticePage() {
       {currentStepIndex >= 2 && (
         <>
           <ChevronRight
-            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`}
+            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`}
           />
           <button
             onClick={() => navTo("subject")}
@@ -128,7 +136,7 @@ export function McqPracticePage() {
           >
             <Book className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
             <span className="truncate max-w-[100px] sm:max-w-[150px]">
-              {selectedSubjectName || "Subject"}
+              {selectedSubjectName || t("breadcrumb.subject")}
             </span>
           </button>
         </>
@@ -137,14 +145,14 @@ export function McqPracticePage() {
       {currentStepIndex >= 3 && (
         <>
           <ChevronRight
-            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`}
+            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`}
           />
           <button
             onClick={() => navTo("banks")}
             className={crumbClass(step === "banks")}
           >
             <ListChecks className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            Banks
+            {t("breadcrumb.banks")}
           </button>
         </>
       )}
@@ -152,13 +160,13 @@ export function McqPracticePage() {
       {currentStepIndex >= 4 && (
         <>
           <ChevronRight
-            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`}
+            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`}
           />
           <span
             className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 md:py-2 rounded-lg sm:rounded-xl ${isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-600"}`}
           >
             <BrainCircuit className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            Quiz
+            {t("breadcrumb.quiz")}
           </span>
         </>
       )}
@@ -174,12 +182,12 @@ export function McqPracticePage() {
           <div className="p-2 sm:p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] text-white shadow-lg">
             <BrainCircuit className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
           </div>
-          MCQ Practice
+          {t("title")}
         </h1>
         <p
           className={`text-xs sm:text-sm md:text-base ${isDark ? "text-gray-300" : "text-gray-600"}`}
         >
-          حل بنوك أسئلة المحاضرات وقيس مستواك
+          {t("subtitle")}
         </p>
       </div>
 
@@ -196,8 +204,10 @@ export function McqPracticePage() {
               onClick={goBack}
               className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 md:px-4 py-1.5 md:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm md:text-base font-semibold transition-all border shadow-sm ${isDark ? "bg-white/5 border-white/20 [@media(hover:hover)]:hover:bg-white/10 text-gray-200" : "bg-white border-gray-300 [@media(hover:hover)]:hover:bg-gray-50 text-gray-800"}`}
             >
-              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-              Back
+              <ArrowLeft
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${isRTL ? "rotate-180" : ""}`}
+              />
+              {t("common:actions.back")}
             </button>
           )}
         </div>
@@ -220,11 +230,11 @@ export function McqPracticePage() {
                   <h2
                     className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}
                   >
-                    Select Year
+                    {t("steps.selectYear")}
                   </h2>
                 </div>
                 {yearsLoading ? (
-                  <LoadingPlaceholder label="Loading years..." />
+                  <LoadingPlaceholder label={t("loading.years")} />
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                     {years.map((year) => (
@@ -259,11 +269,11 @@ export function McqPracticePage() {
                   <h2
                     className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}
                   >
-                    Select Semester
+                    {t("steps.selectSemester")}
                   </h2>
                 </div>
                 {semestersLoading ? (
-                  <LoadingPlaceholder label="Loading semesters..." />
+                  <LoadingPlaceholder label={t("loading.semesters")} />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 max-w-4xl">
                     {semesters.map((semester) => (
@@ -298,11 +308,11 @@ export function McqPracticePage() {
                   <h2
                     className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}
                   >
-                    Select Subject
+                    {t("steps.selectSubject")}
                   </h2>
                 </div>
                 {subjectsLoading ? (
-                  <LoadingPlaceholder label="Loading subjects..." />
+                  <LoadingPlaceholder label={t("loading.subjects")} />
                 ) : subjects.length === 0 ? (
                   <EmptyState
                     icon={
@@ -310,8 +320,8 @@ export function McqPracticePage() {
                         className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`}
                       />
                     }
-                    title="No subjects found"
-                    message="No subjects exist for this year and semester yet."
+                    title={t("empty.noSubjectsTitle")}
+                    message={t("empty.noSubjectsMessage")}
                     isDark={isDark}
                   />
                 ) : (
@@ -320,7 +330,7 @@ export function McqPracticePage() {
                       <button
                         key={subject._id}
                         onClick={() => selectSubject(subject._id)}
-                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-left backdrop-blur-md
+                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-start backdrop-blur-md
                           ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverBrDark}` : `bg-white/80 text-gray-800 border border-gray-200 ${tileHoverBrLight}`}`}
                       >
                         <div
@@ -352,13 +362,15 @@ export function McqPracticePage() {
                     className={`text-base sm:text-lg md:text-2xl font-bold flex items-center gap-2 sm:gap-2.5 md:gap-3 ${isDark ? "text-white" : "text-gray-900"}`}
                   >
                     <ListChecks className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-[#404293]" />
-                    <span className="truncate">بنوك أسئلة {selectedSubjectName}</span>
+                    <span className="truncate">
+                      {t("banksFor", { subject: selectedSubjectName })}
+                    </span>
                   </h2>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span
                       className={`self-start sm:self-auto px-3 sm:px-3.5 md:px-4 py-1 md:py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-sm ${isDark ? "bg-[#2376BB]/20 text-blue-300 border border-blue-500/20" : "bg-blue-50 text-[#404293] border border-blue-200"}`}
                     >
-                      {banks.length} Total
+                      {t("totalCount", { count: banks.length })}
                     </span>
                     <div
                       className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border shadow-sm ${isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white"}`}
@@ -369,11 +381,14 @@ export function McqPracticePage() {
                       <input
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder="Search..."
+                        placeholder={t("searchPlaceholder")}
                         className={`bg-transparent text-xs sm:text-sm outline-none w-24 sm:w-36 ${isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-700 placeholder-gray-400"}`}
                       />
                       {search && (
-                        <button onClick={() => setSearch("")}>
+                        <button
+                          onClick={() => setSearch("")}
+                          aria-label={t("clearSearch")}
+                        >
                           <X
                             size={13}
                             className={
@@ -389,7 +404,7 @@ export function McqPracticePage() {
                 </div>
 
                 {banksLoading ? (
-                  <LoadingPlaceholder label="Loading question banks..." />
+                  <LoadingPlaceholder label={t("loading.banks")} />
                 ) : banks.length === 0 ? (
                   <EmptyState
                     icon={
@@ -397,13 +412,15 @@ export function McqPracticePage() {
                         className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`}
                       />
                     }
-                    title="لا توجد بنوك أسئلة متاحة"
+                    title={t("empty.noBanksTitle")}
                     message={
                       search
-                        ? "لا نتائج مطابقة."
+                        ? t("empty.noMatches")
                         : unpublishedCount > 0
-                          ? `في ${unpublishedCount} بنك أسئلة لهذه المادة بس لسا غير منشور — رح يظهر بعد ما ينشره المشرف.`
-                          : "لم يُنشر أي بنك أسئلة لهذه المادة بعد."
+                          ? t("empty.unpublishedHint", {
+                              count: unpublishedCount,
+                            })
+                          : t("empty.noBanksPublished")
                     }
                     isDark={isDark}
                   />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pause, Play, RotateCcw, Timer } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FocusTimerCardProps {
   isDark: boolean;
@@ -16,6 +17,7 @@ const formatTime = (totalSeconds: number) => {
 };
 
 export default function FocusTimerCard({ isDark }: FocusTimerCardProps) {
+  const { t } = useTranslation("dashboard");
   const [duration, setDuration] = useState(25);
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
   const [active, setActive] = useState(false);
@@ -54,20 +56,21 @@ export default function FocusTimerCard({ isDark }: FocusTimerCardProps) {
             className={`h-5 w-5 ${isRunning ? "text-[#2376BB]" : isDark ? "text-gray-400" : "text-gray-500"}`}
           />
           <h3 className={`text-sm font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
-            مؤقت التركيز
+            {t("focusTimer.title")}
           </h3>
         </div>
         <select
           value={duration}
           onChange={(event) => changeDuration(Number(event.target.value))}
           disabled={active}
+          aria-label={t("focusTimer.durationLabel")}
           className={`cursor-pointer appearance-none rounded-lg px-2 py-1 text-center text-xs font-bold outline-none disabled:opacity-50 ${
             isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-600"
           }`}
         >
           {DURATIONS.map((minutes) => (
             <option key={minutes} value={minutes}>
-              {minutes} د
+              {t("focusTimer.minutesOption", { minutes })}
             </option>
           ))}
         </select>
@@ -86,6 +89,7 @@ export default function FocusTimerCard({ isDark }: FocusTimerCardProps) {
           type="button"
           onClick={() => setActive((prev) => !prev)}
           disabled={secondsLeft === 0}
+          aria-label={t(isRunning ? "focusTimer.pause" : "focusTimer.start")}
           className={`flex h-10 w-10 items-center justify-center rounded-full shadow-sm transition-all disabled:opacity-40 ${
             isRunning
               ? "bg-red-500/10 text-red-500 hover:bg-red-500/20"
@@ -101,6 +105,7 @@ export default function FocusTimerCard({ isDark }: FocusTimerCardProps) {
         <button
           type="button"
           onClick={reset}
+          aria-label={t("focusTimer.reset")}
           className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
             isDark ? "bg-white/10 text-gray-300 hover:bg-white/20" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}

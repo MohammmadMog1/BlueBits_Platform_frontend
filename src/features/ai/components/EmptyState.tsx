@@ -1,19 +1,22 @@
 // src/features/ai/components/EmptyState.tsx
 import { Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
 
-const SUGGESTIONS = [
-  "لخّص لي أهم النقاط في هذه المحاضرة",
-  "اشرح لي هذا المفهوم البرمجي بطريقة مبسطة",
-  "ساعدني أحضّر خطة مذاكرة لهذا الأسبوع",
-  "اقترح علي أسئلة مراجعة لهذه المادة",
-];
+/** مفاتيح الاقتراحات – النصّ يُترجَم عند العرض */
+const SUGGESTION_KEYS = [
+  "summarize",
+  "explain",
+  "studyPlan",
+  "reviewQuestions",
+] as const;
 
 interface EmptyStateProps {
   onPick: (text: string) => void;
 }
 
 export default function EmptyState({ onPick }: EmptyStateProps) {
+  const { t } = useTranslation("ai");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -23,17 +26,19 @@ export default function EmptyState({ onPick }: EmptyStateProps) {
         <Sparkles className="w-8 h-8 text-white" />
       </div>
       <h2 className={`text-[18px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
-        كيف أقدر أساعدك اليوم؟
+        {t("empty.heading")}
       </h2>
       <p className={`mt-1.5 text-[13px] max-w-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-        اسألني أي شيء يخص دراستك أو مشاريعك أو استخدامك لمنصة BlueBits.
+        {t("empty.subtitle")}
       </p>
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-lg">
-        {SUGGESTIONS.map((s) => (
+        {SUGGESTION_KEYS.map((key) => {
+          const suggestion = t(`empty.suggestions.${key}`);
+          return (
           <button
-            key={s}
-            onClick={() => onPick(s)}
+            key={key}
+            onClick={() => onPick(suggestion)}
             dir="auto"
             className={`text-start text-[12.5px] rounded-xl border px-3.5 py-3 transition-all ${
               isDark
@@ -41,9 +46,10 @@ export default function EmptyState({ onPick }: EmptyStateProps) {
                 : "border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
             }`}
           >
-            {s}
+            {suggestion}
           </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 // src/features/admin/components/AdminLayout.tsx
+import { useTranslation } from "react-i18next";
 import MainLayout from "../../../shared/layout/MainLayout/MainLayout";
 import { adminNavItems } from "../admin.config";
 import type { UserProfile } from "../../../shared/layout/MainLayout/MainLayout";
@@ -10,6 +11,7 @@ import {
 } from "../academic/api/academicApi";
 
 export default function AdminLayout() {
+  const { t } = useTranslation("common");
   const userFromStore = useAppSelector((state) => state.auth.user);
 
   useGetYearsQuery();
@@ -23,7 +25,7 @@ export default function AdminLayout() {
         initials: getUserInitials(userFromStore.name),
         profile_image: userFromStore.profile_image,
       }
-    : { name: "Guest", role: "GUEST", initials: "G" };
+    : { name: t("roles.GUEST"), role: "GUEST", initials: "G" };
 
   return <MainLayout navItems={adminNavItems} userProfile={userProfile} />;
 }

@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import {
   AlertCircle,
   CalendarDays,
@@ -23,13 +24,12 @@ import {
   DAYS_OF_WEEK,
   calcCapacity,
   createSubjectRow,
-  dayOfWeekLabel,
   defaultAcademicYear,
-  formatDate,
   getRefId,
   isWithinRange,
   toDateInputValue,
 } from "../utils/schedule";
+import { useScheduleDates } from "../hooks/useScheduleDates";
 import SubjectsConfigEditor from "./SubjectsConfigEditor";
 
 interface ScheduleConfigFormProps {
@@ -64,6 +64,8 @@ export default function ScheduleConfigForm({
   onCancel,
   onSubmit,
 }: ScheduleConfigFormProps) {
+  const { t } = useTranslation(["admin", "common"]);
+  const { dayOfWeekLabel, formatDate, weekdayNames } = useScheduleDates();
   const [academicYear, setAcademicYear] = useState(
     initial?.academicYear ?? defaultAcademicYear(),
   );
@@ -119,25 +121,25 @@ export default function ScheduleConfigForm({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!academicYear.trim()) return setFormError("السنة الأكاديمية مطلوبة");
+    if (!academicYear.trim()) return setFormError(t("schedule.form.errors.academicYearRequired"));
     if (!/^\d{4}-\d{4}$/.test(academicYear.trim()))
-      return setFormError("صيغة السنة الأكاديمية يجب أن تكون مثل 2025-2026");
-    if (!startDate) return setFormError("تاريخ بداية الامتحانات مطلوب");
-    if (!endDate) return setFormError("تاريخ نهاية الامتحانات مطلوب");
+      return setFormError(t("schedule.form.errors.academicYearFormat"));
+    if (!startDate) return setFormError(t("schedule.form.errors.startRequired"));
+    if (!endDate) return setFormError(t("schedule.form.errors.endRequired"));
     if (Date.parse(endDate) < Date.parse(startDate))
-      return setFormError("تاريخ النهاية يجب أن يكون بعد تاريخ البداية");
+      return setFormError(t("schedule.form.errors.endBeforeStart"));
     if (!Number.isFinite(slots) || slots < 1)
-      return setFormError("عدد الفترات اليومية يجب أن يكون 1 على الأقل");
+      return setFormError(t("schedule.form.errors.timeslotsMin"));
     if (capacity.examDays === 0)
       return setFormError(
-        "لا توجد أيام فحص متاحة – راجع مدى التواريخ والأيام المستبعدة",
+        t("schedule.form.errors.noExamDays"),
       );
     if (rows.some((row) => !row.subjectId))
-      return setFormError("اختر المادة في كل صف أو احذف الصفوف الفارغة");
+      return setFormError(t("schedule.form.errors.subjectRequired"));
 
     const ids = rows.map((row) => row.subjectId);
     if (new Set(ids).size !== ids.length)
-      return setFormError("لا يمكن تكرار المادة نفسها أكثر من مرة");
+      return setFormError(t("schedule.form.errors.duplicateSubject"));
 
     const invalidNumbers = rows.some((row) => {
       const carried = Number(row.carriedStudentsCount);
@@ -151,7 +153,7 @@ export default function ScheduleConfigForm({
     });
     if (invalidNumbers)
       return setFormError(
-        "تأكد من أن عدد المحمّلين ≥ 0 وأن مدة الامتحان ≥ 1 دقيقة",
+        t("schedule.form.errors.invalidSubjectNumbers"),
       );
 
     setFormError("");
@@ -171,10 +173,10 @@ export default function ScheduleConfigForm({
   };
 
   const stats = [
-    { label: "أيام الفحص المتاحة", value: capacity.examDays, color: "#404293" },
-    { label: "أيام مستبعدة", value: capacity.excludedDays, color: "#F59E0B" },
-    { label: "إجمالي الفترات", value: capacity.totalSlots, color: "#2376BB" },
-    { label: "المواد المهيأة", value: configuredSubjects, color: "#059669" },
+    { label: t("schedule.capacity.examDays"), value: capacity.examDays, color: "#404293" },
+    { label: t("schedule.capacity.excludedDays"), value: capacity.excludedDays, color: "#F59E0B" },
+    { label: t("schedule.capacity.totalSlots"), value: capacity.totalSlots, color: "#2376BB" },
+    { label: t("schedule.capacity.configuredSubjects"), value: configuredSubjects, color: "#059669" },
   ];
 
   return (
@@ -190,10 +192,10 @@ export default function ScheduleConfigForm({
         </div>
         <div>
           <h2 className="text-base font-black text-gray-900">
-            {mode === "edit" ? "تعديل إعدادات الجدولة" : "إنشاء إعدادات الجدولة"}
+            {t(mode === "edit" ? "schedule.form.editTitle" : "schedule.form.createTitle")}
           </h2>
           <p className="mt-0.5 text-xs font-semibold text-gray-400">
-            الفصل: {semesterLabel}
+            {t("schedule.form.semesterLabel", { semester: semesterLabel })}
           </p>
         </div>
       </div>
@@ -201,7 +203,7 @@ export default function ScheduleConfigForm({
       {/* ── معلومات عامة ─────────────────────── */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block text-sm font-bold text-gray-700">
-          السنة الأكاديمية <span className="text-red-400">*</span>
+          {t("schedule.form.academicYearLabel")} <span className="text-red-400">*</span>
           <input
             value={academicYear}
             onChange={(event) => setAcademicYear(event.target.value)}
@@ -210,7 +212,7 @@ export default function ScheduleConfigForm({
           />
         </label>
         <label className="block text-sm font-bold text-gray-700">
-          عدد الفترات في اليوم <span className="text-red-400">*</span>
+          {t("schedule.form.timeslotsLabel")} <span className="text-red-400">*</span>
           <div className="relative mt-1.5">
             <input
               type="number"
@@ -229,11 +231,13 @@ export default function ScheduleConfigForm({
       <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
         <div className="mb-3 flex items-center gap-2">
           <CalendarRange className="h-4 w-4 text-[#404293]" />
-          <h3 className="text-sm font-black text-gray-900">فترة الامتحانات</h3>
+          <h3 className="text-sm font-black text-gray-900">
+            {t("schedule.form.examPeriod")}
+          </h3>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block text-sm font-bold text-gray-700">
-            تاريخ البداية <span className="text-red-400">*</span>
+            {t("schedule.form.startDate")} <span className="text-red-400">*</span>
             <input
               type="date"
               value={startDate}
@@ -242,7 +246,7 @@ export default function ScheduleConfigForm({
             />
           </label>
           <label className="block text-sm font-bold text-gray-700">
-            تاريخ النهاية <span className="text-red-400">*</span>
+            {t("schedule.form.endDate")} <span className="text-red-400">*</span>
             <input
               type="date"
               value={endDate}
@@ -280,8 +284,10 @@ export default function ScheduleConfigForm({
         {isOverCapacity && (
           <p className="mt-3 flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs font-bold text-amber-700">
             <AlertCircle size={13} className="shrink-0" />
-            عدد المواد ({configuredSubjects}) أكبر من الفترات المتاحة (
-            {capacity.totalSlots}) – وسّع المدى أو زد الفترات اليومية.
+            {t("schedule.form.capacityWarning", {
+              subjects: configuredSubjects,
+              slots: capacity.totalSlots,
+            })}
           </p>
         )}
       </div>
@@ -291,30 +297,30 @@ export default function ScheduleConfigForm({
         <div className="mb-3 flex items-center gap-2">
           <CalendarOff className="h-4 w-4 text-[#404293]" />
           <h3 className="text-sm font-black text-gray-900">
-            أيام الأسبوع المستبعدة
+            {t("schedule.form.excludedWeekdays")}
           </h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {DAYS_OF_WEEK.map((day) => {
-            const isExcluded = excludedDaysOfWeek.includes(day.value);
+            const isExcluded = excludedDaysOfWeek.includes(day);
             return (
               <button
-                key={day.value}
+                key={day}
                 type="button"
-                onClick={() => toggleDay(day.value)}
+                onClick={() => toggleDay(day)}
                 className={`rounded-xl border px-3.5 py-2 text-xs font-bold transition-all ${
                   isExcluded
                     ? "border-red-200 bg-red-50 text-red-600"
                     : "border-gray-200 bg-white text-gray-500 hover:border-[#404293]/30 hover:text-[#404293]"
                 }`}
               >
-                {day.label}
+                {weekdayNames[day]}
               </button>
             );
           })}
         </div>
         <p className="mt-2.5 text-[11px] font-semibold text-gray-400">
-          الأيام المحدّدة بالأحمر لن تُجدول فيها أي امتحانات.
+          {t("schedule.form.excludedWeekdaysHint")}
         </p>
       </div>
 
@@ -323,7 +329,7 @@ export default function ScheduleConfigForm({
         <div className="mb-3 flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-[#404293]" />
           <h3 className="text-sm font-black text-gray-900">
-            تواريخ مستبعدة (عطل رسمية)
+            {t("schedule.form.excludedDates")}
           </h3>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -339,7 +345,7 @@ export default function ScheduleConfigForm({
             disabled={!newExcludedDate}
             className="flex items-center gap-1.5 rounded-xl bg-[#404293]/10 px-4 py-2.5 text-xs font-bold text-[#404293] transition-colors hover:bg-[#404293]/20 disabled:opacity-40"
           >
-            <Plus size={14} /> إضافة
+            <Plus size={14} /> {t("schedule.form.addDate")}
           </button>
         </div>
 
@@ -357,14 +363,14 @@ export default function ScheduleConfigForm({
                       ? "border-amber-200 bg-amber-50 text-amber-700"
                       : "border-gray-200 bg-white text-gray-600"
                   }`}
-                  title={outOfRange ? "خارج مدى فترة الامتحانات" : undefined}
+                  title={outOfRange ? t("schedule.form.outOfRange") : undefined}
                 >
                   {dayOfWeekLabel(day)} · {formatDate(day)}
                   {outOfRange && <AlertCircle size={11} />}
                   <button
                     type="button"
                     onClick={() => removeExcludedDate(day)}
-                    aria-label={`حذف ${day}`}
+                    aria-label={t("schedule.form.removeDate", { date: day })}
                     className="text-gray-300 transition-colors hover:text-red-500"
                   >
                     <X size={12} />
@@ -400,7 +406,7 @@ export default function ScheduleConfigForm({
           disabled={isSubmitting}
           className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50 sm:flex-none sm:px-8"
         >
-          إلغاء
+          {t("common:actions.cancel")}
         </button>
         <button
           type="submit"
@@ -415,12 +421,12 @@ export default function ScheduleConfigForm({
               >
                 <RefreshCcw size={15} />
               </motion.div>
-              جاري الحفظ...
+              {t("schedule.form.saving")}
             </>
           ) : (
             <>
               <CheckCircle2 size={15} />
-              {mode === "edit" ? "حفظ التعديلات" : "إنشاء الإعدادات"}
+              {t(mode === "edit" ? "schedule.form.save" : "schedule.form.create")}
             </>
           )}
         </button>
@@ -428,7 +434,7 @@ export default function ScheduleConfigForm({
 
       <p className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-300">
         <Layers size={12} />
-        تُستخدم هذه الإعدادات مع ردود الطلاب لتوليد برنامج الفحص.
+        {t("schedule.form.footerHint")}
       </p>
     </motion.form>
   );

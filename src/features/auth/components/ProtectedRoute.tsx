@@ -1,6 +1,7 @@
 // src/features/auth/components/ProtectedRoute.tsx
 import type { ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import useAuth from "../hooks/useAuth";
 import type { UserRole } from "../types/auth.types"; // تأكد من صحة المسار
 
@@ -11,7 +12,8 @@ type Props = {
 };
 
 export default function ProtectedRoute({ children, allowedRoles }: Props) {
-  const { isAuthenticated, isLoading, user } = useAuth(); 
+  const { t } = useTranslation("auth");
+  const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
@@ -19,7 +21,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#404293] border-t-transparent"></div>
-          <span>جاري التحقق من الصلاحيات...</span>
+          <span>{t("protectedRoute.checkingPermissions")}</span>
         </div>
       </div>
     );

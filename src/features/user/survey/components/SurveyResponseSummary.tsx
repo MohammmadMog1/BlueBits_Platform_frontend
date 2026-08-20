@@ -1,10 +1,11 @@
 import { CalendarDays, CheckCircle2, Clock, Repeat2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { SurveyResponse } from "../../../admin/surveys/types";
 import {
   MAX_DAYS_BEFORE,
   MIN_DAYS_BEFORE,
-  formatDateTime,
   getRefName,
 } from "../../../admin/surveys/utils/survey";
 import {
@@ -32,6 +33,8 @@ export default function SurveyResponseSummary({
   isDark,
   hint,
 }: SurveyResponseSummaryProps) {
+  const { t } = useTranslation(["survey", "admin"]);
+  const { formatDateTimeOrDash } = useFormatters();
   const yearName = getRefName(response.yearId, "—");
   const semesterName = getRefName(response.semesterId, "—");
 
@@ -89,13 +92,17 @@ export default function SurveyResponseSummary({
           className={`mb-4 flex flex-wrap items-center gap-2 text-[11px] font-bold ${faintClass(isDark)}`}
         >
           <CalendarDays className="h-3 w-3" />
-          أُرسلت في {formatDateTime(response.submittedAt)}
+          {t("summary.submittedAt", {
+            date: formatDateTimeOrDash(response.submittedAt),
+          })}
           <span
             className={`rounded-full px-2 py-0.5 ${
               isDark ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-500"
             }`}
           >
-            {response.subjectResponses.length} مادة
+            {t("summary.subjectsCount", {
+              count: response.subjectResponses.length,
+            })}
           </span>
         </p>
 
@@ -121,7 +128,10 @@ export default function SurveyResponseSummary({
                       isDark ? "text-gray-100" : "text-gray-800"
                     }`}
                   >
-                    {getRefName(entry.subjectId, "مادة غير معروفة")}
+                    {getRefName(
+                      entry.subjectId,
+                      t("summary.unknownSubject"),
+                    )}
                   </span>
 
                   {entry.isCarrying && (
@@ -132,20 +142,24 @@ export default function SurveyResponseSummary({
                           : "bg-amber-50 text-amber-600"
                       }`}
                     >
-                      <Repeat2 className="h-3 w-3" /> حملة
+                      <Repeat2 className="h-3 w-3" /> {t("summary.carrying")}
                     </span>
                   )}
 
                   <span
                     className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-black ${chipClass("blue")}`}
                   >
-                    <Clock className="h-3 w-3" /> {entry.preferredDaysBefore} يوم
+                    <Clock className="h-3 w-3" />{" "}
+                    {t("summary.daysBefore", {
+                      count: entry.preferredDaysBefore,
+                    })}
                   </span>
 
                   <span
                     className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-black ${level.chip(isDark)}`}
                   >
-                    <LevelIcon className="h-3 w-3" /> {level.label}
+                    <LevelIcon className="h-3 w-3" />{" "}
+                    {t(`admin:${level.labelKey}`)}
                   </span>
                 </div>
 

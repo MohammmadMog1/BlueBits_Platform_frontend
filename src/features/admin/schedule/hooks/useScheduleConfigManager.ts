@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useGetSemestersQuery } from "../../academic/api/academicApi";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
 import {
@@ -8,11 +10,13 @@ import {
   useUpdateScheduleConfigMutation,
 } from "../api/scheduleApi";
 import type { ScheduleConfigFormValues } from "../types";
-import { errorMessage } from "../utils/schedule";
+
 
 export type ScheduleConfigMode = "view" | "create" | "edit";
 
 export function useScheduleConfigManager() {
+  const { t } = useTranslation("admin");
+  const errorMessage = useErrorMessage();
   const [pickedSemesterId, setPickedSemesterId] = useState("");
   const [mode, setMode] = useState<ScheduleConfigMode>("view");
   const [isConfirmingDelete, setConfirmingDelete] = useState(false);
@@ -87,10 +91,10 @@ export function useScheduleConfigManager() {
     try {
       if (mode === "edit" && config) {
         await updateConfig({ id: config._id, data: payload }).unwrap();
-        setSuccessMessage("تم تعديل إعدادات الجدولة بنجاح");
+        setSuccessMessage(t("schedule.settings.updated"));
       } else {
         await createConfig(payload).unwrap();
-        setSuccessMessage("تم إنشاء إعدادات الجدولة بنجاح");
+        setSuccessMessage(t("schedule.settings.created"));
       }
       setMode("view");
     } catch {
@@ -107,7 +111,7 @@ export function useScheduleConfigManager() {
       }).unwrap();
       setConfirmingDelete(false);
       setMode("view");
-      setSuccessMessage("تم حذف إعدادات الجدولة");
+      setSuccessMessage(t("schedule.settings.deleted"));
     } catch {
       // الخطأ معروض في نافذة التأكيد
     }

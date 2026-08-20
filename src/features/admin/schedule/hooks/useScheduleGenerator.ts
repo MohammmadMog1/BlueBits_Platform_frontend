@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useGetSemestersQuery } from "../../academic/api/academicApi";
 import {
   useGenerateScheduleDataMutation,
@@ -7,9 +9,11 @@ import {
   usePublishScheduleMutation,
   useSolveScheduleMutation,
 } from "../api/scheduleApi";
-import { errorMessage } from "../utils/schedule";
+
 
 export function useScheduleGenerator() {
+  const { t } = useTranslation("admin");
+  const errorMessage = useErrorMessage();
   const [pickedSemesterId, setPickedSemesterId] = useState("");
   const [isConfirmingPublish, setConfirmingPublish] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -61,7 +65,9 @@ export function useScheduleGenerator() {
     try {
       const data = await generateData(selectedSemesterId).unwrap();
       setSuccessMessage(
-        `تم تجميع بيانات الجدولة – ${data.conflicts?.length ?? 0} تعارض`,
+        t("schedule.generator.collected", {
+          count: data.conflicts?.length ?? 0,
+        }),
       );
     } catch {
       // الخطأ معروض عبر generateError
@@ -73,7 +79,7 @@ export function useScheduleGenerator() {
     setSuccessMessage("");
     try {
       await solve(selectedSemesterId).unwrap();
-      setSuccessMessage("تم توليد الجدول بنجاح");
+      setSuccessMessage(t("schedule.generator.generated"));
     } catch {
       // الخطأ معروض عبر solveError
     }
@@ -84,7 +90,7 @@ export function useScheduleGenerator() {
     try {
       await publish(selectedSemesterId).unwrap();
       setConfirmingPublish(false);
-      setSuccessMessage("تم نشر الجدول");
+      setSuccessMessage(t("schedule.generator.published"));
     } catch {
       // الخطأ معروض في نافذة التأكيد
     }

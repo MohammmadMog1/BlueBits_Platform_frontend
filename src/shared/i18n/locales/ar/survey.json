@@ -1,0 +1,87 @@
+{
+  "title": "استبيان برنامج الفحص",
+  "subtitle": "رأيك يحدّد ترتيب امتحاناتك — حدّد لكل مادة صعوبتها وأيام الراحة التي تحتاجها",
+  "steps": {
+    "pick": "اختر المواد التي ستتقدّم لامتحانها",
+    "configure": "حدّد صعوبة كل مادة وأيام الراحة",
+    "send": "أرسل إجابتك ونحن نتكفّل بالباقي"
+  },
+  "closed": {
+    "title": "لا يوجد استبيان مفتوح حالياً",
+    "hint": "سيظهر الاستبيان هنا فور فتحه لسنتك الدراسية من قِبل الإدارة."
+  },
+  "alreadyAnswered": {
+    "title": "أجبت على هذا الاستبيان مسبقاً",
+    "hint": "شكراً لمشاركتك"
+  },
+  "summary": {
+    "lastTitle": "آخر إجابة عبّأتها",
+    "lastHint": "محفوظة من استبيان سابق",
+    "currentTitle": "تم استلام إجابتك على هذا الاستبيان",
+    "currentHint": "لا يمكن تعديل الإجابة بعد إرسالها",
+    "submittedAt": "أُرسلت في {{date}}",
+    "subjectsCount": "{{count}} مادة",
+    "unknownSubject": "مادة غير معروفة",
+    "carrying": "حملة",
+    "daysBefore": "{{count}} يوم"
+  },
+  "formInfo": "استبيان {{year}} — {{semester}} — {{academicYear}}",
+  "selectedOfTotal": "{{selected}} من {{total}} مادة",
+  "defaults": {
+    "yourYear": "سنتك",
+    "currentSemester": "الفصل الحالي"
+  },
+  "picker": {
+    "heading": "اختر موادك",
+    "selectAll": "تحديد الكل",
+    "clearAll": "إلغاء الكل",
+    "searchPlaceholder": "ابحث عن مادة...",
+    "tabs": {
+      "all": "كل المواد",
+      "selected": "المحددة",
+      "carrying": "الحملة"
+    },
+    "emptyNoSubjects": "لا توجد مواد لسنتك في هذا الفصل",
+    "emptyNoSubjectsHint": "راجع الإدارة لإضافة مواد الفصل قبل تعبئة الاستبيان",
+    "emptyNoMatch": "لا نتائج مطابقة",
+    "emptyNoMatchHint": "جرّب تبويباً آخر أو امسح كلمة البحث",
+    "tapToInclude": "اضغط للتضمين في إجابتك",
+    "restDays": "{{count}} يوم راحة"
+  },
+  "answer": {
+    "heading": "إجابتك",
+    "clearAll": "مسح الكل",
+    "emptyHintLine1": "لم تختر أي مادة بعد.",
+    "emptyHintLine2": "اختر من القائمة المجاورة.",
+    "markAsCarrying": "تحديدها كحملة",
+    "isCarrying": "مادة حملة",
+    "removeSubject": "إزالة المادة من إجابتي",
+    "difficultyLabel": "مستوى الصعوبة بالنسبة إليك",
+    "easiest": "سهلة جداً",
+    "hardest": "صعبة جداً",
+    "restDaysLabel": "أيام الراحة قبل الامتحان",
+    "decreaseDay": "إنقاص يوم",
+    "increaseDay": "زيادة يوم",
+    "prepDays_one": "يوم للتحضير",
+    "prepDays_other": "أيام للتحضير"
+  },
+  "submit": {
+    "cta": "إرسال الإجابة",
+    "hintEmpty": "اختر مادة واحدة على الأقل لتتمكّن من الإرسال",
+    "hintReady": "راجع إعداداتك جيداً — لا يمكن تعديل الإجابة بعد إرسالها",
+    "confirmTitle": "تأكيد الإرسال",
+    "confirmBody": "ستُرسل إجابتك على {{count}} مادة.",
+    "confirmBodyWithCarrying": "ستُرسل إجابتك على {{count}} مادة (منها {{carrying}} حملة).",
+    "cannotEdit": "لا يمكن تعديل الإجابة بعد إرسالها.",
+    "review": "مراجعة",
+    "sending": "جاري الإرسال...",
+    "yesSend": "نعم، أرسل"
+  },
+  "success": {
+    "title": "تم إرسال إجابتك بنجاح 🎉",
+    "line1": "وصلت تفضيلاتك وستُحتسب ضمن توليد برنامج الفحص.",
+    "line2": "لا يمكن تعديل الإجابة بعد إرسالها.",
+    "sentCount": "{{count}} مادة أُرسلت",
+    "viewResponse": "عرض إجابتي"
+  }
+}

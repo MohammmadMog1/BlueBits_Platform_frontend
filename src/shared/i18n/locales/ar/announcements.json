@@ -1,0 +1,63 @@
+{
+  "student": {
+    "title": "الإعلانات",
+    "subtitle": "تابع آخر الإعلانات الخاصة بدفعتك وبقية الدفعات",
+    "tabAll": "كل الإعلانات",
+    "tabMine": "إعلانات دفعتي",
+    "loadFailed": "تعذّر تحميل الإعلانات.",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyMine": "لا يوجد لدفعتك إعلانات بعد",
+    "emptyAll": "لا توجد إعلانات بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "ستظهر هنا الإعلانات الجديدة فور نشرها"
+  },
+  "admin": {
+    "title": "إدارة الإعلانات",
+    "subtitle": "إنشاء وتعديل وحذف الإعلانات لكل دفعة",
+    "new": "إعلان جديد",
+    "allYears": "كل السنوات",
+    "clearFilter": "مسح الفلتر",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyNone": "لا توجد إعلانات بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "أنشئ أول إعلان الآن",
+    "createFirst": "إنشاء إعلان",
+    "messages": {
+      "created": "تم إنشاء الإعلان بنجاح ✓",
+      "updated": "تم تعديل الإعلان بنجاح ✓",
+      "deleted": "تم حذف الإعلان"
+    },
+    "confirmDelete": {
+      "title": "تأكيد الحذف",
+      "body": "ستحذف الإعلان:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "working": "جارٍ...",
+      "yes": "نعم، احذف"
+    },
+    "form": {
+      "createTitle": "إنشاء إعلان جديد",
+      "editTitle": "تعديل الإعلان",
+      "createSubtitle": "أدخل بيانات الإعلان الجديد",
+      "editSubtitle": "عدّل بيانات الإعلان",
+      "titleLabel": "عنوان الإعلان",
+      "titlePlaceholder": "مثال: إعلان مهم لطلاب السنة الأولى",
+      "contentLabel": "المحتوى",
+      "contentPlaceholder": "اكتب محتوى الإعلان...",
+      "yearLabel": "السنة الدراسية",
+      "chooseYear": "اختر السنة...",
+      "yearLocked": "لا يمكن تغيير السنة الدراسية بعد الإنشاء",
+      "titleRequired": "عنوان الإعلان مطلوب",
+      "contentRequired": "محتوى الإعلان مطلوب",
+      "yearRequired": "يرجى اختيار السنة الدراسية",
+      "saving": "جاري الحفظ...",
+      "create": "إنشاء الإعلان",
+      "save": "حفظ التعديلات"
+    },
+    "card": {
+      "edit": "تعديل",
+      "delete": "حذف"
+    }
+  },
+  "searchPlaceholder": "بحث عن إعلان...",
+  "clearSearch": "مسح البحث"
+}

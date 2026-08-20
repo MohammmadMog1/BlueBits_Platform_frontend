@@ -1,5 +1,6 @@
 // src/features/ai/components/AiChatPage.tsx
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AlertCircle, Bot, PanelLeft } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAppSelector } from "../../../app/store/hooks";
@@ -10,7 +11,7 @@ import ChatInput from "./ChatInput";
 import EmptyState from "./EmptyState";
 
 function getUserInitials(name?: string) {
-  if (!name) return "؟";
+  if (!name) return "?";
   return name
     .split(" ")
     .filter(Boolean)
@@ -21,6 +22,7 @@ function getUserInitials(name?: string) {
 }
 
 export default function AiChatPage() {
+  const { t } = useTranslation("ai");
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const user = useAppSelector((state) => state.auth.user);
@@ -90,7 +92,7 @@ export default function AiChatPage() {
         >
           <button
             onClick={() => setSidebarOpen(true)}
-            aria-label="فتح المحادثات"
+            aria-label={t("openConversations")}
             className={`md:hidden p-2 rounded-lg ${
               isDark ? "text-gray-400 hover:bg-white/8" : "text-gray-500 hover:bg-gray-100"
             }`}
@@ -102,16 +104,16 @@ export default function AiChatPage() {
           </div>
           <div className="min-w-0">
             <h1 className={`text-[14px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
-              المساعد الذكي
+              {t("title")}
             </h1>
-            <p className="text-[11px] text-gray-400">مدعوم بالذكاء الاصطناعي • BlueBits</p>
+            <p className="text-[11px] text-gray-400">{t("poweredBy")}</p>
           </div>
         </div>
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-5 space-y-5">
           {isLoadingConversation ? (
             <div className="flex items-center justify-center h-full text-gray-400 text-[13px]">
-              جارِ تحميل المحادثة...
+              {t("loadingConversation")}
             </div>
           ) : messages.length === 0 ? (
             <EmptyState onPick={send} />

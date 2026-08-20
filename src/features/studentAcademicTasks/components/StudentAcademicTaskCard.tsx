@@ -1,5 +1,7 @@
 import { BookMarked, Calendar, FileText, UploadCloud } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../shared/i18n/useFormatters";
 import { useGetMySubmissionQuery } from "../../admin/tasks";
 import type { AcademicTask, SubmissionStatus, TaskSubmission } from "../../admin/tasks";
 
@@ -9,22 +11,11 @@ interface StudentAcademicTaskCardProps {
   onOpenSubmission: (task: AcademicTask) => void;
 }
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" });
-
-const statusMeta: Record<SubmissionStatus, { label: string; className: string }> = {
-  pending: {
-    label: "بانتظار المراجعة",
-    className: "border border-amber-500/20 bg-amber-500/10 text-amber-500",
-  },
-  approved: {
-    label: "مقبول",
-    className: "border border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
-  },
-  rejected: {
-    label: "مرفوض",
-    className: "border border-red-500/20 bg-red-500/10 text-red-500",
-  },
+/** أنماط الشارة فقط – التسمية تُترجَم عند العرض عبر `tasks:submissionStatus.*` */
+const statusClassName: Record<SubmissionStatus, string> = {
+  pending: "border border-amber-500/20 bg-amber-500/10 text-amber-500",
+  approved: "border border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
+  rejected: "border border-red-500/20 bg-red-500/10 text-red-500",
 };
 
 const statusDotColor: Record<"open-none" | SubmissionStatus | "closed-none", string> = {
@@ -45,6 +36,8 @@ function StatusDot({ task, submission }: { task: AcademicTask; submission?: Task
 }
 
 function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBodyProps) {
+  const { t } = useTranslation("tasks");
+  const { formatDateTimeOrDash } = useFormatters();
   const isOpen = task.status === "open";
   return (
     <motion.div
@@ -71,11 +64,14 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
                 isDark ? "border border-white/10 bg-white/8 text-gray-400" : "border border-gray-200 bg-gray-100 text-gray-500"
               }`}
             >
-              <Calendar className="h-2.5 w-2.5" /> يغلق {formatDate(task.closesAt)}
+              <Calendar className="h-2.5 w-2.5" />{" "}
+              {t("academic.closesAt", {
+                date: formatDateTimeOrDash(task.closesAt),
+              })}
             </span>
             {submission && (
-              <span className={`rounded-lg px-1.5 py-0.5 text-[10px] font-bold ${statusMeta[submission.status].className}`}>
-                {statusMeta[submission.status].label}
+              <span className={`rounded-lg px-1.5 py-0.5 text-[10px] font-bold ${statusClassName[submission.status]}`}>
+                {t(`submissionStatus.${submission.status}`)}
               </span>
             )}
           </div>
@@ -85,7 +81,7 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
             isOpen ? "bg-emerald-500/10 text-emerald-500" : "bg-gray-500/10 text-gray-500"
           }`}
         >
-          {isOpen ? "مفتوح" : "مغلق"}
+          {t(isOpen ? "academic.statusOpen" : "academic.statusClosed")}
         </span>
       </div>
       <button
@@ -93,13 +89,16 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
         onClick={() => onOpenSubmission(task)}
         className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2 text-xs font-bold text-white"
       >
-        <UploadCloud size={13} /> {submission ? "عرض التسليم" : "تسليم الحل"}
+        <UploadCloud size={13} />{" "}
+        {t(submission ? "academic.viewSubmission" : "academic.submitSolution")}
       </button>
     </motion.div>
   );
 }
 
 function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBodyProps) {
+  const { t } = useTranslation("tasks");
+  const { formatDateTimeOrDash } = useFormatters();
   const isOpen = task.status === "open";
   return (
     <motion.div
@@ -132,7 +131,7 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
               isOpen ? "bg-emerald-500/10 text-emerald-500" : "bg-gray-500/10 text-gray-500"
             }`}
           >
-            {isOpen ? "مفتوح" : "مغلق"}
+            {t(isOpen ? "academic.statusOpen" : "academic.statusClosed")}
           </span>
         </div>
         {task.description && (
@@ -149,18 +148,24 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
           </span>
           {submission && (
             <span
-              className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${statusMeta[submission.status].className}`}
+              className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${statusClassName[submission.status]}`}
             >
-              {statusMeta[submission.status].label}
+              {t(`submissionStatus.${submission.status}`)}
             </span>
           )}
         </div>
         <div className={`mb-4 space-y-1 text-[11px] font-semibold ${isDark ? "text-gray-500" : "text-gray-400"}`}>
           <p className="flex items-center gap-1.5">
-            <Calendar className="h-3 w-3" /> يفتح: {formatDate(task.opensAt)}
+            <Calendar className="h-3 w-3" />{" "}
+            {t("academic.opensAtLabel", {
+              date: formatDateTimeOrDash(task.opensAt),
+            })}
           </p>
           <p className="flex items-center gap-1.5">
-            <Calendar className="h-3 w-3" /> يغلق: {formatDate(task.closesAt)}
+            <Calendar className="h-3 w-3" />{" "}
+            {t("academic.closesAtLabel", {
+              date: formatDateTimeOrDash(task.closesAt),
+            })}
           </p>
         </div>
         <button
@@ -168,7 +173,8 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
           onClick={() => onOpenSubmission(task)}
           className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2.5 text-xs font-bold text-white shadow-md shadow-[#404293]/20 transition-all hover:-translate-y-0.5"
         >
-          <UploadCloud size={13} /> {submission ? "عرض التسليم" : "تسليم الحل"}
+          <UploadCloud size={13} />{" "}
+        {t(submission ? "academic.viewSubmission" : "academic.submitSolution")}
         </button>
       </div>
     </motion.div>

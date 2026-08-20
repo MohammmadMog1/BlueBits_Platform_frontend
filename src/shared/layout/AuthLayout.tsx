@@ -1,7 +1,9 @@
 import { Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import logo from "../../app/assets/Logo.png";
 
 const AuthLayout = () => {
+  const { t } = useTranslation("auth");
   return (
     // الخلفية الأساسية فاتحة ومريحة للعين متناسقة مع البوسترات
     <div className="relative min-h-[100dvh] w-full overflow-hidden bg-[#f5f7fa] text-slate-800 antialiased">
@@ -28,21 +30,20 @@ const AuthLayout = () => {
               
               {/* تدرج لوني للنص مأخوذ مباشرة من لوغو الفريق */}
               <h1 className="mb-4 text-4xl font-extrabold tracking-tight bg-gradient-to-r from-[#464cc4] to-[#2192cf] bg-clip-text text-transparent">
-                Welcome to BlueBits
+                {t("layout.welcome")}
               </h1>
-              
+
               <p className="max-w-md text-base leading-8 text-slate-600 font-medium">
-                Your smart academic space for lectures, assignments, and a
-                better study experience.
+                {t("layout.tagline")}
               </p>
-              
+
               {/* البادجات ملونة بنفس درجات أطراف اللوغو المتدرجة */}
               <div className="mt-8 flex flex-wrap gap-3">
                 <span className="rounded-xl border border-[#464cc4]/20 bg-[#464cc4]/5 px-4 py-1.5 text-xs font-semibold text-[#464cc4]">
-                  Secure access
+                  {t("layout.secureAccess")}
                 </span>
                 <span className="rounded-xl border border-[#2192cf]/20 bg-[#2192cf]/5 px-4 py-1.5 text-xs font-semibold text-[#2192cf]">
-                  Fast onboarding
+                  {t("layout.fastOnboarding")}
                 </span>
               </div>
             </div>

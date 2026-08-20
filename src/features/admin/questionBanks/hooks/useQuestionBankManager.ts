@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   useGetSemestersQuery,
   useGetYearsQuery,
@@ -65,6 +66,7 @@ export interface UseQuestionBankManagerReturn {
 }
 
 export function useQuestionBankManager(): UseQuestionBankManagerReturn {
+  const { t } = useTranslation("admin");
   const [step, setStep] = useState<BankStep>("year");
   const [selectedYearId, setSelectedYearId] = useState("");
   const [selectedSemesterId, setSelectedSemesterId] = useState("");
@@ -137,12 +139,12 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
     );
 
     return [
-      { label: "Total Banks", value: banks.length, color: "#404293" },
-      { label: "Published", value: publishedCount, color: "#059669" },
-      { label: "Drafts", value: draftCount, color: "#F59E0B" },
-      { label: "Total Questions", value: totalQuestions, color: "#2376BB" },
+      { label: t("banks.stats.totalBanks"), value: banks.length, color: "#404293" },
+      { label: t("banks.stats.published"), value: publishedCount, color: "#059669" },
+      { label: t("banks.stats.drafts"), value: draftCount, color: "#F59E0B" },
+      { label: t("banks.stats.totalQuestions"), value: totalQuestions, color: "#2376BB" },
     ];
-  }, [banks]);
+  }, [banks, t]);
 
   // ── Navigation ───────────────────────────
   const selectYear = useCallback((yearId: string) => {
@@ -207,10 +209,10 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
       try {
         await publishBank(bankId).unwrap();
       } catch (error) {
-        setActionError(getApiErrorMessage(error, "تعذّر نشر بنك الأسئلة."));
+        setActionError(getApiErrorMessage(error) ?? t("banks.actionErrors.publishFailed"));
       }
     },
-    [publishBank],
+    [publishBank, t],
   );
 
   const handleUnpublish = useCallback(
@@ -219,10 +221,10 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
       try {
         await unpublishBank(bankId).unwrap();
       } catch (error) {
-        setActionError(getApiErrorMessage(error, "تعذّر إلغاء نشر بنك الأسئلة."));
+        setActionError(getApiErrorMessage(error) ?? t("banks.actionErrors.unpublishFailed"));
       }
     },
-    [unpublishBank],
+    [unpublishBank, t],
   );
 
   const handleDeleteBank = useCallback(
@@ -235,10 +237,10 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
           setStep("banks");
         }
       } catch (error) {
-        setActionError(getApiErrorMessage(error, "تعذّر حذف بنك الأسئلة."));
+        setActionError(getApiErrorMessage(error) ?? t("banks.actionErrors.deleteBankFailed"));
       }
     },
-    [deleteBank, selectedBankId],
+    [deleteBank, selectedBankId, t],
   );
 
   const handleDeleteQuestion = useCallback(
@@ -247,10 +249,10 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
       try {
         await deleteQuestion({ questionId, bankId: selectedBankId }).unwrap();
       } catch (error) {
-        setActionError(getApiErrorMessage(error, "تعذّر حذف السؤال."));
+        setActionError(getApiErrorMessage(error) ?? t("banks.actionErrors.deleteQuestionFailed"));
       }
     },
-    [deleteQuestion, selectedBankId],
+    [deleteQuestion, selectedBankId, t],
   );
 
   const handleUpdateQuestion = useCallback(
@@ -260,11 +262,11 @@ export function useQuestionBankManager(): UseQuestionBankManagerReturn {
         await updateQuestion({ ...payload, bankId: selectedBankId }).unwrap();
         return true;
       } catch (error) {
-        setActionError(getApiErrorMessage(error, "تعذّر تعديل السؤال."));
+        setActionError(getApiErrorMessage(error) ?? t("banks.actionErrors.updateQuestionFailed"));
         return false;
       }
     },
-    [updateQuestion, selectedBankId],
+    [updateQuestion, selectedBankId, t],
   );
 
   const clearActionError = useCallback(() => setActionError(null), []);

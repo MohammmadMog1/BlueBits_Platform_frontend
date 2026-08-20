@@ -16,8 +16,10 @@ import {
   Trophy,
   X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import {
-  formatDateTime,
   getLectureTitle,
   getSubjectName,
   scoreColor,
@@ -32,6 +34,9 @@ interface QuizSessionProps {
 }
 
 export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
+  const { t } = useTranslation("mcq");
+  const { formatDateTimeOrDash } = useFormatters();
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -74,7 +79,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
     return (
       <div className="flex items-center justify-center gap-2 py-20 text-gray-400">
         <Loader2 className="w-5 h-5 animate-spin" />
-        <span className="text-sm font-medium">جارٍ تحميل بنك الأسئلة…</span>
+        <span className="text-sm font-medium">{t("loading.bank")}</span>
       </div>
     );
   }
@@ -88,13 +93,14 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
           <BrainCircuit className="w-7 h-7 text-gray-300" />
         </div>
         <p className={`font-bold mb-1 ${isDark ? "text-gray-300" : "text-gray-500"}`}>
-          بنك الأسئلة غير متاح
+          {t("unavailable.title")}
         </p>
         <button
           onClick={onBackToList}
           className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-sm font-bold shadow-md"
         >
-          <ArrowLeft size={14} /> رجوع
+          <ArrowLeft size={14} className={isRTL ? "rotate-180" : ""} />{" "}
+          {t("unavailable.back")}
         </button>
       </div>
     );
@@ -132,7 +138,10 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
                 {getLectureTitle(bank) || bank.title}
               </h2>
               <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                {getSubjectName(bank)} · {questions.length} سؤال
+                {t("intro.subjectAndCount", {
+                  subject: getSubjectName(bank),
+                  count: questions.length,
+                })}
               </p>
             </div>
             <button
@@ -140,7 +149,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
               disabled={questions.length === 0}
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-lg shadow-[#404293]/25 hover:shadow-[#404293]/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 transition-all flex-shrink-0"
             >
-              <Play size={16} /> ابدأ الحل
+              <Play size={16} /> {t("intro.start")}
             </button>
           </div>
 
@@ -154,7 +163,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
             >
               <AlertCircle size={16} className="text-amber-500 flex-shrink-0" />
               <p className={`text-sm ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-                هذا البنك لا يحتوي على أسئلة بعد.
+                {t("intro.emptyBank")}
               </p>
             </div>
           )}
@@ -169,11 +178,11 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
             >
               <Trophy size={16} className="text-amber-500 flex-shrink-0" />
               <p className={`text-sm ${isDark ? "text-gray-200" : "text-gray-700"}`}>
-                أفضل نتيجة لك:{" "}
+                {t("intro.bestScore")}{" "}
                 <span className="font-black" style={{ color: scoreColor(bestScore) }}>
                   {bestScore}%
                 </span>{" "}
-                من {attempts.length} محاولة
+                {t("intro.outOfAttempts", { count: attempts.length })}
               </p>
             </div>
           )}
@@ -186,18 +195,18 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
             <h3
               className={`font-bold text-sm sm:text-base ${isDark ? "text-white" : "text-gray-900"}`}
             >
-              محاولاتي السابقة
+              {t("intro.previousAttempts")}
             </h3>
           </div>
 
           {attemptsLoading ? (
             <div className="flex items-center gap-2 py-6 text-gray-400">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span className="text-sm">جارٍ التحميل…</span>
+              <span className="text-sm">{t("loading.generic")}</span>
             </div>
           ) : attempts.length === 0 ? (
             <p className={`text-sm py-4 ${isDark ? "text-gray-400" : "text-gray-400"}`}>
-              لم تحل هذا البنك بعد — ابدأ أول محاولة!
+              {t("intro.noAttempts")}
             </p>
           ) : (
             <div className="space-y-2">
@@ -220,12 +229,15 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
                       <p
                         className={`text-sm font-semibold ${isDark ? "text-gray-200" : "text-gray-700"}`}
                       >
-                        {attempt.correctCount} / {attempt.totalQuestions} صحيحة
+                        {t("intro.correctOfTotal", {
+                          correct: attempt.correctCount,
+                          total: attempt.totalQuestions,
+                        })}
                       </p>
                       <p
                         className={`text-[11px] ${isDark ? "text-gray-500" : "text-gray-400"}`}
                       >
-                        {formatDateTime(attempt.createdAt)}
+                        {formatDateTimeOrDash(attempt.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -250,7 +262,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
   // ── RUNNING ───────────────────────────────
   const stats = [
     {
-      label: "Total",
+      label: t("session.total"),
       value: questions.length,
       icon: Activity,
       tone: isDark
@@ -261,7 +273,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
       iconClass: "text-[#2376BB]",
     },
     {
-      label: "Done",
+      label: t("session.done"),
       value: answeredCount,
       icon: Target,
       tone: isDark
@@ -272,7 +284,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
       iconClass: isDark ? "text-blue-300" : "text-[#404293]",
     },
     {
-      label: "Correct",
+      label: t("session.correct"),
       value: correctCount,
       icon: Check,
       tone: isDark
@@ -283,7 +295,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
       iconClass: isDark ? "text-green-400" : "text-green-600",
     },
     {
-      label: "Wrong",
+      label: t("session.wrong"),
       value: wrongCount,
       icon: X,
       tone: isDark
@@ -307,14 +319,17 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={restart}
-              title="رجوع لتفاصيل البنك"
+              title={t("session.backToBank")}
+              aria-label={t("session.backToBank")}
               className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-colors flex-shrink-0 ${
                 isDark
                   ? "hover:bg-white/10 text-gray-300"
                   : "hover:bg-gray-100 text-gray-700"
               }`}
             >
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ArrowLeft
+                className={`w-4 h-4 sm:w-5 sm:h-5 ${isRTL ? "rotate-180" : ""}`}
+              />
             </button>
             <h2
               className={`font-extrabold text-sm sm:text-lg md:text-xl truncate ${isDark ? "text-white" : "text-gray-900"}`}
@@ -334,7 +349,9 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
               ) : (
                 <CheckCircle2 size={15} />
               )}
-              <span>{submitting ? "جارٍ الإرسال…" : "إرسال النتيجة"}</span>
+              <span>
+                {t(submitting ? "session.submitting" : "session.submit")}
+              </span>
             </button>
           )}
         </div>
@@ -414,7 +431,8 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
               : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
           }`}
         >
-          <ArrowRight size={15} /> السابق
+          <ArrowRight size={15} className={isRTL ? "" : "rotate-180"} />{" "}
+          {t("session.previous")}
         </button>
 
         <div className="flex items-center gap-1.5">
@@ -450,7 +468,7 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
             ) : (
               <Send size={15} />
             )}
-            إرسال النتيجة
+            {t("session.submit")}
           </button>
         ) : (
           <button
@@ -461,7 +479,8 @@ export function QuizSession({ bankId, onBackToList }: QuizSessionProps) {
                 : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
             }`}
           >
-            التالي <ArrowLeft size={15} />
+            {t("session.next")}{" "}
+            <ArrowLeft size={15} className={isRTL ? "" : "rotate-180"} />
           </button>
         )}
       </div>

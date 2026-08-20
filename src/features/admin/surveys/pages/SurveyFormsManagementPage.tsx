@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import CreateSurveyFormModal from "../components/CreateSurveyFormModal";
 import FormResponsesPanel from "../components/FormResponsesPanel";
 import SurveyFormCard from "../components/SurveyFormCard";
@@ -37,14 +38,10 @@ import {
   successAlertClass,
 } from "../utils/surveyTheme";
 
-const FILTERS: { value: SurveyFormFilter; label: string }[] = [
-  { value: "all", label: "الكل" },
-  { value: "draft", label: "مسودات" },
-  { value: "open", label: "مفتوحة" },
-  { value: "closed", label: "مغلقة" },
-];
+const FILTERS: SurveyFormFilter[] = ["all", "draft", "open", "closed"];
 
 export default function SurveyFormsManagementPage() {
+  const { t } = useTranslation(["admin", "common"]);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -100,11 +97,10 @@ export default function SurveyFormsManagementPage() {
             <h1
               className={`text-xl font-black tracking-tight sm:text-2xl ${headingClass(isDark)}`}
             >
-              استبيان الجدولة
+              {t("surveys.title")}
             </h1>
             <p className={`mt-0.5 text-sm font-medium ${mutedClass(isDark)}`}>
-              أنشئ فورماً لكل سنة في كل فصل، افتحه للطلاب، ثم أغلقه قبل توليد
-              الجدول
+              {t("surveys.subtitle")}
             </p>
           </div>
         </div>
@@ -113,7 +109,8 @@ export default function SurveyFormsManagementPage() {
           <button
             type="button"
             onClick={() => void refetch()}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className={iconButtonClass(isDark)}
           >
             <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
@@ -123,7 +120,7 @@ export default function SurveyFormsManagementPage() {
             onClick={startCreate}
             className={`${primaryButtonClass} px-5 py-2.5`}
           >
-            <FilePlus2 size={15} /> فورم جديد
+            <FilePlus2 size={15} /> {t("surveys.newForm")}
           </button>
         </div>
       </div>
@@ -131,19 +128,19 @@ export default function SurveyFormsManagementPage() {
       {/* ── الفلاتر والبحث ───────────────────── */}
       <div className={`${panelClass(isDark)} flex flex-wrap items-center gap-3 p-4`}>
         <div className="flex flex-wrap gap-2">
-          {FILTERS.map((item) => {
-            const isActive = filter === item.value;
+          {FILTERS.map((value) => {
+            const isActive = filter === value;
             return (
               <button
-                key={item.value}
+                key={value}
                 type="button"
-                onClick={() => setFilter(item.value)}
+                onClick={() => setFilter(value)}
                 className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all ${segmentButtonClass(
                   isDark,
                   isActive,
                 )}`}
               >
-                {item.label}
+                {t(`surveys.filters.${value}`)}
                 <span
                   className={`rounded-full px-1.5 text-[10px] font-black ${
                     isActive
@@ -153,7 +150,7 @@ export default function SurveyFormsManagementPage() {
                         : "bg-white text-gray-400"
                   }`}
                 >
-                  {counts[item.value]}
+                  {counts[value]}
                 </span>
               </button>
             );
@@ -162,14 +159,14 @@ export default function SurveyFormsManagementPage() {
 
         <div className="relative min-w-[200px] flex-1">
           <Search
-            className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+            className={`pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
           />
           <input
             type="text"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="ابحث بالسنة أو الفصل أو السنة الأكاديمية..."
-            className={`${fieldClass(isDark)} py-2.5 pr-11`}
+            placeholder={t("surveys.searchPlaceholder")}
+            className={`${fieldClass(isDark)} py-2.5 pe-11`}
           />
         </div>
       </div>
@@ -185,7 +182,11 @@ export default function SurveyFormsManagementPage() {
           >
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span className="flex-1">{successMessage}</span>
-            <button type="button" onClick={dismissSuccess} aria-label="إغلاق">
+            <button
+              type="button"
+              onClick={dismissSuccess}
+              aria-label={t("common:actions.close")}
+            >
               <X size={14} className="opacity-60 hover:opacity-100" />
             </button>
           </motion.div>
@@ -232,12 +233,18 @@ export default function SurveyFormsManagementPage() {
             <Inbox className={`h-9 w-9 ${faintClass(isDark)}`} />
           </div>
           <h2 className={`mb-2 text-lg font-black ${headingClass(isDark)}`}>
-            {counts.all === 0 ? "لا توجد فورمات بعد" : "لا نتائج مطابقة"}
+            {t(
+              counts.all === 0
+                ? "surveys.emptyNoFormsTitle"
+                : "surveys.emptyNoMatchTitle",
+            )}
           </h2>
           <p className={`mb-6 max-w-md text-sm ${mutedClass(isDark)}`}>
-            {counts.all === 0
-              ? "أنشئ فورماً لكل سنة في الفصل المطلوب ليبدأ الطلاب بالإجابة"
-              : "جرّب فلتراً آخر أو امسح كلمة البحث"}
+            {t(
+              counts.all === 0
+                ? "surveys.emptyNoFormsHint"
+                : "surveys.emptyNoMatchHint",
+            )}
           </p>
           {counts.all === 0 && (
             <button
@@ -245,7 +252,7 @@ export default function SurveyFormsManagementPage() {
               onClick={startCreate}
               className={`${primaryButtonClass} px-5 py-2.5`}
             >
-              <FilePlus2 size={15} /> إنشاء أول فورم
+              <FilePlus2 size={15} /> {t("surveys.createFirst")}
             </button>
           )}
         </div>
@@ -336,12 +343,18 @@ export default function SurveyFormsManagementPage() {
               </div>
 
               <h3 className={`mb-2 text-lg font-black ${headingClass(isDark)}`}>
-                {isOpening ? "تأكيد الفتح" : "تأكيد الإغلاق النهائي"}
+                {t(
+                  isOpening
+                    ? "surveys.confirm.openTitle"
+                    : "surveys.confirm.closeTitle",
+                )}
               </h3>
               <p className={`mb-1 text-sm ${mutedClass(isDark)}`}>
-                {isOpening
-                  ? "سيتمكن طلاب هذه السنة من تعبئة الاستبيان:"
-                  : "سيتوقف استقبال الردود نهائياً لفورم:"}
+                {t(
+                  isOpening
+                    ? "surveys.confirm.openBody"
+                    : "surveys.confirm.closeBody",
+                )}
               </p>
               <p
                 className={`mb-4 text-sm font-black ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}
@@ -351,13 +364,13 @@ export default function SurveyFormsManagementPage() {
               </p>
               {!isOpening && (
                 <p className="mb-6 text-xs font-bold text-red-500">
-                  لا يمكن إعادة فتح الفورم بعد إغلاقه.
+                  {t("surveys.confirm.cannotReopen")}
                 </p>
               )}
 
               {actionError && (
                 <p
-                  className={`mb-4 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-right text-xs font-bold ${
+                  className={`mb-4 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-start text-xs font-bold ${
                     isDark
                       ? "border-red-500/25 bg-red-500/10 text-red-400"
                       : "border-red-200 bg-red-50 text-red-600"
@@ -379,7 +392,7 @@ export default function SurveyFormsManagementPage() {
                       : "border-gray-200 text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -392,10 +405,12 @@ export default function SurveyFormsManagementPage() {
                   }`}
                 >
                   {isActionRunning
-                    ? "جاري التنفيذ..."
-                    : isOpening
-                      ? "نعم، افتح"
-                      : "نعم، أغلق"}
+                    ? t("surveys.confirm.running")
+                    : t(
+                        isOpening
+                          ? "surveys.confirm.yesOpen"
+                          : "surveys.confirm.yesClose",
+                      )}
                 </button>
               </div>
             </motion.div>

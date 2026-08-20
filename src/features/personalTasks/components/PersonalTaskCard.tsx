@@ -1,5 +1,7 @@
 import { Calendar, CheckCircle2, Circle, Edit3, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../shared/i18n/useFormatters";
 import type { PersonalTask } from "../types";
 
 interface PersonalTaskCardProps {
@@ -10,9 +12,6 @@ interface PersonalTaskCardProps {
   onEdit: (task: PersonalTask) => void;
   onDelete: (task: PersonalTask) => void;
 }
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("ar-EG", { dateStyle: "medium" });
 
 const isOverdue = (task: PersonalTask) =>
   !task.isCompleted && new Date(task.dueDate).getTime() < Date.now();
@@ -27,6 +26,7 @@ function StatusDot({ task }: { task: PersonalTask }) {
 }
 
 function DueChip({ task, isDark, small }: { task: PersonalTask; isDark: boolean; small?: boolean }) {
+  const { formatShortDate } = useFormatters();
   const overdue = isOverdue(task);
   const base = small ? "text-[10px]" : "text-[11px]";
   const px = small ? "px-1.5 py-0.5" : "px-2 py-1";
@@ -41,7 +41,7 @@ function DueChip({ task, isDark, small }: { task: PersonalTask; isDark: boolean;
             : "border border-gray-200 bg-gray-100 text-gray-500"
       }`}
     >
-      <Calendar className={icon} /> {formatDate(task.dueDate)}
+      <Calendar className={icon} /> {formatShortDate(task.dueDate)}
     </span>
   );
 }
@@ -142,6 +142,8 @@ function DesktopPersonalTaskCard({
   onEdit,
   onDelete,
 }: CardBodyProps) {
+  const { t } = useTranslation("tasks");
+
   return (
     <motion.div
       layout
@@ -161,7 +163,7 @@ function DesktopPersonalTaskCard({
         type="button"
         onClick={() => !task.isCompleted && !isCompleting && onComplete(task)}
         disabled={task.isCompleted || isCompleting}
-        title={task.isCompleted ? "مكتملة" : "تحديد كمنجزة"}
+        title={t(task.isCompleted ? "personal.completed" : "personal.markDone")}
         className="mt-0.5 shrink-0 disabled:cursor-default"
       >
         {task.isCompleted ? (
@@ -205,7 +207,7 @@ function DesktopPersonalTaskCard({
         </div>
       </div>
 
-      <div className="ml-2 flex shrink-0 flex-col items-end gap-2">
+      <div className="ms-2 flex shrink-0 flex-col items-end gap-2">
         <button
           type="button"
           onClick={() => onEdit(task)}

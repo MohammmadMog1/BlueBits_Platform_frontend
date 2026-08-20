@@ -1,0 +1,84 @@
+{
+  "greetingTitle": "{{greeting}}, {{name}}",
+  "defaultName": "there",
+  "subtitleWithYear": "{{year}} — here's your day at a glance",
+  "subtitle": "Here's your day on the platform at a glance",
+  "stats": {
+    "upcoming": "Upcoming deadlines",
+    "overdueHint_one": "1 overdue",
+    "overdueHint_other": "{{count}} overdue",
+    "personalTasks": "Personal tasks",
+    "doneHint": "{{count}} done",
+    "academicOpen": "Open academic tasks",
+    "totalHint": "{{count}} total",
+    "announcements": "Your cohort's announcements"
+  },
+  "surveyCallout": {
+    "title": "The exam schedule survey is open",
+    "subtitle": "{{semester}} · {{year}} — your input shapes the exam order",
+    "currentSemester": "Current semester",
+    "cta": "Fill in the survey"
+  },
+  "progress": {
+    "title": "Overall progress",
+    "hint": "Personal and academic tasks combined",
+    "personalDone": "Personal tasks done",
+    "academicOpen": "Open academic tasks",
+    "overdue": "Overdue",
+    "openTasksPage": "Open the tasks page"
+  },
+  "deadlines": {
+    "title": "Closest deadlines",
+    "hint": "Sorted from nearest to furthest",
+    "emptyTitle": "No upcoming deadlines",
+    "emptyHint": "You're all caught up — add a task when you need one",
+    "personalFallback": "Personal task",
+    "academicFallback": "Academic task"
+  },
+  "latestLectures": {
+    "title": "Latest lectures",
+    "hint": "The most recent uploads",
+    "emptyTitle": "No lectures published",
+    "emptyHint": "They'll appear here as soon as they're uploaded"
+  },
+  "announcements": {
+    "title": "Your cohort's announcements",
+    "hint": "The latest from the academic team",
+    "emptyTitle": "No announcements",
+    "emptyHint": "We'll let you know as soon as one is posted"
+  },
+  "focusTimer": {
+    "title": "Focus timer",
+    "minutesOption": "{{minutes}} min",
+    "durationLabel": "Session length",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset"
+  },
+  "quickActions": {
+    "lectures": {
+      "label": "Lectures",
+      "hint": "Browse and download"
+    },
+    "mcq": {
+      "label": "MCQ practice",
+      "hint": "Question banks"
+    },
+    "tasks": {
+      "label": "My tasks",
+      "hint": "Personal and academic"
+    },
+    "survey": {
+      "label": "Survey",
+      "hint": "Exam schedule"
+    },
+    "announcements": {
+      "label": "Announcements",
+      "hint": "News for your cohort"
+    },
+    "assistant": {
+      "label": "AI assistant",
+      "hint": "Ask and revise"
+    }
+  }
+}

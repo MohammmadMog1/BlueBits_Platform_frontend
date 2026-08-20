@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useGetYearsQuery } from "../../academic/api/academicApi";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
 import AcademicTaskCard from "../components/AcademicTaskCard";
 import AcademicTaskFormModal from "../components/AcademicTaskFormModal";
@@ -27,21 +29,9 @@ import type { AcademicTask, AcademicTaskFormData } from "../types";
 
 const toastDuration = 3000;
 
-const errorMessage = (error: unknown) => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    )
-      return (data as { message: string }).message;
-  }
-  return "تعذّر تنفيذ الطلب. حاول مرة أخرى.";
-};
-
 export default function AcademicTasksManagementPage() {
+  const { t } = useTranslation(["admin", "common"]);
+  const errorMessage = useErrorMessage();
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [filterSubject, setFilterSubject] = useState("");
@@ -100,11 +90,11 @@ export default function AcademicTasksManagementPage() {
       if (editTask) {
         await updateTask({ id: editTask._id, data }).unwrap();
         setEditTask(null);
-        showToast("تم تعديل التاسك بنجاح ✓", "success");
+        showToast(t("tasks.messages.updated"), "success");
       } else {
         await createTask(data).unwrap();
         setShowModal(false);
-        showToast("تم إنشاء التاسك وفتحه للطلاب ✓", "success");
+        showToast(t("tasks.messages.created"), "success");
       }
     } catch (error) {
       showToast(errorMessage(error), "error");
@@ -116,7 +106,7 @@ export default function AcademicTasksManagementPage() {
     try {
       await deleteTask(deletingTask._id).unwrap();
       setDeletingTask(null);
-      showToast("تم حذف التاسك", "success");
+      showToast(t("tasks.messages.deleted"), "success");
     } catch (error) {
       showToast(errorMessage(error), "error");
     }
@@ -127,21 +117,21 @@ export default function AcademicTasksManagementPage() {
     try {
       await closeTask(closingTask._id).unwrap();
       setClosingTask(null);
-      showToast("تم إغلاق التاسك", "success");
+      showToast(t("tasks.messages.closed"), "success");
     } catch (error) {
       showToast(errorMessage(error), "error");
     }
   };
 
   const stats = [
-    { label: "إجمالي التاسكات", value: tasks.length, color: "#404293" },
+    { label: t("tasks.totalTasks"), value: tasks.length, color: "#404293" },
     {
-      label: "مفتوحة",
+      label: t("tasks.statusOpen"),
       value: tasks.filter((task) => task.status === "open").length,
       color: "#059669",
     },
     {
-      label: "مغلقة",
+      label: t("tasks.statusClosed"),
       value: tasks.filter((task) => task.status === "closed").length,
       color: "#6b7280",
     },
@@ -156,18 +146,19 @@ export default function AcademicTasksManagementPage() {
               <ClipboardList className="h-[18px] w-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black tracking-tight text-gray-900">
-              إدارة التاسكات الأكاديمية
+              {t("tasks.title")}
             </h1>
           </div>
           <p className="text-sm font-medium text-gray-400">
-            إنشاء وتعديل وإغلاق التاسكات الأكاديمية للطلاب
+            {t("tasks.subtitle")}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => tasksQuery.refetch()}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-[#404293]/30 hover:text-[#404293]"
           >
             <RefreshCcw
@@ -179,7 +170,7 @@ export default function AcademicTasksManagementPage() {
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-5 py-2.5 text-sm font-bold text-white shadow-xl shadow-[#404293]/30 transition-all hover:-translate-y-0.5 hover:shadow-[#404293]/45 active:scale-[0.98]"
           >
-            <Plus size={17} /> تاسك جديد
+            <Plus size={17} /> {t("tasks.new")}
           </button>
         </div>
       </div>
@@ -214,11 +205,11 @@ export default function AcademicTasksManagementPage() {
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="بحث عن تاسك..."
+            placeholder={t("tasks.searchPlaceholder")}
             className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
           />
           {search && (
-            <button type="button" onClick={() => setSearch("")} aria-label="مسح البحث">
+            <button type="button" onClick={() => setSearch("")} aria-label={t("tasks.clearSearch")}>
               <X size={13} className="text-gray-300 hover:text-gray-500" />
             </button>
           )}
@@ -230,24 +221,24 @@ export default function AcademicTasksManagementPage() {
               setFilterYear(event.target.value);
               setFilterSubject("");
             }}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
           >
-            <option value="">كل السنوات</option>
+            <option value="">{t("tasks.allYears")}</option>
             {yearOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
               </option>
             ))}
           </select>
-          <GraduationCap className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         </div>
         <div className="relative">
           <select
             value={filterSubject}
             onChange={(event) => setFilterSubject(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
           >
-            <option value="">كل المواد</option>
+            <option value="">{t("tasks.allSubjects")}</option>
             {subjectOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
@@ -259,11 +250,11 @@ export default function AcademicTasksManagementPage() {
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
           >
-            <option value="">كل الحالات</option>
-            <option value="open">مفتوحة</option>
-            <option value="closed">مغلقة</option>
+            <option value="">{t("tasks.allStatuses")}</option>
+            <option value="open">{t("tasks.statusOpen")}</option>
+            <option value="closed">{t("tasks.statusClosed")}</option>
           </select>
         </div>
         {(filterYear || filterSubject || filterStatus) && (
@@ -276,7 +267,7 @@ export default function AcademicTasksManagementPage() {
             }}
             className="flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold text-red-500 transition-colors hover:border-red-100 hover:bg-red-50"
           >
-            <X size={13} /> مسح الفلاتر
+            <X size={13} /> {t("tasks.clearFilters")}
           </button>
         )}
       </div>
@@ -316,10 +307,10 @@ export default function AcademicTasksManagementPage() {
             <ClipboardList className="h-7 w-7 text-gray-300" />
           </div>
           <p className="mb-1 font-bold text-gray-400">
-            {search ? "لا توجد نتائج" : "لا توجد تاسكات بعد"}
+            {t(search ? "tasks.emptyNoResults" : "tasks.emptyNone")}
           </p>
           <p className="mb-4 text-sm text-gray-300">
-            {search ? "جرّب مصطلح بحث مختلف" : "أنشئ أول تاسك أكاديمي الآن"}
+            {t(search ? "tasks.emptySearchHint" : "tasks.emptyHint")}
           </p>
           {!search && (
             <button
@@ -327,7 +318,7 @@ export default function AcademicTasksManagementPage() {
               onClick={() => setShowModal(true)}
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white shadow-md"
             >
-              <Plus size={14} /> إنشاء تاسك
+              <Plus size={14} /> {t("tasks.createFirst")}
             </button>
           )}
         </div>
@@ -406,12 +397,18 @@ export default function AcademicTasksManagementPage() {
               <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50">
                 <Trash2 className="h-7 w-7 text-red-500" />
               </div>
-              <h3 className="mb-2 text-lg font-black text-gray-900">تأكيد الحذف</h3>
-              <p className="mb-1 text-sm text-gray-500">ستحذف التاسك:</p>
+              <h3 className="mb-2 text-lg font-black text-gray-900">
+                {t("tasks.confirmDelete.title")}
+              </h3>
+              <p className="mb-1 text-sm text-gray-500">
+                {t("tasks.confirmDelete.body")}
+              </p>
               <p className="mb-6 text-sm font-black text-[#404293]">
                 "{deletingTask.title}"
               </p>
-              <p className="mb-6 text-xs text-gray-400">لا يمكن التراجع عن هذا الإجراء.</p>
+              <p className="mb-6 text-xs text-gray-400">
+                {t("tasks.confirmDelete.irreversible")}
+              </p>
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -419,7 +416,7 @@ export default function AcademicTasksManagementPage() {
                   disabled={deleteState.isLoading}
                   className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -435,10 +432,10 @@ export default function AcademicTasksManagementPage() {
                       >
                         <RefreshCcw size={14} />
                       </motion.div>
-                      جاري...
+                      {t("tasks.confirmDelete.working")}
                     </>
                   ) : (
-                    "نعم، احذف"
+                    t("tasks.confirmDelete.yes")
                   )}
                 </button>
               </div>
@@ -467,13 +464,17 @@ export default function AcademicTasksManagementPage() {
               <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50">
                 <Lock className="h-7 w-7 text-amber-500" />
               </div>
-              <h3 className="mb-2 text-lg font-black text-gray-900">تأكيد الإغلاق</h3>
-              <p className="mb-1 text-sm text-gray-500">سيتم إغلاق التاسك:</p>
+              <h3 className="mb-2 text-lg font-black text-gray-900">
+                {t("tasks.confirmClose.title")}
+              </h3>
+              <p className="mb-1 text-sm text-gray-500">
+                {t("tasks.confirmClose.body")}
+              </p>
               <p className="mb-6 text-sm font-black text-[#404293]">
                 "{closingTask.title}"
               </p>
               <p className="mb-6 text-xs text-gray-400">
-                لن يتمكن الطلاب من التسليم بعد الإغلاق.
+                {t("tasks.confirmClose.note")}
               </p>
               <div className="flex gap-3">
                 <button
@@ -482,7 +483,7 @@ export default function AcademicTasksManagementPage() {
                   disabled={closeState.isLoading}
                   className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -498,10 +499,10 @@ export default function AcademicTasksManagementPage() {
                       >
                         <RefreshCcw size={14} />
                       </motion.div>
-                      جاري...
+                      {t("tasks.confirmDelete.working")}
                     </>
                   ) : (
-                    "نعم، أغلق"
+                    t("tasks.confirmClose.yes")
                   )}
                 </button>
               </div>

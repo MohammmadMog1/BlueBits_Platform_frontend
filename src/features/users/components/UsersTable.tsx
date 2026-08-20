@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown, ShieldCheck, Trash2, Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { User } from "../types";
-import { PERMISSIONS_LIST, ROLE_COLORS, USER_ROLES } from "../types";
+import { ROLE_COLORS, USER_ROLES } from "../types";
 
 interface UsersTableProps {
   users: User[];
@@ -22,6 +23,7 @@ export default function UsersTable({
   onManagePermissions,
   loading,
 }: UsersTableProps) {
+  const { t } = useTranslation(["users", "admin"]);
   const filteredUsers = users.filter((user) => {
     const searchValue = search.toLowerCase();
     const matchesSearch =
@@ -52,23 +54,23 @@ export default function UsersTable({
       ) : filteredUsers.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Users className="w-10 h-10 text-gray-200 mb-3" />
-          <p className="font-bold text-gray-400">لا توجد نتائج</p>
+          <p className="font-bold text-gray-400">{t("table.noResults")}</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <div className="min-w-[1080px]" role="table" aria-label="جدول المستخدمين">
+          <div className="min-w-[1080px]" role="table" aria-label={t("table.label")}>
             <div
               role="row"
               className="grid grid-cols-[1.4fr_1.5fr_0.9fr_0.9fr_0.9fr_1.3fr_auto] items-center gap-4 px-6 py-3.5 bg-gray-50/80 border-b border-gray-100 text-[11px] font-black text-gray-400 uppercase tracking-wider sticky top-0 z-10"
             >
-              <span role="columnheader">المستخدم</span>
-              <span role="columnheader">البريد الإلكتروني</span>
-              <span role="columnheader">السنة الدراسية</span>
-              <span role="columnheader">الحالة</span>
-              <span role="columnheader">الدور</span>
-              <span role="columnheader">الصلاحيات</span>
+              <span role="columnheader">{t("table.colUser")}</span>
+              <span role="columnheader">{t("table.colEmail")}</span>
+              <span role="columnheader">{t("table.colYear")}</span>
+              <span role="columnheader">{t("table.colStatus")}</span>
+              <span role="columnheader">{t("table.colRole")}</span>
+              <span role="columnheader">{t("table.colPermissions")}</span>
               <span role="columnheader" className="sr-only">
-                إجراءات
+                {t("table.colActions")}
               </span>
             </div>
             <div role="rowgroup">
@@ -108,7 +110,9 @@ export default function UsersTable({
                           {user.year}
                         </span>
                       ) : (
-                        <span className="text-[11px] text-gray-300 font-semibold">غير محدد</span>
+                        <span className="text-[11px] text-gray-300 font-semibold">
+                          {t("table.notSet")}
+                        </span>
                       )}
                     </div>
                     <span
@@ -119,53 +123,55 @@ export default function UsersTable({
                           : "bg-gray-100 text-gray-500"
                       }`}
                     >
-                      {user.isVerified !== false ? "✓ موثّق" : "غير موثّق"}
+                      {t(user.isVerified !== false ? "table.verified" : "table.unverified")}
                     </span>
                     <div role="cell" className="relative flex-shrink-0 w-fit">
                       <select
                         value={user.role}
                         onChange={(event) => onRoleChange(user._id, event.target.value)}
-                        aria-label={`دور ${user.name}`}
-                        className={`appearance-none pl-2.5 pr-7 py-1.5 rounded-xl text-[11px] font-black border border-transparent outline-none cursor-pointer transition-all focus:ring-2 focus:ring-[#404293]/30 ${
+                        aria-label={t("table.roleOf", { name: user.name })}
+                        className={`appearance-none ps-2.5 pe-7 py-1.5 rounded-xl text-[11px] font-black border border-transparent outline-none cursor-pointer transition-all focus:ring-2 focus:ring-[#404293]/30 ${
                           ROLE_COLORS[user.role] || "bg-gray-100 text-gray-700"
                         }`}
                       >
                         {USER_ROLES.map((roleOption) => (
                           <option key={roleOption} value={roleOption}>
-                            {roleOption}
+                            {t(`admin:roles.${roleOption}`)}
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none opacity-60" />
+                      <ChevronDown className="absolute end-2 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none opacity-60" />
                     </div>
                     <div role="cell" className="flex flex-wrap items-center gap-1.5 min-w-0">
                       {user.permissions && user.permissions.length > 0 ? (
                         user.permissions.map((permission) => (
                           <span
                             key={permission}
-                            title={PERMISSIONS_LIST.find((item) => item.key === permission)?.description}
+                            title={t(`permissions.${permission}.description`)}
                             className="text-[10px] font-bold px-2 py-1 rounded-full bg-[#404293]/10 text-[#404293] whitespace-nowrap"
                           >
-                            {PERMISSIONS_LIST.find((item) => item.key === permission)?.label ?? permission}
+                            {t(`permissions.${permission}.label`)}
                           </span>
                         ))
                       ) : (
-                        <span className="text-[11px] text-gray-300 font-semibold">لا توجد</span>
+                        <span className="text-[11px] text-gray-300 font-semibold">
+                          {t("table.noPermissions")}
+                        </span>
                       )}
                     </div>
                     <div role="cell" className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => onManagePermissions(user)}
-                        title="إدارة الصلاحيات"
-                        aria-label={`إدارة صلاحيات ${user.name}`}
+                        title={t("table.managePermissions")}
+                        aria-label={t("table.managePermissionsOf", { name: user.name })}
                         className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-300 hover:text-[#404293] hover:bg-[#404293]/10 transition-all shrink-0"
                       >
                         <ShieldCheck size={14} />
                       </button>
                       <button
                         onClick={() => onDelete(user._id)}
-                        title="حذف"
-                        aria-label={`حذف ${user.name}`}
+                        title={t("table.delete")}
+                        aria-label={t("table.deleteUser", { name: user.name })}
                         className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all shrink-0"
                       >
                         <Trash2 size={14} />
@@ -176,7 +182,9 @@ export default function UsersTable({
               </AnimatePresence>
             </div>
             <div className="px-6 py-3 border-t border-gray-50">
-              <p className="text-xs text-gray-400 font-semibold">{filteredUsers.length} مستخدم</p>
+              <p className="text-xs text-gray-400 font-semibold">
+                {t("table.count", { count: filteredUsers.length })}
+              </p>
             </div>
           </div>
         </div>

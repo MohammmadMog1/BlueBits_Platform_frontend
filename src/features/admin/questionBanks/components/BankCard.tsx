@@ -10,9 +10,10 @@ import {
   Eye,
   User,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { QuestionBank } from "../types";
 import {
-  formatDateTime,
   getCreatorName,
   getLectureTitle,
   getSubjectName,
@@ -39,6 +40,8 @@ export function BankCard({
   onUnpublish,
   onDelete,
 }: BankCardProps) {
+  const { t } = useTranslation("admin");
+  const { formatDateTimeOrDash } = useFormatters();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const isPublished = bank.status === "published";
 
@@ -62,7 +65,7 @@ export function BankCard({
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg shadow-[#404293]/25">
             <BrainCircuit className="w-7 h-7 text-white" />
           </div>
-          <span className="absolute -bottom-1 -right-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm bg-[#2376BB]">
+          <span className="absolute -bottom-1 -end-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm bg-[#2376BB]">
             MCQ
           </span>
         </div>
@@ -81,11 +84,11 @@ export function BankCard({
               <span className="text-[#2376BB] font-bold">
                 {bank.questionCount ?? 0}
               </span>{" "}
-              questions
+              {t("banks.card.questions")}
             </span>
             <span className="flex items-center gap-1 font-medium">
               <Clock size={11} className="text-gray-300" />
-              {formatDateTime(bank.publishedAt ?? bank.createdAt)}
+              {formatDateTimeOrDash(bank.publishedAt ?? bank.createdAt)}
             </span>
             <span className="flex items-center gap-1 font-medium">
               <User size={11} className="text-gray-300" /> {getCreatorName(bank)}
@@ -100,9 +103,7 @@ export function BankCard({
           <button
             onClick={isPublished ? onUnpublish : onPublish}
             disabled={disabled || !canPublish}
-            title={
-              canPublish ? undefined : "لا تملك صلاحية النشر"
-            }
+            title={canPublish ? undefined : t("banks.noPublishPermission")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border disabled:opacity-50 disabled:cursor-not-allowed ${
               isPublished
                 ? "bg-green-500/10 border-green-500/25 text-green-600 hover:bg-green-500/20"
@@ -111,11 +112,11 @@ export function BankCard({
           >
             {isPublished ? (
               <>
-                <ToggleRight size={13} /> Published
+                <ToggleRight size={13} /> {t("banks.card.published")}
               </>
             ) : (
               <>
-                <ToggleLeft size={13} /> Draft
+                <ToggleLeft size={13} /> {t("banks.card.draft")}
               </>
             )}
           </button>
@@ -125,7 +126,7 @@ export function BankCard({
               onClick={onOpen}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
             >
-              <Eye size={12} /> Review
+              <Eye size={12} /> {t("banks.card.review")}
             </button>
             {canDelete &&
               (confirmDelete ? (
@@ -138,13 +139,13 @@ export function BankCard({
                     disabled={disabled}
                     className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
                   >
-                    Confirm
+                    {t("banks.card.confirm")}
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
                     className="px-2 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-600"
                   >
-                    Cancel
+                    {t("banks.card.cancel")}
                   </button>
                 </span>
               ) : (
@@ -152,7 +153,7 @@ export function BankCard({
                   onClick={() => setConfirmDelete(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
                 >
-                  <Trash2 size={12} /> Delete
+                  <Trash2 size={12} /> {t("banks.card.delete")}
                 </button>
               ))}
           </div>

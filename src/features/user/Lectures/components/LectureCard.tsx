@@ -1,5 +1,7 @@
 import { useTheme } from "next-themes";
 import { Eye, Download, Clock, File, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { LecturePopulated } from "../types";
 import { LectureInteractions } from "../interactions";
 
@@ -9,19 +11,9 @@ interface LectureCardProps {
   onDownload: (lecture: LecturePopulated) => void;
 }
 
-const formatDate = (iso: string): string => {
-  try {
-    return new Date(iso).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return "";
-  }
-};
-
 export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
+  const { t } = useTranslation("lectures");
+  const { formatShortDate } = useFormatters();
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const isPractical = lecture.type === "practical";
@@ -50,11 +42,11 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
             <FileText className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
           </div>
           <span
-            className={`absolute -bottom-1 -right-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
+            className={`absolute -bottom-1 -end-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
               isPractical ? "bg-emerald-500" : "bg-[#404293]"
             }`}
           >
-            {isPractical ? "LAB" : "PDF"}
+            {t(isPractical ? "card.badgeLab" : "card.badgePdf")}
           </span>
         </div>
 
@@ -70,11 +62,11 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
           >
             <span className="flex items-center gap-1">
               <Clock size={11} className={isDark ? "text-gray-500" : "text-gray-300"} />
-              {formatDate(lecture.createdAt)}
+              {formatShortDate(lecture.createdAt)}
             </span>
             <span className="flex items-center gap-1">
               <File size={11} className={isDark ? "text-gray-500" : "text-gray-300"} />
-              {lecture.type}
+              {t(isPractical ? "type.practical" : "type.theoretical")}
             </span>
           </div>
         </div>
@@ -84,13 +76,13 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
             onClick={() => onView(lecture)}
             className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-[11px] sm:text-sm font-bold shadow-md hover:opacity-90 hover:-translate-y-0.5 transition-all"
           >
-            <Eye size={13} /> View
+            <Eye size={13} /> {t("card.view")}
           </button>
           <button
             onClick={() => onDownload(lecture)}
             className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-semibold border transition-all ${isDark ? "border-white/20 bg-white/5 hover:bg-white/15 text-gray-100" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"}`}
           >
-            <Download size={13} /> Download
+            <Download size={13} /> {t("card.download")}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Loader2, MessageCircle, Send, ThumbsDown, ThumbsUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../../../app/store/hooks";
 import {
   useGetLectureReactionsQuery,
@@ -20,7 +21,8 @@ interface LectureInteractionsProps {
   isDark: boolean;
 }
 
-const errorMessage = (error: unknown) => {
+/** يستخرج رسالة الخطأ من ردّ الخادم، وإلا `null` ليستخدم المكوّن نصّاً مترجَماً */
+const serverMessage = (error: unknown): string | null => {
   if (typeof error === "object" && error !== null && "data" in error) {
     const data = (error as { data: unknown }).data;
     if (
@@ -32,10 +34,11 @@ const errorMessage = (error: unknown) => {
       return (data as { message: string }).message;
     }
   }
-  return "تعذّر تنفيذ الطلب، حاول مرة أخرى.";
+  return null;
 };
 
 export function LectureInteractions({ lectureId, isDark }: LectureInteractionsProps) {
+  const { t } = useTranslation("lectures");
   const [expanded, setExpanded] = useState(false);
   const [draft, setDraft] = useState("");
   const [composerError, setComposerError] = useState("");
@@ -73,7 +76,9 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
       await createComment({ lectureId, userId: currentUser._id, content: trimmed }).unwrap();
       setDraft("");
     } catch (error) {
-      setComposerError(errorMessage(error));
+      setComposerError(
+        serverMessage(error) ?? t("interactions.requestFailed"),
+      );
     }
   };
 
@@ -86,6 +91,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
           type="button"
           onClick={() => handleReact("like")}
           disabled={isReacting}
+          aria-label={t("interactions.like")}
           className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all sm:gap-1.5 sm:rounded-xl sm:px-3 sm:py-1.5 sm:text-sm ${
             userReaction === "like"
               ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white"
@@ -102,6 +108,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
           type="button"
           onClick={() => handleReact("dislike")}
           disabled={isReacting}
+          aria-label={t("interactions.dislike")}
           className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all sm:gap-1.5 sm:rounded-xl sm:px-3 sm:py-1.5 sm:text-sm ${
             userReaction === "dislike"
               ? "bg-gradient-to-r from-red-500 to-rose-500 text-white"
@@ -128,7 +135,9 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
           }`}
         >
           <MessageCircle className="h-3.5 w-3.5" />
-          {expanded && commentsResult ? commentsResult.count : "التعليقات"}
+          {expanded && commentsResult
+            ? commentsResult.count
+            : t("interactions.comments")}
         </button>
       </div>
 
@@ -142,17 +151,19 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
             className="overflow-hidden"
           >
             <div className="mt-3 flex flex-col gap-2.5 sm:mt-4 sm:gap-3">
-              <div className="flex max-h-52 flex-col gap-2.5 overflow-y-auto overscroll-contain pr-1 sm:max-h-72 sm:gap-3">
+              <div className="flex max-h-52 flex-col gap-2.5 overflow-y-auto overscroll-contain pe-1 sm:max-h-72 sm:gap-3">
                 {commentsLoading ? (
                   <div className="flex items-center justify-center gap-2 py-6 text-gray-400">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-xs font-medium">جاري تحميل التعليقات...</span>
+                    <span className="text-xs font-medium">
+                      {t("interactions.loadingComments")}
+                    </span>
                   </div>
                 ) : comments.length === 0 ? (
                   <p
                     className={`py-3 text-center text-xs font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}
                   >
-                    لا توجد تعليقات بعد، كن أول من يعلّق
+                    {t("interactions.noComments")}
                   </p>
                 ) : (
                   comments.map((comment) => (
@@ -182,7 +193,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
                   <textarea
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
-                    placeholder="اكتب تعليقك..."
+                    placeholder={t("interactions.composerPlaceholder")}
                     rows={1}
                     className={`flex-1 resize-none rounded-lg border px-2.5 py-1.5 text-xs outline-none focus:border-[#2376BB] sm:rounded-xl sm:px-3 sm:py-2 sm:text-sm ${
                       isDark
@@ -194,6 +205,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
                     type="button"
                     onClick={handleSubmitComment}
                     disabled={isCreating || !draft.trim()}
+                    aria-label={t("interactions.sendComment")}
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[#404293] to-[#2376BB] text-white disabled:opacity-50 sm:h-9 sm:w-9 sm:rounded-xl"
                   >
                     {isCreating ? (
@@ -208,7 +220,9 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
                 <p className="text-[11px] font-semibold text-red-500">{composerError}</p>
               )}
               {commentsFetching && !commentsLoading && (
-                <span className="text-[10px] text-gray-400">...جاري التحديث</span>
+                <span className="text-[10px] text-gray-400">
+                  {t("interactions.updating")}
+                </span>
               )}
             </div>
           </motion.div>

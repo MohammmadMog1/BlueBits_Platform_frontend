@@ -1,6 +1,7 @@
 import { Clock } from "lucide-react";
 import type { DayGroup } from "../types";
-import { dayOfWeekLabel, formatDate } from "../utils/schedule";
+import { useTranslation } from "react-i18next";
+import { useScheduleDates } from "../hooks/useScheduleDates";
 
 interface TimetableDayCardsProps {
   days: DayGroup[];
@@ -8,6 +9,8 @@ interface TimetableDayCardsProps {
 
 /** عرض البطاقات: بطاقة لكل يوم، مفيد للقراءة السريعة على الشاشات الصغيرة */
 export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
+  const { t } = useTranslation("admin");
+  const { dayOfWeekLabel, formatDate } = useScheduleDates();
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       {days.map((day) => (
@@ -20,7 +23,12 @@ export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
               {dayOfWeekLabel(day.day)} · {formatDate(day.day)}
             </p>
             <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-gray-400">
-              {day.slots.reduce((total, slot) => total + slot.entries.length, 0)} مادة
+              {t("schedule.timetable.subjectsCount", {
+                count: day.slots.reduce(
+                  (total, slot) => total + slot.entries.length,
+                  0,
+                ),
+              })}
             </span>
           </div>
 
@@ -42,7 +50,7 @@ export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
                     }`}
                   >
                     <Clock size={10} />
-                    فترة {slot.timeslot}
+                    {t("schedule.timetable.slotLabel", { number: slot.timeslot })}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {slot.entries.map((entry) => (

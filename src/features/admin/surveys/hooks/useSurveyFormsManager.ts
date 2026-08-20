@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import {
   useGetSemestersQuery,
   useGetYearsQuery,
@@ -10,7 +12,7 @@ import {
   useOpenSurveyFormMutation,
 } from "../api/surveysApi";
 import type { SurveyForm, SurveyFormFilter, SurveyFormValues } from "../types";
-import { errorMessage, getRefId } from "../utils/survey";
+import { getRefId } from "../utils/survey";
 
 /** الإجراء المطلوب تأكيده قبل تنفيذه */
 export interface PendingAction {
@@ -23,6 +25,8 @@ export interface PendingAction {
  * إنشاء مسودة → فتحها للطلاب → إغلاقها نهائياً، مع تصفح الردود.
  */
 export function useSurveyFormsManager() {
+  const { t } = useTranslation("admin");
+  const errorMessage = useErrorMessage();
   const [filter, setFilter] = useState<SurveyFormFilter>("all");
   const [search, setSearch] = useState("");
   const [isCreating, setCreating] = useState(false);
@@ -66,12 +70,15 @@ export function useSurveyFormsManager() {
       return {
         yearId,
         semesterId,
-        yearName: yearRef?.name ?? yearNameById.get(yearId) ?? "سنة غير محددة",
+        yearName:
+          yearRef?.name ?? yearNameById.get(yearId) ?? t("surveys.unknownYear"),
         semesterName:
-          semesterRef?.name ?? semesterNameById.get(semesterId) ?? "فصل غير محدد",
+          semesterRef?.name ??
+          semesterNameById.get(semesterId) ??
+          t("surveys.unknownSemester"),
       };
     },
-    [yearNameById, semesterNameById],
+    [yearNameById, semesterNameById, t],
   );
 
   const visibleForms = useMemo(() => {
@@ -130,7 +137,7 @@ export function useSurveyFormsManager() {
         academicYear: values.academicYear.trim(),
       }).unwrap();
       setCreating(false);
-      setSuccessMessage("تم إنشاء الفورم كمسودة – افتحه ليبدأ الطلاب بالإجابة");
+      setSuccessMessage(t("surveys.messages.created"));
     } catch {
       // الخطأ معروض داخل النافذة عبر createError
     }
@@ -155,10 +162,10 @@ export function useSurveyFormsManager() {
     try {
       if (type === "open") {
         await openForm(form._id).unwrap();
-        setSuccessMessage("تم فتح الفورم للطلاب");
+        setSuccessMessage(t("surveys.messages.opened"));
       } else {
         await closeForm(form._id).unwrap();
-        setSuccessMessage("تم إغلاق الفورم – لا يمكن إعادة فتحه");
+        setSuccessMessage(t("surveys.messages.closed"));
       }
       setPendingAction(null);
     } catch {

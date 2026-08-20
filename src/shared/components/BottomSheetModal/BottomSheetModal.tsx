@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 interface BottomSheetModalProps {
   onClose: () => void;
@@ -23,6 +24,7 @@ export default function BottomSheetModal({
   isDark,
   maxWidthClassName = "sm:max-w-lg",
 }: BottomSheetModalProps) {
+  const { t } = useTranslation("common");
   return (
     <div className="fixed inset-0 z-[300] flex items-end justify-center sm:items-center">
       <motion.div
@@ -73,7 +75,7 @@ export default function BottomSheetModal({
           <button
             type="button"
             onClick={onClose}
-            aria-label="إغلاق"
+            aria-label={t("actions.close")}
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-colors ${
               isDark ? "bg-white/10 text-gray-300 hover:bg-white/15" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
             }`}

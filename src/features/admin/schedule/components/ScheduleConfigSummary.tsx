@@ -11,16 +11,15 @@ import {
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import type { Subject } from "../../subjects/types";
 import type { ScheduleConfig, SubjectConfig } from "../types";
 import {
-  DAYS_OF_WEEK,
   calcCapacity,
-  dayOfWeekLabel,
-  formatDate,
   getRefId,
   toDateInputValue,
 } from "../utils/schedule";
+import { useScheduleDates } from "../hooks/useScheduleDates";
 
 interface ScheduleConfigSummaryProps {
   config: ScheduleConfig;
@@ -30,13 +29,21 @@ interface ScheduleConfigSummaryProps {
   onDelete: () => void;
 }
 
-const subjectName = (item: SubjectConfig, subjects: Subject[]): string => {
+/**
+ * اسم المادة من الإعداد. الحالات التي لا اسم فيها تُرجَع كمفتاح ترجمة
+ * لأن الدالة نقيّة ولا تعرف اللغة الحالية.
+ */
+const subjectName = (
+  item: SubjectConfig,
+  subjects: Subject[],
+): { name: string } | { key: "deleted" } | { key: "unknown"; id: string } => {
   if (item.subjectId && typeof item.subjectId === "object") {
-    return item.subjectId.name;
+    return { name: item.subjectId.name };
   }
   const id = getRefId(item.subjectId);
-  if (!id) return "مادة محذوفة";
-  return subjects.find((subject) => subject._id === id)?.name ?? `مادة (${id.slice(0, 8)}…)`;
+  if (!id) return { key: "deleted" };
+  const found = subjects.find((subject) => subject._id === id)?.name;
+  return found ? { name: found } : { key: "unknown", id };
 };
 
 export default function ScheduleConfigSummary({
@@ -46,6 +53,8 @@ export default function ScheduleConfigSummary({
   onEdit,
   onDelete,
 }: ScheduleConfigSummaryProps) {
+  const { t } = useTranslation("admin");
+  const { dayOfWeekLabel, formatDate, weekdayNames } = useScheduleDates();
   const excludedDates = (config.excludedDates ?? []).map(toDateInputValue);
   const capacity = calcCapacity(
     config.startDate,
@@ -59,10 +68,10 @@ export default function ScheduleConfigSummary({
     capacity.totalSlots > 0 && subjectsConfig.length > capacity.totalSlots;
 
   const stats = [
-    { label: "أيام الفحص المتاحة", value: capacity.examDays, color: "#404293" },
-    { label: "أيام مستبعدة", value: capacity.excludedDays, color: "#F59E0B" },
-    { label: "إجمالي الفترات", value: capacity.totalSlots, color: "#2376BB" },
-    { label: "المواد المهيأة", value: subjectsConfig.length, color: "#059669" },
+    { label: t("schedule.capacity.examDays"), value: capacity.examDays, color: "#404293" },
+    { label: t("schedule.capacity.excludedDays"), value: capacity.excludedDays, color: "#F59E0B" },
+    { label: t("schedule.capacity.totalSlots"), value: capacity.totalSlots, color: "#2376BB" },
+    { label: t("schedule.capacity.configuredSubjects"), value: subjectsConfig.length, color: "#059669" },
   ];
 
   return (
@@ -79,14 +88,17 @@ export default function ScheduleConfigSummary({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-black text-gray-900">
-                الإعدادات مضبوطة
+                {t("schedule.summary.configured")}
               </h2>
               <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600">
                 {config.academicYear}
               </span>
             </div>
             <p className="mt-0.5 text-xs font-semibold text-gray-400">
-              الفصل: {semesterLabel} · آخر تحديث: {formatDate(config.updatedAt)}
+              {t("schedule.summary.semesterAndUpdated", {
+                semester: semesterLabel,
+                date: formatDate(config.updatedAt),
+              })}
             </p>
           </div>
         </div>
@@ -96,12 +108,12 @@ export default function ScheduleConfigSummary({
             onClick={onEdit}
             className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-[#404293]/25 transition-all hover:-translate-y-0.5"
           >
-            <Pencil size={13} /> تعديل
+            <Pencil size={13} /> {t("schedule.summary.edit")}
           </button>
           <button
             type="button"
             onClick={onDelete}
-            aria-label="حذف الإعدادات"
+            aria-label={t("schedule.summary.deleteConfig")}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-400 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
           >
             <Trash2 size={15} />
@@ -113,7 +125,9 @@ export default function ScheduleConfigSummary({
         <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3.5">
           <CalendarRange className="h-4 w-4 shrink-0 text-[#404293]" />
           <div>
-            <p className="text-[11px] font-bold text-gray-400">فترة الامتحانات</p>
+            <p className="text-[11px] font-bold text-gray-400">
+              {t("schedule.summary.examPeriod")}
+            </p>
             <p className="text-sm font-black text-gray-900">
               {formatDate(config.startDate)} ← {formatDate(config.endDate)}
             </p>
@@ -122,9 +136,13 @@ export default function ScheduleConfigSummary({
         <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3.5">
           <Clock className="h-4 w-4 shrink-0 text-[#2376BB]" />
           <div>
-            <p className="text-[11px] font-bold text-gray-400">الفترات اليومية</p>
+            <p className="text-[11px] font-bold text-gray-400">
+              {t("schedule.summary.dailySlots")}
+            </p>
             <p className="text-sm font-black text-gray-900">
-              {config.timeslotsPerDay} فترات / يوم
+              {t("schedule.summary.slotsPerDay", {
+                count: config.timeslotsPerDay,
+              })}
             </p>
           </div>
         </div>
@@ -157,8 +175,10 @@ export default function ScheduleConfigSummary({
       {isOverCapacity && (
         <p className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-700">
           <AlertCircle size={13} className="shrink-0" />
-          عدد المواد ({subjectsConfig.length}) أكبر من الفترات المتاحة (
-          {capacity.totalSlots}) – قد يفشل توليد الجدول.
+          {t("schedule.summary.capacityWarning", {
+            subjects: subjectsConfig.length,
+            slots: capacity.totalSlots,
+          })}
         </p>
       )}
 
@@ -167,7 +187,7 @@ export default function ScheduleConfigSummary({
           <div className="mb-2.5 flex items-center gap-2">
             <CalendarOff className="h-4 w-4 text-[#404293]" />
             <h3 className="text-xs font-black text-gray-900">
-              أيام الأسبوع المستبعدة
+              {t("schedule.summary.excludedWeekdays")}
             </h3>
           </div>
           {config.excludedDaysOfWeek?.length ? (
@@ -177,13 +197,13 @@ export default function ScheduleConfigSummary({
                   key={day}
                   className="rounded-lg border border-red-100 bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-600"
                 >
-                  {DAYS_OF_WEEK[day]?.label ?? day}
+                  {weekdayNames[day] ?? day}
                 </span>
               ))}
             </div>
           ) : (
             <p className="text-[11px] font-semibold text-gray-400">
-              لا توجد أيام مستبعدة
+              {t("schedule.summary.noExcludedWeekdays")}
             </p>
           )}
         </div>
@@ -191,7 +211,9 @@ export default function ScheduleConfigSummary({
         <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
           <div className="mb-2.5 flex items-center gap-2">
             <CalendarDays className="h-4 w-4 text-[#404293]" />
-            <h3 className="text-xs font-black text-gray-900">تواريخ مستبعدة</h3>
+            <h3 className="text-xs font-black text-gray-900">
+              {t("schedule.summary.excludedDates")}
+            </h3>
           </div>
           {excludedDates.length ? (
             <div className="flex flex-wrap gap-1.5">
@@ -206,7 +228,7 @@ export default function ScheduleConfigSummary({
             </div>
           ) : (
             <p className="text-[11px] font-semibold text-gray-400">
-              لا توجد تواريخ مستبعدة
+              {t("schedule.summary.noExcludedDates")}
             </p>
           )}
         </div>
@@ -215,7 +237,9 @@ export default function ScheduleConfigSummary({
       <div>
         <div className="mb-2.5 flex items-center gap-2">
           <BookMarked className="h-4 w-4 text-[#2376BB]" />
-          <h3 className="text-xs font-black text-gray-900">إعدادات المواد</h3>
+          <h3 className="text-xs font-black text-gray-900">
+            {t("schedule.summary.subjectsConfig")}
+          </h3>
           <span className="rounded-full bg-[#2376BB]/10 px-2 py-0.5 text-[10px] font-bold text-[#2376BB]">
             {subjectsConfig.length}
           </span>
@@ -223,23 +247,31 @@ export default function ScheduleConfigSummary({
 
         {subjectsConfig.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-6 text-center text-xs font-bold text-gray-400">
-            لم تُضبط أي مادة – اضغط تعديل لإضافة المواد
+            {t("schedule.summary.noSubjectsConfigured")}
           </p>
         ) : (
           <div className="overflow-hidden rounded-2xl border border-gray-100">
             <table className="w-full text-right text-xs">
               <thead className="bg-gray-50 text-[11px] font-black text-gray-500">
                 <tr>
-                  <th className="px-4 py-2.5">المادة</th>
-                  <th className="px-4 py-2.5">الطلاب المحمّلون</th>
-                  <th className="px-4 py-2.5">مدة الامتحان</th>
+                  <th className="px-4 py-2.5">{t("schedule.summary.colSubject")}</th>
+                  <th className="px-4 py-2.5">{t("schedule.summary.colCarried")}</th>
+                  <th className="px-4 py-2.5">{t("schedule.summary.colDuration")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
                 {subjectsConfig.map((item, index) => (
                   <tr key={`${getRefId(item.subjectId)}-${index}`}>
                     <td className="px-4 py-2.5 font-bold text-gray-800">
-                      {subjectName(item, subjects)}
+                      {(() => {
+                        const result = subjectName(item, subjects);
+                        if ("name" in result) return result.name;
+                        return result.key === "deleted"
+                          ? t("schedule.summary.deletedSubject")
+                          : t("schedule.summary.unknownSubject", {
+                              id: result.id.slice(0, 8),
+                            });
+                      })()}
                     </td>
                     <td className="px-4 py-2.5 font-semibold text-gray-500">
                       <span className="inline-flex items-center gap-1.5">
@@ -248,7 +280,9 @@ export default function ScheduleConfigSummary({
                       </span>
                     </td>
                     <td className="px-4 py-2.5 font-semibold text-gray-500">
-                      {item.examDurationOverride} دقيقة
+                      {t("schedule.summary.minutes", {
+                        count: item.examDurationOverride,
+                      })}
                     </td>
                   </tr>
                 ))}

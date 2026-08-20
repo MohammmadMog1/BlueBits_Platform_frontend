@@ -6,6 +6,7 @@
  *
  * ✅ الترتيب الصحيح: year → semester → subject → type → lectures
  */
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "motion/react";
 import {
   BookOpen,
@@ -29,17 +30,14 @@ import { useLectureManager } from "../hooks/useLectureManager";
 import type { LectureType } from "../types";
 
 // ─────────────────────────────────────────────
-// Constants
-// ─────────────────────────────────────────────
-const LECTURE_TYPES: { label: string; value: LectureType }[] = [
-  { label: "Theoretical", value: "theoretical" },
-  { label: "Practical", value: "practical" },
-];
-
-// ─────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────
 export default function LectureManagementPage() {
+  const { t } = useTranslation("admin");
+  const LECTURE_TYPES: { label: string; value: LectureType }[] = [
+    { label: t("lectureManagement.types.theoretical"), value: "theoretical" },
+    { label: t("lectureManagement.types.practical"), value: "practical" },
+  ];
   const {
     // Data
     years,
@@ -82,11 +80,14 @@ export default function LectureManagementPage() {
 
   // ── Helpers ──────────────────────────────
   const selectedYearName =
-    years.find((y) => y._id === selectedYearId)?.name ?? "Year";
+    years.find((y) => y._id === selectedYearId)?.name ??
+    t("lectureManagement.breadcrumb.year");
   const selectedSemesterName =
-    semesters.find((s) => s._id === selectedSemesterId)?.name ?? "Semester";
+    semesters.find((s) => s._id === selectedSemesterId)?.name ??
+    t("lectureManagement.breadcrumb.semester");
   const selectedSubjectName =
-    subjects.find((s) => s._id === selectedSubjectId)?.name ?? "Subject";
+    subjects.find((s) => s._id === selectedSubjectId)?.name ??
+    t("lectureManagement.breadcrumb.subject");
     
   const canUpload = !!(
     selectedYearId &&
@@ -108,7 +109,7 @@ export default function LectureManagementPage() {
         }`}
       >
         <GraduationCap className="w-4 h-4" />
-        {selectedYearId ? selectedYearName : "Year"}
+        {selectedYearId ? selectedYearName : t("lectureManagement.breadcrumb.year")}
       </button>
 
       {/* Semester */}
@@ -124,7 +125,9 @@ export default function LectureManagementPage() {
             }`}
           >
             <Layers className="w-4 h-4" />
-            {selectedSemesterId ? selectedSemesterName : "Semester"}
+            {selectedSemesterId
+              ? selectedSemesterName
+              : t("lectureManagement.breadcrumb.semester")}
           </button>
         </>
       )}
@@ -142,7 +145,9 @@ export default function LectureManagementPage() {
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            {selectedSubjectId ? selectedSubjectName : "Subject"}
+            {selectedSubjectId
+              ? selectedSubjectName
+              : t("lectureManagement.breadcrumb.subject")}
           </button>
         </>
       )}
@@ -160,7 +165,9 @@ export default function LectureManagementPage() {
             }`}
           >
             <Book className="w-4 h-4" />
-            {selectedType === "theoretical" ? "Theoretical" : "Practical"}
+            {selectedType === "theoretical"
+              ? t("lectureManagement.types.theoretical")
+              : t("lectureManagement.types.practical")}
           </button>
         </>
       )}
@@ -170,7 +177,8 @@ export default function LectureManagementPage() {
         <>
           <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
           <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600">
-            <MonitorPlay className="w-4 h-4" /> Lectures
+            <MonitorPlay className="w-4 h-4" />{" "}
+            {t("lectureManagement.breadcrumb.lectures")}
           </span>
         </>
       )}
@@ -190,12 +198,12 @@ export default function LectureManagementPage() {
               <BookOpen className="w-[18px] h-[18px] text-white" />
             </div>
             <h1 className="text-xl font-black text-gray-900 tracking-tight">
-              Lecture Management
+              {t("lectureManagement.title")}
             </h1>
           </div>
           {/* ✅ تم تعديل النص */}
-          <p className="text-sm text-gray-400 font-medium ml-0.5">
-            Navigate by year → semester → subject → type to manage lectures
+          <p className="text-sm text-gray-400 font-medium ms-0.5">
+            {t("lectureManagement.subtitle")}
           </p>
         </div>
         <button
@@ -203,7 +211,7 @@ export default function LectureManagementPage() {
           disabled={!canUpload}
           className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-xl shadow-[#404293]/30 hover:shadow-[#404293]/45 hover:-translate-y-0.5 active:scale-[0.98] transition-all flex-shrink-0 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Plus size={17} /> Upload Lecture
+          <Plus size={17} /> {t("lectureManagement.uploadLecture")}
         </button>
       </div>
 
@@ -242,7 +250,7 @@ export default function LectureManagementPage() {
               onClick={goBack}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-600 hover:text-[#404293] hover:border-[#404293]/30 shadow-sm transition-all flex-shrink-0"
             >
-              <ArrowLeft className="w-4 h-4" /> Back
+              <ArrowLeft className="w-4 h-4" /> {t("lectureManagement.back")}
             </button>
           )}
         </div>
@@ -262,12 +270,14 @@ export default function LectureManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <GraduationCap className="w-5 h-5 text-gray-400" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Academic Year
+                    {t("lectureManagement.steps.selectYear")}
                   </h2>
                 </div>
 
                 {yearsLoading ? (
-                  <LoadingPlaceholder label="Loading years…" />
+                  <LoadingPlaceholder
+                    label={t("lectureManagement.loading.years")}
+                  />
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {years.map((year) => (
@@ -299,13 +309,16 @@ export default function LectureManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <Layers className="w-5 h-5 text-[#33529F]" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Semester —{" "}
-                    <span className="text-[#404293]">{selectedYearName}</span>
+                    {t("lectureManagement.steps.selectSemester", {
+                      year: selectedYearName,
+                    })}
                   </h2>
                 </div>
 
                 {semestersLoading ? (
-                  <LoadingPlaceholder label="Loading semesters…" />
+                  <LoadingPlaceholder
+                    label={t("lectureManagement.loading.semesters")}
+                  />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
                     {semesters.map((sem) => (
@@ -335,18 +348,21 @@ export default function LectureManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <Book className="w-5 h-5 text-[#2376BB]" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Subject —{" "}
-                    <span className="text-[#33529F]">{selectedSemesterName}</span>
+                    {t("lectureManagement.steps.selectSubject", {
+                      semester: selectedSemesterName,
+                    })}
                   </h2>
                 </div>
 
                 {subjectsLoading ? (
-                  <LoadingPlaceholder label="Loading subjects…" />
+                  <LoadingPlaceholder
+                    label={t("lectureManagement.loading.subjects")}
+                  />
                 ) : subjects.length === 0 ? (
                   <EmptyState
                     icon={<FolderOpen className="w-7 h-7 text-gray-300" />}
-                    title="No subjects found"
-                    message="No subjects exist for this year and semester."
+                    title={t("lectureManagement.empty.noSubjectsTitle")}
+                    message={t("lectureManagement.empty.noSubjectsMessage")}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -383,8 +399,9 @@ export default function LectureManagementPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                   <Book className="w-5 h-5 text-[#2376BB]" />
                   <h2 className="text-lg font-bold text-gray-800">
-                    Select Type —{" "}
-                    <span className="text-[#33529F]">{selectedSubjectName}</span>
+                    {t("lectureManagement.steps.selectType", {
+                      subject: selectedSubjectName,
+                    })}
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
@@ -419,8 +436,9 @@ export default function LectureManagementPage() {
                       {selectedSubjectName}
                     </h2>
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#404293]/10 text-[#404293]">
-                      {contextLectures.length} lecture
-                      {contextLectures.length !== 1 ? "s" : ""}
+                      {t("lectureManagement.lectureCount", {
+                        count: contextLectures.length,
+                      })}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -430,7 +448,7 @@ export default function LectureManagementPage() {
                       <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search..."
+                        placeholder={t("lectureManagement.searchPlaceholder")}
                         className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-36"
                       />
                       {search && (
@@ -447,22 +465,24 @@ export default function LectureManagementPage() {
                       onClick={openUpload}
                       className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-xs font-bold shadow-md hover:-translate-y-0.5 transition-all flex-shrink-0"
                     >
-                      <Plus size={14} /> Upload
+                      <Plus size={14} /> {t("lectureManagement.uploadShort")}
                     </button>
                   </div>
                 </div>
 
                 {/* Lectures list */}
                 {fetchStatus === "loading" ? (
-                  <LoadingPlaceholder label="Loading lectures…" />
+                  <LoadingPlaceholder
+                    label={t("lectureManagement.loading.lectures")}
+                  />
                 ) : contextLectures.length === 0 ? (
                   <EmptyState
                     icon={<FolderOpen className="w-7 h-7 text-gray-300" />}
-                    title="No lectures yet"
+                    title={t("lectureManagement.empty.noLecturesTitle")}
                     message={
                       search
-                        ? "No matches found."
-                        : "Upload the first lecture for this subject."
+                        ? t("lectureManagement.empty.noMatches")
+                        : t("lectureManagement.empty.uploadFirst")
                     }
                     action={
                       !search && (
@@ -470,7 +490,8 @@ export default function LectureManagementPage() {
                           onClick={openUpload}
                           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-sm font-bold shadow-md"
                         >
-                          <Upload size={14} /> Upload Lecture
+                          <Upload size={14} />{" "}
+                          {t("lectureManagement.uploadLecture")}
                         </button>
                       )
                     }

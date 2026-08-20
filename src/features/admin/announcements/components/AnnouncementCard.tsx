@@ -1,5 +1,7 @@
 import { Edit3, GraduationCap, Trash2, UserRound } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { Announcement } from "../types";
 
 interface AnnouncementCardProps {
@@ -7,9 +9,6 @@ interface AnnouncementCardProps {
   onEdit: (announcement: Announcement) => void;
   onDelete: (announcement: Announcement) => void;
 }
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" });
 
 const yearName = (yearId: Announcement["yearId"]) =>
   typeof yearId === "object" && yearId !== null ? yearId.name : "—";
@@ -22,6 +21,9 @@ export default function AnnouncementCard({
   onEdit,
   onDelete,
 }: AnnouncementCardProps) {
+  const { t } = useTranslation("announcements");
+  const { formatDateTimeOrDash } = useFormatters();
+
   return (
     <motion.div
       layout
@@ -47,7 +49,7 @@ export default function AnnouncementCard({
           </span>
         </div>
         <p className="mb-4 text-[11px] font-semibold text-gray-400">
-          {formatDate(announcement.createdAt)}
+          {formatDateTimeOrDash(announcement.createdAt)}
         </p>
         <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
           <button
@@ -55,14 +57,14 @@ export default function AnnouncementCard({
             onClick={() => onEdit(announcement)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-500 transition-all hover:border-[#404293]/15 hover:bg-[#404293]/6 hover:text-[#404293]"
           >
-            <Edit3 size={12} /> تعديل
+            <Edit3 size={12} /> {t("admin.card.edit")}
           </button>
           <button
             type="button"
             onClick={() => onDelete(announcement)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold text-gray-400 transition-all hover:border-red-100 hover:bg-red-50 hover:text-red-500"
           >
-            <Trash2 size={12} /> حذف
+            <Trash2 size={12} /> {t("admin.card.delete")}
           </button>
         </div>
       </div>

@@ -16,6 +16,8 @@ import {
   X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import { useLectures } from "../hooks/useLectures";
 import { LectureCard } from "../components/LectureCard";
 import { LatestLecturesSection } from "../components/LatestLecturesSection";
@@ -26,6 +28,8 @@ import type { LectureStep } from "../hooks/useLectures";
 const STEP_ORDER: LectureStep[] = ["year", "semester", "subject", "type", "lectures"];
 
 export function UserLectureManager() {
+  const { t } = useTranslation(["lectures", "common"]);
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -89,63 +93,71 @@ export function UserLectureManager() {
         className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "year" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
       >
         <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        <span className="hidden sm:inline">{selectedYearName || "Select Year"}</span>
-        <span className="sm:hidden">{selectedYearName || "Year"}</span>
+        <span className="hidden sm:inline">
+          {selectedYearName || t("breadcrumb.selectYear")}
+        </span>
+        <span className="sm:hidden">
+          {selectedYearName || t("breadcrumb.year")}
+        </span>
       </button>
 
       {currentStepIndex >= 1 && (
         <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
+          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           <button
             onClick={() => navTo("semester")}
             disabled={!selectedYearId}
             className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "semester" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : !selectedYearId ? "opacity-50 cursor-not-allowed text-gray-400" : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
           >
             <Layers className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            {selectedSemesterName || "Semester"}
+            {selectedSemesterName || t("breadcrumb.semester")}
           </button>
         </>
       )}
 
       {currentStepIndex >= 2 && (
         <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
+          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           <button
             onClick={() => navTo("subject")}
             disabled={!selectedSemesterId}
             className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "subject" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : !selectedSemesterId ? "opacity-50 cursor-not-allowed text-gray-400" : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
           >
             <Book className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            <span className="truncate max-w-[100px] sm:max-w-[150px]">{selectedSubjectName || "Subject"}</span>
+            <span className="truncate max-w-[100px] sm:max-w-[150px]">
+              {selectedSubjectName || t("breadcrumb.subject")}
+            </span>
           </button>
         </>
       )}
 
       {currentStepIndex >= 3 && (
         <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
+          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           <button
             onClick={() => navTo("type")}
             className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "type" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
           >
             <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
             {step === "lectures"
-              ? selectedType === "practical"
-                ? "Practical"
-                : "Theoretical"
-              : "Type"}
+              ? t(
+                  selectedType === "practical"
+                    ? "type.practical"
+                    : "type.theoretical",
+                )
+              : t("breadcrumb.type")}
           </button>
         </>
       )}
 
       {currentStepIndex >= 4 && (
         <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
+          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           <span
             className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl ${isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-600"}`}
           >
             <MonitorPlay className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            Lectures
+            {t("breadcrumb.lectures")}
           </span>
         </>
       )}
@@ -161,10 +173,10 @@ export function UserLectureManager() {
           <div className="p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-xl md:rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] text-white shadow-lg">
             <Book className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
           </div>
-          Lectures
+          {t("title")}
         </h1>
         <p className={`text-xs sm:text-sm md:text-base ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-          Browse your academic content easily
+          {t("subtitle")}
         </p>
       </div>
 
@@ -184,8 +196,10 @@ export function UserLectureManager() {
               onClick={goBack}
               className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm md:text-base font-semibold transition-all border shadow-sm ${isDark ? "bg-white/5 border-white/20 [@media(hover:hover)]:hover:bg-white/10 text-gray-200" : "bg-white border-gray-300 [@media(hover:hover)]:hover:bg-gray-50 text-gray-800"}`}
             >
-              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-              Back
+              <ArrowLeft
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${isRTL ? "rotate-180" : ""}`}
+              />
+              {t("common:actions.back")}
             </button>
           )}
         </div>
@@ -205,11 +219,11 @@ export function UserLectureManager() {
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
                   <Calendar className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isDark ? "text-gray-400" : "text-gray-500"}`} />
                   <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Select Year
+                    {t("steps.selectYear")}
                   </h2>
                 </div>
                 {yearsLoading ? (
-                  <LoadingPlaceholder label="Loading years..." />
+                  <LoadingPlaceholder label={t("loading.years")} />
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                     {years.map((year) => (
@@ -234,11 +248,11 @@ export function UserLectureManager() {
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
                   <Layers className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
                   <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Select Semester
+                    {t("steps.selectSemester")}
                   </h2>
                 </div>
                 {semestersLoading ? (
-                  <LoadingPlaceholder label="Loading semesters..." />
+                  <LoadingPlaceholder label={t("loading.semesters")} />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 max-w-4xl">
                     {semesters.map((semester) => (
@@ -263,16 +277,16 @@ export function UserLectureManager() {
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
                   <Book className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
                   <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Select Subject
+                    {t("steps.selectSubject")}
                   </h2>
                 </div>
                 {subjectsLoading ? (
-                  <LoadingPlaceholder label="Loading subjects..." />
+                  <LoadingPlaceholder label={t("loading.subjects")} />
                 ) : subjects.length === 0 ? (
                   <EmptyState
                     icon={<FolderOpen className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`} />}
-                    title="No subjects found"
-                    message="No subjects exist for this year and semester yet."
+                    title={t("empty.noSubjectsTitle")}
+                    message={t("empty.noSubjectsMessage")}
                     isDark={isDark}
                   />
                 ) : (
@@ -281,7 +295,7 @@ export function UserLectureManager() {
                       <button
                         key={subject._id}
                         onClick={() => selectSubject(subject._id)}
-                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-left backdrop-blur-md
+                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-start backdrop-blur-md
                           ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverBrDark}` : `bg-white/80 text-gray-800 border border-gray-200 ${tileHoverBrLight}`}`}
                       >
                         <div
@@ -305,16 +319,16 @@ export function UserLectureManager() {
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
                   <FlaskConical className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
                   <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Select Type
+                    {t("steps.selectType")}
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 max-w-4xl">
                   {(
                     [
-                      { value: "theoretical", label: "Theoretical", icon: BookOpen },
-                      { value: "practical", label: "Practical", icon: FlaskConical },
-                    ] as { value: LectureType; label: string; icon: typeof BookOpen }[]
-                  ).map(({ value, label, icon: Icon }) => (
+                      { value: "theoretical", icon: BookOpen },
+                      { value: "practical", icon: FlaskConical },
+                    ] as { value: LectureType; icon: typeof BookOpen }[]
+                  ).map(({ value, icon: Icon }) => (
                     <button
                       key={value}
                       onClick={() => selectType(value)}
@@ -322,7 +336,7 @@ export function UserLectureManager() {
                         ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
                     >
                       <Icon className={`w-7 h-7 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
-                      {label}
+                      {t(`type.${value}`)}
                     </button>
                   ))}
                 </div>
@@ -337,13 +351,15 @@ export function UserLectureManager() {
                     className={`text-base sm:text-lg md:text-2xl font-bold flex items-center gap-2 sm:gap-2.5 md:gap-3 ${isDark ? "text-white" : "text-gray-900"}`}
                   >
                     <MonitorPlay className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-[#404293]" />
-                    <span className="truncate">Lectures for {selectedSubjectName}</span>
+                    <span className="truncate">
+                      {t("lecturesFor", { subject: selectedSubjectName })}
+                    </span>
                   </h2>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span
                       className={`self-start sm:self-auto px-3 sm:px-3.5 md:px-4 py-1 sm:py-1 md:py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-sm ${isDark ? "bg-[#2376BB]/20 text-blue-300 border border-blue-500/20" : "bg-blue-50 text-[#404293] border border-blue-200"}`}
                     >
-                      {contextLectures.length} Total
+                      {t("totalCount", { count: contextLectures.length })}
                     </span>
                     <div
                       className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border shadow-sm ${isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white"}`}
@@ -352,11 +368,14 @@ export function UserLectureManager() {
                       <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search..."
+                        placeholder={t("searchPlaceholder")}
                         className={`bg-transparent text-xs sm:text-sm outline-none w-24 sm:w-36 ${isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-700 placeholder-gray-400"}`}
                       />
                       {search && (
-                        <button onClick={() => setSearch("")}>
+                        <button
+                          onClick={() => setSearch("")}
+                          aria-label={t("clearSearch")}
+                        >
                           <X size={13} className={isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-300 hover:text-gray-500"} />
                         </button>
                       )}
@@ -365,15 +384,15 @@ export function UserLectureManager() {
                 </div>
 
                 {fetchStatus === "loading" ? (
-                  <LoadingPlaceholder label="Loading lectures..." />
+                  <LoadingPlaceholder label={t("loading.lectures")} />
                 ) : contextLectures.length === 0 ? (
                   <EmptyState
                     icon={<MonitorPlay className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`} />}
-                    title="No lectures yet"
+                    title={t("empty.noLecturesTitle")}
                     message={
                       search
-                        ? "No matches found."
-                        : "No lectures published for this subject yet."
+                        ? t("empty.noMatches")
+                        : t("empty.noLecturesMessage")
                     }
                     isDark={isDark}
                   />

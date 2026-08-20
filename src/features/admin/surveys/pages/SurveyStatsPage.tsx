@@ -14,12 +14,13 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import SubjectStatsTable from "../components/SubjectStatsTable";
 import { useSurveyStats } from "../hooks/useSurveyStats";
 import type { StatsScope, SubjectStatsSortKey } from "../types";
-import { formatDate } from "../utils/survey";
 import {
-  statusLabel,
+  statusLabelKey,
   dividerClass,
   errorAlertClass,
   faintClass,
@@ -32,20 +33,22 @@ import {
   skeletonClass,
 } from "../utils/surveyTheme";
 
-const SCOPES: { value: StatsScope; label: string }[] = [
-  { value: "year", label: "سنة محددة" },
-  { value: "all", label: "كل السنوات" },
-];
+const SCOPES = [
+  { value: "year", labelKey: "surveys.stats.scopeYear" },
+  { value: "all", labelKey: "surveys.stats.scopeAll" },
+] as const satisfies readonly { value: StatsScope; labelKey: string }[];
 
-const SORTS: { value: SubjectStatsSortKey; label: string }[] = [
-  { value: "difficulty", label: "الأصعب أولاً" },
-  { value: "days", label: "الأكثر حاجة لراحة" },
-  { value: "responses", label: "الأكثر إجابات" },
-  { value: "carrying", label: "الأكثر حملة" },
-  { value: "name", label: "أبجدياً" },
+const SORTS: SubjectStatsSortKey[] = [
+  "difficulty",
+  "days",
+  "responses",
+  "carrying",
+  "name",
 ];
 
 export default function SurveyStatsPage() {
+  const { t } = useTranslation(["admin", "common"]);
+  const { formatLongDateOrDash } = useFormatters();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -83,10 +86,10 @@ export default function SurveyStatsPage() {
             <h1
               className={`text-xl font-black tracking-tight sm:text-2xl ${headingClass(isDark)}`}
             >
-              إحصاءات الاستبيان
+              {t("surveys.stats.title")}
             </h1>
             <p className={`mt-0.5 text-sm font-medium ${mutedClass(isDark)}`}>
-              متوسط الصعوبة وأيام الراحة المطلوبة وعدد الحملة لكل مادة
+              {t("surveys.stats.subtitle")}
             </p>
           </div>
         </div>
@@ -94,7 +97,8 @@ export default function SurveyStatsPage() {
         <button
           type="button"
           onClick={refetch}
-          title="تحديث"
+          title={t("common:actions.refresh")}
+          aria-label={t("common:actions.refresh")}
           className={iconButtonClass(isDark)}
         >
           <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
@@ -115,7 +119,7 @@ export default function SurveyStatsPage() {
                 scope === item.value,
               )}`}
             >
-              {item.label}
+              {t(item.labelKey)}
             </button>
           ))}
         </div>
@@ -128,7 +132,7 @@ export default function SurveyStatsPage() {
                 className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}
               />
               <h2 className={`text-xs font-black ${headingClass(isDark)}`}>
-                السنة الدراسية
+                {t("surveys.stats.yearHeading")}
               </h2>
             </div>
 
@@ -140,7 +144,7 @@ export default function SurveyStatsPage() {
               </div>
             ) : years.length === 0 ? (
               <p className={`text-xs font-semibold ${mutedClass(isDark)}`}>
-                لا توجد سنوات دراسية – أضفها من صفحة الهيكل الأكاديمي أولاً.
+                {t("surveys.stats.noYears")}
               </p>
             ) : (
               <div className="flex flex-wrap gap-2">
@@ -165,18 +169,18 @@ export default function SurveyStatsPage() {
                 <label
                   className={`mb-1.5 block text-[11px] font-black ${mutedClass(isDark)}`}
                 >
-                  الفورم (اتركه فارغاً لفورم السنة الحالي)
+                  {t("surveys.stats.formLabel")}
                 </label>
                 <select
                   value={formId}
                   onChange={(event) => setFormId(event.target.value)}
                   className={`${fieldClass(isDark)} max-w-md py-2.5`}
                 >
-                  <option value="">الفورم الحالي</option>
+                  <option value="">{t("surveys.stats.currentForm")}</option>
                   {yearForms.map((form) => (
                     <option key={form._id} value={form._id}>
-                      {form.academicYear} — {statusLabel(form.status)} —{" "}
-                      {formatDate(form.createdAt)}
+                      {form.academicYear} — {t(statusLabelKey(form.status))} —{" "}
+                      {formatLongDateOrDash(form.createdAt)}
                     </option>
                   ))}
                 </select>
@@ -191,18 +195,19 @@ export default function SurveyStatsPage() {
         >
           <div className="relative">
             <SlidersHorizontal
-              className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+              className={`pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
             />
             <select
               value={sortKey}
               onChange={(event) =>
                 setSortKey(event.target.value as SubjectStatsSortKey)
               }
-              className={`${fieldClass(isDark)} w-auto py-2.5 pr-11`}
+              aria-label={t("surveys.stats.sorts.difficulty")}
+              className={`${fieldClass(isDark)} w-auto py-2.5 pe-11`}
             >
-              {SORTS.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
+              {SORTS.map((value) => (
+                <option key={value} value={value}>
+                  {t(`surveys.stats.sorts.${value}`)}
                 </option>
               ))}
             </select>
@@ -210,14 +215,14 @@ export default function SurveyStatsPage() {
 
           <div className="relative min-w-[200px] flex-1">
             <Search
-              className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+              className={`pointer-events-none absolute end-3.5 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
             />
             <input
               type="text"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="ابحث باسم المادة..."
-              className={`${fieldClass(isDark)} py-2.5 pr-11`}
+              placeholder={t("surveys.stats.searchPlaceholder")}
+              className={`${fieldClass(isDark)} py-2.5 pe-11`}
             />
           </div>
         </div>
@@ -256,12 +261,14 @@ export default function SurveyStatsPage() {
             <Inbox className={`h-9 w-9 ${faintClass(isDark)}`} />
           </div>
           <h2 className={`mb-2 text-lg font-black ${headingClass(isDark)}`}>
-            لا توجد إحصاءات
+            {t("surveys.stats.emptyTitle")}
           </h2>
           <p className={`max-w-md text-sm ${mutedClass(isDark)}`}>
-            {scope === "year"
-              ? "لا يوجد فورم لهذه السنة، أو لم يُجب أي طالب بعد"
-              : "لم تُنشأ فورمات أو لم تصل ردود بعد"}
+            {t(
+              scope === "year"
+                ? "surveys.stats.emptyYearHint"
+                : "surveys.stats.emptyAllHint",
+            )}
           </p>
         </div>
       ) : (

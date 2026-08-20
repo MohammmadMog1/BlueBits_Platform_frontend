@@ -1,5 +1,6 @@
 import { BookOpen, ClipboardCheck, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import {
   headingClass,
   mutedClass,
@@ -20,6 +21,8 @@ export default function SurveySuccessState({
   subjectsCount,
   onViewResponse,
 }: SurveySuccessStateProps) {
+  const { t } = useTranslation("survey");
+
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-4 text-center">
       <motion.div
@@ -47,7 +50,7 @@ export default function SurveySuccessState({
             className="absolute"
             style={{
               top: `${50 + 50 * Math.sin((index / SPARKLE_COUNT) * 2 * Math.PI)}%`,
-              left: `${50 + 50 * Math.cos((index / SPARKLE_COUNT) * 2 * Math.PI)}%`,
+              insetInlineStart: `${50 + 50 * Math.cos((index / SPARKLE_COUNT) * 2 * Math.PI)}%`,
             }}
           >
             <Sparkles className="h-4 w-4 text-emerald-400" />
@@ -63,15 +66,15 @@ export default function SurveySuccessState({
         <h2
           className={`mb-3 text-3xl font-black tracking-tight sm:text-4xl ${headingClass(isDark)}`}
         >
-          تم إرسال إجابتك بنجاح 🎉
+          {t("success.title")}
         </h2>
         <p className={`mb-2 text-base font-medium sm:text-lg ${mutedClass(isDark)}`}>
-          وصلت تفضيلاتك وستُحتسب ضمن توليد برنامج الفحص.
+          {t("success.line1")}
         </p>
         <p
           className={`mb-8 text-sm ${isDark ? "text-gray-500" : "text-gray-400"}`}
         >
-          لا يمكن تعديل الإجابة بعد إرسالها.
+          {t("success.line2")}
         </p>
 
         <div
@@ -82,7 +85,7 @@ export default function SurveySuccessState({
           }`}
         >
           <BookOpen className="h-4 w-4 text-[#2376BB]" />
-          {subjectsCount} مادة أُرسلت
+          {t("success.sentCount", { count: subjectsCount })}
         </div>
 
         <div>
@@ -91,7 +94,7 @@ export default function SurveySuccessState({
             onClick={onViewResponse}
             className={`${primaryButtonClass} px-8 py-3.5 text-base`}
           >
-            عرض إجابتي
+            {t("success.viewResponse")}
           </button>
         </div>
       </motion.div>

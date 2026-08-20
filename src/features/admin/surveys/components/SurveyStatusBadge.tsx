@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { SurveyFormStatus } from "../types";
 import { statusBadgeClass } from "../utils/surveyTheme";
 
@@ -10,6 +11,7 @@ export default function SurveyStatusBadge({
   status,
   isDark = false,
 }: SurveyStatusBadgeProps) {
+  const { t } = useTranslation("admin");
   const meta = statusBadgeClass(isDark, status);
 
   return (
@@ -21,7 +23,7 @@ export default function SurveyStatusBadge({
           status === "open" ? "animate-pulse" : ""
         }`}
       />
-      {meta.label}
+      {t(meta.labelKey)}
     </span>
   );
 }

@@ -1,0 +1,87 @@
+{
+  "title": "تدريب الأسئلة",
+  "subtitle": "حل بنوك أسئلة المحاضرات وقِس مستواك",
+  "breadcrumb": {
+    "selectYear": "اختر السنة",
+    "year": "السنة",
+    "semester": "الفصل",
+    "subject": "المادة",
+    "banks": "البنوك",
+    "quiz": "الاختبار"
+  },
+  "steps": {
+    "selectYear": "اختر السنة",
+    "selectSemester": "اختر الفصل",
+    "selectSubject": "اختر المادة"
+  },
+  "loading": {
+    "years": "جارِ تحميل السنوات...",
+    "semesters": "جارِ تحميل الفصول...",
+    "subjects": "جارِ تحميل المواد...",
+    "banks": "جارِ تحميل بنوك الأسئلة...",
+    "bank": "جارٍ تحميل بنك الأسئلة…",
+    "generic": "جارٍ التحميل…"
+  },
+  "empty": {
+    "noSubjectsTitle": "لا توجد مواد",
+    "noSubjectsMessage": "لم تُضَف أي مادة لهذه السنة وهذا الفصل بعد.",
+    "noBanksTitle": "لا توجد بنوك أسئلة متاحة",
+    "noMatches": "لا نتائج مطابقة.",
+    "unpublishedHint": "هناك {{count}} بنك أسئلة لهذه المادة لكنه غير منشور بعد — سيظهر فور نشره من قِبل المشرف.",
+    "noBanksPublished": "لم يُنشر أي بنك أسئلة لهذه المادة بعد."
+  },
+  "banksFor": "بنوك أسئلة {{subject}}",
+  "totalCount": "{{count}} إجمالاً",
+  "searchPlaceholder": "ابحث...",
+  "clearSearch": "مسح البحث",
+  "card": {
+    "questionsCount": "سؤال",
+    "start": "ابدأ الحل",
+    "noQuestions": "لا أسئلة"
+  },
+  "intro": {
+    "subjectAndCount": "{{subject}} · {{count}} سؤال",
+    "start": "ابدأ الحل",
+    "emptyBank": "هذا البنك لا يحتوي على أسئلة بعد.",
+    "bestScore": "أفضل نتيجة لك:",
+    "outOfAttempts": "من {{count}} محاولة",
+    "previousAttempts": "محاولاتي السابقة",
+    "noAttempts": "لم تحل هذا البنك بعد — ابدأ أول محاولة!",
+    "correctOfTotal": "{{correct}} / {{total}} صحيحة"
+  },
+  "unavailable": {
+    "title": "بنك الأسئلة غير متاح",
+    "back": "رجوع"
+  },
+  "session": {
+    "backToBank": "رجوع لتفاصيل البنك",
+    "total": "الإجمالي",
+    "done": "مُجاب",
+    "correct": "صحيحة",
+    "wrong": "خطأ",
+    "submit": "إرسال النتيجة",
+    "submitting": "جارٍ الإرسال…",
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "question": {
+    "typeTrueFalse": "صح / خطأ",
+    "typeMcq": "اختيار من متعدد",
+    "correctAnswer": "إجابة صحيحة",
+    "wrongAnswer": "إجابة خطأ",
+    "yourAnswer": "إجابتك"
+  },
+  "result": {
+    "outOf100": "من 100",
+    "excellent": "نتيجة ممتازة! 🎉",
+    "good": "نتيجة جيدة، وهناك مجال للتحسين",
+    "needsReview": "تحتاج مراجعة المحاضرة",
+    "summary": "أجبت بشكل صحيح على {{correct}} من {{total}} سؤال.",
+    "correct": "صحيحة",
+    "wrong": "خطأ",
+    "unanswered": "بدون إجابة",
+    "retry": "إعادة الحل",
+    "backToBanks": "قائمة البنوك",
+    "reviewHeading": "مراجعة الإجابات"
+  }
+}

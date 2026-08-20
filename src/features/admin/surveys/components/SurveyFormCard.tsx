@@ -9,8 +9,10 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { SurveyForm } from "../types";
-import { formatDateTime, getRefName } from "../utils/survey";
+import { getRefName } from "../utils/survey";
 import {
   dividerClass,
   faintClass,
@@ -43,7 +45,12 @@ export default function SurveyFormCard({
   onClose,
   onViewResponses,
 }: SurveyFormCardProps) {
-  const creatorName = getRefName(form.createdBy, "النظام");
+  const { t } = useTranslation("admin");
+  const { formatDateTimeOrDash } = useFormatters();
+  const creatorName = getRefName(
+    form.createdBy,
+    t("surveys.card.systemCreator"),
+  );
 
   return (
     <motion.div
@@ -94,28 +101,28 @@ export default function SurveyFormCard({
           <p
             className={`flex items-center gap-1 text-[10px] font-bold ${faintClass(isDark)}`}
           >
-            <LockOpen size={10} /> فُتح في
+            <LockOpen size={10} /> {t("surveys.card.openedAt")}
           </p>
           <p
             className={`mt-0.5 truncate text-[11px] font-black ${
               isDark ? "text-gray-200" : "text-gray-700"
             }`}
           >
-            {formatDateTime(form.openedAt)}
+            {formatDateTimeOrDash(form.openedAt)}
           </p>
         </div>
         <div className={`${softBoxClass(isDark)} px-3 py-2`}>
           <p
             className={`flex items-center gap-1 text-[10px] font-bold ${faintClass(isDark)}`}
           >
-            <Lock size={10} /> أُغلق في
+            <Lock size={10} /> {t("surveys.card.closedAt")}
           </p>
           <p
             className={`mt-0.5 truncate text-[11px] font-black ${
               isDark ? "text-gray-200" : "text-gray-700"
             }`}
           >
-            {formatDateTime(form.closedAt)}
+            {formatDateTimeOrDash(form.closedAt)}
           </p>
         </div>
       </div>
@@ -123,7 +130,8 @@ export default function SurveyFormCard({
       <p
         className={`flex items-center gap-1.5 text-[11px] font-semibold ${faintClass(isDark)}`}
       >
-        <UserIcon size={12} /> أنشأه: {creatorName}
+        <UserIcon size={12} />{" "}
+        {t("surveys.card.createdBy", { name: creatorName })}
       </p>
 
       {/* ── الإجراءات ────────────────────────── */}
@@ -135,7 +143,7 @@ export default function SurveyFormCard({
             disabled={isBusy}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-[#404293]/25 transition-all hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
           >
-            <PlayCircle size={14} /> فتح للطلاب
+            <PlayCircle size={14} /> {t("surveys.card.openForStudents")}
           </button>
         )}
 
@@ -150,7 +158,7 @@ export default function SurveyFormCard({
                 : "border-red-200 text-red-600 hover:bg-red-50"
             }`}
           >
-            <Lock size={14} /> إغلاق نهائي
+            <Lock size={14} /> {t("surveys.card.closeFinal")}
           </button>
         )}
 
@@ -165,7 +173,12 @@ export default function SurveyFormCard({
                 : "border-gray-200 text-gray-500 hover:border-[#404293]/30 hover:text-[#404293]"
           }`}
         >
-          <ListChecks size={14} /> {isOpened ? "الردود معروضة" : "عرض الردود"}
+          <ListChecks size={14} />{" "}
+          {t(
+            isOpened
+              ? "surveys.card.responsesShown"
+              : "surveys.card.viewResponses",
+          )}
         </button>
       </div>
     </motion.div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import {
   CloudUpload,
@@ -29,6 +30,7 @@ export function UploadModal({
   subjectName,
   type,
 }: UploadModalProps) {
+  const { t } = useTranslation("admin");
   const dispatch = useAppDispatch();
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -62,14 +64,14 @@ export function UploadModal({
     const maxSize = 200 * 1024 * 1024; // 200 MB
 
     if (selected.size > maxSize) {
-      setLocalError("File exceeds the 200 MB limit.");
+      setLocalError(t("lectureManagement.upload.errors.fileTooLarge"));
       return;
     }
     if (
       !allowedTypes.includes(selected.type) &&
       !selected.type.startsWith("video/")
     ) {
-      setLocalError("Only PDF or video files are accepted.");
+      setLocalError(t("lectureManagement.upload.errors.invalidFileType"));
       return;
     }
 
@@ -87,7 +89,7 @@ export function UploadModal({
 
   const handleSubmit = async () => {
     if (!file || !title.trim()) {
-      setLocalError("Please select a file and enter a title.");
+      setLocalError(t("lectureManagement.upload.errors.missingFields"));
       return;
     }
 
@@ -141,11 +143,17 @@ export function UploadModal({
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 text-base">
-                  Upload Lecture
+                  {t("lectureManagement.upload.title")}
                 </h3>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {subjectName} ·{" "}
-                  {type === "practical" ? "Practical" : "Theoretical"}
+                  {t("lectureManagement.upload.subjectAndType", {
+                    subject: subjectName,
+                    type: t(
+                      type === "practical"
+                        ? "lectureManagement.types.practical"
+                        : "lectureManagement.types.theoretical",
+                    ),
+                  })}
                 </p>
               </div>
             </div>
@@ -170,17 +178,17 @@ export function UploadModal({
               </div>
               <div>
                 <p className="font-bold text-gray-900 text-base">
-                  Upload Successful!
+                  {t("lectureManagement.upload.successTitle")}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">
-                  "{title}" has been uploaded successfully.
+                  {t("lectureManagement.upload.successMessage", { title })}
                 </p>
               </div>
               <button
                 onClick={handleClose}
                 className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold text-sm shadow-md"
               >
-                Done
+                {t("lectureManagement.upload.done")}
               </button>
             </motion.div>
           ) : (
@@ -232,7 +240,7 @@ export function UploadModal({
                       }}
                       className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-semibold"
                     >
-                      <X size={12} /> Remove file
+                      <X size={12} /> {t("lectureManagement.upload.removeFile")}
                     </button>
                   </>
                 ) : (
@@ -242,17 +250,19 @@ export function UploadModal({
                     </div>
                     <div className="text-center">
                       <p className="font-semibold text-gray-700 text-sm">
-                        {dragOver ? "Release to upload" : "Drop your PDF here"}
+                        {dragOver
+                          ? t("lectureManagement.upload.dropzone.releaseToUpload")
+                          : t("lectureManagement.upload.dropzone.dropTitle")}
                       </p>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        or{" "}
+                        {t("lectureManagement.upload.dropzone.or")}{" "}
                         <span className="text-[#404293] font-semibold">
-                          browse files
+                          {t("lectureManagement.upload.dropzone.browseFiles")}
                         </span>
                       </p>
                     </div>
                     <span className="text-[10px] text-gray-300 font-medium uppercase tracking-wider">
-                      PDF / video · Max 200 MB
+                      {t("lectureManagement.upload.dropzone.hint")}
                     </span>
                   </>
                 )}
@@ -261,32 +271,36 @@ export function UploadModal({
               {(localError || uploadFailed || error) && (
                 <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
                   <AlertCircle size={14} className="flex-shrink-0" />
-                  <span>{localError || error || "Upload failed."}</span>
+                  <span>
+                    {localError || error || t("lectureManagement.upload.failed")}
+                  </span>
                 </div>
               )}
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                  Lecture Title
+                  {t("lectureManagement.upload.titleLabel")}
                 </label>
                 <input
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="e.g. Introduction to Neural Networks"
+                  placeholder={t("lectureManagement.upload.titlePlaceholder")}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                  Description
+                  {t("lectureManagement.upload.descriptionLabel")}
                 </label>
                 <textarea
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   rows={3}
                   className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400"
-                  placeholder="Optional description for the lecture"
+                  placeholder={t(
+                    "lectureManagement.upload.descriptionPlaceholder",
+                  )}
                 />
               </div>
 
@@ -298,12 +312,12 @@ export function UploadModal({
                     onChange={(event) => setIsPublished(event.target.checked)}
                     className="w-4 h-4 rounded border-gray-300 text-[#404293] focus:ring-[#404293]"
                   />
-                  Publish lecture
+                  {t("lectureManagement.upload.publishCheckbox")}
                 </label>
                 <span className="text-xs text-gray-400">
                   {isPublished
-                    ? "Visible to users after upload"
-                    : "Saved as draft"}
+                    ? t("lectureManagement.upload.publishedHint")
+                    : t("lectureManagement.upload.draftHint")}
                 </span>
               </div>
 
@@ -311,7 +325,7 @@ export function UploadModal({
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-xs text-gray-500 font-medium">
-                      Uploading...
+                      {t("lectureManagement.upload.uploading")}
                     </span>
                     <span className="text-xs font-bold text-[#404293]">
                       {Math.min(uploadProgress, 100)}%
@@ -333,7 +347,7 @@ export function UploadModal({
                   onClick={handleClose}
                   className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
                 >
-                  Cancel
+                  {t("lectureManagement.upload.cancel")}
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -354,7 +368,9 @@ export function UploadModal({
                   ) : (
                     <Upload size={16} />
                   )}
-                  {uploading ? "Uploading..." : "Upload Lecture"}
+                  {uploading
+                    ? t("lectureManagement.upload.uploading")
+                    : t("lectureManagement.upload.submit")}
                 </button>
               </div>
             </>

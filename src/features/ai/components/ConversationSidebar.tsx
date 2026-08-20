@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Loader2, MessageSquare, SquarePen, Trash2 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../shared/i18n/useFormatters";
 import { useDeleteConversationMutation, useGetConversationsQuery } from "../api/aiApi";
 
 interface ConversationSidebarProps {
@@ -10,23 +12,13 @@ interface ConversationSidebarProps {
   onNewConversation: () => void;
 }
 
-function formatRelativeDate(iso: string) {
-  const date = new Date(iso);
-  const diffMin = Math.floor((Date.now() - date.getTime()) / 60000);
-  if (diffMin < 1) return "الآن";
-  if (diffMin < 60) return `منذ ${diffMin} د`;
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `منذ ${diffHr} س`;
-  const diffDay = Math.floor(diffHr / 24);
-  if (diffDay < 7) return `منذ ${diffDay} يوم`;
-  return date.toLocaleDateString("ar-EG", { day: "numeric", month: "short" });
-}
-
 export default function ConversationSidebar({
   activeConversationId,
   onSelect,
   onNewConversation,
 }: ConversationSidebarProps) {
+  const { t } = useTranslation(["ai", "common"]);
+  const { formatRelative } = useFormatters();
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const { data: conversations, isLoading } = useGetConversationsQuery();
@@ -54,7 +46,7 @@ export default function ConversationSidebar({
           }`}
         >
           <SquarePen className="w-4 h-4" />
-          محادثة جديدة
+          {t("sidebar.newConversation")}
         </button>
       </div>
 
@@ -68,7 +60,7 @@ export default function ConversationSidebar({
         {!isLoading && conversations?.length === 0 && (
           <div className="text-center py-10 px-4">
             <MessageSquare className={`w-8 h-8 mx-auto mb-2 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-            <p className="text-[12px] text-gray-400">لا توجد محادثات سابقة بعد</p>
+            <p className="text-[12px] text-gray-400">{t("sidebar.empty")}</p>
           </div>
         )}
 
@@ -101,9 +93,9 @@ export default function ConversationSidebar({
                       : "text-gray-700"
                   }`}
                 >
-                  {conv.title || "محادثة بدون عنوان"}
+                  {conv.title || t("sidebar.untitled")}
                 </p>
-                <p className="text-[11px] text-gray-400 mt-0.5">{formatRelativeDate(conv.updatedAt)}</p>
+                <p className="text-[11px] text-gray-400 mt-0.5">{formatRelative(conv.updatedAt)}</p>
               </div>
 
               <button
@@ -111,7 +103,7 @@ export default function ConversationSidebar({
                   e.stopPropagation();
                   setPendingDeleteId(conv._id);
                 }}
-                aria-label="حذف المحادثة"
+                aria-label={t("sidebar.deleteConversation")}
                 className={`opacity-0 group-hover:opacity-100 flex-shrink-0 p-1.5 rounded-lg transition-all ${
                   isDark
                     ? "text-gray-400 hover:bg-red-500/15 hover:text-red-400"
@@ -129,7 +121,7 @@ export default function ConversationSidebar({
                   }`}
                 >
                   <p className={`text-[12px] mb-2 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                    حذف هذه المحادثة نهائياً؟
+                    {t("sidebar.confirmDelete")}
                   </p>
                   <div className="flex gap-2">
                     <button
@@ -140,7 +132,7 @@ export default function ConversationSidebar({
                           : "border-gray-200 text-gray-600 hover:bg-gray-50"
                       }`}
                     >
-                      إلغاء
+                      {t("common:actions.cancel")}
                     </button>
                     <button
                       onClick={() => handleDelete(conv._id)}
@@ -148,7 +140,7 @@ export default function ConversationSidebar({
                       className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[12px] font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 disabled:opacity-60"
                     >
                       {isDeleting && <Loader2 className="w-3 h-3 animate-spin" />}
-                      حذف
+                      {t("common:actions.delete")}
                     </button>
                   </div>
                 </div>

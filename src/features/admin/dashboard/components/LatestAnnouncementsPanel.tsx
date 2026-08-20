@@ -7,7 +7,8 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
-import { formatShortDate } from "../../../../shared/utils/datetime";
+import { useTranslation } from "react-i18next";
+import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { Announcement } from "../../announcements/types";
 
 interface LatestAnnouncementsPanelProps {
@@ -16,19 +17,24 @@ interface LatestAnnouncementsPanelProps {
   isLoading: boolean;
 }
 
-const yearName = (announcement: Announcement): string =>
-  typeof announcement.yearId === "object" ? announcement.yearId.name : "كل السنوات";
-
 export default function LatestAnnouncementsPanel({
   announcements,
   isDark,
   isLoading,
 }: LatestAnnouncementsPanelProps) {
+  const { t } = useTranslation("admin");
+  const { formatShortDate } = useFormatters();
+
+  const yearName = (announcement: Announcement): string =>
+    typeof announcement.yearId === "object"
+      ? announcement.yearId.name
+      : t("latestAnnouncements.allYears");
+
   return (
     <SectionCard
       icon={Megaphone}
-      title="أحدث الإعلانات"
-      hint="آخر ما نُشر للطلاب"
+      title={t("latestAnnouncements.title")}
+      hint={t("latestAnnouncements.hint")}
       tone="sky"
       isDark={isDark}
       to="/admin/announcements"
@@ -42,8 +48,8 @@ export default function LatestAnnouncementsPanel({
       ) : announcements.length === 0 ? (
         <SectionEmpty
           icon={Megaphone}
-          title="لا توجد إعلانات"
-          hint="أنشئ أول إعلان لتصل الطلاب"
+          title={t("latestAnnouncements.emptyTitle")}
+          hint={t("latestAnnouncements.emptyHint")}
           isDark={isDark}
         />
       ) : (

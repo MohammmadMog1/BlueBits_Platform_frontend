@@ -11,16 +11,14 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { useGetYearsQuery } from "../../academic/api/academicApi";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
 import { getLecture } from "../../lectures/api/lecturesService";
 import { useGetLecturesBySubjectQuery } from "../api/academicTasksApi";
 import type { AcademicTaskFormData, LectureType } from "../types";
 
-const lectureTypeOptions: { id: LectureType; label: string }[] = [
-  { id: "theoretical", label: "نظري" },
-  { id: "practical", label: "عملي" },
-];
+const LECTURE_TYPES: LectureType[] = ["theoretical", "practical"];
 
 interface AcademicTaskFormModalProps {
   initial?: AcademicTaskFormData;
@@ -39,6 +37,7 @@ export default function AcademicTaskFormModal({
   onClose,
   onSubmit,
 }: AcademicTaskFormModalProps) {
+  const { t } = useTranslation(["admin", "common", "lectures"]);
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [yearId, setYearId] = useState(initial?.yearId ?? "");
@@ -107,13 +106,13 @@ export default function AcademicTaskFormModal({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!title.trim()) return setFormError("عنوان التاسك مطلوب");
-    if (!yearId) return setFormError("يرجى اختيار السنة الدراسية");
-    if (!subjectId) return setFormError("يرجى اختيار المادة");
-    if (!lectureType) return setFormError("يرجى اختيار نوع المحاضرة");
-    if (!lectureId) return setFormError("يرجى اختيار المحاضرة");
+    if (!title.trim()) return setFormError(t("tasks.form.titleRequired"));
+    if (!yearId) return setFormError(t("tasks.form.yearRequired"));
+    if (!subjectId) return setFormError(t("tasks.form.subjectRequired"));
+    if (!lectureType) return setFormError(t("tasks.form.lectureTypeRequired"));
+    if (!lectureId) return setFormError(t("tasks.form.lectureRequired"));
     if (durationDays + durationHours + durationMinutes <= 0)
-      return setFormError("يرجى تحديد مدة التاسك");
+      return setFormError(t("tasks.form.durationRequired"));
     setFormError("");
     onSubmit({
       title: title.trim(),
@@ -151,10 +150,10 @@ export default function AcademicTaskFormModal({
               </div>
               <div>
                 <h3 className="text-base font-bold text-gray-900">
-                  {isEdit ? "تعديل التاسك" : "إنشاء تاسك أكاديمي"}
+                  {t(isEdit ? "tasks.form.editTitle" : "tasks.form.createTitle")}
                 </h3>
                 <p className="mt-0.5 text-xs text-gray-400">
-                  {isEdit ? "عدّل بيانات التاسك" : "أدخل بيانات التاسك الجديد"}
+                  {t(isEdit ? "tasks.form.editSubtitle" : "tasks.form.createSubtitle")}
                 </p>
               </div>
             </div>
@@ -162,7 +161,7 @@ export default function AcademicTaskFormModal({
               type="button"
               onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200"
-              aria-label="إغلاق"
+              aria-label={t("common:actions.close")}
             >
               <X size={15} className="text-gray-500" />
             </button>
@@ -173,64 +172,64 @@ export default function AcademicTaskFormModal({
           className="max-h-[70vh] space-y-5 overflow-y-auto px-7 py-6"
         >
           <label className="block text-sm font-bold text-gray-700">
-            عنوان التاسك <span className="text-red-400">*</span>
+            {t("tasks.form.titleLabel")} <span className="text-red-400">*</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              placeholder="مثال: حل تمارين الفصل الأول"
+              placeholder={t("tasks.form.titlePlaceholder")}
               className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <label className="block text-sm font-bold text-gray-700">
-            الوصف
+            {t("tasks.form.descriptionLabel")}
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="وصف مختصر للتاسك..."
+              placeholder={t("tasks.form.descriptionPlaceholder")}
               rows={3}
               className="mt-1.5 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="block text-sm font-bold text-gray-700">
-              السنة <span className="text-red-400">*</span>
+              {t("tasks.form.yearLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={yearId}
                   onChange={(event) => handleYearChange(event.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                 >
-                  <option value="">اختر السنة...</option>
+                  <option value="">{t("tasks.form.chooseYear")}</option>
                   {yearOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-                <GraduationCap className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
             <label className="block text-sm font-bold text-gray-700">
-              المادة <span className="text-red-400">*</span>
+              {t("tasks.form.subjectLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={subjectId}
                   onChange={(event) => handleSubjectChange(event.target.value)}
                   disabled={!yearId}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
                 >
-                  <option value="">اختر المادة...</option>
+                  <option value="">{t("tasks.form.chooseSubject")}</option>
                   {subjectOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-                <BookMarked className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <BookMarked className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
             <label className="block text-sm font-bold text-gray-700">
-              نوع المحاضرة <span className="text-red-400">*</span>
+              {t("tasks.form.lectureTypeLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={lectureType}
@@ -238,45 +237,45 @@ export default function AcademicTaskFormModal({
                     handleLectureTypeChange(event.target.value as LectureType | "")
                   }
                   disabled={!subjectId}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
                 >
-                  <option value="">اختر النوع...</option>
-                  {lectureTypeOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
+                  <option value="">{t("tasks.form.chooseType")}</option>
+                  {LECTURE_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {t(`lectures:type.${type}`)}
                     </option>
                   ))}
                 </select>
-                <Layers className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Layers className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
             <label className="block text-sm font-bold text-gray-700 sm:col-span-2">
-              المحاضرة <span className="text-red-400">*</span>
+              {t("tasks.form.lectureLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={lectureId}
                   onChange={(event) => setLectureId(event.target.value)}
                   disabled={!lectureType}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
                 >
-                  <option value="">اختر المحاضرة...</option>
+                  <option value="">{t("tasks.form.chooseLecture")}</option>
                   {lectureOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-                <FileText className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <FileText className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
           </div>
           <div>
             <p className="mb-1.5 text-sm font-bold text-gray-700">
-              مدة التاسك <span className="text-red-400">*</span>
+              {t("tasks.form.durationLabel")} <span className="text-red-400">*</span>
             </p>
             <div className="grid grid-cols-3 gap-3">
               <label className="block text-xs font-semibold text-gray-500">
-                أيام
+                {t("tasks.form.days")}
                 <input
                   type="number"
                   min={0}
@@ -286,7 +285,7 @@ export default function AcademicTaskFormModal({
                 />
               </label>
               <label className="block text-xs font-semibold text-gray-500">
-                ساعات
+                {t("tasks.form.hours")}
                 <input
                   type="number"
                   min={0}
@@ -296,7 +295,7 @@ export default function AcademicTaskFormModal({
                 />
               </label>
               <label className="block text-xs font-semibold text-gray-500">
-                دقائق
+                {t("tasks.form.minutes")}
                 <input
                   type="number"
                   min={0}
@@ -319,7 +318,7 @@ export default function AcademicTaskFormModal({
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
@@ -338,12 +337,12 @@ export default function AcademicTaskFormModal({
                   >
                     <RefreshCcw size={15} />
                   </motion.div>
-                  جاري الحفظ...
+                  {t("tasks.form.saving")}
                 </>
               ) : (
                 <>
                   <CheckCircle2 size={15} />
-                  {isEdit ? "حفظ التعديلات" : "إنشاء التاسك"}
+                  {t(isEdit ? "tasks.form.save" : "tasks.form.create")}
                 </>
               )}
             </button>

@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import DashboardHeader from "../../../../shared/components/Dashboard/DashboardHeader";
 import QuickActionsPanel from "../../../../shared/components/Dashboard/QuickActionsPanel";
 import StatTile from "../../../../shared/components/StatTile/StatTile";
@@ -27,6 +28,7 @@ import SurveyStatusPanel from "../components/SurveyStatusPanel";
  * الترتيب مقصود — أرقام سريعة، ثم لوحات تحتاج قراراً، ثم اختصارات.
  */
 export default function AdminDashboardPage() {
+  const { t } = useTranslation("admin");
   const isDark = useIsDark();
   const {
     users,
@@ -44,8 +46,8 @@ export default function AdminDashboardPage() {
     <div className="flex flex-col gap-5">
       <DashboardHeader
         icon={LayoutDashboard}
-        title="لوحة الإدارة"
-        subtitle="نظرة عامة على المستخدمين والمحتوى والمهام"
+        title={t("dashboard.title")}
+        subtitle={t("dashboard.subtitle")}
         isDark={isDark}
         isFetching={isFetching}
         onRefresh={refresh}
@@ -58,7 +60,7 @@ export default function AdminDashboardPage() {
           className={errorAlertClass(isDark)}
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
-          تعذّر تحميل بعض البيانات. الأرقام المعروضة قد تكون ناقصة — جرّب التحديث.
+          {t("dashboard.loadError")}
         </motion.div>
       )}
 
@@ -66,9 +68,9 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <StatTile
           icon={Users}
-          label="المستخدمون"
+          label={t("stats.users")}
           value={users.total}
-          hint={`+${users.joinedLastWeek} هذا الأسبوع`}
+          hint={t("stats.usersHint", { count: users.joinedLastWeek })}
           tone="brand"
           isDark={isDark}
           isLoading={isLoading}
@@ -76,9 +78,9 @@ export default function AdminDashboardPage() {
         />
         <StatTile
           icon={UserCheck}
-          label="حسابات مفعّلة"
+          label={t("stats.verifiedAccounts")}
           value={`${users.verifiedRate}%`}
-          hint={`${users.unverified} بانتظار التفعيل`}
+          hint={t("stats.unverifiedHint", { count: users.unverified })}
           tone="emerald"
           isDark={isDark}
           isLoading={isLoading}
@@ -86,9 +88,12 @@ export default function AdminDashboardPage() {
         />
         <StatTile
           icon={FileText}
-          label="المحاضرات"
+          label={t("stats.lectures")}
           value={content.lectures}
-          hint={`${content.theoretical} نظري / ${content.practical} عملي`}
+          hint={t("stats.lecturesHint", {
+            theoretical: content.theoretical,
+            practical: content.practical,
+          })}
           tone="violet"
           isDark={isDark}
           isLoading={isLoading}
@@ -96,7 +101,7 @@ export default function AdminDashboardPage() {
         />
         <StatTile
           icon={BookMarked}
-          label="المواد"
+          label={t("stats.subjects")}
           value={content.subjects}
           tone="sky"
           isDark={isDark}
@@ -105,7 +110,7 @@ export default function AdminDashboardPage() {
         />
         <StatTile
           icon={GraduationCap}
-          label="السنوات الدراسية"
+          label={t("stats.years")}
           value={content.years}
           tone="rose"
           isDark={isDark}
@@ -114,9 +119,9 @@ export default function AdminDashboardPage() {
         />
         <StatTile
           icon={ClipboardList}
-          label="مهام مفتوحة"
+          label={t("stats.openTasks")}
           value={tasks.open}
-          hint={`${tasks.total} إجمالاً`}
+          hint={t("stats.totalHint", { count: tasks.total })}
           tone="amber"
           isDark={isDark}
           isLoading={isLoading}

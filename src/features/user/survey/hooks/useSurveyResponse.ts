@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../../app/store/hooks";
+import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useGetSubjectsQuery } from "../../../admin/subjects/api/subjectsApi";
 import {
   useGetActiveSurveyFormQuery,
@@ -16,7 +18,6 @@ import {
   MIN_DAYS_BEFORE,
   MIN_DIFFICULTY,
   clamp,
-  errorMessage,
   getRefId,
   getRefName,
 } from "../../../admin/surveys/utils/survey";
@@ -36,6 +37,8 @@ export type PickerTab = "all" | "selected" | "carrying";
  * الفورم المفتوح لسنته ← مواد سنته في نفس الفصل ← إرسال الإجابة.
  */
 export function useSurveyResponse() {
+  const { t } = useTranslation("survey");
+  const errorMessage = useErrorMessage();
   const currentUser = useAppSelector((state) => state.auth.user);
 
   const [rows, setRows] = useState<AnswerRowState[]>([]);
@@ -200,7 +203,7 @@ export function useSurveyResponse() {
       }).unwrap();
 
       setConfirming(false);
-      setSuccessMessage("تم إرسال إجابتك بنجاح 🎉");
+      setSuccessMessage(t("success.title"));
     } catch {
       // الخطأ معروض داخل نافذة التأكيد
     }
@@ -218,8 +221,11 @@ export function useSurveyResponse() {
     subjectsCount: subjects.length,
     myResponse: myResponseQuery.data ?? null,
     lastResponse: lastResponseQuery.data ?? null,
-    yearName: getRefName(form?.yearId ?? null, "سنتك"),
-    semesterName: getRefName(form?.semesterId ?? null, "الفصل الحالي"),
+    yearName: getRefName(form?.yearId ?? null, t("defaults.yourYear")),
+    semesterName: getRefName(
+      form?.semesterId ?? null,
+      t("defaults.currentSemester"),
+    ),
 
     // الحالة
     isLoading: activeQuery.isLoading,

@@ -1,14 +1,12 @@
 import { GraduationCap, Megaphone } from "lucide-react";
 import { motion } from "motion/react";
 import type { Announcement } from "../../admin/announcements";
+import { useFormatters } from "../../../shared/i18n/useFormatters";
 
 interface StudentAnnouncementCardProps {
   announcement: Announcement;
   isDark: boolean;
 }
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleString("ar-EG", { dateStyle: "medium", timeStyle: "short" });
 
 const yearName = (yearId: Announcement["yearId"]) =>
   typeof yearId === "object" && yearId !== null ? yearId.name : "—";
@@ -17,6 +15,7 @@ export default function StudentAnnouncementCard({
   announcement,
   isDark,
 }: StudentAnnouncementCardProps) {
+  const { formatDateTime } = useFormatters();
   return (
     <motion.div
       layout
@@ -63,7 +62,7 @@ export default function StudentAnnouncementCard({
             <GraduationCap className="h-3 w-3" /> {yearName(announcement.yearId)}
           </span>
           <span className={isDark ? "text-gray-500" : "text-gray-400"}>
-            {formatDate(announcement.createdAt)}
+            {formatDateTime(announcement.createdAt)}
           </span>
         </div>
       </div>

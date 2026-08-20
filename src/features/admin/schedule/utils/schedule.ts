@@ -4,15 +4,11 @@ const DAY_MS = 86_400_000;
 /** سقف أمان حتى لا تدور الحلقة على مدى تواريخ غير منطقي */
 const MAX_RANGE_DAYS = 730;
 
-export const DAYS_OF_WEEK = [
-  { value: 0, label: "الأحد" },
-  { value: 1, label: "الإثنين" },
-  { value: 2, label: "الثلاثاء" },
-  { value: 3, label: "الأربعاء" },
-  { value: 4, label: "الخميس" },
-  { value: 5, label: "الجمعة" },
-  { value: 6, label: "السبت" },
-] as const;
+/**
+ * أرقام أيام الأسبوع كما يفهمها `Date.getUTCDay` (0 = الأحد).
+ * الأسماء تُشتقّ من `Intl` عبر `useWeekdayNames` فتتبع اللغة الحالية.
+ */
+export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6] as const;
 
 /** يستخرج الـ id سواء كان المرجع populated أو نصاً أو null */
 export const getRefId = (ref: Ref<{ _id: string }>): string => {
@@ -30,27 +26,14 @@ export const toDateInputValue = (value?: string | null): string => {
   return value.slice(0, 10);
 };
 
-const dateFormatter = new Intl.DateTimeFormat("ar-EG-u-ca-gregory-nu-latn", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
-/** 2026-08-17T00:00:00.000Z → 17 أغسطس 2026 */
-export const formatDate = (value?: string | null): string => {
-  const day = toDateInputValue(value);
-  if (!day) return "—";
-  const time = Date.parse(`${day}T00:00:00Z`);
-  if (Number.isNaN(time)) return day;
-  return dateFormatter.format(new Date(time));
-};
-
-/** اسم اليوم من تاريخ YYYY-MM-DD */
-export const dayOfWeekLabel = (day: string): string => {
+/**
+ * رقم اليوم في الأسبوع من تاريخ YYYY-MM-DD، أو `null` للتاريخ غير الصالح.
+ * التسمية تُشتقّ في `useScheduleDates` لأنها تتبع اللغة.
+ */
+export const dayOfWeekIndex = (day: string): number | null => {
   const time = Date.parse(`${toDateInputValue(day)}T00:00:00Z`);
-  if (Number.isNaN(time)) return "";
-  return DAYS_OF_WEEK[new Date(time).getUTCDay()].label;
+  if (Number.isNaN(time)) return null;
+  return new Date(time).getUTCDay();
 };
 
 /** كل أيام المدى (شاملاً الطرفين) بصيغة YYYY-MM-DD */
@@ -174,21 +157,5 @@ export const defaultAcademicYear = (): string => {
   return `${startYear}-${startYear + 1}`;
 };
 
-/** رسالة الخطأ القادمة من الباك (envelope فيه message) */
-export const errorMessage = (
-  error: unknown,
-  fallback = "تعذّر تنفيذ الطلب. حاول مرة أخرى.",
-): string => {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const data = (error as { data: unknown }).data;
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "message" in data &&
-      typeof (data as { message: unknown }).message === "string"
-    ) {
-      return (data as { message: string }).message;
-    }
-  }
-  return fallback;
-};
+/** رسالة الخطأ – المصدر الموحّد الآن `shared/i18n/useErrorMessage` */
+export { serverMessage } from "../../../../shared/utils/apiError";

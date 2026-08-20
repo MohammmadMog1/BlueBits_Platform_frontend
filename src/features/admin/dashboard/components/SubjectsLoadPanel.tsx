@@ -1,4 +1,5 @@
 import { BookMarked, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import SectionCard from "../../../../shared/components/Dashboard/SectionCard";
 import SectionEmpty from "../../../../shared/components/Dashboard/SectionEmpty";
 import {
@@ -22,15 +23,21 @@ export default function SubjectsLoadPanel({
   isDark,
   isLoading,
 }: SubjectsLoadPanelProps) {
+  const { t } = useTranslation("admin");
+
   return (
     <SectionCard
       icon={BookMarked}
-      title="المواد الأكثر محتوى"
-      hint={`${content.lectures} محاضرة — ${content.theoretical} نظري / ${content.practical} عملي`}
+      title={t("subjectsLoad.title")}
+      hint={t("subjectsLoad.hint", {
+        lectures: content.lectures,
+        theoretical: content.theoretical,
+        practical: content.practical,
+      })}
       tone="violet"
       isDark={isDark}
       to="/admin/lectures"
-      toLabel="إدارة المحاضرات"
+      toLabel={t("subjectsLoad.manageLectures")}
     >
       {isLoading ? (
         <div className="space-y-3">
@@ -41,8 +48,8 @@ export default function SubjectsLoadPanel({
       ) : content.topSubjects.length === 0 ? (
         <SectionEmpty
           icon={FileText}
-          title="لا توجد محاضرات مرفوعة"
-          hint="ابدأ برفع أول محاضرة لتظهر الإحصاءات"
+          title={t("subjectsLoad.emptyTitle")}
+          hint={t("subjectsLoad.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -57,7 +64,10 @@ export default function SubjectsLoadPanel({
                   {subject.totalLectures}
                   <span className={faintClass(isDark)}>
                     {" "}
-                    ({subject.theoreticalCount}ن / {subject.practicalCount}ع)
+                    {t("subjectsLoad.typeSplit", {
+                      theoretical: subject.theoreticalCount,
+                      practical: subject.practicalCount,
+                    })}
                   </span>
                 </span>
               </div>

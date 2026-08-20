@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, Calendar, CheckCircle2, ClipboardList, RefreshCcw } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import BottomSheetModal from "../../../shared/components/BottomSheetModal/BottomSheetModal";
 import type { PersonalTaskFormData } from "../types";
 
@@ -25,6 +26,7 @@ export default function PersonalTaskFormModal({
   onClose,
   onSubmit,
 }: PersonalTaskFormModalProps) {
+  const { t } = useTranslation("tasks");
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [dueDate, setDueDate] = useState(toDateInputValue(initial?.dueDate));
@@ -39,8 +41,8 @@ export default function PersonalTaskFormModal({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!title.trim()) return setFormError("عنوان المهمة مطلوب");
-    if (!dueDate) return setFormError("يرجى تحديد تاريخ الاستحقاق");
+    if (!title.trim()) return setFormError(t("personal.form.titleRequired"));
+    if (!dueDate) return setFormError(t("personal.form.dueDateRequired"));
     setFormError("");
     onSubmit({
       title: title.trim(),
@@ -54,8 +56,10 @@ export default function PersonalTaskFormModal({
       onClose={onClose}
       isDark={isDark}
       icon={<ClipboardList className="h-5 w-5 text-white" />}
-      title={isEdit ? "تعديل المهمة" : "مهمة جديدة"}
-      subtitle={isEdit ? "عدّل بيانات مهمتك" : "أضف مهمة إلى قائمتك الشخصية"}
+      title={t(isEdit ? "personal.form.editTitle" : "personal.form.createTitle")}
+      subtitle={t(
+        isEdit ? "personal.form.editSubtitle" : "personal.form.createSubtitle",
+      )}
       footer={
         <button
           type="submit"
@@ -71,12 +75,12 @@ export default function PersonalTaskFormModal({
               >
                 <RefreshCcw size={15} />
               </motion.div>
-              جاري الحفظ...
+              {t("personal.form.saving")}
             </>
           ) : (
             <>
               <CheckCircle2 size={15} />
-              {isEdit ? "حفظ التعديلات" : "إضافة المهمة"}
+              {t(isEdit ? "personal.form.save" : "personal.form.create")}
             </>
           )}
         </button>
@@ -84,40 +88,40 @@ export default function PersonalTaskFormModal({
     >
       <form id="personal-task-form" onSubmit={handleSubmit} className="space-y-4">
         <label className={labelClass}>
-          عنوان المهمة <span className="text-red-400">*</span>
+          {t("personal.form.titleLabel")} <span className="text-red-400">*</span>
           <input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="مثال: ذاكري شبكات"
+            placeholder={t("personal.form.titlePlaceholder")}
             autoFocus
             className={inputClass}
           />
         </label>
         <label className={labelClass}>
-          الوصف
+          {t("personal.form.descriptionLabel")}
           <textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="وصف مختصر للمهمة..."
+            placeholder={t("personal.form.descriptionPlaceholder")}
             rows={3}
             className={`${inputClass} resize-none`}
           />
         </label>
         <label className={labelClass}>
-          تاريخ الاستحقاق <span className="text-red-400">*</span>
+          {t("personal.form.dueDateLabel")} <span className="text-red-400">*</span>
           <div className="relative mt-1.5">
             <input
               type="date"
               value={dueDate}
               onChange={(event) => setDueDate(event.target.value)}
-              className={`w-full appearance-none rounded-xl border py-3 pl-10 pr-4 text-sm font-normal outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
+              className={`w-full appearance-none rounded-xl border py-3 ps-10 pe-4 text-sm font-normal outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
                 isDark
                   ? "border-white/10 bg-white/5 text-white"
                   : "border-gray-200 bg-gray-50 text-gray-900"
               }`}
             />
             <Calendar
-              className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
                 isDark ? "text-gray-500" : "text-gray-400"
               }`}
             />

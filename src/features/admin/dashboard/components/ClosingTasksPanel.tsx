@@ -8,7 +8,9 @@ import {
   skeletonClass,
   softBoxClass,
 } from "../../../../shared/utils/theme";
+import { useTranslation } from "react-i18next";
 import { deadlineInfo, urgencyBadgeClass } from "../../../../shared/utils/datetime";
+import { useDeadlineLabel } from "../../../../shared/i18n/useDeadlineLabel";
 import { useNow } from "../../../../shared/hooks/useNow";
 import type { TasksMetrics } from "../types";
 
@@ -24,13 +26,15 @@ export default function ClosingTasksPanel({
   isDark,
   isLoading,
 }: ClosingTasksPanelProps) {
+  const { t } = useTranslation("admin");
+  const deadlineLabel = useDeadlineLabel();
   const now = useNow();
 
   return (
     <SectionCard
       icon={ClipboardList}
-      title="مهام تقترب من الإغلاق"
-      hint={`${tasks.open} مفتوحة من أصل ${tasks.total}`}
+      title={t("closingTasks.title")}
+      hint={t("closingTasks.hint", { open: tasks.open, total: tasks.total })}
       tone="amber"
       isDark={isDark}
       to="/admin/academic-tasks"
@@ -44,8 +48,8 @@ export default function ClosingTasksPanel({
       ) : tasks.closingSoon.length === 0 ? (
         <SectionEmpty
           icon={ClipboardList}
-          title="لا توجد مهام مفتوحة"
-          hint="كل المهام مغلقة حالياً"
+          title={t("closingTasks.emptyTitle")}
+          hint={t("closingTasks.emptyHint")}
           isDark={isDark}
         />
       ) : (
@@ -72,7 +76,7 @@ export default function ClosingTasksPanel({
                     info.urgency,
                   )}`}
                 >
-                  {info.label}
+                  {deadlineLabel(info)}
                 </span>
               </li>
             );
@@ -82,7 +86,7 @@ export default function ClosingTasksPanel({
 
       {!isLoading && tasks.total > 0 && (
         <p className={`mt-3 text-[11px] font-semibold ${mutedClass(isDark)}`}>
-          {tasks.closed} مهمة مغلقة
+          {t("closingTasks.closedCount", { count: tasks.closed })}
         </p>
       )}
     </SectionCard>

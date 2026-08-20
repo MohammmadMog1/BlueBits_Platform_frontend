@@ -3,10 +3,12 @@ import type { Announcement } from "../../announcements/types";
 import type { SurveyForm } from "../../surveys/types";
 import type { UserRole } from "../../../users/types";
 
-/** توزيع المستخدمين على الأدوار (مرتّب تنازلياً) */
+/**
+ * توزيع المستخدمين على الأدوار (مرتّب تنازلياً).
+ * لا يحمل تسمية جاهزة – المكوّن يترجم `role` عبر `admin:roles.*`.
+ */
 export interface RoleBreakdownItem {
   role: UserRole;
-  label: string;
   count: number;
   /** النسبة من إجمالي المستخدمين (0..100) */
   percentage: number;

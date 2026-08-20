@@ -49,11 +49,24 @@ export function useFormatters() {
       return Number.isNaN(date.getTime()) ? null : date;
     };
 
+    const longDate = new Intl.DateTimeFormat(locale, {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+
+    const mediumDate = new Intl.DateTimeFormat(locale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
     const safe =
-      (formatter: Intl.DateTimeFormat) =>
-      (value: Date | string | number): string => {
+      (formatter: Intl.DateTimeFormat, fallback = "") =>
+      (value: Date | string | number | null | undefined): string => {
+        if (value === null || value === undefined || value === "") return fallback;
         const date = toDate(value);
-        return date ? formatter.format(date) : "";
+        return date ? formatter.format(date) : fallback;
       };
 
     return {
@@ -67,6 +80,15 @@ export function useFormatters() {
       formatDateTime: safe(dateTime),
       /** "14:30" */
       formatTime: safe(time),
+
+      /**
+       * صيغ تعرض "—" بدل فراغ عند غياب القيمة – تُستخدم في الجداول
+       * ولوحات الإدارة حيث الخانة الفارغة تبدو خطأً في العرض.
+       */
+      formatLongDateOrDash: safe(longDate, "—"),
+      formatDateTimeOrDash: safe(dateTime, "—"),
+      /** "19 Aug 2026" / "19 أغسطس 2026" مع "—" عند غياب القيمة */
+      formatMediumDateOrDash: safe(mediumDate, "—"),
 
       formatNumber: (value: number) => number.format(value),
       /** يتوقّع كسراً: 0.75 -> "75%" */

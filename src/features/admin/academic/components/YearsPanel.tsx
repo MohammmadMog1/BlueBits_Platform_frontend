@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import {
   AlertCircle,
   Edit3,
@@ -31,7 +32,9 @@ function YearModal({
   onSubmit: (values: FormState) => void;
   submitting: boolean;
 }) {
+  const { t } = useTranslation(["admin", "common"]);
   const [values, setValues] = useState(initial);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -51,31 +54,31 @@ function YearModal({
           </div>
           <div>
             <h2 className="font-black text-gray-900">{title}</h2>
-            <p className="text-sm text-gray-400">أدخل بيانات السنة الدراسية</p>
+            <p className="text-sm text-gray-400">{t("academic.years.modalHint")}</p>
           </div>
         </div>
         <label className="mb-4 block text-sm font-bold text-gray-600">
-          اسم السنة
+          {t("academic.years.nameLabel")}
           <input
             required
             value={values.name}
             onChange={(event) =>
               setValues({ ...values, name: event.target.value })
             }
-            placeholder="مثال: Year 1"
+            placeholder={t("academic.years.namePlaceholder")}
             className="mt-1.5 w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-[#404293]"
           />
         </label>
         {!initial.order && (
           <label className="mb-5 block text-sm font-bold text-gray-600">
-            الترتيب
+            {t("academic.years.orderInputLabel")}
             <input
               type="number"
               value={values.order}
               onChange={(event) =>
                 setValues({ ...values, order: event.target.value })
               }
-              placeholder="مثال: 1"
+              placeholder={t("academic.years.orderPlaceholder")}
               className="mt-1.5 w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-[#404293]"
             />
           </label>
@@ -86,13 +89,13 @@ function YearModal({
             onClick={onClose}
             className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-bold text-gray-500"
           >
-            إلغاء
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={submitting}
             className="flex-1 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
-            {submitting ? "جارٍ الحفظ..." : "حفظ"}
+            {t(submitting ? "academic.saving" : "academic.save")}
           </button>
         </div>
       </motion.form>
@@ -111,6 +114,8 @@ function DeleteConfirm({
   onConfirm: () => void;
   deleting: boolean;
 }) {
+  const { t } = useTranslation(["admin", "common"]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -121,23 +126,25 @@ function DeleteConfirm({
         className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
       >
         <Trash2 className="mx-auto mb-3 text-red-500" />
-        <h2 className="font-black text-gray-900">حذف السنة الدراسية؟</h2>
+        <h2 className="font-black text-gray-900">
+          {t("academic.years.deleteTitle")}
+        </h2>
         <p className="mt-2 text-sm text-gray-500">
-          سيتم حذف «{label}» نهائياً.
+          {t("academic.years.deleteBody", { name: label })}
         </p>
         <div className="mt-5 flex gap-2">
           <button
             onClick={onClose}
             className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-bold text-gray-500"
           >
-            إلغاء
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={deleting}
             onClick={onConfirm}
             className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
-            {deleting ? "جارٍ الحذف..." : "حذف"}
+            {t(deleting ? "academic.deleting" : "academic.delete")}
           </button>
         </div>
       </motion.div>
@@ -146,6 +153,7 @@ function DeleteConfirm({
 }
 
 export default function YearsPanel() {
+  const { t } = useTranslation(["admin", "common"]);
   const {
     data: years = [],
     isLoading,
@@ -176,21 +184,21 @@ export default function YearsPanel() {
       else if (modal)
         await updateYear({ id: modal._id, name: values.name }).unwrap();
       showToast(
-        modal === "add" ? "تم إنشاء السنة بنجاح ✓" : "تم حفظ التعديلات ✓",
+        t(modal === "add" ? "academic.years.created" : "academic.saved"),
       );
       setModal(null);
     } catch {
-      showToast("تعذّر تنفيذ العملية");
+      showToast(t("academic.actionFailed"));
     }
   };
   const remove = async () => {
     if (!deletingItem) return;
     try {
       await deleteYear(deletingItem._id).unwrap();
-      showToast("تم الحذف");
+      showToast(t("academic.deleted"));
       setDeletingItem(null);
     } catch {
-      showToast("تعذّر حذف السنة");
+      showToast(t("academic.years.deleteFailed"));
     }
   };
 
@@ -198,12 +206,13 @@ export default function YearsPanel() {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-gray-500">
-          {years.length} سنة مسجّلة
+          {t("academic.years.count", { count: years.length })}
         </p>
         <div className="flex gap-2">
           <button
             onClick={refetch}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:text-[#404293]"
           >
             <RefreshCcw
@@ -214,13 +223,13 @@ export default function YearsPanel() {
             onClick={() => setModal("add")}
             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5"
           >
-            <Plus size={15} /> إضافة سنة
+            <Plus size={15} /> {t("academic.years.add")}
           </button>
         </div>
       </div>
       {isError && (
         <div className="mb-4 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
-          <AlertCircle size={15} /> تعذّر الاتصال بالخادم
+          <AlertCircle size={15} /> {t("academic.connectionFailed")}
         </div>
       )}
       {isLoading ? (
@@ -235,12 +244,12 @@ export default function YearsPanel() {
       ) : sortedYears.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-3xl border border-gray-100 bg-white py-20 text-center">
           <GraduationCap className="mb-3 h-10 w-10 text-gray-200" />
-          <p className="font-bold text-gray-400">لا توجد سنوات بعد</p>
+          <p className="font-bold text-gray-400">{t("academic.years.empty")}</p>
           <button
             onClick={() => setModal("add")}
             className="mt-4 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2 text-sm font-bold text-white"
           >
-            <Plus size={14} /> إضافة سنة
+            <Plus size={14} /> {t("academic.years.add")}
           </button>
         </div>
       ) : (
@@ -266,7 +275,7 @@ export default function YearsPanel() {
                   </p>
                   {year.order !== undefined && (
                     <p className="mt-0.5 text-[11px] font-semibold text-gray-400">
-                      الترتيب: {year.order}
+                      {t("academic.years.orderLabel", { order: year.order })}
                     </p>
                   )}
                   <div className="mt-3 flex gap-1.5">
@@ -275,14 +284,14 @@ export default function YearsPanel() {
                       className="flex-1 rounded-xl py-1.5 text-[11px] font-semibold text-gray-500 hover:bg-[#404293]/[.06] hover:text-[#404293]"
                     >
                       <Edit3 size={11} className="mx-1 inline" />
-                      تعديل
+                      {t("academic.edit")}
                     </button>
                     <button
                       onClick={() => setDeletingItem(year)}
                       className="flex-1 rounded-xl py-1.5 text-[11px] font-semibold text-gray-400 hover:bg-red-50 hover:text-red-500"
                     >
                       <Trash2 size={11} className="mx-1 inline" />
-                      حذف
+                      {t("academic.delete")}
                     </button>
                   </div>
                 </div>
@@ -294,9 +303,11 @@ export default function YearsPanel() {
       <AnimatePresence>
         {modal && (
           <YearModal
-            title={
-              modal === "add" ? "إضافة سنة دراسية" : "تعديل السنة الدراسية"
-            }
+            title={t(
+              modal === "add"
+                ? "academic.years.addTitle"
+                : "academic.years.editTitle",
+            )}
             initial={
               modal === "add"
                 ? { name: "", order: "" }

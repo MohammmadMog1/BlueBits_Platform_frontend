@@ -8,6 +8,8 @@ import {
   Target,
   XCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import type { Question } from "../../../admin/questionBanks/types";
 import { scoreColor } from "../../../admin/questionBanks/utils/bank";
 import type { QuizResult } from "../hooks/useQuizRunner";
@@ -25,6 +27,8 @@ export function QuizResultView({
   onRetry,
   onBackToList,
 }: QuizResultViewProps) {
+  const { t } = useTranslation("mcq");
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -85,41 +89,46 @@ export function QuizResultView({
             <span
               className={`text-[10px] font-bold ${isDark ? "text-gray-400" : "text-gray-400"}`}
             >
-              من 100
+              {t("result.outOf100")}
             </span>
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 text-center sm:text-right w-full">
+        <div className="flex-1 min-w-0 text-center sm:text-start w-full">
           <h3
             className={`text-lg sm:text-2xl font-black mb-1.5 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            {percentage >= 80
-              ? "نتيجة ممتازة! 🎉"
-              : percentage >= 50
-                ? "نتيجة جيدة، في مجال للتحسين"
-                : "تحتاج مراجعة المحاضرة"}
+            {t(
+              percentage >= 80
+                ? "result.excellent"
+                : percentage >= 50
+                  ? "result.good"
+                  : "result.needsReview",
+            )}
           </h3>
           <p className={`text-sm mb-4 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-            أجبت بشكل صحيح على {result.correctCount} من {result.totalQuestions} سؤال.
+            {t("result.summary", {
+              correct: result.correctCount,
+              total: result.totalQuestions,
+            })}
           </p>
 
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {[
               {
-                label: "صحيحة",
+                label: t("result.correct"),
                 value: result.correctCount,
                 color: "#059669",
                 icon: CheckCircle2,
               },
               {
-                label: "خطأ",
+                label: t("result.wrong"),
                 value: answeredWrong,
                 color: "#DC2626",
                 icon: XCircle,
               },
               {
-                label: "بدون إجابة",
+                label: t("result.unanswered"),
                 value: unanswered,
                 color: "#F59E0B",
                 icon: Target,
@@ -153,7 +162,7 @@ export function QuizResultView({
               onClick={onRetry}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-lg shadow-[#404293]/25 hover:-translate-y-0.5 transition-all"
             >
-              <RotateCcw size={15} /> إعادة الحل
+              <RotateCcw size={15} /> {t("result.retry")}
             </button>
             <button
               onClick={onBackToList}
@@ -163,7 +172,8 @@ export function QuizResultView({
                   : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <ArrowLeft size={15} /> قائمة البنوك
+              <ArrowLeft size={15} className={isRTL ? "rotate-180" : ""} />{" "}
+              {t("result.backToBanks")}
             </button>
           </div>
         </div>
@@ -174,7 +184,7 @@ export function QuizResultView({
         <h4
           className={`text-base sm:text-lg font-bold ${isDark ? "text-white" : "text-gray-900"}`}
         >
-          مراجعة الإجابات
+          {t("result.reviewHeading")}
         </h4>
 
         {questions.map((question, index) => {
@@ -209,7 +219,7 @@ export function QuizResultView({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 ps-10">
                 {question.options?.map((option, optionIndex) => {
                   const isSelected = answer?.selectedIndex === optionIndex;
                   const isRightOption = optionIndex === correctIndex;
@@ -235,8 +245,8 @@ export function QuizResultView({
                       )}
                       <span className="truncate">{option.text}</span>
                       {isSelected && (
-                        <span className="ml-auto text-[10px] font-bold opacity-70">
-                          إجابتك
+                        <span className="ms-auto text-[10px] font-bold opacity-70">
+                          {t("question.yourAnswer")}
                         </span>
                       )}
                     </div>
@@ -246,7 +256,7 @@ export function QuizResultView({
 
               {question.explanation && (
                 <div
-                  className={`flex gap-2 mt-3 ml-10 rounded-xl px-3.5 py-2.5 border ${
+                  className={`flex gap-2 mt-3 ms-10 rounded-xl px-3.5 py-2.5 border ${
                     isDark
                       ? "bg-[#2376BB]/10 border-[#2376BB]/20"
                       : "bg-[#2376BB]/6 border-[#2376BB]/12"

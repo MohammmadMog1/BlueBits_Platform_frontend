@@ -17,11 +17,12 @@ import {
   useBulkUploadQuestionsMutation,
   useUploadQuestionsDocxMutation,
 } from "../api/questionBanksApi";
+import { useTranslation } from "react-i18next";
 import { useSubjectLectures } from "../hooks/useSubjectLectures";
 import {
-  QUESTIONS_JSON_TEMPLATE,
   getApiErrorMessage,
   parseQuestionsJson,
+  questionsJsonTemplate,
 } from "../utils/bank";
 
 type UploadMode = "json" | "docx";
@@ -42,6 +43,7 @@ export function UploadQuestionsModal({
   onClose,
   onUploaded,
 }: UploadQuestionsModalProps) {
+  const { t } = useTranslation(["admin", "common", "lectures"]);
   const jsonFileRef = useRef<HTMLInputElement>(null);
   const docxFileRef = useRef<HTMLInputElement>(null);
 
@@ -69,6 +71,17 @@ export function UploadQuestionsModal({
     [mode, jsonText],
   );
 
+  /** القالب يحمل نصوصاً توضيحية مترجَمة، فيُعاد بناؤه عند تبديل اللغة */
+  const jsonTemplate = useMemo(
+    () =>
+      questionsJsonTemplate({
+        mcqQuestion: t("banks.upload.sample.mcqQuestion"),
+        mcqExplanation: t("banks.upload.sample.mcqExplanation"),
+        trueFalseQuestion: t("banks.upload.sample.trueFalseQuestion"),
+      }),
+    [t],
+  );
+
   const mcqCount =
     parsed?.questions.filter((question) => question.type === "mcq").length ?? 0;
   const trueFalseCount =
@@ -77,7 +90,7 @@ export function UploadQuestionsModal({
 
   const readJsonFile = (file: File) => {
     if (!/\.json$/i.test(file.name)) {
-      setLocalError("الملف يجب أن يكون بصيغة .json");
+      setLocalError(t("banks.upload.errors.jsonExtension"));
       return;
     }
     const reader = new FileReader();
@@ -86,13 +99,13 @@ export function UploadQuestionsModal({
       setJsonFileName(file.name);
       setLocalError("");
     };
-    reader.onerror = () => setLocalError("تعذّر قراءة الملف.");
+    reader.onerror = () => setLocalError(t("banks.upload.errors.readFailed"));
     reader.readAsText(file);
   };
 
   const setDocx = (file: File) => {
     if (!/\.docx?$/i.test(file.name)) {
-      setLocalError("الملف يجب أن يكون بصيغة .docx");
+      setLocalError(t("banks.upload.errors.docxExtension"));
       return;
     }
     setLocalError("");
@@ -113,18 +126,18 @@ export function UploadQuestionsModal({
     setServerError("");
 
     if (!lectureId) {
-      setLocalError("اختر المحاضرة التي سيُربط بها بنك الأسئلة.");
+      setLocalError(t("banks.upload.errors.lectureRequired"));
       return;
     }
 
     try {
       if (mode === "json") {
         if (!parsed || parsed.questions.length === 0) {
-          setLocalError("لا توجد أسئلة صالحة للرفع.");
+          setLocalError(t("banks.upload.errors.noValidQuestions"));
           return;
         }
         if (parsed.errors.length > 0) {
-          setLocalError("صحّح الأخطاء الظاهرة أدناه قبل الرفع.");
+          setLocalError(t("banks.upload.errors.fixErrors"));
           return;
         }
         const result = await bulkUpload({
@@ -137,14 +150,16 @@ export function UploadQuestionsModal({
       }
 
       if (!docxFile) {
-        setLocalError("اختر ملف الوورد أولاً.");
+        setLocalError(t("banks.upload.errors.docxRequired"));
         return;
       }
       const result = await uploadDocx({ lectureId, file: docxFile }).unwrap();
       setSuccessCount(result.questionsCount ?? 0);
       onUploaded?.(result.bank?._id ?? "");
     } catch (error) {
-      setServerError(getApiErrorMessage(error, "تعذّر رفع الأسئلة."));
+      setServerError(
+        getApiErrorMessage(error) ?? t("banks.upload.errors.uploadFailed"),
+      );
     }
   };
 
@@ -176,13 +191,14 @@ export function UploadQuestionsModal({
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 text-base">
-                  Upload Questions
+                  {t("banks.upload.title")}
                 </h3>
                 <p className="text-xs text-gray-400 mt-0.5">{subjectName}</p>
               </div>
             </div>
             <button
               onClick={onClose}
+              aria-label={t("common:actions.close")}
               className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
             >
               <X size={15} className="text-gray-500" />
@@ -202,17 +218,17 @@ export function UploadQuestionsModal({
               </div>
               <div>
                 <p className="font-bold text-gray-900 text-base">
-                  تم رفع {successCount} سؤال بنجاح
+                  {t("banks.upload.successCount", { count: successCount })}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">
-                  البنك محفوظ كمسودة — راجع الأسئلة ثم انشره للطلاب.
+                  {t("banks.upload.successHint")}
                 </p>
               </div>
               <button
                 onClick={onClose}
                 className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold text-sm shadow-md"
               >
-                Done
+                {t("banks.upload.done")}
               </button>
             </motion.div>
           ) : (
@@ -220,7 +236,7 @@ export function UploadQuestionsModal({
               {/* Lecture select */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                  Lecture
+                  {t("banks.upload.lectureLabel")}
                 </label>
                 <select
                   value={lectureId}
@@ -229,20 +245,27 @@ export function UploadQuestionsModal({
                   className={`${inputClass} disabled:opacity-60`}
                 >
                   <option value="">
-                    {lecturesLoading
-                      ? "جارٍ تحميل المحاضرات…"
-                      : lectures.length === 0
-                        ? "لا توجد محاضرات في هذه المادة"
-                        : "اختر المحاضرة"}
+                    {t(
+                      lecturesLoading
+                        ? "banks.loading.lectures"
+                        : lectures.length === 0
+                          ? "banks.upload.noLectures"
+                          : "banks.upload.chooseLecture",
+                    )}
                   </option>
                   {lectures.map((lecture) => (
                     <option key={lecture._id} value={lecture._id}>
-                      {lecture.title} · {lecture.type === "practical" ? "عملي" : "نظري"}
+                      {lecture.title} ·{" "}
+                      {t(
+                        lecture.type === "practical"
+                          ? "lectures:type.practical"
+                          : "lectures:type.theoretical",
+                      )}
                     </option>
                   ))}
                 </select>
                 <p className="text-[11px] text-gray-400 mt-1.5">
-                  إذا كان للمحاضرة بنك موجود، تُضاف الأسئلة إليه.
+                  {t("banks.upload.lectureHint")}
                 </p>
               </div>
 
@@ -250,8 +273,16 @@ export function UploadQuestionsModal({
               <div className="flex gap-2 p-1 rounded-2xl bg-gray-100">
                 {(
                   [
-                    { value: "json", label: "JSON", icon: FileJson },
-                    { value: "docx", label: "Word (.docx)", icon: FileText },
+                    {
+                      value: "json",
+                      label: t("banks.upload.modeJson"),
+                      icon: FileJson,
+                    },
+                    {
+                      value: "docx",
+                      label: t("banks.upload.modeDocx"),
+                      icon: FileText,
+                    },
                   ] as { value: UploadMode; label: string; icon: typeof FileJson }[]
                 ).map(({ value, label, icon: Icon }) => (
                   <button
@@ -324,13 +355,13 @@ export function UploadQuestionsModal({
                 <div className="text-center">
                   <p className="font-semibold text-gray-700 text-sm">
                     {mode === "json"
-                      ? jsonFileName || "أفلت ملف الأسئلة (.json) هنا"
-                      : docxFile?.name || "أفلت ملف الوورد (.docx) هنا"}
+                      ? jsonFileName || t("banks.upload.dropJson")
+                      : docxFile?.name || t("banks.upload.dropDocx")}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    أو{" "}
+                    {t("banks.upload.or")}{" "}
                     <span className="text-[#404293] font-semibold">
-                      اختر ملفاً من جهازك
+                      {t("banks.upload.chooseFile")}
                     </span>
                   </p>
                 </div>
@@ -342,7 +373,7 @@ export function UploadQuestionsModal({
                     }}
                     className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-semibold"
                   >
-                    <X size={12} /> إزالة الملف
+                    <X size={12} /> {t("banks.upload.removeFile")}
                   </button>
                 )}
               </div>
@@ -352,17 +383,18 @@ export function UploadQuestionsModal({
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-sm font-semibold text-gray-700">
-                      أو الصق الأسئلة كـ JSON
+                      {t("banks.upload.pasteLabel")}
                     </label>
                     <button
                       onClick={() => {
-                        setJsonText(QUESTIONS_JSON_TEMPLATE);
+                        setJsonText(jsonTemplate);
                         setJsonFileName("");
                         setLocalError("");
                       }}
                       className="flex items-center gap-1.5 text-[11px] font-bold text-[#404293] hover:text-[#2376BB] transition-colors"
                     >
-                      <ClipboardPaste size={12} /> إدراج نموذج
+                      <ClipboardPaste size={12} />{" "}
+                      {t("banks.upload.insertTemplate")}
                     </button>
                   </div>
                   <textarea
@@ -374,24 +406,30 @@ export function UploadQuestionsModal({
                     rows={8}
                     dir="ltr"
                     spellCheck={false}
-                    placeholder={QUESTIONS_JSON_TEMPLATE}
+                    placeholder={jsonTemplate}
                     className="w-full resize-y rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-xs font-mono text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-300"
                   />
 
                   {jsonText.trim() && (
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-bold">
                       <span className="px-2.5 py-1 rounded-full bg-[#404293]/10 text-[#404293]">
-                        {parsed?.questions.length ?? 0} سؤال صالح
+                        {t("banks.upload.validQuestions", {
+                          count: parsed?.questions.length ?? 0,
+                        })}
                       </span>
                       <span className="px-2.5 py-1 rounded-full bg-[#2376BB]/10 text-[#2376BB]">
-                        {mcqCount} اختيار من متعدد
+                        {t("banks.upload.mcqCount", { count: mcqCount })}
                       </span>
                       <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600">
-                        {trueFalseCount} صح / خطأ
+                        {t("banks.upload.trueFalseCount", {
+                          count: trueFalseCount,
+                        })}
                       </span>
                       {(parsed?.errors.length ?? 0) > 0 && (
                         <span className="px-2.5 py-1 rounded-full bg-red-500/10 text-red-600">
-                          {parsed?.errors.length} خطأ
+                          {t("banks.upload.errorsCount", {
+                            count: parsed?.errors.length ?? 0,
+                          })}
                         </span>
                       )}
                     </div>
@@ -399,9 +437,18 @@ export function UploadQuestionsModal({
 
                   {jsonText.trim() && (parsed?.errors.length ?? 0) > 0 && (
                     <ul className="mt-2 space-y-1 max-h-32 overflow-y-auto rounded-xl bg-red-50 border border-red-100 px-4 py-2.5">
-                      {parsed?.errors.map((error) => (
-                        <li key={error} className="text-xs text-red-600">
-                          • {error}
+                      {parsed?.errors.map((parseError, index) => (
+                        <li
+                          key={`${parseError.code}-${index}`}
+                          className="text-xs text-red-600"
+                        >
+                          •{" "}
+                          {t(
+                            `banks.parseErrors.${parseError.code}`,
+                            "position" in parseError
+                              ? { position: parseError.position }
+                              : undefined,
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -414,13 +461,7 @@ export function UploadQuestionsModal({
                 <div className="flex gap-2.5 rounded-2xl bg-[#2376BB]/6 border border-[#2376BB]/15 px-4 py-3">
                   <Info size={15} className="text-[#2376BB] flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-gray-600 leading-relaxed">
-                    ملف الوورد يجب أن يلتزم بالصيغة المتفق عليها مع الباك (سؤال ثم
-                    خياراته وتحديد الإجابة الصحيحة). إذا لم يتعرّف السيرفر على
-                    الأسئلة سترى رسالة{" "}
-                    <span className="font-semibold">
-                      «تأكد إنو الملف ملتزم بالصيغة المطلوبة»
-                    </span>
-                    .
+                    {t("banks.upload.docxHint")}
                   </p>
                 </div>
               )}
@@ -437,7 +478,7 @@ export function UploadQuestionsModal({
                   onClick={onClose}
                   className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
                 >
-                  Cancel
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   onClick={handleSubmit}
@@ -451,7 +492,11 @@ export function UploadQuestionsModal({
                   ) : (
                     <CloudUpload size={16} />
                   )}
-                  {uploading ? "جارٍ الرفع…" : "رفع الأسئلة"}
+                  {t(
+                    uploading
+                      ? "banks.upload.submitting"
+                      : "banks.upload.submit",
+                  )}
                 </button>
               </div>
             </>

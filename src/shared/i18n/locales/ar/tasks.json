@@ -1,0 +1,93 @@
+{
+  "hub": {
+    "title": "مهامي",
+    "subtitle": "نظّم مهامك الشخصية والأكاديمية في مكان واحد",
+    "overallProgress": "التقدّم الإجمالي",
+    "personalCount": "{{count}} شخصية",
+    "academicCount": "{{count}} أكاديمية",
+    "tabPersonal": "المهام الشخصية",
+    "tabAcademic": "المهام الأكاديمية"
+  },
+  "searchPlaceholder": "بحث عن مهمة...",
+  "clearSearch": "مسح البحث",
+  "personal": {
+    "filterAll": "كل المهام",
+    "filterPending": "قيد الإنجاز",
+    "filterCompleted": "منجزة",
+    "new": "مهمة جديدة",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyNone": "لا توجد مهام بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "أضف أول مهمة شخصية الآن",
+    "addFirst": "إضافة مهمة",
+    "groupPending": "قيد الإنجاز — {{count}}",
+    "groupCompleted": "منجزة — {{count}}",
+    "completed": "مكتملة",
+    "markDone": "تحديد كمنجزة",
+    "messages": {
+      "created": "تم إنشاء المهمة بنجاح ✓",
+      "updated": "تم تعديل المهمة بنجاح ✓",
+      "deleted": "تم حذف المهمة",
+      "completed": "تم تحديد المهمة كمنجزة ✅"
+    },
+    "confirmDelete": {
+      "title": "تأكيد الحذف",
+      "body": "ستحذف المهمة:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "working": "جارٍ...",
+      "yes": "نعم، احذف"
+    },
+    "form": {
+      "createTitle": "مهمة جديدة",
+      "editTitle": "تعديل المهمة",
+      "createSubtitle": "أضف مهمة إلى قائمتك الشخصية",
+      "editSubtitle": "عدّل بيانات مهمتك",
+      "titleLabel": "عنوان المهمة",
+      "titlePlaceholder": "مثال: مراجعة مادة الشبكات",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف مختصر للمهمة...",
+      "dueDateLabel": "تاريخ الاستحقاق",
+      "titleRequired": "عنوان المهمة مطلوب",
+      "dueDateRequired": "يرجى تحديد تاريخ الاستحقاق",
+      "saving": "جاري الحفظ...",
+      "create": "إضافة المهمة",
+      "save": "حفظ التعديلات"
+    }
+  },
+  "academic": {
+    "loadFailed": "تعذّر تحميل المهام الأكاديمية.",
+    "emptyNoResults": "لا توجد نتائج",
+    "emptyNone": "لا توجد مهام أكاديمية بعد",
+    "emptySearchHint": "جرّب مصطلح بحث مختلف",
+    "emptyHint": "ستظهر هنا المهام التي ينشئها فريقك الأكاديمي",
+    "groupOpen": "مفتوحة — {{count}}",
+    "groupClosed": "مغلقة — {{count}}",
+    "statusOpen": "مفتوح",
+    "statusClosed": "مغلق",
+    "closesAt": "يغلق {{date}}",
+    "opensAtLabel": "يفتح: {{date}}",
+    "closesAtLabel": "يغلق: {{date}}",
+    "viewSubmission": "عرض التسليم",
+    "submitSolution": "تسليم الحل"
+  },
+  "submissionStatus": {
+    "pending": "بانتظار المراجعة",
+    "approved": "مقبول",
+    "rejected": "مرفوض"
+  },
+  "submission": {
+    "title": "تسليم الحل",
+    "current": "تسليمك الحالي",
+    "viewFile": "عرض الملف المُسلَّم",
+    "rejectionReason": "سبب الرفض: {{reason}}",
+    "closedNotice": "هذه المهمة مغلقة ولا يمكن تسليم حل جديد.",
+    "fileLabel": "ملف الحل",
+    "chooseFile": "اختر ملفاً لرفعه",
+    "noteLabel": "ملاحظة",
+    "notePlaceholder": "ملاحظة اختيارية...",
+    "fileRequired": "يرجى إرفاق ملف الحل",
+    "uploading": "جاري الرفع...",
+    "resubmit": "إعادة التسليم",
+    "submit": "تسليم الحل"
+  }
+}

@@ -15,7 +15,24 @@
     "searchPlaceholder": "ابحث...",
     "retry": "إعادة المحاولة",
     "back": "رجوع",
-    "more": "المزيد"
+    "more": "المزيد",
+    "add": "إضافة",
+    "update": "تحديث",
+    "refresh": "تحديث البيانات",
+    "viewAll": "عرض الكل",
+    "download": "تحميل",
+    "upload": "رفع",
+    "submit": "إرسال",
+    "next": "التالي",
+    "previous": "السابق",
+    "reset": "إعادة تعيين",
+    "clear": "مسح",
+    "apply": "تطبيق",
+    "copy": "نسخ",
+    "select": "اختيار",
+    "saving": "جارِ الحفظ...",
+    "deleting": "جارِ الحذف...",
+    "sending": "جارِ الإرسال..."
   },
   "profile": {
     "open": "فتح الملف الشخصي",
@@ -53,11 +70,47 @@
     "title": "خطأ",
     "userArea": "حدث خطأ في منطقة المستخدم.",
     "adminArea": "حدث خطأ في منطقة الإدارة.",
-    "generic": "حدث خطأ غير متوقّع."
+    "generic": "حدث خطأ غير متوقّع.",
+    "loadFailed": "تعذّر تحميل البيانات.",
+    "saveFailed": "تعذّر حفظ التغييرات.",
+    "deleteFailed": "تعذّر الحذف.",
+    "partialLoad": "تعذّر تحميل بعض البيانات. جرّب التحديث."
   },
   "states": {
     "loading": "جارِ التحميل...",
     "empty": "لا توجد بيانات",
-    "noResults": "لا توجد نتائج"
+    "noResults": "لا توجد نتائج",
+    "unavailable": "غير متاح"
+  },
+  "greeting": {
+    "morning": "صباح الخير",
+    "afternoon": "طاب يومك",
+    "evening": "مساء الخير"
+  },
+  "deadline": {
+    "none": "بدون موعد",
+    "passed": "انتهى الموعد",
+    "minutes_zero": "متبقٍ أقل من دقيقة",
+    "minutes_one": "متبقٍ دقيقة واحدة",
+    "minutes_two": "متبقٍ دقيقتان",
+    "minutes_few": "متبقٍ {{count}} دقائق",
+    "minutes_many": "متبقٍ {{count}} دقيقة",
+    "minutes_other": "متبقٍ {{count}} دقيقة",
+    "hours_zero": "متبقٍ أقل من ساعة",
+    "hours_one": "متبقٍ ساعة واحدة",
+    "hours_two": "متبقٍ ساعتان",
+    "hours_few": "متبقٍ {{count}} ساعات",
+    "hours_many": "متبقٍ {{count}} ساعة",
+    "hours_other": "متبقٍ {{count}} ساعة",
+    "days_zero": "ينتهي اليوم",
+    "days_one": "متبقٍ يوم واحد",
+    "days_two": "متبقٍ يومان",
+    "days_few": "متبقٍ {{count}} أيام",
+    "days_many": "متبقٍ {{count}} يوماً",
+    "days_other": "متبقٍ {{count}} يوم"
+  },
+  "dashboard": {
+    "quickActions": "إجراءات سريعة",
+    "quickActionsHint": "اختصارات لأكثر ما تستخدمه"
   }
 }

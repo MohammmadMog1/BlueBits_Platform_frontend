@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Users, Plus, RefreshCcw, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import CreateUserModal from "../components/CreateUserModal";
 import ManagePermissionsModal from "../components/ManagePermissionsModal";
 import UsersFilter from "../components/UsersFilter";
@@ -18,6 +19,7 @@ import type { User } from "../types";
 const toastDuration = 3000;
 
 export default function UsersManagementPage() {
+  const { t } = useTranslation(["users", "admin", "common"]);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
@@ -58,9 +60,9 @@ export default function UsersManagementPage() {
   const handleRoleChange = async (id: string, newRole: string) => {
     try {
       await updateUserRole({ id, role: newRole as User["role"] }).unwrap();
-      showToast("تم تحديث الدور ✓", "success");
+      showToast(t("messages.roleUpdated"), "success");
     } catch {
-      showToast("فشل تحديث الدور. حاول مرة أخرى.", "error");
+      showToast(t("messages.roleUpdateFailed"), "error");
     }
   };
 
@@ -68,19 +70,19 @@ export default function UsersManagementPage() {
     setDeletingId(id);
     try {
       await deleteUser(id).unwrap();
-      showToast("تم حذف المستخدم", "success");
+      showToast(t("messages.deleted"), "success");
     } catch {
-      showToast("فشل حذف المستخدم. حاول مرة أخرى.", "error");
+      showToast(t("messages.deleteFailed"), "error");
     } finally {
       setDeletingId(null);
     }
   };
 
   const stats = [
-    { label: "إجمالي المستخدمين", value: users.length, color: "#404293" },
-    { label: "USER", value: users.filter((user) => user.role === "USER").length, color: "#2376BB" },
-    { label: "DOCTOR", value: users.filter((user) => user.role === "DOCTOR").length, color: "#7c3aed" },
-    { label: "مُوثّقون", value: users.filter((user) => user.isVerified !== false).length, color: "#059669" },
+    { label: t("stats.total"), value: users.length, color: "#404293" },
+    { label: t("admin:roles.USER"), value: users.filter((user) => user.role === "USER").length, color: "#2376BB" },
+    { label: t("admin:roles.DOCTOR"), value: users.filter((user) => user.role === "DOCTOR").length, color: "#7c3aed" },
+    { label: t("stats.verified"), value: users.filter((user) => user.isVerified !== false).length, color: "#059669" },
   ];
 
   const deletingUser = users.find((user) => user._id === deletingId);
@@ -94,14 +96,17 @@ export default function UsersManagementPage() {
             <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
               <Users className="w-4.5 h-4.5 text-white" />
             </div>
-            <h1 className="text-xl font-black text-gray-900 tracking-tight">إدارة المستخدمين</h1>
+            <h1 className="text-xl font-black text-gray-900 tracking-tight">
+              {t("title")}
+            </h1>
           </div>
-          <p className="text-sm text-gray-400 font-medium">عرض وإنشاء وتعديل حسابات المستخدمين</p>
+          <p className="text-sm text-gray-400 font-medium">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => refetch()}
-            title="تحديث"
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
             className="w-10 h-10 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-[#404293] hover:border-[#404293]/30 shadow-sm transition-all"
           >
             <RefreshCcw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -110,7 +115,7 @@ export default function UsersManagementPage() {
             onClick={() => setShowCreate(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-linear-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-xl shadow-[#404293]/30 hover:-translate-y-0.5 active:scale-[0.98] transition-all"
           >
-            <Plus size={17} /> مستخدم جديد
+            <Plus size={17} /> {t("new")}
           </button>
         </div>
       </div>
@@ -135,7 +140,7 @@ export default function UsersManagementPage() {
           className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-3.5 text-amber-700 text-sm font-semibold"
         >
           <AlertCircle className="w-4 h-4 shrink-0" />
-          تعذّر الاتصال بالخادم — حاول إعادة التحميل
+          {t("connectionFailed")}
         </motion.div>
       ) : null}
 
@@ -155,7 +160,7 @@ export default function UsersManagementPage() {
             onClose={() => setShowCreate(false)}
             onCreated={() => {
               setShowCreate(false);
-              showToast("تم إنشاء الحساب بنجاح ✓", "success");
+              showToast(t("messages.created"), "success");
             }}
           />
         )}
@@ -187,8 +192,14 @@ export default function UsersManagementPage() {
               className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden"
             >
               <div className="px-6 py-5 border-b border-gray-100">
-                <h3 className="text-lg font-black text-gray-900">تأكيد الحذف</h3>
-                <p className="text-sm text-gray-500 mt-1">هل تريد حذف المستخدم {deletingUser?.name || "؟"}</p>
+                <h3 className="text-lg font-black text-gray-900">
+                  {t("confirmDelete.title")}
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {t("confirmDelete.body", {
+                    name: deletingUser?.name || t("confirmDelete.unknownUser"),
+                  })}
+                </p>
               </div>
               <div className="px-6 py-4 flex items-center gap-3">
                 <button
@@ -196,7 +207,7 @@ export default function UsersManagementPage() {
                   onClick={() => setDeletingId(null)}
                   className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
                 >
-                  إلغاء
+                  {t("common:actions.cancel")}
                 </button>
                 <button
                   type="button"
@@ -204,7 +215,7 @@ export default function UsersManagementPage() {
                   className="flex-1 py-3 rounded-xl bg-rose-500 text-white font-bold text-sm shadow-lg shadow-rose-500/15 hover:-translate-y-0.5 transition-all disabled:opacity-50"
                   disabled={isDeleting}
                 >
-                  حذف
+                  {t("common:actions.delete")}
                 </button>
               </div>
             </motion.div>

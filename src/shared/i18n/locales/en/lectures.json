@@ -1,0 +1,76 @@
+{
+  "title": "Lectures",
+  "subtitle": "Browse your academic content easily",
+  "type": {
+    "theoretical": "Theoretical",
+    "practical": "Practical"
+  },
+  "breadcrumb": {
+    "selectYear": "Select Year",
+    "year": "Year",
+    "semester": "Semester",
+    "subject": "Subject",
+    "type": "Type",
+    "lectures": "Lectures"
+  },
+  "steps": {
+    "selectYear": "Select Year",
+    "selectSemester": "Select Semester",
+    "selectSubject": "Select Subject",
+    "selectType": "Select Type"
+  },
+  "loading": {
+    "years": "Loading years...",
+    "semesters": "Loading semesters...",
+    "subjects": "Loading subjects...",
+    "lectures": "Loading lectures..."
+  },
+  "empty": {
+    "noSubjectsTitle": "No subjects found",
+    "noSubjectsMessage": "No subjects exist for this year and semester yet.",
+    "noLecturesTitle": "No lectures yet",
+    "noLecturesMessage": "No lectures published for this subject yet.",
+    "noMatches": "No matches found."
+  },
+  "lecturesFor": "Lectures for {{subject}}",
+  "totalCount": "{{count}} total",
+  "searchPlaceholder": "Search...",
+  "clearSearch": "Clear search",
+  "card": {
+    "view": "View",
+    "download": "Download",
+    "badgeLab": "LAB",
+    "badgePdf": "PDF"
+  },
+  "latest": {
+    "title": "Latest Lectures",
+    "viewAll": "View All",
+    "showLess": "Show Less"
+  },
+  "recentDownloads": {
+    "title": "Recently Downloaded"
+  },
+  "interactions": {
+    "like": "Like",
+    "dislike": "Dislike",
+    "comments": "Comments",
+    "loadingComments": "Loading comments...",
+    "noComments": "No comments yet — be the first to comment",
+    "composerPlaceholder": "Write a comment...",
+    "sendComment": "Send comment",
+    "updating": "Updating...",
+    "requestFailed": "The request failed, please try again."
+  },
+  "comment": {
+    "unknownUser": "User",
+    "edited": "(edited)",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this comment?",
+    "yes": "Yes",
+    "saveFailed": "Could not save the edit, please try again.",
+    "deleteFailed": "Could not delete the comment, please try again."
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import {
   FileText,
@@ -30,6 +31,7 @@ export function AdminLectureCard({
   onToggleStatus: () => void;
   onRename: (title: string) => void;
 }) {
+  const { t } = useTranslation("admin");
   const [renaming, setRenaming] = useState(false);
   const [draft, setDraft] = useState(lec.title);
 
@@ -79,11 +81,13 @@ export function AdminLectureCard({
             <FileText className="w-7 h-7 text-white" />
           </div>
           <span
-            className={`absolute -bottom-1 -right-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
+            className={`absolute -bottom-1 -end-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
               isPractical ? "bg-emerald-500" : "bg-[#404293]"
             }`}
           >
-            {isPractical ? "LAB" : "PDF"}
+            {isPractical
+              ? t("lectureManagement.card.labBadge")
+              : t("lectureManagement.card.pdfBadge")}
           </span>
         </div>
 
@@ -104,7 +108,7 @@ export function AdminLectureCard({
                 onClick={confirmRename}
                 className="flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-lg bg-[#404293] text-white font-bold hover:bg-[#33529F] transition-colors flex-shrink-0"
               >
-                <CheckCircle2 size={11} /> Save
+                <CheckCircle2 size={11} /> {t("lectureManagement.card.save")}
               </button>
               <button
                 onClick={() => {
@@ -130,7 +134,10 @@ export function AdminLectureCard({
               <Clock size={11} className="text-gray-300" /> {formattedDate}
             </span>
             <span className="flex items-center gap-1 font-medium">
-              <File size={11} className="text-gray-300" /> {lec.type}
+              <File size={11} className="text-gray-300" />{" "}
+              {isPractical
+                ? t("lectureManagement.types.practical")
+                : t("lectureManagement.types.theoretical")}
             </span>
             {/* ✅ تم إضافة حجم الملف بدلاً من downloads/views */}
             <span className="flex items-center gap-1 font-medium">
@@ -141,7 +148,7 @@ export function AdminLectureCard({
             </span>
           </div>
           <p className="text-[10px] text-gray-300 italic hidden sm:block">
-            Double-click title to rename
+            {t("lectureManagement.card.renameHint")}
           </p>
         </div>
 
@@ -156,11 +163,11 @@ export function AdminLectureCard({
           >
             {lec.isPublished ? (
               <>
-                <ToggleRight size={13} /> Published
+                <ToggleRight size={13} /> {t("lectureManagement.card.published")}
               </>
             ) : (
               <>
-                <ToggleLeft size={13} /> Draft
+                <ToggleLeft size={13} /> {t("lectureManagement.card.draft")}
               </>
             )}
           </button>
@@ -170,25 +177,25 @@ export function AdminLectureCard({
               onClick={onView}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
             >
-              <Eye size={12} /> View
+              <Eye size={12} /> {t("lectureManagement.card.view")}
             </button>
             <button
               onClick={onDownload}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
             >
-              <Download size={12} /> Download
+              <Download size={12} /> {t("lectureManagement.card.download")}
             </button>
             <button
               onClick={() => setRenaming(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
             >
-              <Edit3 size={12} /> Rename
+              <Edit3 size={12} /> {t("lectureManagement.card.rename")}
             </button>
             <button
               onClick={onDelete}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
             >
-              <Trash2 size={12} /> Delete
+              <Trash2 size={12} /> {t("lectureManagement.card.delete")}
             </button>
           </div>
         </div>

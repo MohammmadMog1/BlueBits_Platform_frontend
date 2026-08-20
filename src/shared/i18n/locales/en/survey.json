@@ -1,0 +1,87 @@
+{
+  "title": "Exam schedule survey",
+  "subtitle": "Your input shapes the exam order — set each subject's difficulty and the rest days you need",
+  "steps": {
+    "pick": "Pick the subjects you will sit exams for",
+    "configure": "Set each subject's difficulty and rest days",
+    "send": "Send your answer and we'll handle the rest"
+  },
+  "closed": {
+    "title": "No survey is currently open",
+    "hint": "The survey will appear here as soon as the admin team opens it for your year."
+  },
+  "alreadyAnswered": {
+    "title": "You have already answered this survey",
+    "hint": "Thanks for taking part"
+  },
+  "summary": {
+    "lastTitle": "Your most recent answer",
+    "lastHint": "Saved from an earlier survey",
+    "currentTitle": "Your answer to this survey has been received",
+    "currentHint": "Answers cannot be edited once submitted",
+    "submittedAt": "Submitted on {{date}}",
+    "subjectsCount": "{{count}} subjects",
+    "unknownSubject": "Unknown subject",
+    "carrying": "Retaken",
+    "daysBefore": "{{count}} days"
+  },
+  "formInfo": "Survey — {{year}} — {{semester}} — {{academicYear}}",
+  "selectedOfTotal": "{{selected}} of {{total}} subjects",
+  "defaults": {
+    "yourYear": "your year",
+    "currentSemester": "the current semester"
+  },
+  "picker": {
+    "heading": "Pick your subjects",
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "searchPlaceholder": "Search for a subject...",
+    "tabs": {
+      "all": "All subjects",
+      "selected": "Selected",
+      "carrying": "Retakes"
+    },
+    "emptyNoSubjects": "No subjects for your year in this semester",
+    "emptyNoSubjectsHint": "Ask the admin team to add the semester's subjects before filling in the survey",
+    "emptyNoMatch": "No matching results",
+    "emptyNoMatchHint": "Try another tab or clear the search term",
+    "tapToInclude": "Tap to include it in your answer",
+    "restDays": "{{count}} rest days"
+  },
+  "answer": {
+    "heading": "Your answer",
+    "clearAll": "Clear all",
+    "emptyHintLine1": "You haven't picked any subject yet.",
+    "emptyHintLine2": "Choose from the list beside this panel.",
+    "markAsCarrying": "Mark as a retake",
+    "isCarrying": "Retaken subject",
+    "removeSubject": "Remove this subject from my answer",
+    "difficultyLabel": "How hard is it for you",
+    "easiest": "Very easy",
+    "hardest": "Very hard",
+    "restDaysLabel": "Rest days before the exam",
+    "decreaseDay": "One day fewer",
+    "increaseDay": "One day more",
+    "prepDays_one": "day to prepare",
+    "prepDays_other": "days to prepare"
+  },
+  "submit": {
+    "cta": "Send answer",
+    "hintEmpty": "Pick at least one subject before sending",
+    "hintReady": "Review your settings carefully — answers cannot be edited once sent",
+    "confirmTitle": "Confirm submission",
+    "confirmBody": "Your answer for {{count}} subjects will be sent.",
+    "confirmBodyWithCarrying": "Your answer for {{count}} subjects will be sent ({{carrying}} of them retakes).",
+    "cannotEdit": "Answers cannot be edited once submitted.",
+    "review": "Review",
+    "sending": "Sending...",
+    "yesSend": "Yes, send it"
+  },
+  "success": {
+    "title": "Your answer was sent successfully 🎉",
+    "line1": "Your preferences have arrived and will be used when generating the exam schedule.",
+    "line2": "Answers cannot be edited once submitted.",
+    "sentCount": "{{count}} subjects sent",
+    "viewResponse": "View my answer"
+  }
+}

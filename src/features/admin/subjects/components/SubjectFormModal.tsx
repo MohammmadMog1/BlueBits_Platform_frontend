@@ -9,6 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import type { SubjectFormData } from "../types";
 
 interface Option {
@@ -37,6 +38,7 @@ export default function SubjectFormModal({
   onClose,
   onSubmit,
 }: SubjectFormModalProps) {
+  const { t } = useTranslation(["admin", "common"]);
   const [name, setName] = useState(initial?.name ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [yearId, setYearId] = useState(initial?.yearId ?? "");
@@ -45,9 +47,9 @@ export default function SubjectFormModal({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!name.trim()) return setFormError("اسم المادة مطلوب");
-    if (!yearId) return setFormError("يرجى اختيار السنة الدراسية");
-    if (!semesterId) return setFormError("يرجى اختيار الفصل الدراسي");
+    if (!name.trim()) return setFormError(t("subjects.form.nameRequired"));
+    if (!yearId) return setFormError(t("subjects.form.yearRequired"));
+    if (!semesterId) return setFormError(t("subjects.form.semesterRequired"));
     setFormError("");
     onSubmit({
       name: name.trim(),
@@ -81,10 +83,10 @@ export default function SubjectFormModal({
               </div>
               <div>
                 <h3 className="text-base font-bold text-gray-900">
-                  {isEdit ? "تعديل المادة" : "إضافة مادة جديدة"}
+                  {t(isEdit ? "subjects.form.editTitle" : "subjects.form.createTitle")}
                 </h3>
                 <p className="mt-0.5 text-xs text-gray-400">
-                  {isEdit ? "عدّل بيانات المادة" : "أدخل بيانات المادة الجديدة"}
+                  {t(isEdit ? "subjects.form.editSubtitle" : "subjects.form.createSubtitle")}
                 </p>
               </div>
             </div>
@@ -92,7 +94,7 @@ export default function SubjectFormModal({
               type="button"
               onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200"
-              aria-label="إغلاق"
+              aria-label={t("common:actions.close")}
             >
               <X size={15} className="text-gray-500" />
             </button>
@@ -100,59 +102,59 @@ export default function SubjectFormModal({
         </div>
         <form onSubmit={handleSubmit} className="space-y-5 px-7 py-6">
           <label className="block text-sm font-bold text-gray-700">
-            اسم المادة <span className="text-red-400">*</span>
+            {t("subjects.form.nameLabel")} <span className="text-red-400">*</span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="مثال: نمذجة ومحاكاة"
+              placeholder={t("subjects.form.namePlaceholder")}
               className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <label className="block text-sm font-bold text-gray-700">
-            وصف المادة
+            {t("subjects.form.descriptionLabel")}
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="وصف مختصر للمادة..."
+              placeholder={t("subjects.form.descriptionPlaceholder")}
               rows={3}
               className="mt-1.5 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
             />
           </label>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="block text-sm font-bold text-gray-700">
-              السنة الدراسية <span className="text-red-400">*</span>
+              {t("subjects.form.yearLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={yearId}
                   onChange={(event) => setYearId(event.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                 >
-                  <option value="">اختر السنة...</option>
+                  <option value="">{t("subjects.form.chooseYear")}</option>
                   {yearOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-                <GraduationCap className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
             <label className="block text-sm font-bold text-gray-700">
-              الفصل الدراسي <span className="text-red-400">*</span>
+              {t("subjects.form.semesterLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={semesterId}
                   onChange={(event) => setSemesterId(event.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
                 >
-                  <option value="">اختر الفصل...</option>
+                  <option value="">{t("subjects.form.chooseSemester")}</option>
                   {semesterOptions.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-                <Layers className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Layers className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               </div>
             </label>
           </div>
@@ -168,7 +170,7 @@ export default function SubjectFormModal({
               onClick={onClose}
               className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
             >
-              إلغاء
+              {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
@@ -187,12 +189,12 @@ export default function SubjectFormModal({
                   >
                     <RefreshCcw size={15} />
                   </motion.div>
-                  جاري الحفظ...
+                  {t("subjects.form.saving")}
                 </>
               ) : (
                 <>
                   <CheckCircle2 size={15} />
-                  {isEdit ? "حفظ التعديلات" : "إنشاء المادة"}
+                  {t(isEdit ? "subjects.form.save" : "subjects.form.create")}
                 </>
               )}
             </button>
