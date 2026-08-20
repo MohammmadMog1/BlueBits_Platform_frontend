@@ -292,7 +292,7 @@ export default function SemestersPanel() {
         )}
       </AnimatePresence>
       {toast && (
-        <div className="fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white shadow-xl">
+        <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0))] left-1/2 z-60 -translate-x-1/2 rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white shadow-xl lg:bottom-6">
           {toast}
         </div>
       )}

@@ -516,7 +516,7 @@ export default function AcademicTasksManagementPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
-          className={`fixed bottom-6 left-1/2 z-[500] -translate-x-1/2 rounded-2xl px-5 py-3.5 text-sm font-semibold shadow-xl ${
+          className={`fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0))] left-1/2 z-500 -translate-x-1/2 rounded-2xl px-5 py-3.5 text-sm font-semibold shadow-xl lg:bottom-6 ${
             toast.type === "success" ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"
           }`}
         >

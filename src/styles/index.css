@@ -52,6 +52,13 @@
     font-family: var(--font-sans);
     /* أرقام بعرض ثابت: يمنع "رقصة" الأرقام في العدّادات والإحصاءات */
     font-variant-numeric: tabular-nums;
+    /* يمنع ارتداد الصفحة (rubber-band) من التسرّب إلى إيماءات المتصفح على الجوال */
+    overscroll-behavior-y: none;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
   }
 
   /**

@@ -30,7 +30,7 @@ const MainLayout = ({ navItems, userProfile }: MainLayoutProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-dvh overflow-hidden bg-gray-50">
       {/* ✅ تم تمرير userProfile الذي يحتوي الآن على role */}
       <Sidebar
         navItems={navItems}
@@ -45,7 +45,7 @@ const MainLayout = ({ navItems, userProfile }: MainLayoutProps) => {
           onOpenProfile={() => setIsProfileOpen(true)}
           isProfileOpen={isProfileOpen}
         />
-        <main className="flex-1 overflow-y-auto overscroll-contain p-3 pb-24 sm:p-6 lg:pb-6">
+        <main className="flex-1 overflow-y-auto overscroll-contain p-3 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:p-6 lg:pb-6">
           <Outlet />
         </main>
         <BottomBar navItems={navItems} userProfile={userProfile} />
