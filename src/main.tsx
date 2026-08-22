@@ -4,13 +4,16 @@ import "./shared/i18n";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider } from "next-themes";
 import { store, persistor } from "./app/store/store";
 import App from "./App"; // استيراد كامبوننت App الجديد
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <App />
+      </ThemeProvider>
     </PersistGate>
   </Provider>,
 );

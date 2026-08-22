@@ -13,6 +13,7 @@ import type {
   LectureUploadPayload,
 } from "../types";
 import { setUploadProgress } from "./lecturesSlice";
+import { lecturesStatsApi } from "../api/lecturesStatsApi";
 
 /** رسالة الخطأ من الخادم، أو نص فارغ ليستخدم المكوّن رسالةً مترجَمة بديلة */
 const formatError = (error: unknown): string => {
@@ -51,6 +52,9 @@ export const uploadLectureThunk = createAsyncThunk<
     
     // ✅ نجلب المحاضرة الكاملة (populated) باستخدام الـ id
     const fullLecture = await getLecture(lecture._id);
+    thunkAPI.dispatch(
+      lecturesStatsApi.util.invalidateTags([{ type: "LectureStats", id: "LIST" }]),
+    );
     return fullLecture;
   } catch (error) {
     return thunkAPI.rejectWithValue(formatError(error));
@@ -78,6 +82,9 @@ export const deleteLectureThunk = createAsyncThunk<
 >("lectures/delete", async (id, thunkAPI) => {
   try {
     await deleteLecture(id);
+    thunkAPI.dispatch(
+      lecturesStatsApi.util.invalidateTags([{ type: "LectureStats", id: "LIST" }]),
+    );
     return id;
   } catch (error) {
     return thunkAPI.rejectWithValue(formatError(error));

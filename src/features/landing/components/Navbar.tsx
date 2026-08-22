@@ -110,7 +110,7 @@ export function Navbar({
               }`}
             >
               {t(`nav.${link.key}`)}
-              <span className="absolute -bottom-1 start-0 w-0 h-0.5 bg-gradient-to-r from-[#404293] to-[#2376BB] group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute -bottom-1 start-0 w-0 h-0.5 bg-[#404293] group-hover:w-full transition-all duration-300"></span>
             </a>
           ))}
         </div>
@@ -139,11 +139,11 @@ export function Navbar({
           {/* ✅ زر المحاضرات */}
           <button
             onClick={() => navigate("/user/lectures")}
-            className={`hidden md:flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-300 ${
+            className={`hidden md:flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors duration-200 ${
               isDark
-                ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] hover:from-[#404293]/30 hover:to-[#2376BB]/30 border border-[#404293]/30"
-                : "bg-gradient-to-r from-[#404293]/10 to-[#2376BB]/10 text-[#404293] hover:from-[#404293]/20 hover:to-[#2376BB]/20 border border-[#404293]/20"
-            } hover:scale-105`}
+                ? "text-gray-300 hover:bg-white/5"
+                : "text-gray-600 hover:bg-slate-100"
+            }`}
           >
             <BookOpen className="w-4 h-4" />
             {t("nav.lectures")}
@@ -153,11 +153,11 @@ export function Navbar({
           {isAuthenticated && user && (
             <button
               onClick={() => navigate("/user")}
-              className={`hidden md:flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl transition-all duration-300 ${
+              className={`hidden md:flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors duration-200 ${
                 isDark
-                  ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] hover:from-[#404293]/30 hover:to-[#2376BB]/30 border border-[#404293]/30"
-                  : "bg-gradient-to-r from-[#404293]/10 to-[#2376BB]/10 text-[#404293] hover:from-[#404293]/20 hover:to-[#2376BB]/20 border border-[#404293]/20"
-              } hover:scale-105`}
+                  ? "text-gray-300 hover:bg-white/5"
+                  : "text-gray-600 hover:bg-slate-100"
+              }`}
             >
               <LayoutDashboard className="w-4 h-4" />
               {t("nav.dashboard")}
@@ -176,7 +176,7 @@ export function Navbar({
                 } hover:scale-105`}
               >
                 {/* Avatar - بدون النقطة الخضراء */}
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg overflow-hidden">
+                <div className="w-8 h-8 rounded-full bg-[#404293] flex items-center justify-center overflow-hidden">
                   {getAvatarContent()}
                 </div>
 
@@ -272,17 +272,17 @@ export function Navbar({
             <div className="hidden md:flex items-center gap-3">
               <button
                 onClick={() => navigate("/auth/login")}
-                className={`text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-300 ${
+                className={`text-sm font-semibold px-5 py-2.5 rounded-xl border transition-colors duration-200 ${
                   isDark
-                    ? "text-gray-300 hover:bg-white/5 border border-white/10"
-                    : "text-[#404293] hover:bg-[#404293]/5 border border-[#404293]/30"
-                } hover:scale-105`}
+                    ? "text-gray-300 hover:bg-white/5 border-white/10"
+                    : "text-[#404293] hover:bg-[#404293]/5 border-[#404293]/30"
+                }`}
               >
                 {t("nav.login")}
               </button>
               <button
                 onClick={() => navigate("/auth/register")}
-                className="text-sm font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg shadow-[#404293]/30 hover:shadow-xl hover:shadow-[#404293]/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300"
+                className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
               >
                 {t("nav.getStarted")}
               </button>
@@ -335,10 +335,10 @@ export function Navbar({
                 navigate("/user/lectures");
                 setMobileMenuOpen(false);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 text-sm font-bold py-2.5 px-3 rounded-xl transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 text-sm font-semibold py-2.5 px-3 rounded-xl border transition-colors ${
                 isDark
-                  ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] border border-[#404293]/30"
-                  : "bg-gradient-to-r from-[#404293]/10 to-[#2376BB]/10 text-[#404293] border border-[#404293]/20"
+                  ? "border-white/10 text-gray-300 hover:bg-white/5"
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -351,10 +351,10 @@ export function Navbar({
                   navigate("/user");
                   setMobileMenuOpen(false);
                 }}
-                className={`flex-1 flex items-center justify-center gap-2 text-sm font-bold py-2.5 px-3 rounded-xl transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 text-sm font-semibold py-2.5 px-3 rounded-xl border transition-colors ${
                   isDark
-                    ? "bg-gradient-to-r from-[#404293]/20 to-[#2376BB]/20 text-[#9fa8e8] border border-[#404293]/30"
-                    : "bg-gradient-to-r from-[#404293]/10 to-[#2376BB]/10 text-[#404293] border border-[#404293]/20"
+                    ? "border-white/10 text-gray-300 hover:bg-white/5"
+                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
@@ -378,7 +378,7 @@ export function Navbar({
                     : "bg-slate-50 border border-slate-200 hover:bg-slate-100"
                 }`}
               >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#404293] flex items-center justify-center overflow-hidden flex-shrink-0">
                   {getAvatarContent()}
                 </div>
                 <div className="flex flex-col overflow-hidden flex-1 text-start">
@@ -420,7 +420,7 @@ export function Navbar({
                   navigate("/auth/register");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 text-sm font-bold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-lg active:scale-[0.98] transition-all"
+                className="flex-1 text-sm font-semibold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-sm active:scale-[0.98] transition-all"
               >
                 {t("nav.getStarted")}
               </button>

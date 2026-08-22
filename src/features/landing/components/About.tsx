@@ -1,37 +1,14 @@
 import {
-  GraduationCap,
   Zap,
   Shield,
   Users,
   TrendingUp,
   ChevronRight,
-  Star,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../shared/i18n/useLanguage";
-import { TabLabel } from "./shared/VisualHelpers";
-
-// Fallback image component if not found in shared
-const ImageWithFallback = ({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-}) => (
-  <img
-    src={src}
-    alt={alt}
-    className={className}
-    onError={(e) => {
-      (e.target as HTMLImageElement).src =
-        "https://images.unsplash.com/photo-1541178735493-479c1a27ed24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800";
-    }}
-  />
-);
+import { TabLabel, AboutPanel } from "./shared/VisualHelpers";
 
 interface AboutProps {
   isDark: boolean;
@@ -60,8 +37,7 @@ export function About({ isDark, navigate }: AboutProps) {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <TabLabel className="mb-6 sm:mb-8">
-              <GraduationCap className="w-3 h-3" />
+            <TabLabel className="mb-6 sm:mb-8" isDark={isDark}>
               {t("about.badge")}
             </TabLabel>
             <h2
@@ -90,15 +66,15 @@ export function About({ isDark, navigate }: AboutProps) {
               {HIGHLIGHTS.map((item) => (
                 <div
                   key={item.id}
-                  className={`p-4 rounded-2xl border transition-all duration-300 ${
+                  className={`p-4 rounded-xl border transition-colors duration-200 ${
                     isDark
-                      ? "bg-white/3 border-white/5 hover:border-[#404293]/40"
-                      : "bg-gradient-to-br from-[#404293]/5 to-[#2376BB]/5 border-slate-100 hover:border-[#404293]/30 shadow-sm"
+                      ? "border-white/8 hover:border-white/15"
+                      : "border-slate-100 hover:border-slate-200"
                   }`}
                 >
-                  <item.icon className="w-4 h-4 text-[#404293] mb-2.5" />
+                  <item.icon className={`w-4 h-4 mb-2.5 ${isDark ? "text-gray-300" : "text-[#404293]"}`} />
                   <div
-                    className={`text-sm font-bold mb-0.5 ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
+                    className={`text-sm font-semibold mb-0.5 ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
                   >
                     {t(`about.highlights.${item.id}.label`)}
                   </div>
@@ -112,7 +88,7 @@ export function About({ isDark, navigate }: AboutProps) {
             </div>
             <button
               onClick={() => navigate("/auth/register")}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-bold shadow-lg shadow-[#404293]/20 hover:shadow-xl hover:shadow-[#404293]/35 hover:-translate-y-0.5 active:scale-[0.98] transition-all text-sm duration-300"
+              className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold shadow-sm hover:shadow-md active:scale-[0.98] transition-all text-sm duration-200"
             >
               {t("about.join")}{" "}
               <ChevronRight
@@ -128,47 +104,13 @@ export function About({ isDark, navigate }: AboutProps) {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="relative mt-4 lg:mt-0"
           >
-            <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-white/10">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1541178735493-479c1a27ed24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800"
-                alt={t("about.imageAlt")}
-                className="w-full h-60 sm:h-80 lg:h-96 object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#404293]/40 via-transparent to-transparent" />
-            </div>
-            <div
-              className={`absolute -bottom-4 -start-2 sm:-start-6 z-20 p-4 rounded-2xl shadow-xl backdrop-blur-md border ${
-                isDark
-                  ? "bg-[#151720]/90 border-white/8"
-                  : "bg-white/90 border-slate-100"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-lg flex-shrink-0">
-                  <Star className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <div
-                    className={`font-black text-base ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
-                  >
-                    {t("about.satisfactionValue")}
-                  </div>
-                  <div
-                    className={`text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}
-                  >
-                    {t("about.satisfactionCaption")}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="absolute -top-3 -end-2 sm:-end-4 z-20 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] shadow-lg shadow-[#404293]/20">
-              <div className="text-white font-black text-sm">
-                {t("about.academicYearValue")}
-              </div>
-              <div className="text-white/70 text-xs font-semibold">
-                {t("about.academicYearLabel")}
-              </div>
-            </div>
+            <AboutPanel
+              isDark={isDark}
+              satisfactionValue={t("about.satisfactionValue")}
+              satisfactionCaption={t("about.satisfactionCaption")}
+              academicYearValue={t("about.academicYearValue")}
+              academicYearLabel={t("about.academicYearLabel")}
+            />
           </motion.div>
         </div>
       </div>

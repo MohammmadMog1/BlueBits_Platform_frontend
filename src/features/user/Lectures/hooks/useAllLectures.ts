@@ -1,40 +1,11 @@
-import { useEffect, useState } from "react";
-import { getAllLectures } from "../api/lecturesService";
-import type { LecturePopulated } from "../types";
+import { useGetAllLecturesQuery } from "../api/userLecturesApi";
 
-let inFlightRequest: Promise<LecturePopulated[]> | null = null;
-
-const fetchAllLecturesOnce = (): Promise<LecturePopulated[]> => {
-  if (!inFlightRequest) {
-    inFlightRequest = getAllLectures().finally(() => {
-      inFlightRequest = null;
-    });
-  }
-  return inFlightRequest;
-};
-
-// Shared by useLatestLectures and useRecentDownloads so mounting both at once
-// (as UserLectureManager does) triggers a single "/lectures" request, not two.
+/**
+ * Shared by useLatestLectures and useRecentDownloads. يعتمد على RTK Query
+ * فالكاش المشترك يمنع تكرار طلب "/lectures" عند التنقّل بين الداشبورد
+ * وصفحة المحاضرات، أو عند تركيب أكثر من مكوّن يحتاج نفس البيانات دفعة واحدة.
+ */
 export function useAllLectures() {
-  const [lectures, setLectures] = useState<LecturePopulated[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchAllLecturesOnce()
-      .then((data) => {
-        if (!cancelled) setLectures(data);
-      })
-      .catch(() => {
-        if (!cancelled) setLectures([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  const { data: lectures = [], isLoading: loading } = useGetAllLecturesQuery();
   return { lectures, loading };
 }

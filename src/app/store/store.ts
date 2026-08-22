@@ -15,6 +15,8 @@ import { usersApi } from "../../features/users/api/usersApiSlice";
 import { academicApi } from "../../features/admin/academic/api/academicApi";
 import { subjectsApi } from "../../features/admin/subjects/api/subjectsApi";
 import { academicTasksApi } from "../../features/admin/tasks/api/academicTasksApi";
+import { lecturesStatsApi } from "../../features/admin/lectures/api/lecturesStatsApi";
+import { userLecturesApi } from "../../features/user/Lectures/api/userLecturesApi";
 import lecturesReducer from "../../features/admin/lectures/redux/lecturesSlice";
 import userLecturesReducer from "../../features/user/Lectures/redux/lecturesSlice";
 // ✨ جديد: إضافة profileApi
@@ -50,6 +52,8 @@ const rootReducer = combineReducers({
   [academicApi.reducerPath]: academicApi.reducer,
   [subjectsApi.reducerPath]: subjectsApi.reducer,
   [academicTasksApi.reducerPath]: academicTasksApi.reducer,
+  [lecturesStatsApi.reducerPath]: lecturesStatsApi.reducer,
+  [userLecturesApi.reducerPath]: userLecturesApi.reducer,
   // ✨ جديد: تسجيل reducer الخاص بـ profileApi
   [profileApi.reducerPath]: profileApi.reducer,
   [aiApi.reducerPath]: aiApi.reducer,
@@ -82,6 +86,8 @@ export const store = configureStore({
       academicApi.middleware,
       subjectsApi.middleware,
       academicTasksApi.middleware,
+      lecturesStatsApi.middleware,
+      userLecturesApi.middleware,
       // ✨ جديد: تسجيل middleware الخاص بـ profileApi
       profileApi.middleware,
       aiApi.middleware,

@@ -58,7 +58,7 @@ export function Footer({ isDark, LogoImg }: FooterProps) {
                     <a
                       href="#"
                       onClick={(e) => e.preventDefault()}
-                      className={`text-sm transition-colors hover:text-[#404293] dark:hover:text-[#9fa8e8] ${isDark ? "text-gray-500 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
+                      className={`text-sm transition-colors ${isDark ? "text-gray-500 hover:text-white" : "text-slate-500 hover:text-slate-900"}`}
                     >
                       {t(`footer.links.${l}`)}
                     </a>
@@ -82,7 +82,7 @@ export function Footer({ isDark, LogoImg }: FooterProps) {
                 key={s}
                 href="#"
                 onClick={(e) => e.preventDefault()}
-                className={`text-xs transition-colors hover:text-[#404293] dark:hover:text-[#9fa8e8] ${isDark ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-900"}`}
+                className={`text-xs transition-colors ${isDark ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-900"}`}
               >
                 {s}
               </a>

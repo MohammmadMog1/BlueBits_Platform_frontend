@@ -91,8 +91,3 @@ export const downloadLectureAsBlob = async (id: string): Promise<Blob> => {
     throw new Error("Failed to download file from Cloudinary");
   return fileResponse.blob();
 };
-
-export const getAllLectures = async (): Promise<LecturePopulated[]> => {
-  const response = await apiClient.get("/lectures");
-  return unwrapLectureList(response);
-};

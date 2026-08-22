@@ -6,6 +6,7 @@ import {
   useGetSemestersQuery,
 } from "../../academic/api/academicApi";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
+import { useGetLecturesCountPerSubjectQuery } from "../api/lecturesStatsApi";
 import {
   deleteLectureThunk,
   fetchLecturesThunk,
@@ -14,13 +15,8 @@ import {
 import {
   getLectureDownloadInfo,
   downloadLectureAsBlob,
-  getLecturesCountPerSubject,
 } from "../api/lecturesService";
-import type {
-  LecturePopulated,
-  LectureType,
-  LectureSubjectStats,
-} from "../types";
+import type { LecturePopulated, LectureType } from "../types";
 
 export type LectureStep = "year" | "semester" | "subject" | "type" | "lectures"; // ✅ تم تبديل الترتيب
 
@@ -72,7 +68,7 @@ export function useLectureManager(): UseLectureManagerReturn {
   const [selectedType, setSelectedType] = useState<LectureType>("theoretical");
   const [search, setSearch] = useState("");
   const [showUpload, setShowUpload] = useState(false);
-  const [subjectStats, setSubjectStats] = useState<LectureSubjectStats[]>([]);
+  const { data: subjectStats = [] } = useGetLecturesCountPerSubjectQuery();
 
   const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
   const { data: semesters = [], isLoading: semestersLoading } =
@@ -108,12 +104,6 @@ export function useLectureManager(): UseLectureManagerReturn {
     selectedSubjectId,
     selectedType,
   ]);
-
-  useEffect(() => {
-    getLecturesCountPerSubject()
-      .then((stats) => setSubjectStats(stats))
-      .catch(() => setSubjectStats([]));
-  }, []);
 
   const contextLectures = useMemo(
     () =>
