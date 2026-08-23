@@ -10,6 +10,7 @@ import { About } from "./components/About";
 import { CTA } from "./components/CTA";
 import { Footer } from "./components/Footer";
 import { AuthModal } from "./components/AuthModal";
+import { HexBackground, GrainOverlay } from "./components/shared/VisualHelpers";
 import logoImg from "../../app/assets/Logo.png";
 // Data & Assets
 import { featuresData, statsData } from "./data/landingData";
@@ -39,19 +40,14 @@ export default function LandingPage() {
 
   return (
     <div
-      className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${isDark ? "bg-[#08090d] text-gray-100" : "bg-white text-[#1c1d30]"}`}
+      className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${isDark ? "bg-[#08090d] text-gray-100" : "bg-[#EDF1FA] text-[#1c1d30]"}`}
       style={{
         fontFamily: "'Plus Jakarta Sans', 'Cairo', 'Inter', sans-serif",
       }}
     >
-      {/* ─── Background ─── */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div
-          className={`absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full blur-[140px] ${
-            isDark ? "bg-[#404293]/8" : "bg-[#404293]/[0.04]"
-          }`}
-        />
-      </div>
+      {/* ─── Background — brand-mark hex/chevron watermark + film grain ─── */}
+      <HexBackground isDark={isDark} />
+      <GrainOverlay isDark={isDark} />
 
       {/* ─── Auth Modal ─── */}
       {showAuthModal && (

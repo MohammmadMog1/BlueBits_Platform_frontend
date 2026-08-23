@@ -1,6 +1,7 @@
 // src/features/profile/components/ProfileImageUploader.tsx
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { Camera, Check, Loader2, X } from "lucide-react";
 import { useUpdateMeAndUploadMutation } from "../api/profileApi";
 import { getUserInitials, getProfileImageUrl } from "../../../shared/utils/user";
@@ -13,6 +14,8 @@ interface Props {
 
 export default function ProfileImageUploader({ user, onUpdated }: Props) {
   const { t } = useTranslation(["profile", "common"]);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -56,7 +59,11 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
   return (
     <div className="relative flex-shrink-0">
       {/* Avatar */}
-      <div className="w-24 h-24 rounded-full ring-4 ring-white shadow-lg overflow-hidden bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center">
+      <div
+        className={`w-24 h-24 rounded-full ring-4 shadow-lg overflow-hidden bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center ${
+          isDark ? "ring-[#161719]" : "ring-white"
+        }`}
+      >
         {preview ? (
           <img src={preview} alt={t("profile:imageUploader.previewAlt")} className="w-full h-full object-cover" />
         ) : imageUrl ? (
@@ -104,7 +111,9 @@ export default function ProfileImageUploader({ user, onUpdated }: Props) {
             onClick={cancelPreview}
             disabled={isLoading}
             title={t("common:actions.cancel")}
-            className="p-2 rounded-full bg-white border border-gray-200 text-gray-500 shadow-md hover:scale-110 hover:text-red-500 transition-all"
+            className={`p-2 rounded-full border shadow-md hover:scale-110 hover:text-red-500 transition-all ${
+              isDark ? "bg-[#26272b] border-white/10 text-gray-400" : "bg-white border-gray-200 text-gray-500"
+            }`}
           >
             <X className="w-4 h-4" />
           </button>

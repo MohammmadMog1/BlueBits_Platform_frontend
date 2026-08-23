@@ -1,6 +1,7 @@
 // src/features/profile/components/EditProfileForm.tsx
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { Loader2, Save, UserRound, GraduationCap, CheckCircle2 } from "lucide-react";
 import { useUpdateMeMutation } from "../api/profileApi";
 import { useGetYearsQuery } from "../../admin/academic/api/academicApi";
@@ -13,6 +14,8 @@ interface Props {
 
 export default function EditProfileForm({ user, onUpdated }: Props) {
   const { t } = useTranslation("profile");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [name, setName] = useState(user.name);
   const [yearId, setYearId] = useState(user.yearId ?? "");
   const [saved, setSaved] = useState(false);
@@ -47,39 +50,63 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl bg-white/98 border border-gray-200/80 shadow-sm p-6"
+      className={`rounded-2xl border shadow-sm p-6 ${
+        isDark ? "bg-white/5 border-white/10" : "bg-white/98 border-gray-200/80"
+      }`}
     >
-      <h2 className="text-[15px] font-bold text-gray-800">{t("editForm.title")}</h2>
+      <h2 className={`text-[15px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+        {t("editForm.title")}
+      </h2>
       <p className="text-[12px] text-gray-400 mt-0.5">{t("editForm.subtitle")}</p>
 
       <div className="mt-5 space-y-4">
         {/* Name */}
         <div>
-          <label className="flex items-center gap-1.5 text-[12px] font-semibold text-gray-600 mb-1.5">
+          <label
+            className={`flex items-center gap-1.5 text-[12px] font-semibold mb-1.5 ${
+              isDark ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
             <UserRound className="w-3.5 h-3.5" /> {t("editForm.nameLabel")}
           </label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t("editForm.namePlaceholder")}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-[13px] text-gray-700 outline-none focus:border-[#404293]/40 focus:bg-white focus:ring-2 focus:ring-[#404293]/10 transition-all"
+            className={`w-full px-4 py-2.5 rounded-xl border text-[13px] outline-none focus:border-[#404293]/40 focus:ring-2 focus:ring-[#404293]/10 transition-all ${
+              isDark
+                ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-500 focus:bg-white/10"
+                : "border-gray-200 bg-gray-50 text-gray-700 focus:bg-white"
+            }`}
           />
         </div>
 
         {/* Year */}
         {years && years.length > 0 && (
           <div>
-            <label className="flex items-center gap-1.5 text-[12px] font-semibold text-gray-600 mb-1.5">
+            <label
+              className={`flex items-center gap-1.5 text-[12px] font-semibold mb-1.5 ${
+                isDark ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
               <GraduationCap className="w-3.5 h-3.5" /> {t("editForm.yearLabel")}
             </label>
             <select
               value={yearId}
               onChange={(e) => setYearId(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-[13px] text-gray-700 outline-none focus:border-[#404293]/40 focus:bg-white focus:ring-2 focus:ring-[#404293]/10 transition-all"
+              className={`w-full px-4 py-2.5 rounded-xl border text-[13px] outline-none focus:border-[#404293]/40 focus:ring-2 focus:ring-[#404293]/10 transition-all ${
+                isDark
+                  ? "border-white/10 bg-white/5 text-gray-100 focus:bg-white/10"
+                  : "border-gray-200 bg-gray-50 text-gray-700 focus:bg-white"
+              }`}
             >
-              <option value="">{t("editForm.selectYear")}</option>
+              <option value="" className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
+                {t("editForm.selectYear")}
+              </option>
               {years.map((y) => (
-                <option key={y._id} value={y._id}>{y.name}</option>
+                <option key={y._id} value={y._id} className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
+                  {y.name}
+                </option>
               ))}
             </select>
           </div>
@@ -97,7 +124,11 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
         </button>
 
         {saved && (
-          <span className="flex items-center gap-1.5 text-[12px] font-semibold text-emerald-600 animate-fadeIn">
+          <span
+            className={`flex items-center gap-1.5 text-[12px] font-semibold animate-fadeIn ${
+              isDark ? "text-emerald-400" : "text-emerald-600"
+            }`}
+          >
             <CheckCircle2 className="w-4 h-4" /> {t("editForm.savedSuccess")}
           </span>
         )}

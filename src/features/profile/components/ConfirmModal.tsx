@@ -1,6 +1,7 @@
 // src/features/profile/components/ConfirmModal.tsx
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { AlertTriangle, Loader2, X } from "lucide-react";
 
 interface ConfirmModalProps {
@@ -29,6 +30,8 @@ export default function ConfirmModal({
   children,
 }: ConfirmModalProps) {
   const { t } = useTranslation("common");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -48,12 +51,20 @@ export default function ConfirmModal({
       <div
         role="dialog"
         aria-modal="true"
-        className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 animate-fadeIn"
+        className={`fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto rounded-2xl border shadow-2xl p-6 animate-fadeIn ${
+          isDark ? "bg-[#1e1f22] border-white/10" : "bg-white border-gray-200"
+        }`}
       >
         <div className="flex items-start justify-between gap-4">
           <div
             className={`p-2.5 rounded-xl ${
-              variant === "danger" ? "bg-red-50 text-red-500" : "bg-[#404293]/10 text-[#404293]"
+              variant === "danger"
+                ? isDark
+                  ? "bg-red-500/10 text-red-400"
+                  : "bg-red-50 text-red-500"
+                : isDark
+                  ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                  : "bg-[#404293]/10 text-[#404293]"
             }`}
           >
             <AlertTriangle className="w-5 h-5" />
@@ -61,21 +72,33 @@ export default function ConfirmModal({
           <button
             onClick={onClose}
             aria-label={t("actions.close")}
-            className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            className={`p-1.5 rounded-lg transition-colors ${
+              isDark
+                ? "text-gray-400 hover:bg-white/10 hover:text-gray-200"
+                : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            }`}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <h3 className="mt-3 text-[16px] font-bold text-gray-800">{title}</h3>
-        <p className="mt-1.5 text-[13px] text-gray-500 leading-relaxed">{description}</p>
+        <h3 className={`mt-3 text-[16px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+          {title}
+        </h3>
+        <p className={`mt-1.5 text-[13px] leading-relaxed ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          {description}
+        </p>
 
         {children && <div className="mt-4">{children}</div>}
 
         <div className="mt-6 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl text-[13px] font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+            className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold border transition-all ${
+              isDark
+                ? "border-white/10 text-gray-300 hover:bg-white/5"
+                : "border-gray-200 text-gray-600 hover:bg-gray-50"
+            }`}
           >
             {t("actions.cancel")}
           </button>

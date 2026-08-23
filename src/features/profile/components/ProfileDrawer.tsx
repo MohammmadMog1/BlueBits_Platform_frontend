@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { X, RefreshCw, AlertTriangle, Loader2, LogOut } from "lucide-react";
 import { useAppDispatch } from "../../../app/store/hooks";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../../auth/hooks/useAuth";
 import ProfileHeaderCard from "./ProfileHeaderCard";
 import EditProfileForm from "./EditProfileForm";
+import AppearanceCard from "./AppearanceCard";
 import AccountInfoCard from "./AccountInfoCard";
 import AccountStatusCard from "./AccountStatusCard";
 import DangerZoneCard from "./DangerZoneCard";
@@ -25,6 +27,8 @@ export default function ProfileDrawer({ open, onClose }: Props) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -66,14 +70,20 @@ export default function ProfileDrawer({ open, onClose }: Props) {
         aria-modal="true"
         aria-label={t("profile:drawer.ariaLabel")}
         inert={!open}
-        className={`fixed inset-y-0 right-0 z-70 w-full sm:w-[560px] bg-gray-50 shadow-2xl flex flex-col will-change-transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          open ? "translate-x-0" : "translate-x-full pointer-events-none"
-        }`}
+        className={`fixed inset-y-0 right-0 z-70 w-full sm:w-[560px] shadow-2xl flex flex-col will-change-transform transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isDark ? "bg-[#161719]" : "bg-gray-50"
+        } ${open ? "translate-x-0" : "translate-x-full pointer-events-none"}`}
       >
         {/* Sticky top bar */}
-        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-gray-200/80 bg-white/95 backdrop-blur-xl flex-shrink-0">
+        <div
+          className={`flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b backdrop-blur-xl flex-shrink-0 ${
+            isDark ? "border-white/8 bg-[#1a1b1e]/95" : "border-gray-200/80 bg-white/95"
+          }`}
+        >
           <div className="min-w-0">
-            <h2 className="text-[17px] font-bold text-gray-800">{t("profile:drawer.title")}</h2>
+            <h2 className={`text-[17px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+              {t("profile:drawer.title")}
+            </h2>
             <p className="text-[12px] text-gray-400 truncate">
               {t("profile:drawer.subtitle")}
             </p>
@@ -82,7 +92,11 @@ export default function ProfileDrawer({ open, onClose }: Props) {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-semibold text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50"
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-semibold transition-colors disabled:opacity-50 ${
+                isDark
+                  ? "text-gray-400 hover:bg-red-500/10 hover:text-red-400"
+                  : "text-gray-500 hover:bg-red-50 hover:text-red-500"
+              }`}
             >
               {loggingOut ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -94,7 +108,11 @@ export default function ProfileDrawer({ open, onClose }: Props) {
             <button
               onClick={onClose}
               aria-label={t("common:actions.close")}
-              className="p-2 rounded-xl text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+              className={`p-2 rounded-xl transition-colors ${
+                isDark
+                  ? "text-gray-400 hover:bg-white/10 hover:text-gray-200"
+                  : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              }`}
             >
               <X className="w-5 h-5" />
             </button>
@@ -112,11 +130,21 @@ export default function ProfileDrawer({ open, onClose }: Props) {
             </div>
           ) : isError || !user ? (
             <div className="flex items-center justify-center h-full min-h-[50vh]">
-              <div className="max-w-sm w-full rounded-2xl bg-white border border-red-200 shadow-sm p-6 text-center">
-                <div className="mx-auto w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-                  <AlertTriangle className="w-6 h-6 text-red-500" />
+              <div
+                className={`max-w-sm w-full rounded-2xl border shadow-sm p-6 text-center ${
+                  isDark ? "bg-white/5 border-red-500/25" : "bg-white border-red-200"
+                }`}
+              >
+                <div
+                  className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-4 ${
+                    isDark ? "bg-red-500/10" : "bg-red-50"
+                  }`}
+                >
+                  <AlertTriangle className={`w-6 h-6 ${isDark ? "text-red-400" : "text-red-500"}`} />
                 </div>
-                <h3 className="text-[15px] font-bold text-gray-800">{t("profile:drawer.errorTitle")}</h3>
+                <h3 className={`text-[15px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+                  {t("profile:drawer.errorTitle")}
+                </h3>
                 <p className="mt-1 text-[12px] text-gray-400">
                   {t("profile:drawer.errorSubtitle")}
                 </p>
@@ -133,6 +161,7 @@ export default function ProfileDrawer({ open, onClose }: Props) {
             <div className="space-y-5">
               <ProfileHeaderCard user={user} onUpdated={handleUserUpdated} />
               <EditProfileForm user={user} onUpdated={handleUserUpdated} />
+              <AppearanceCard />
               <AccountInfoCard user={user} />
               <AccountStatusCard />
               <DangerZoneCard />

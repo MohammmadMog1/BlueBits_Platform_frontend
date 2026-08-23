@@ -6,8 +6,10 @@ import { useTranslation } from "react-i18next";
 import { useAppSelector, useAppDispatch } from "../../auth/redux/hooks";
 import { logoutThunk } from "../../auth/redux/authThunk";
 import { getProfileImageUrl } from "../../../shared/utils/user";
+import { useLanguage } from "../../../shared/i18n/useLanguage";
 import LanguageSwitcher from "../../../shared/components/LanguageSwitcher/LanguageSwitcher";
 import ProfileDrawer from "../../profile/components/ProfileDrawer";
+import { MagneticButton } from "./shared/VisualHelpers";
 
 /** روابط التنقّل – نخزّن المفتاح لا النصّ حتى يتبدّل مع اللغة */
 const NAV_LINKS = [
@@ -35,6 +37,7 @@ export function Navbar({
   LogoImg,
 }: NavbarProps) {
   const { t } = useTranslation(["landing", "common"]);
+  const { isRTL } = useLanguage();
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   
@@ -87,7 +90,7 @@ export function Navbar({
         scrolled
           ? isDark
             ? "bg-[#08090d]/90 border-white/10 shadow-2xl backdrop-blur-xl"
-            : "bg-white/90 border-slate-200 shadow-lg backdrop-blur-xl"
+            : "bg-[#EDF1FA]/90 border-slate-200 shadow-lg backdrop-blur-xl"
           : "bg-transparent border-transparent"
       }`}
     >
@@ -110,7 +113,24 @@ export function Navbar({
               }`}
             >
               {t(`nav.${link.key}`)}
-              <span className="absolute -bottom-1 start-0 w-0 h-0.5 bg-[#404293] group-hover:w-full transition-all duration-300"></span>
+              {/* Underline grows from the reading-start edge (RTL-safe via
+                  logical `start-0`); a small brand chevron leads it, mirrored
+                  for RTL like the rest of the directional icons on this page. */}
+              <span className="absolute -bottom-1 start-0 h-px w-0 bg-[#2376BB] group-hover:w-full transition-all duration-300 ease-out" />
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 8 8"
+                className={`absolute -bottom-[9px] start-0 w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isRTL ? "-scale-x-100" : ""}`}
+                fill="none"
+              >
+                <path
+                  d="M1 1L5 4L1 7"
+                  stroke="#2376BB"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </a>
           ))}
         </div>
@@ -280,12 +300,15 @@ export function Navbar({
               >
                 {t("nav.login")}
               </button>
-              <button
+              <MagneticButton
                 onClick={() => navigate("/auth/register")}
-                className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
+                strength={8}
+                className={`text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md ${
+                  isDark ? "bg-white/95 text-[#12131c]" : "bg-[#1a1b2e] text-white"
+                }`}
               >
                 {t("nav.getStarted")}
-              </button>
+              </MagneticButton>
             </div>
           )}
 
@@ -308,7 +331,7 @@ export function Navbar({
           className={`md:hidden border-t px-4 py-5 space-y-3 shadow-2xl backdrop-blur-xl transition-all duration-300 ${
             isDark
               ? "border-white/10 bg-[#08090d]/98 text-white"
-              : "border-slate-100 bg-white/98 text-slate-900"
+              : "border-slate-200 bg-[#EDF1FA]/98 text-slate-900"
           }`}
         >
           {/* Navigation Links */}
@@ -415,15 +438,18 @@ export function Navbar({
               >
                 {t("nav.login")}
               </button>
-              <button
+              <MagneticButton
                 onClick={() => {
                   navigate("/auth/register");
                   setMobileMenuOpen(false);
                 }}
-                className="flex-1 text-sm font-semibold py-2.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-sm active:scale-[0.98] transition-all"
+                strength={6}
+                className={`flex-1 text-sm font-semibold py-2.5 rounded-xl shadow-sm ${
+                  isDark ? "bg-white/95 text-[#12131c]" : "bg-[#1a1b2e] text-white"
+                }`}
               >
                 {t("nav.getStarted")}
-              </button>
+              </MagneticButton>
             </div>
           )}
         </div>

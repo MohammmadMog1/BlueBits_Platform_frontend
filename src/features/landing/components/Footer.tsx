@@ -23,7 +23,7 @@ export function Footer({ isDark, LogoImg }: FooterProps) {
 
   return (
     <footer
-      className={`relative py-14 sm:py-20 border-t transition-colors duration-500 ${isDark ? "bg-[#06070a] border-white/5" : "bg-white border-slate-100"}`}
+      className={`relative py-14 sm:py-20 border-t transition-colors duration-500 ${isDark ? "bg-[#06070a] border-white/5" : "bg-[#E7EBF7] border-slate-200"}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-12 mb-10 sm:mb-16">

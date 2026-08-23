@@ -148,3 +148,34 @@
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgb(255 255 255 / 0.32);
 }
+
+/*
+ * بطاقات المزايا (Landing/Features) — إطار متدرّج يظهر عند التحويم بدل
+ * تغيير لون حدّ ثابت. يعتمد على قناع (mask) بدل حدّ عادي لأنّ الشكل
+ * المطلوب حلقة رفيعة حول البطاقة فقط، لا تعبئة كاملة.
+ */
+.bb-edge-card {
+  position: relative;
+}
+
+.bb-edge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #404293, #2376bb);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.bb-edge-card:hover::before,
+.bb-edge-card:focus-visible::before {
+  opacity: 1;
+}

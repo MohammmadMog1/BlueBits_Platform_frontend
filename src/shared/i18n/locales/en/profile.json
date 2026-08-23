@@ -25,6 +25,13 @@
     "verified": "Verified",
     "joined": "Joined {{date}}"
   },
+  "appearance": {
+    "title": "Appearance",
+    "subtitle": "Choose how BlueBits looks on this device",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "dangerZone": {
     "title": "Danger Zone",
     "description": "Permanently delete your account and all associated data. This action cannot be undone.",

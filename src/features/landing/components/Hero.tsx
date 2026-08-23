@@ -2,7 +2,7 @@ import { ChevronRight, BookOpen } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../shared/i18n/useLanguage";
-import { TabLabel, HeroPreview } from "./shared/VisualHelpers";
+import { TabLabel, HeroPreview, MagneticButton, CountUp, HighlightUnderline } from "./shared/VisualHelpers";
 import type { statsData } from "../data/landingData";
 
 interface HeroProps {
@@ -47,8 +47,9 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             style={{ fontSize: "clamp(2rem, 8vw, 5rem)", fontWeight: 800 }}
           >
             {t("hero.titleLead")}{" "}
-            <span className="bg-gradient-to-r from-[#404293] to-[#2376BB] bg-clip-text text-transparent">
+            <span className="relative inline-block text-[#2376BB]">
               {t("hero.titleHighlight")}
+              <HighlightUnderline isRTL={isRTL} />
             </span>
           </motion.h1>
 
@@ -69,16 +70,16 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
             custom={3}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6"
           >
-            <button
+            <MagneticButton
               onClick={() => navigate("/auth/register")}
-              className="w-full sm:w-auto group flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold shadow-sm hover:shadow-md active:scale-[0.98] transition-all duration-200"
+              className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold shadow-sm hover:shadow-md"
               style={{ fontSize: "0.95rem" }}
             >
               {t("hero.ctaPrimary")}
               <ChevronRight
                 className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""}`}
               />
-            </button>
+            </MagneticButton>
 
             <button
               onClick={() => navigate("/user/lectures")}
@@ -125,9 +126,10 @@ export function Hero({ isDark, navigate, stats }: HeroProps) {
                     className={`w-4 h-4 mb-2 ${isDark ? "text-gray-500" : "text-slate-400"}`}
                   />
                 )}
-                <div className={`text-xl sm:text-2xl font-bold mb-0.5 ${isDark ? "text-white" : "text-[#1a1b2e]"}`}>
-                  {s.value}
-                </div>
+                <CountUp
+                  value={s.value}
+                  className={`block text-xl sm:text-2xl font-bold mb-0.5 ${isDark ? "text-white" : "text-[#1a1b2e]"}`}
+                />
                 <div
                   className={`text-[11px] sm:text-xs font-medium ${isDark ? "text-gray-500" : "text-slate-500"}`}
                 >

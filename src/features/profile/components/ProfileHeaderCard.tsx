@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { BadgeCheck, Mail, CalendarDays, LogOut, Loader2 } from "lucide-react";
 import ProfileImageUploader from "./ProfileImageUploader";
 import { useFormatters } from "../../../shared/i18n/useFormatters";
@@ -18,6 +19,8 @@ export default function ProfileHeaderCard({ user, onUpdated }: Props) {
   const { formatMediumDateOrDash } = useFormatters();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -27,7 +30,11 @@ export default function ProfileHeaderCard({ user, onUpdated }: Props) {
   };
 
   return (
-    <div className="rounded-2xl bg-white/98 border border-gray-200/80 shadow-sm overflow-hidden">
+    <div
+      className={`rounded-2xl border shadow-sm overflow-hidden ${
+        isDark ? "bg-white/5 border-white/10" : "bg-white/98 border-gray-200/80"
+      }`}
+    >
       {/* Banner */}
       <div className="h-32 sm:h-36 bg-gradient-to-r from-[#404293] to-[#2376BB] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,white_1px,transparent_1px)] bg-[length:16px_16px]" />
@@ -46,9 +53,15 @@ export default function ProfileHeaderCard({ user, onUpdated }: Props) {
         <div className="mt-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-[22px] font-bold text-gray-800">{user.name}</h1>
+              <h1 className={`text-[22px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+                {user.name}
+              </h1>
               {user.isVerified && (
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-semibold">
+                <span
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                    isDark ? "bg-emerald-500/10 text-emerald-400" : "bg-emerald-50 text-emerald-600"
+                  }`}
+                >
                   <BadgeCheck className="w-3.5 h-3.5" /> {t("profile:headerCard.verified")}
                 </span>
               )}
@@ -57,7 +70,11 @@ export default function ProfileHeaderCard({ user, onUpdated }: Props) {
                 disabled={loggingOut}
                 title={t("common:profile.logout")}
                 aria-label={t("common:profile.logout")}
-                className="p-1.5 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50"
+                className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${
+                  isDark
+                    ? "text-gray-400 hover:bg-red-500/10 hover:text-red-400"
+                    : "text-gray-400 hover:bg-red-50 hover:text-red-500"
+                }`}
               >
                 {loggingOut ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -67,7 +84,11 @@ export default function ProfileHeaderCard({ user, onUpdated }: Props) {
               </button>
             </div>
 
-            <div className="mt-2 flex items-center gap-4 flex-wrap text-[12px] text-gray-500">
+            <div
+              className={`mt-2 flex items-center gap-4 flex-wrap text-[12px] ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
               <span className="flex items-center gap-1.5">
                 <Mail className="w-3.5 h-3.5" /> {user.email}
               </span>

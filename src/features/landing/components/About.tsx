@@ -8,7 +8,7 @@ import {
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../shared/i18n/useLanguage";
-import { TabLabel, AboutPanel } from "./shared/VisualHelpers";
+import { TabLabel, AboutPanel, MagneticButton, HighlightUnderline } from "./shared/VisualHelpers";
 
 interface AboutProps {
   isDark: boolean;
@@ -48,8 +48,9 @@ export function About({ isDark, navigate }: AboutProps) {
               }}
             >
               {t("about.titleLead")}{" "}
-              <span className="bg-gradient-to-r from-[#404293] to-[#2376BB] bg-clip-text text-transparent">
+              <span className="relative inline-block text-[#2376BB]">
                 {t("about.titleHighlight")}
+                <HighlightUnderline isRTL={isRTL} />
               </span>
             </h2>
             <p
@@ -86,15 +87,17 @@ export function About({ isDark, navigate }: AboutProps) {
                 </div>
               ))}
             </div>
-            <button
+            <MagneticButton
               onClick={() => navigate("/auth/register")}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white font-semibold shadow-sm hover:shadow-md active:scale-[0.98] transition-all text-sm duration-200"
+              className={`px-7 py-3.5 rounded-xl font-semibold shadow-sm hover:shadow-md text-sm ${
+                isDark ? "bg-white/95 text-[#12131c]" : "bg-[#1a1b2e] text-white"
+              }`}
             >
               {t("about.join")}{" "}
               <ChevronRight
                 className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`}
               />
-            </button>
+            </MagneticButton>
           </motion.div>
 
           <motion.div

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "next-themes";
 import { UserX } from "lucide-react";
 import { useAppDispatch } from "../../../app/store/hooks";
 import { useActiveMeMutation } from "../api/profileApi";
@@ -11,6 +12,8 @@ import { logout } from "../../auth/redux/authSlice";
 
 export default function AccountStatusCard() {
   const { t } = useTranslation("profile");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -29,19 +32,33 @@ export default function AccountStatusCard() {
   };
 
   return (
-    <div className="rounded-2xl bg-white/98 border border-gray-200/80 shadow-sm p-6">
+    <div
+      className={`rounded-2xl border shadow-sm p-6 ${
+        isDark ? "bg-white/5 border-white/10" : "bg-white/98 border-gray-200/80"
+      }`}
+    >
       <div className="flex items-start gap-4">
-        <div className="p-2.5 rounded-xl bg-amber-50 text-amber-500 flex-shrink-0">
+        <div
+          className={`p-2.5 rounded-xl flex-shrink-0 ${
+            isDark ? "bg-amber-500/12 text-amber-400" : "bg-amber-50 text-amber-500"
+          }`}
+        >
           <UserX className="w-5 h-5" />
         </div>
         <div className="flex-1">
-          <h2 className="text-[15px] font-bold text-gray-800">{t("accountStatus.title")}</h2>
+          <h2 className={`text-[15px] font-bold ${isDark ? "text-white" : "text-gray-800"}`}>
+            {t("accountStatus.title")}
+          </h2>
           <p className="mt-1 text-[12px] text-gray-400 leading-relaxed">
             {t("accountStatus.description")}
           </p>
           <button
             onClick={() => setOpen(true)}
-            className="mt-4 px-4 py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-600 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
+            className={`mt-4 px-4 py-2 rounded-xl border text-[12px] font-semibold transition-colors ${
+              isDark
+                ? "border-amber-500/25 bg-amber-500/10 text-amber-400 hover:bg-amber-500/15"
+                : "border-amber-200 bg-amber-50 text-amber-600 hover:bg-amber-100"
+            }`}
           >
             {t("accountStatus.deactivateButton")}
           </button>
