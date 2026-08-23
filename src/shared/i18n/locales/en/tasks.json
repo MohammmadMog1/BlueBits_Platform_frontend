@@ -56,6 +56,11 @@
   },
   "academic": {
     "loadFailed": "Failed to load academic tasks.",
+    "allYears": "All years",
+    "allSubjects": "All subjects",
+    "filterByYear": "Filter by year",
+    "filterBySubject": "Filter by subject",
+    "clearFilters": "Clear filters",
     "emptyNoResults": "No results",
     "emptyNone": "No academic tasks yet",
     "emptySearchHint": "Try a different search term",
@@ -67,7 +72,6 @@
     "closesAt": "closes {{date}}",
     "opensAtLabel": "Opens: {{date}}",
     "closesAtLabel": "Closes: {{date}}",
-    "viewSubmission": "View submission",
     "submitSolution": "Submit solution"
   },
   "submissionStatus": {

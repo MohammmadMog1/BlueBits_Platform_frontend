@@ -15,6 +15,7 @@ import type { Question, QuestionOption, QuestionType } from "../types";
 
 interface QuestionEditorModalProps {
   question: Question;
+  isDark: boolean;
   saving?: boolean;
   error?: string | null;
   onClose: () => void;
@@ -28,6 +29,7 @@ interface QuestionEditorModalProps {
 
 export function QuestionEditorModal({
   question,
+  isDark,
   saving,
   error,
   onClose,
@@ -129,15 +131,24 @@ export function QuestionEditorModal({
     if (saved) onClose();
   };
 
-  const inputClass =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400";
+  const inputClass = `w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] ${
+    isDark
+      ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-500"
+      : "border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400"
+  }`;
+
+  const textareaClass = `w-full resize-none rounded-2xl border px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] ${
+    isDark
+      ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-500"
+      : "border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400"
+  }`;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[320] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md"
+      className="fixed inset-0 z-[320] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
@@ -146,37 +157,45 @@ export function QuestionEditorModal({
         exit={{ scale: 0.94, y: 24 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl"
+        className={`w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl ${
+          isDark ? "border border-white/10 bg-[#1a1b1e]" : "border border-gray-200 bg-white"
+        }`}
       >
-        <div className="px-7 pt-7 pb-5 border-b border-gray-100 flex items-center justify-between">
+        <div
+          className={`px-7 pt-7 pb-5 border-b flex items-center justify-between ${
+            isDark ? "border-white/8" : "border-gray-100"
+          }`}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
               <Pencil className="w-[18px] h-[18px] text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-base">
+              <h3 className={`font-bold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
                 {t("banks.editor.title")}
               </h3>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className={`text-xs mt-0.5 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                 {t("banks.editor.subtitle")}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+              isDark ? "bg-white/10 text-gray-300 hover:bg-white/15" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+            }`}
           >
-            <X size={15} className="text-gray-500" />
+            <X size={15} />
           </button>
         </div>
 
         <div className="px-7 py-6 space-y-5">
           {/* Type */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label className={`block text-sm font-semibold mb-1.5 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("banks.editor.typeLabel")}
             </label>
-            <div className="flex gap-2 p-1 rounded-2xl bg-gray-100">
+            <div className={`flex gap-2 p-1 rounded-2xl ${isDark ? "bg-white/5" : "bg-gray-100"}`}>
               {(
                 [
                   { value: "mcq", label: t("banks.editor.typeMcq") },
@@ -191,8 +210,12 @@ export function QuestionEditorModal({
                   onClick={() => setType(value)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
                     type === value
-                      ? "bg-white text-[#404293] shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
+                      ? isDark
+                        ? "bg-white/10 text-[#7fb5e4] shadow-sm"
+                        : "bg-white text-[#404293] shadow-sm"
+                      : isDark
+                        ? "text-gray-400 hover:text-gray-200"
+                        : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   {label}
@@ -203,14 +226,14 @@ export function QuestionEditorModal({
 
           {/* Question text */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label className={`block text-sm font-semibold mb-1.5 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("banks.editor.questionTextLabel")}
             </label>
             <textarea
               value={questionText}
               onChange={(event) => setQuestionText(event.target.value)}
               rows={3}
-              className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293]"
+              className={textareaClass}
             />
           </div>
 
@@ -218,7 +241,7 @@ export function QuestionEditorModal({
           {type === "mcq" ? (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-gray-700">
+                <label className={`text-sm font-semibold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                   {t("banks.editor.optionsLabel")}
                 </label>
                 <button
@@ -237,8 +260,12 @@ export function QuestionEditorModal({
                       aria-label={t("banks.editor.markCorrect")}
                       className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 border transition-all ${
                         option.isCorrect
-                          ? "bg-green-500/12 border-green-500/30 text-green-600"
-                          : "bg-gray-50 border-gray-200 text-gray-300 hover:text-gray-400"
+                          ? isDark
+                            ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+                            : "bg-green-500/12 border-green-500/30 text-green-600"
+                          : isDark
+                            ? "bg-white/5 border-white/10 text-gray-600 hover:text-gray-400"
+                            : "bg-gray-50 border-gray-200 text-gray-300 hover:text-gray-400"
                       }`}
                     >
                       <CheckCircle2 size={16} />
@@ -255,7 +282,11 @@ export function QuestionEditorModal({
                       onClick={() => removeOption(index)}
                       disabled={mcqOptions.length <= 2}
                       aria-label={t("banks.editor.removeOption")}
-                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-40 disabled:hover:text-gray-300 disabled:hover:bg-transparent transition-all"
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 disabled:opacity-40 disabled:hover:bg-transparent transition-all ${
+                        isDark
+                          ? "text-gray-600 hover:text-red-400 hover:bg-red-500/10 disabled:hover:text-gray-600"
+                          : "text-gray-300 hover:text-red-500 hover:bg-red-50 disabled:hover:text-gray-300"
+                      }`}
                     >
                       <Trash2 size={15} />
                     </button>
@@ -265,7 +296,7 @@ export function QuestionEditorModal({
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                 {t("banks.editor.correctAnswerLabel")}
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -275,8 +306,12 @@ export function QuestionEditorModal({
                     onClick={() => setTrueFalseAnswer(value)}
                     className={`py-3 rounded-xl text-sm font-bold border transition-all ${
                       trueFalseAnswer === value
-                        ? "bg-green-500/10 border-green-500/30 text-green-600"
-                        : "bg-gray-50 border-gray-200 text-gray-500 hover:border-gray-300"
+                        ? isDark
+                          ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
+                          : "bg-green-500/10 border-green-500/30 text-green-600"
+                        : isDark
+                          ? "bg-white/5 border-white/10 text-gray-400 hover:border-white/20"
+                          : "bg-gray-50 border-gray-200 text-gray-500 hover:border-gray-300"
                     }`}
                   >
                     {t(value ? "banks.editor.true" : "banks.editor.false")}
@@ -288,7 +323,7 @@ export function QuestionEditorModal({
 
           {/* Explanation */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label className={`block text-sm font-semibold mb-1.5 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("banks.editor.explanationLabel")}
             </label>
             <textarea
@@ -296,12 +331,16 @@ export function QuestionEditorModal({
               onChange={(event) => setExplanation(event.target.value)}
               rows={2}
               placeholder={t("banks.editor.explanationPlaceholder")}
-              className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400"
+              className={textareaClass}
             />
           </div>
 
           {(localError || error) && (
-            <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
+            <div
+              className={`flex items-start gap-2 text-sm border rounded-xl px-4 py-2.5 ${
+                isDark ? "text-red-400 bg-red-500/10 border-red-500/25" : "text-red-600 bg-red-50 border-red-200"
+              }`}
+            >
               <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
               <span>{localError || error}</span>
             </div>
@@ -310,7 +349,11 @@ export function QuestionEditorModal({
           <div className="flex gap-3 pt-1">
             <button
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
+              className={`flex-1 py-3 rounded-xl border font-semibold text-sm transition-colors ${
+                isDark
+                  ? "border-white/10 text-gray-300 hover:bg-white/5"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
             >
               {t("common:actions.cancel")}
             </button>

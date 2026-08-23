@@ -13,9 +13,10 @@ import {
 
 interface BankResultsPanelProps {
   bankId: string;
+  isDark: boolean;
 }
 
-export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
+export function BankResultsPanel({ bankId, isDark }: BankResultsPanelProps) {
   const { t } = useTranslation("admin");
   const { formatDateTimeOrDash } = useFormatters();
   const {
@@ -57,7 +58,11 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
 
   if (error) {
     return (
-      <div className="rounded-2xl bg-red-50 border border-red-100 px-5 py-4 text-sm text-red-600">
+      <div
+        className={`rounded-2xl border px-5 py-4 text-sm ${
+          isDark ? "bg-red-500/10 border-red-500/25 text-red-400" : "bg-red-50 border-red-100 text-red-600"
+        }`}
+      >
         {getApiErrorMessage(error) ?? t("banks.results.loadFailed")}
       </div>
     );
@@ -66,13 +71,19 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
   if (attempts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-14 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
-          <Users className="w-7 h-7 text-gray-300" />
+        <div
+          className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
+            isDark ? "bg-white/5" : "bg-gray-100"
+          }`}
+        >
+          <Users className={`w-7 h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`} />
         </div>
-        <p className="font-bold text-gray-400 mb-1">
+        <p className={`font-bold mb-1 ${isDark ? "text-gray-300" : "text-gray-400"}`}>
           {t("banks.results.emptyTitle")}
         </p>
-        <p className="text-sm text-gray-300">{t("banks.results.emptyHint")}</p>
+        <p className={`text-sm ${isDark ? "text-gray-500" : "text-gray-300"}`}>
+          {t("banks.results.emptyHint")}
+        </p>
       </div>
     );
   }
@@ -99,7 +110,9 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
         ].map((item) => (
           <div
             key={item.label}
-            className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3.5 flex items-center gap-3"
+            className={`rounded-2xl border shadow-sm px-4 py-3.5 flex items-center gap-3 ${
+              isDark ? "bg-white/5 border-white/10" : "bg-white border-gray-100"
+            }`}
           >
             <div
               className="w-1.5 h-8 rounded-full flex-shrink-0"
@@ -108,10 +121,10 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
               }}
             />
             <div>
-              <p className="text-lg font-black text-gray-900 leading-none">
+              <p className={`text-lg font-black leading-none ${isDark ? "text-white" : "text-gray-900"}`}>
                 {item.value}
               </p>
-              <p className="text-[11px] text-gray-400 font-semibold mt-0.5">
+              <p className="text-[11px] font-semibold mt-0.5 text-gray-400">
                 {item.label}
               </p>
             </div>
@@ -119,32 +132,41 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-100">
+      <div className={`overflow-x-auto rounded-2xl border ${isDark ? "border-white/10" : "border-gray-100"}`}>
         <table className="w-full text-sm">
-          <thead className="bg-gray-50/80">
-            <tr className="text-start text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+          <thead className={isDark ? "bg-white/5" : "bg-gray-50/80"}>
+            <tr
+              className={`text-start text-[11px] font-bold uppercase tracking-wider ${
+                isDark ? "text-gray-500" : "text-gray-400"
+              }`}
+            >
               <th className="px-5 py-3">{t("banks.results.colStudent")}</th>
               <th className="px-5 py-3">{t("banks.results.colScore")}</th>
               <th className="px-5 py-3">{t("banks.results.colCorrect")}</th>
               <th className="px-5 py-3">{t("banks.results.colSubmitted")}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className={isDark ? "divide-y divide-white/5" : "divide-y divide-gray-50"}>
             {attempts.map((attempt) => {
               const percentage = attempt.scorePercentage ?? 0;
               const isBest = percentage === summary.best && percentage > 0;
               return (
-                <tr key={attempt._id} className="hover:bg-gray-50/60 transition-colors">
+                <tr
+                  key={attempt._id}
+                  className={`transition-colors ${
+                    isDark ? "hover:bg-white/5" : "hover:bg-gray-50/60"
+                  }`}
+                >
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
                       {isBest && (
                         <Trophy size={13} className="text-amber-400 flex-shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <p className="font-bold text-gray-800 truncate">
+                        <p className={`font-bold truncate ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                           {getStudentName(attempt)}
                         </p>
-                        <p className="text-[11px] text-gray-400 truncate">
+                        <p className={`text-[11px] truncate ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                           {getStudentEmail(attempt)}
                         </p>
                       </div>
@@ -161,10 +183,10 @@ export function BankResultsPanel({ bankId }: BankResultsPanelProps) {
                       {percentage}%
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-gray-600 font-semibold">
+                  <td className={`px-5 py-3.5 font-semibold ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                     {attempt.correctCount} / {attempt.totalQuestions}
                   </td>
-                  <td className="px-5 py-3.5 text-gray-400 text-xs font-medium">
+                  <td className={`px-5 py-3.5 text-xs font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                     {formatDateTimeOrDash(attempt.createdAt)}
                   </td>
                 </tr>

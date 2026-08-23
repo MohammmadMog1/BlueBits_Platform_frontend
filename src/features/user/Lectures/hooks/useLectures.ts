@@ -166,7 +166,9 @@ export function useLectures(): UseLecturesReturn {
         setTimeout(() => URL.revokeObjectURL(url), 30000);
 
         recordDownload(userId, lecture._id);
-      } catch {}
+      } catch {
+        // تجاهل: فشل التنزيل يُترك بصمت بدل كسر الواجهة
+      }
     },
     [userId],
   );
@@ -174,8 +176,19 @@ export function useLectures(): UseLecturesReturn {
   const handleView = useCallback(async (lecture: LecturePopulated) => {
     try {
       const info = await getLectureDownloadInfo(lecture._id);
-      if (info.downloadUrl) window.open(info.downloadUrl, "_blank");
-    } catch {}
+      const blob = await downloadLectureAsBlob(lecture._id);
+      // نعيد تغليف الـ blob بنوع الملف الصحيح حتى يعرضه المتصفح مباشرة
+      // بدل تنزيله — عنوان Cloudinary الأصلي قد يصل بـ Content-Disposition
+      // يفرض التنزيل، لكن رابط blob محلي وليس طلب شبكة فيتجاهله المتصفح.
+      const viewableBlob = info.fileType
+        ? new Blob([blob], { type: info.fileType })
+        : blob;
+      const blobUrl = URL.createObjectURL(viewableBlob);
+      window.open(blobUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch {
+      // تجاهل: فشل العرض يُترك بصمت بدل كسر الواجهة
+    }
   }, []);
 
   return {

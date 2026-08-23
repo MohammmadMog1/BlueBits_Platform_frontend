@@ -2,8 +2,7 @@ import { BookMarked, Calendar, FileText, UploadCloud } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useFormatters } from "../../../shared/i18n/useFormatters";
-import { useGetMySubmissionQuery } from "../../admin/tasks";
-import type { AcademicTask, SubmissionStatus, TaskSubmission } from "../../admin/tasks";
+import type { AcademicTask } from "../../admin/tasks";
 
 interface StudentAcademicTaskCardProps {
   task: AcademicTask;
@@ -11,31 +10,12 @@ interface StudentAcademicTaskCardProps {
   onOpenSubmission: (task: AcademicTask) => void;
 }
 
-/** أنماط الشارة فقط – التسمية تُترجَم عند العرض عبر `tasks:submissionStatus.*` */
-const statusClassName: Record<SubmissionStatus, string> = {
-  pending: "border border-amber-500/20 bg-amber-500/10 text-amber-500",
-  approved: "border border-emerald-500/20 bg-emerald-500/10 text-emerald-500",
-  rejected: "border border-red-500/20 bg-red-500/10 text-red-500",
-};
-
-const statusDotColor: Record<"open-none" | SubmissionStatus | "closed-none", string> = {
-  "open-none": "bg-[#2376BB]",
-  pending: "bg-amber-500",
-  approved: "bg-emerald-500",
-  rejected: "bg-red-500",
-  "closed-none": "bg-gray-400",
-};
-
-interface CardBodyProps extends StudentAcademicTaskCardProps {
-  submission?: TaskSubmission | null;
+function StatusDot({ task }: { task: AcademicTask }) {
+  const color = task.status === "open" ? "bg-[#2376BB]" : "bg-gray-400";
+  return <div className={`h-2 w-2 shrink-0 rounded-full ${color}`} />;
 }
 
-function StatusDot({ task, submission }: { task: AcademicTask; submission?: TaskSubmission | null }) {
-  const key = submission ? submission.status : task.status === "open" ? "open-none" : "closed-none";
-  return <div className={`h-2 w-2 shrink-0 rounded-full ${statusDotColor[key]}`} />;
-}
-
-function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBodyProps) {
+function MobileTaskCard({ task, isDark, onOpenSubmission }: StudentAcademicTaskCardProps) {
   const { t } = useTranslation("tasks");
   const { formatDateTimeOrDash } = useFormatters();
   const isOpen = task.status === "open";
@@ -52,7 +32,7 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
     >
       <div className="flex items-start gap-2.5">
         <div className="mt-1.5">
-          <StatusDot task={task} submission={submission} />
+          <StatusDot task={task} />
         </div>
         <div className="min-w-0 flex-1">
           <p className={`text-sm font-bold leading-snug ${isDark ? "text-white" : "text-gray-900"}`}>
@@ -69,11 +49,6 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
                 date: formatDateTimeOrDash(task.closesAt),
               })}
             </span>
-            {submission && (
-              <span className={`rounded-lg px-1.5 py-0.5 text-[10px] font-bold ${statusClassName[submission.status]}`}>
-                {t(`submissionStatus.${submission.status}`)}
-              </span>
-            )}
           </div>
         </div>
         <span
@@ -89,14 +64,13 @@ function MobileTaskCard({ task, isDark, onOpenSubmission, submission }: CardBody
         onClick={() => onOpenSubmission(task)}
         className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2 text-xs font-bold text-white"
       >
-        <UploadCloud size={13} />{" "}
-        {t(submission ? "academic.viewSubmission" : "academic.submitSolution")}
+        <UploadCloud size={13} /> {t("academic.submitSolution")}
       </button>
     </motion.div>
   );
 }
 
-function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBodyProps) {
+function DesktopTaskCard({ task, isDark, onOpenSubmission }: StudentAcademicTaskCardProps) {
   const { t } = useTranslation("tasks");
   const { formatDateTimeOrDash } = useFormatters();
   const isOpen = task.status === "open";
@@ -117,7 +91,7 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
       <div className="p-5">
         <div className="mb-2 flex items-start gap-2.5">
           <div className="mt-1.5">
-            <StatusDot task={task} submission={submission} />
+            <StatusDot task={task} />
           </div>
           <h3
             className={`line-clamp-2 flex-1 text-base font-black leading-snug ${
@@ -146,13 +120,6 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
           <span className="flex items-center gap-1 rounded-full bg-[#2376BB]/10 px-2.5 py-1 text-[11px] font-bold text-[#2376BB]">
             <FileText className="h-3 w-3" /> {task.lectureId?.title ?? "—"}
           </span>
-          {submission && (
-            <span
-              className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${statusClassName[submission.status]}`}
-            >
-              {t(`submissionStatus.${submission.status}`)}
-            </span>
-          )}
         </div>
         <div className={`mb-4 space-y-1 text-[11px] font-semibold ${isDark ? "text-gray-500" : "text-gray-400"}`}>
           <p className="flex items-center gap-1.5">
@@ -173,8 +140,7 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
           onClick={() => onOpenSubmission(task)}
           className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] py-2.5 text-xs font-bold text-white shadow-md shadow-[#404293]/20 transition-all hover:-translate-y-0.5"
         >
-          <UploadCloud size={13} />{" "}
-        {t(submission ? "academic.viewSubmission" : "academic.submitSolution")}
+          <UploadCloud size={13} /> {t("academic.submitSolution")}
         </button>
       </div>
     </motion.div>
@@ -182,15 +148,13 @@ function DesktopTaskCard({ task, isDark, onOpenSubmission, submission }: CardBod
 }
 
 export default function StudentAcademicTaskCard(props: StudentAcademicTaskCardProps) {
-  const { data: submission } = useGetMySubmissionQuery(props.task._id);
-
   return (
     <>
       <div className="sm:hidden">
-        <MobileTaskCard {...props} submission={submission} />
+        <MobileTaskCard {...props} />
       </div>
       <div className="hidden sm:block">
-        <DesktopTaskCard {...props} submission={submission} />
+        <DesktopTaskCard {...props} />
       </div>
     </>
   );

@@ -21,6 +21,13 @@ import {
 import { useScheduleDates } from "../hooks/useScheduleDates";
 import TimetableDayCards from "./TimetableDayCards";
 import TimetableGrid from "./TimetableGrid";
+import {
+  dividerClass,
+  emptyBoxClass,
+  headingClass,
+  mutedClass,
+  panelClass,
+} from "../../../../shared/utils/theme";
 
 const VIEW_OPTIONS: {
   mode: TimetableViewMode;
@@ -36,6 +43,7 @@ interface TimetableViewProps {
   isPublishing: boolean;
   publishError?: string;
   onPublish: () => void;
+  isDark: boolean;
 }
 
 export default function TimetableView({
@@ -43,6 +51,7 @@ export default function TimetableView({
   isPublishing,
   publishError,
   onPublish,
+  isDark,
 }: TimetableViewProps) {
   const { t } = useTranslation("admin");
   const { formatDate } = useScheduleDates();
@@ -84,10 +93,10 @@ export default function TimetableView({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-5 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
+      className={`space-y-5 p-6 ${panelClass(isDark)}`}
     >
       {/* ── الترويسة + النشر ─────────────────── */}
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 pb-4">
+      <div className={`flex flex-wrap items-start justify-between gap-4 border-b pb-4 ${dividerClass(isDark)}`}>
         <div className="flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-2xl shadow-md ${
@@ -100,14 +109,18 @@ export default function TimetableView({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-black text-gray-900">
+              <h2 className={`text-base font-black ${headingClass(isDark)}`}>
                 {t("schedule.timetable.heading")}
               </h2>
               <span
                 className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
                   isPublished
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "bg-amber-50 text-amber-600"
+                    ? isDark
+                      ? "bg-emerald-500/15 text-emerald-400"
+                      : "bg-emerald-50 text-emerald-600"
+                    : isDark
+                      ? "bg-amber-500/15 text-amber-400"
+                      : "bg-amber-50 text-amber-600"
                 }`}
               >
                 {t(
@@ -117,7 +130,7 @@ export default function TimetableView({
                 )}
               </span>
             </div>
-            <p className="mt-0.5 text-xs font-semibold text-gray-400">
+            <p className={`mt-0.5 text-xs font-semibold ${mutedClass(isDark)}`}>
               {t("schedule.timetable.yearAndUpdated", {
                 year: schedule.academicYear,
                 date: formatDate(schedule.updatedAt),
@@ -128,7 +141,11 @@ export default function TimetableView({
 
         <div className="flex items-center gap-2">
           {/* مُبدّل طريقة العرض */}
-          <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1">
+          <div
+            className={`flex items-center gap-1 rounded-xl border p-1 ${
+              isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+            }`}
+          >
             {VIEW_OPTIONS.map((option) => {
               const isActive = viewMode === option.mode;
               return (
@@ -139,8 +156,12 @@ export default function TimetableView({
                   aria-pressed={isActive}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold transition-all ${
                     isActive
-                      ? "bg-white text-[#404293] shadow-sm"
-                      : "text-gray-400 hover:text-gray-600"
+                      ? isDark
+                        ? "bg-white/10 text-[#7fb5e4] shadow-sm"
+                        : "bg-white text-[#404293] shadow-sm"
+                      : isDark
+                        ? "text-gray-500 hover:text-gray-300"
+                        : "text-gray-400 hover:text-gray-600"
                   }`}
                 >
                   <option.icon size={13} />
@@ -171,7 +192,13 @@ export default function TimetableView({
       </div>
 
       {publishError && (
-        <p className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-bold text-red-600">
+        <p
+          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold ${
+            isDark
+              ? "border-red-500/25 bg-red-500/10 text-red-400"
+              : "border-red-200 bg-red-50 text-red-600"
+          }`}
+        >
           <AlertCircle size={13} className="shrink-0" />
           {publishError}
         </p>
@@ -182,19 +209,29 @@ export default function TimetableView({
         <div
           className={`flex items-center gap-3 rounded-2xl border px-4 py-3.5 ${
             hasHardViolations
-              ? "border-red-200 bg-red-50"
-              : "border-emerald-200 bg-emerald-50"
+              ? isDark
+                ? "border-red-500/25 bg-red-500/10"
+                : "border-red-200 bg-red-50"
+              : isDark
+                ? "border-emerald-500/25 bg-emerald-500/10"
+                : "border-emerald-200 bg-emerald-50"
           }`}
         >
           {hasHardViolations ? (
-            <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
+            <AlertTriangle className={`h-4 w-4 shrink-0 ${isDark ? "text-red-400" : "text-red-500"}`} />
           ) : (
-            <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
+            <ShieldCheck className={`h-4 w-4 shrink-0 ${isDark ? "text-emerald-400" : "text-emerald-600"}`} />
           )}
           <div>
             <p
               className={`text-[11px] font-bold ${
-                hasHardViolations ? "text-red-500" : "text-emerald-600"
+                hasHardViolations
+                  ? isDark
+                    ? "text-red-400"
+                    : "text-red-500"
+                  : isDark
+                    ? "text-emerald-400"
+                    : "text-emerald-600"
               }`}
             >
               {t(
@@ -205,7 +242,13 @@ export default function TimetableView({
             </p>
             <p
               className={`text-sm font-black ${
-                hasHardViolations ? "text-red-700" : "text-emerald-700"
+                hasHardViolations
+                  ? isDark
+                    ? "text-red-300"
+                    : "text-red-700"
+                  : isDark
+                    ? "text-emerald-300"
+                    : "text-emerald-700"
               }`}
               dir="ltr"
             >
@@ -219,7 +262,9 @@ export default function TimetableView({
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="flex items-center gap-2.5 rounded-2xl border border-gray-100 bg-gray-50/60 px-3 py-2.5"
+              className={`flex items-center gap-2.5 rounded-2xl border px-3 py-2.5 ${
+                isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50/60"
+              }`}
             >
               <div
                 className="h-7 w-1.5 shrink-0 rounded-full"
@@ -228,10 +273,10 @@ export default function TimetableView({
                 }}
               />
               <div>
-                <p className="text-base font-black leading-none text-gray-900">
+                <p className={`text-base font-black leading-none ${headingClass(isDark)}`}>
                   {stat.value}
                 </p>
-                <p className="mt-0.5 text-[10px] font-bold text-gray-400">
+                <p className={`mt-0.5 text-[10px] font-bold ${mutedClass(isDark)}`}>
                   {stat.label}
                 </p>
               </div>
@@ -241,7 +286,13 @@ export default function TimetableView({
       </div>
 
       {clashes > 0 && (
-        <p className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-700">
+        <p
+          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold ${
+            isDark
+              ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
+        >
           <AlertTriangle size={13} className="shrink-0" />
           {t("schedule.timetable.clashesNotice", { count: clashes })}
         </p>
@@ -249,17 +300,17 @@ export default function TimetableView({
 
       {/* ── الجدول ───────────────────────────── */}
       {days.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center text-xs font-bold text-gray-400">
+        <p className={`py-10 text-center text-xs font-bold ${mutedClass(isDark)} ${emptyBoxClass(isDark)}`}>
           {t("schedule.timetable.empty")}
         </p>
       ) : viewMode === "grid" ? (
-        <TimetableGrid days={days} timeslots={timeslots} />
+        <TimetableGrid days={days} timeslots={timeslots} isDark={isDark} />
       ) : (
-        <TimetableDayCards days={days} />
+        <TimetableDayCards days={days} isDark={isDark} />
       )}
 
       {isPublished && (
-        <p className="flex items-center gap-2 text-[11px] font-bold text-emerald-600">
+        <p className={`flex items-center gap-2 text-[11px] font-bold ${isDark ? "text-emerald-400" : "text-emerald-600"}`}>
           <CheckCircle2 size={12} />
           {t("schedule.timetable.publishedNotice")}
         </p>

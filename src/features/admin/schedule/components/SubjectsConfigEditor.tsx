@@ -4,12 +4,20 @@ import { AnimatePresence, motion } from "motion/react";
 import type { Subject } from "../../subjects/types";
 import type { SubjectConfigRow } from "../types";
 import { createSubjectRow } from "../utils/schedule";
+import {
+  emptyBoxClass,
+  fieldClass,
+  headingClass,
+  mutedClass,
+  skeletonClass,
+} from "../../../../shared/utils/theme";
 
 interface SubjectsConfigEditorProps {
   rows: SubjectConfigRow[];
   subjects: Subject[];
   isLoading: boolean;
   onChange: (rows: SubjectConfigRow[]) => void;
+  isDark: boolean;
 }
 
 export default function SubjectsConfigEditor({
@@ -17,6 +25,7 @@ export default function SubjectsConfigEditor({
   subjects,
   isLoading,
   onChange,
+  isDark,
 }: SubjectsConfigEditorProps) {
   const { t } = useTranslation("admin");
   const usedIds = new Set(rows.map((row) => row.subjectId).filter(Boolean));
@@ -41,11 +50,15 @@ export default function SubjectsConfigEditor({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <BookMarked className="h-4 w-4 text-[#2376BB]" />
-          <h3 className="text-sm font-black text-gray-900">
+          <BookMarked className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`} />
+          <h3 className={`text-sm font-black ${headingClass(isDark)}`}>
             {t("schedule.subjectsEditor.title")}
           </h3>
-          <span className="rounded-full bg-[#2376BB]/10 px-2 py-0.5 text-[11px] font-bold text-[#2376BB]">
+          <span
+            className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
+              isDark ? "bg-[#2376BB]/15 text-[#7fb5e4]" : "bg-[#2376BB]/10 text-[#2376BB]"
+            }`}
+          >
             {rows.length}
           </span>
         </div>
@@ -54,7 +67,11 @@ export default function SubjectsConfigEditor({
             <button
               type="button"
               onClick={addAllRemaining}
-              className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold text-gray-500 transition-colors hover:border-[#404293]/30 hover:text-[#404293]"
+              className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-colors ${
+                isDark
+                  ? "border-white/10 text-gray-400 hover:border-[#2376BB]/40 hover:text-[#2376BB]"
+                  : "border-gray-200 text-gray-500 hover:border-[#404293]/30 hover:text-[#404293]"
+              }`}
             >
               <ListPlus size={14} />{" "}
               {t("schedule.subjectsEditor.addAll", { count: remaining.length })}
@@ -63,7 +80,11 @@ export default function SubjectsConfigEditor({
           <button
             type="button"
             onClick={addRow}
-            className="flex items-center gap-1.5 rounded-xl bg-[#404293]/10 px-3 py-2 text-xs font-bold text-[#404293] transition-colors hover:bg-[#404293]/20"
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${
+              isDark
+                ? "bg-[#2376BB]/15 text-[#7fb5e4] hover:bg-[#2376BB]/25"
+                : "bg-[#404293]/10 text-[#404293] hover:bg-[#404293]/20"
+            }`}
           >
             <Plus size={14} /> {t("schedule.subjectsEditor.addSubject")}
           </button>
@@ -73,19 +94,16 @@ export default function SubjectsConfigEditor({
       {isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-14 animate-pulse rounded-2xl border border-gray-100 bg-gray-50"
-            />
+            <div key={index} className={`h-14 ${skeletonClass(isDark)}`} />
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-10 text-center">
-          <BookMarked className="h-6 w-6 text-gray-300" />
-          <p className="text-sm font-bold text-gray-400">
+        <div className={`flex flex-col items-center gap-2 py-10 text-center ${emptyBoxClass(isDark)}`}>
+          <BookMarked className={`h-6 w-6 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
+          <p className={`text-sm font-bold ${mutedClass(isDark)}`}>
             {t("schedule.subjectsEditor.empty")}
           </p>
-          <p className="text-xs text-gray-400">
+          <p className={`text-xs ${mutedClass(isDark)}`}>
             {t("schedule.subjectsEditor.emptyHint")}
           </p>
         </div>
@@ -107,8 +125,16 @@ export default function SubjectsConfigEditor({
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, height: 0 }}
-                  className={`rounded-2xl border bg-white p-3 shadow-sm ${
-                    isDuplicate ? "border-red-200" : "border-gray-100"
+                  className={`rounded-2xl border p-3 shadow-sm ${
+                    isDark ? "bg-white/5" : "bg-white"
+                  } ${
+                    isDuplicate
+                      ? isDark
+                        ? "border-red-500/25"
+                        : "border-red-200"
+                      : isDark
+                        ? "border-white/10"
+                        : "border-gray-100"
                   }`}
                 >
                   <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-[minmax(0,1fr)_130px_130px_40px]">
@@ -117,7 +143,7 @@ export default function SubjectsConfigEditor({
                       onChange={(event) =>
                         updateRow(row.key, { subjectId: event.target.value })
                       }
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                      className={`w-full px-3 py-2.5 ${fieldClass(isDark)}`}
                     >
                       <option value="">{t("schedule.subjectsEditor.chooseSubject")}</option>
                       {isUnknown && (
@@ -141,7 +167,11 @@ export default function SubjectsConfigEditor({
                     </select>
 
                     <label className="relative block">
-                      <Users className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-300" />
+                      <Users
+                        className={`pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 ${
+                          isDark ? "text-gray-600" : "text-gray-300"
+                        }`}
+                      />
                       <input
                         type="number"
                         min={0}
@@ -153,12 +183,16 @@ export default function SubjectsConfigEditor({
                         }
                         placeholder={t("schedule.subjectsEditor.carriedPlaceholder")}
                         title={t("schedule.subjectsEditor.carriedTitle")}
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-9 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                        className={`py-2.5 pl-3 pr-9 ${fieldClass(isDark)}`}
                       />
                     </label>
 
                     <label className="relative block">
-                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-300">
+                      <span
+                        className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold ${
+                          isDark ? "text-gray-600" : "text-gray-300"
+                        }`}
+                      >
                         {t("schedule.subjectsEditor.minutes")}
                       </span>
                       <input
@@ -173,7 +207,7 @@ export default function SubjectsConfigEditor({
                         }
                         placeholder={t("schedule.subjectsEditor.durationPlaceholder")}
                         title={t("schedule.subjectsEditor.durationTitle")}
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-12 text-sm font-semibold text-gray-800 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                        className={`py-2.5 pl-3 pr-12 ${fieldClass(isDark)}`}
                       />
                     </label>
 
@@ -181,14 +215,22 @@ export default function SubjectsConfigEditor({
                       type="button"
                       onClick={() => removeRow(row.key)}
                       aria-label={t("schedule.subjectsEditor.removeSubject")}
-                      className="flex h-10 w-10 items-center justify-center justify-self-end rounded-xl border border-transparent text-gray-300 transition-colors hover:border-red-100 hover:bg-red-50 hover:text-red-500"
+                      className={`flex h-10 w-10 items-center justify-center justify-self-end rounded-xl border border-transparent transition-colors ${
+                        isDark
+                          ? "text-gray-600 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-400"
+                          : "text-gray-300 hover:border-red-100 hover:bg-red-50 hover:text-red-500"
+                      }`}
                     >
                       <Trash2 size={15} />
                     </button>
                   </div>
 
                   {(isDuplicate || isUnknown) && (
-                    <p className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-amber-600">
+                    <p
+                      className={`mt-2 flex items-center gap-1.5 text-[11px] font-bold ${
+                        isDark ? "text-amber-400" : "text-amber-600"
+                      }`}
+                    >
                       <AlertCircle size={12} />
                       {isDuplicate
                         ? t("schedule.subjectsEditor.duplicateWarning")

@@ -137,6 +137,21 @@ export const questionBanksApi = createApi({
       ],
     }),
 
+    /** كل البنوك مرتبة حسب السنة تصاعدياً، مع فلتر اختياري بالمادة */
+    getBanksSortedByYear: builder.query<QuestionBank[], string | void>({
+      query: (subjectId) => {
+        const search = new URLSearchParams();
+        if (subjectId) search.set("subjectId", subjectId);
+        const qs = search.toString();
+        return `/question-banks/sorted-by-year${qs ? `?${qs}` : ""}`;
+      },
+      transformResponse: (response: ApiResponse<QuestionBank[]> | QuestionBank[]) =>
+        unwrapList(response),
+      providesTags: (_result, _error, subjectId) => [
+        { type: "BankList", id: subjectId ? `SORTED-SUBJECT-${subjectId}` : "SORTED-ALL" },
+      ],
+    }),
+
     // ── Upload ──────────────────────────────
     bulkUploadQuestions: builder.mutation<BulkUploadResult, BulkUploadPayload>({
       query: (body) => ({
@@ -252,6 +267,7 @@ export const {
   useGetBankByLectureQuery,
   useGetBanksByYearQuery,
   useGetBanksBySubjectQuery,
+  useGetBanksSortedByYearQuery,
   useBulkUploadQuestionsMutation,
   useUploadQuestionsDocxMutation,
   useUpdateQuestionMutation,

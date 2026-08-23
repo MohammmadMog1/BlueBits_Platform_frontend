@@ -14,6 +14,18 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
 import { useAppSelector } from "../../../../app/store/hooks";
+import { useIsDark } from "../../../../shared/hooks/useIsDark";
+import {
+  accentIconClass,
+  cardClass,
+  emptyBoxClass,
+  errorAlertClass,
+  faintClass,
+  fieldClass,
+  headingClass,
+  iconButtonClass,
+  mutedClass,
+} from "../../../../shared/utils/theme";
 import {
   useGetSemestersQuery,
   useGetYearsQuery,
@@ -33,6 +45,7 @@ const getUserId = (user: { _id: string } | null) => user?._id ?? "";
 export default function SubjectManagementPage() {
   const { t } = useTranslation(["admin", "common"]);
   const errorMessage = useErrorMessage();
+  const isDark = useIsDark();
   const user = useAppSelector((state) => state.auth.user);
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
@@ -133,11 +146,11 @@ export default function SubjectManagementPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#404293] to-[#2376BB] shadow-md shadow-[#404293]/25">
               <BookMarked className="h-[18px] w-[18px] text-white" />
             </div>
-            <h1 className="text-xl font-black tracking-tight text-gray-900">
+            <h1 className={`text-xl font-black tracking-tight ${headingClass(isDark)}`}>
               {t("subjects.title")}
             </h1>
           </div>
-          <p className="text-sm font-medium text-gray-400">
+          <p className={`text-sm font-medium ${mutedClass(isDark)}`}>
             {t("subjects.subtitle")}
           </p>
         </div>
@@ -147,7 +160,7 @@ export default function SubjectManagementPage() {
             onClick={() => subjectsQuery.refetch()}
             title={t("common:actions.refresh")}
             aria-label={t("common:actions.refresh")}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-[#404293]/30 hover:text-[#404293]"
+            className={iconButtonClass(isDark)}
           >
             <RefreshCcw
               className={`h-4 w-4 ${subjectsQuery.isFetching ? "animate-spin" : ""}`}
@@ -167,7 +180,7 @@ export default function SubjectManagementPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3.5 shadow-sm transition-shadow hover:shadow-md"
+            className={`flex items-center gap-3 px-4 py-3.5 transition-shadow hover:shadow-md ${cardClass(isDark)}`}
           >
             <div
               className="h-8 w-1.5 shrink-0 rounded-full"
@@ -176,10 +189,10 @@ export default function SubjectManagementPage() {
               }}
             />
             <div>
-              <p className="text-lg font-black leading-none text-gray-900">
+              <p className={`text-lg font-black leading-none ${headingClass(isDark)}`}>
                 {stat.value}
               </p>
-              <p className="mt-0.5 text-[11px] font-semibold text-gray-400">
+              <p className={`mt-0.5 text-[11px] font-semibold ${mutedClass(isDark)}`}>
                 {stat.label}
               </p>
             </div>
@@ -187,14 +200,20 @@ export default function SubjectManagementPage() {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-        <div className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5">
-          <Search className="h-4 w-4 shrink-0 text-gray-400" />
+      <div className={`flex flex-wrap items-center gap-3 p-4 ${cardClass(isDark)}`}>
+        <div
+          className={`flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border px-3.5 py-2.5 ${
+            isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+          }`}
+        >
+          <Search className={`h-4 w-4 shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={t("subjects.searchPlaceholder")}
-            className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+            className={`flex-1 bg-transparent text-sm outline-none placeholder-gray-400 ${
+              isDark ? "text-gray-200" : "text-gray-700"
+            }`}
           />
           {search && (
             <button
@@ -202,7 +221,7 @@ export default function SubjectManagementPage() {
               onClick={() => setSearch("")}
               aria-label={t("subjects.clearSearch")}
             >
-              <X size={13} className="text-gray-300 hover:text-gray-500" />
+              <X size={13} className="text-gray-400 hover:text-gray-500" />
             </button>
           )}
         </div>
@@ -210,7 +229,7 @@ export default function SubjectManagementPage() {
           <select
             value={filterYear}
             onChange={(event) => setFilterYear(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-4`}
           >
             <option value="">{t("subjects.allYears")}</option>
             {yearOptions.map((option) => (
@@ -219,13 +238,15 @@ export default function SubjectManagementPage() {
               </option>
             ))}
           </select>
-          <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <GraduationCap
+            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+          />
         </div>
         <div className="relative">
           <select
             value={filterSemester}
             onChange={(event) => setFilterSemester(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-4`}
           >
             <option value="">{t("subjects.allSemesters")}</option>
             {semesterOptions.map((option) => (
@@ -234,7 +255,9 @@ export default function SubjectManagementPage() {
               </option>
             ))}
           </select>
-          <Layers className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Layers
+            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+          />
         </div>
         {(filterYear || filterSemester) && (
           <button
@@ -243,7 +266,11 @@ export default function SubjectManagementPage() {
               setFilterYear("");
               setFilterSemester("");
             }}
-            className="flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold text-red-500 transition-colors hover:border-red-100 hover:bg-red-50"
+            className={`flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold transition-colors ${
+              isDark
+                ? "text-red-400 hover:border-red-500/20 hover:bg-red-500/10"
+                : "text-red-500 hover:border-red-100 hover:bg-red-50"
+            }`}
           >
             <X size={13} /> {t("subjects.clearFilters")}
           </button>
@@ -254,14 +281,18 @@ export default function SubjectManagementPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3.5 text-sm font-semibold text-amber-700"
+          className={`flex items-center gap-3 rounded-2xl border px-5 py-3.5 text-sm font-semibold ${
+            isDark
+              ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           {errorMessage(subjectsQuery.error)}
         </motion.div>
       )}
       {mutationError && !showModal && !editSubject && (
-        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-3.5 text-sm font-semibold text-red-700">
+        <div className={errorAlertClass(isDark)}>
           <AlertCircle className="h-4 w-4 shrink-0" />
           {errorMessage(mutationError)}
         </div>
@@ -272,28 +303,32 @@ export default function SubjectManagementPage() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="animate-pulse rounded-2xl border border-gray-100 bg-white p-5"
+              className={`animate-pulse rounded-2xl border p-5 ${
+                isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-white"
+              }`}
             >
-              <div className="mb-5 h-1 w-full rounded-full bg-gray-100" />
-              <div className="mb-3 h-4 w-3/4 rounded-full bg-gray-100" />
-              <div className="mb-2 h-3 w-full rounded-full bg-gray-100" />
-              <div className="mb-5 h-3 w-2/3 rounded-full bg-gray-100" />
+              <div className={`mb-5 h-1 w-full rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-3 h-4 w-3/4 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-2 h-3 w-full rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-5 h-3 w-2/3 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
               <div className="flex gap-2">
-                <div className="h-7 flex-1 rounded-full bg-gray-100" />
-                <div className="h-7 flex-1 rounded-full bg-gray-100" />
+                <div className={`h-7 flex-1 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+                <div className={`h-7 flex-1 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
               </div>
             </div>
           ))}
         </div>
       ) : filteredSubjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-gray-100 bg-white py-24 text-center shadow-sm">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
-            <BookMarked className="h-7 w-7 text-gray-300" />
+        <div
+          className={`flex flex-col items-center justify-center py-24 text-center ${emptyBoxClass(isDark)}`}
+        >
+          <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${isDark ? "bg-white/10" : "bg-gray-100"}`}>
+            <BookMarked className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
-          <p className="mb-1 font-bold text-gray-400">
+          <p className={`mb-1 font-bold ${mutedClass(isDark)}`}>
             {t(search ? "subjects.emptyNoResults" : "subjects.emptyNone")}
           </p>
-          <p className="mb-4 text-sm text-gray-300">
+          <p className={`mb-4 text-sm ${faintClass(isDark)}`}>
             {t(search ? "subjects.emptySearchHint" : "subjects.emptyHint")}
           </p>
           {!search && (
@@ -315,6 +350,7 @@ export default function SubjectManagementPage() {
                 subject={subject}
                 yearLabel={getYearLabel(subject.yearId)}
                 semesterLabel={getSemesterLabel(subject.semesterId)}
+                isDark={isDark}
                 onEdit={setEditSubject}
                 onDelete={setDeletingSubject}
               />
@@ -341,6 +377,7 @@ export default function SubjectManagementPage() {
             error={modalError}
             yearOptions={yearOptions}
             semesterOptions={semesterOptions}
+            isDark={isDark}
             onClose={() => {
               setShowModal(false);
               setEditSubject(null);
@@ -364,21 +401,32 @@ export default function SubjectManagementPage() {
               exit={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(event) => event.stopPropagation()}
-              className="w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl"
+              className={`w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl ${
+                isDark
+                  ? "border border-white/10 bg-[#1a1b1e]"
+                  : "border border-gray-200 bg-white"
+              }`}
             >
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50">
-                <Trash2 className="h-7 w-7 text-red-500" />
+              <div
+                className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${accentIconClass(
+                  isDark,
+                  "rose",
+                )}`}
+              >
+                <Trash2 className="h-7 w-7" />
               </div>
-              <h3 className="mb-2 text-lg font-black text-gray-900">
+              <h3 className={`mb-2 text-lg font-black ${headingClass(isDark)}`}>
                 {t("subjects.confirmDelete.title")}
               </h3>
-              <p className="mb-1 text-sm text-gray-500">
+              <p className={`mb-1 text-sm ${mutedClass(isDark)}`}>
                 {t("subjects.confirmDelete.body")}
               </p>
-              <p className="mb-6 text-sm font-black text-[#404293]">
+              <p
+                className={`mb-6 text-sm font-black ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}
+              >
                 "{deletingSubject.name}"
               </p>
-              <p className="mb-6 text-xs text-gray-400">
+              <p className={`mb-6 text-xs ${faintClass(isDark)}`}>
                 {t("subjects.confirmDelete.irreversible")}
               </p>
               <div className="flex gap-3">
@@ -386,7 +434,11 @@ export default function SubjectManagementPage() {
                   type="button"
                   onClick={() => setDeletingSubject(null)}
                   disabled={deleteState.isLoading}
-                  className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                  className={`flex-1 rounded-xl border-2 py-3 text-sm font-bold transition-colors disabled:opacity-50 ${
+                    isDark
+                      ? "border-white/15 text-gray-300 hover:bg-white/5"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   {t("common:actions.cancel")}
                 </button>
@@ -394,7 +446,9 @@ export default function SubjectManagementPage() {
                   type="button"
                   onClick={handleDelete}
                   disabled={deleteState.isLoading}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-3 text-sm font-bold text-white shadow-md shadow-red-200 transition-all hover:bg-red-600 disabled:opacity-60"
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-red-600 disabled:opacity-60 ${
+                    isDark ? "shadow-red-950/40" : "shadow-red-200"
+                  }`}
                 >
                   {deleteState.isLoading ? (
                     <>

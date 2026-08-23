@@ -7,6 +7,8 @@ import Logo from "../../../../app/assets/Logo.png";
 interface LatestLectureCardProps {
   lecture: LecturePopulated;
   onClick: (lecture: LecturePopulated) => void;
+  /** "strip": بعرض ثابت لشريط أفقي قابل للتمرير. "grid": يملأ عرض خلية الشبكة. */
+  variant?: "strip" | "grid";
 }
 
 const extractLectureNumber = (title: string): string | null => {
@@ -14,16 +16,18 @@ const extractLectureNumber = (title: string): string | null => {
   return match ? match[1] : null;
 };
 
-export function LatestLectureCard({ lecture, onClick }: LatestLectureCardProps) {
+export function LatestLectureCard({ lecture, onClick, variant = "strip" }: LatestLectureCardProps) {
   const { formatShortDate } = useFormatters();
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const lectureNumber = extractLectureNumber(lecture.title);
+  const sizingClass =
+    variant === "grid" ? "w-full" : "snap-start flex-shrink-0 w-[160px] sm:w-[220px]";
 
   return (
     <button
       onClick={() => onClick(lecture)}
-      className={`snap-start flex-shrink-0 w-[160px] sm:w-[220px] rounded-xl sm:rounded-2xl border overflow-hidden text-start transition-all hover:-translate-y-1 hover:shadow-xl group backdrop-blur-md
+      className={`${sizingClass} rounded-xl sm:rounded-2xl border overflow-hidden text-start transition-all hover:-translate-y-1 hover:shadow-xl group backdrop-blur-md
         ${isDark ? "bg-white/5 border-white/10 hover:border-[#2376BB]/50" : "bg-white/90 border-gray-200 shadow-sm hover:border-[#2376BB]/40"}`}
     >
       <div

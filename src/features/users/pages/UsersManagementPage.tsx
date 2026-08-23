@@ -15,11 +15,20 @@ import {
 } from "../api/usersApiSlice";
 import { useGetYearsQuery } from "../../admin/academic/api/academicApi";
 import type { User } from "../types";
+import { useIsDark } from "../../../shared/hooks/useIsDark";
+import {
+  dividerClass,
+  headingClass,
+  iconButtonClass,
+  mutedClass,
+  primaryButtonClass,
+} from "../../../shared/utils/theme";
 
 const toastDuration = 3000;
 
 export default function UsersManagementPage() {
   const { t } = useTranslation(["users", "admin", "common"]);
+  const isDark = useIsDark();
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
@@ -96,31 +105,31 @@ export default function UsersManagementPage() {
             <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
               <Users className="w-4.5 h-4.5 text-white" />
             </div>
-            <h1 className="text-xl font-black text-gray-900 tracking-tight">
+            <h1 className={`text-xl font-black tracking-tight ${headingClass(isDark)}`}>
               {t("title")}
             </h1>
           </div>
-          <p className="text-sm text-gray-400 font-medium">{t("subtitle")}</p>
+          <p className={`text-sm font-medium ${mutedClass(isDark)}`}>{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => refetch()}
             title={t("common:actions.refresh")}
             aria-label={t("common:actions.refresh")}
-            className="w-10 h-10 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-400 hover:text-[#404293] hover:border-[#404293]/30 shadow-sm transition-all"
+            className={iconButtonClass(isDark)}
           >
             <RefreshCcw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
           </button>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-linear-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-xl shadow-[#404293]/30 hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+            className={`px-5 py-2.5 ${primaryButtonClass}`}
           >
             <Plus size={17} /> {t("new")}
           </button>
         </div>
       </div>
 
-      <UsersStats stats={stats} />
+      <UsersStats stats={stats} isDark={isDark} />
 
       <UsersFilter
         search={search}
@@ -131,13 +140,18 @@ export default function UsersManagementPage() {
         onRoleChange={setRoleFilter}
         onYearChange={setYearFilter}
         onClearFilter={() => setSearch("")}
+        isDark={isDark}
       />
 
       {error ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-3.5 text-amber-700 text-sm font-semibold"
+          className={`flex items-center gap-3 rounded-2xl border px-5 py-3.5 text-sm font-semibold ${
+            isDark
+              ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
         >
           <AlertCircle className="w-4 h-4 shrink-0" />
           {t("connectionFailed")}
@@ -152,6 +166,7 @@ export default function UsersManagementPage() {
         onRoleChange={handleRoleChange}
         onDelete={setDeletingId}
         onManagePermissions={(user) => setManagingPermissionsUserId(user._id)}
+        isDark={isDark}
       />
 
       <AnimatePresence>
@@ -162,6 +177,7 @@ export default function UsersManagementPage() {
               setShowCreate(false);
               showToast(t("messages.created"), "success");
             }}
+            isDark={isDark}
           />
         )}
       </AnimatePresence>
@@ -172,6 +188,7 @@ export default function UsersManagementPage() {
             user={managingPermissionsUser}
             onClose={() => setManagingPermissionsUserId(null)}
             onError={(message) => showToast(message, "error")}
+            isDark={isDark}
           />
         )}
       </AnimatePresence>
@@ -189,13 +206,15 @@ export default function UsersManagementPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.94, y: 24 }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
-              className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden"
+              className={`w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden ${
+                isDark ? "bg-[#202121]" : "bg-white"
+              }`}
             >
-              <div className="px-6 py-5 border-b border-gray-100">
-                <h3 className="text-lg font-black text-gray-900">
+              <div className={`px-6 py-5 border-b ${dividerClass(isDark)}`}>
+                <h3 className={`text-lg font-black ${headingClass(isDark)}`}>
                   {t("confirmDelete.title")}
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className={`text-sm mt-1 ${mutedClass(isDark)}`}>
                   {t("confirmDelete.body", {
                     name: deletingUser?.name || t("confirmDelete.unknownUser"),
                   })}
@@ -205,7 +224,11 @@ export default function UsersManagementPage() {
                 <button
                   type="button"
                   onClick={() => setDeletingId(null)}
-                  className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
+                  className={`flex-1 py-3 rounded-xl border font-semibold text-sm transition-colors ${
+                    isDark
+                      ? "border-white/10 text-gray-300 hover:bg-white/5"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   {t("common:actions.cancel")}
                 </button>

@@ -10,6 +10,7 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import DashboardHeader from "../../../../shared/components/Dashboard/DashboardHeader";
 import QuickActionsPanel from "../../../../shared/components/Dashboard/QuickActionsPanel";
+import StaggerGrid from "../../../../shared/components/Dashboard/StaggerGrid";
 import StatTile from "../../../../shared/components/StatTile/StatTile";
 import { useIsDark } from "../../../../shared/hooks/useIsDark";
 import { errorAlertClass } from "../../../../shared/utils/theme";
@@ -76,7 +77,7 @@ export default function UserDashboardPage() {
         </motion.div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <StaggerGrid className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile
           icon={CalendarClock}
           label={t("stats.upcoming")}
@@ -120,7 +121,7 @@ export default function UserDashboardPage() {
           isLoading={isLoading}
           to="/user/announcements"
         />
-      </div>
+      </StaggerGrid>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
@@ -129,7 +130,7 @@ export default function UserDashboardPage() {
         <FocusTimerCard isDark={isDark} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <StaggerGrid className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <UpcomingDeadlinesPanel items={upcoming} isDark={isDark} isLoading={isLoading} />
         <LatestLecturesPanel
           lectures={latestLectures}
@@ -141,7 +142,7 @@ export default function UserDashboardPage() {
           isDark={isDark}
           isLoading={isLoading}
         />
-      </div>
+      </StaggerGrid>
 
       <QuickActionsPanel actions={userQuickActions} isDark={isDark} />
     </div>

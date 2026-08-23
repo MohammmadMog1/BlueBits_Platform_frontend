@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { Eye, Download, Clock, File, FileText } from "lucide-react";
+import { Eye, Download, Clock, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useFormatters } from "../../../../shared/i18n/useFormatters";
 import type { LecturePopulated } from "../types";
@@ -20,74 +20,74 @@ export function LectureCard({ lecture, onView, onDownload }: LectureCardProps) {
 
   return (
     <div
-      className={`group rounded-xl sm:rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl overflow-hidden backdrop-blur-md
-        ${isDark ? "bg-white/5 border-white/10 hover:border-[#2376BB]/40" : "bg-white/90 border-gray-200 hover:shadow-[#404293]/10"}`}
+      className={`group rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg overflow-hidden backdrop-blur-md
+        ${isDark ? "bg-white/[0.04] border-white/10 hover:border-[#2376BB]/40 hover:shadow-black/20" : "bg-white/95 border-gray-100 hover:shadow-[#404293]/8"}`}
     >
-      <div
-        className={`h-1 w-full ${
-          isPractical
-            ? "bg-gradient-to-r from-emerald-400 to-teal-500"
-            : "bg-gradient-to-r from-[#404293] to-[#2376BB]"
-        }`}
-      />
-      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 p-3 sm:p-5">
-        <div className="relative flex-shrink-0 self-start">
-          <div
-            className={`w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-2xl flex items-center justify-center shadow-lg ${
-              isPractical
-                ? "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-200/40"
-                : "bg-gradient-to-br from-[#404293] to-[#2376BB] shadow-[#404293]/30"
-            }`}
-          >
-            <FileText className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
-          </div>
-          <span
-            className={`absolute -bottom-1 -end-1 text-[8px] font-black px-1.5 py-0.5 rounded-md text-white shadow-sm ${
-              isPractical ? "bg-emerald-500" : "bg-[#404293]"
-            }`}
-          >
-            {t(isPractical ? "card.badgeLab" : "card.badgePdf")}
-          </span>
+      <div className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-3.5">
+        <div
+          className={`flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl shadow-sm ${
+            isPractical
+              ? "bg-gradient-to-br from-emerald-400 to-teal-500"
+              : "bg-gradient-to-br from-[#404293] to-[#2376BB]"
+          }`}
+        >
+          <FileText className="h-4 w-4 sm:h-[18px] sm:w-[18px] text-white" />
         </div>
 
-        <div className="flex-1 min-w-0 flex flex-col justify-center">
+        <div className="min-w-0 flex-1">
           <h3
-            className={`font-bold text-sm sm:text-base leading-snug mb-2 line-clamp-2 ${isDark ? "text-gray-100" : "text-gray-900"}`}
+            className={`truncate text-[13px] sm:text-sm font-bold leading-snug ${isDark ? "text-gray-100" : "text-gray-900"}`}
           >
             {lecture.title}
           </h3>
-
-          <div
-            className={`flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-xs font-medium ${isDark ? "text-gray-400" : "text-gray-500"}`}
-          >
-            <span className="flex items-center gap-1">
-              <Clock size={11} className={isDark ? "text-gray-500" : "text-gray-300"} />
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span
+              className={`flex items-center gap-1 text-[11px] font-medium ${isDark ? "text-gray-500" : "text-gray-400"}`}
+            >
+              <Clock size={10} />
               {formatShortDate(lecture.createdAt)}
             </span>
-            <span className="flex items-center gap-1">
-              <File size={11} className={isDark ? "text-gray-500" : "text-gray-300"} />
+            <span
+              className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                isPractical
+                  ? isDark
+                    ? "bg-emerald-500/15 text-emerald-400"
+                    : "bg-emerald-50 text-emerald-600"
+                  : isDark
+                    ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                    : "bg-[#404293]/8 text-[#404293]"
+              }`}
+            >
               {t(isPractical ? "type.practical" : "type.theoretical")}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0 pt-1">
+        <div className="flex flex-shrink-0 items-center gap-1.5">
           <button
             onClick={() => onView(lecture)}
-            className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] text-white text-[11px] sm:text-sm font-bold shadow-md hover:opacity-90 hover:-translate-y-0.5 transition-all"
+            aria-label={t("card.view")}
+            className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#404293] to-[#2376BB] px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-90 sm:px-3 sm:text-xs"
           >
-            <Eye size={13} /> {t("card.view")}
+            <Eye size={12} />
+            <span className="hidden sm:inline">{t("card.view")}</span>
           </button>
           <button
             onClick={() => onDownload(lecture)}
-            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-semibold border transition-all ${isDark ? "border-white/20 bg-white/5 hover:bg-white/15 text-gray-100" : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"}`}
+            aria-label={t("card.download")}
+            className={`flex h-7 w-7 items-center justify-center rounded-lg border text-[11px] font-semibold transition-all sm:h-auto sm:w-auto sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs ${
+              isDark
+                ? "border-white/10 bg-white/5 text-gray-300 hover:bg-white/10"
+                : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
+            }`}
           >
-            <Download size={13} /> {t("card.download")}
+            <Download size={12} />
+            <span className="hidden sm:inline">{t("card.download")}</span>
           </button>
         </div>
       </div>
 
-      <div className="px-3 sm:px-5 pb-3 sm:pb-5">
+      <div className="px-3 sm:px-3.5 pb-3">
         <LectureInteractions lectureId={lecture._id} isDark={isDark} />
       </div>
     </div>

@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import { AlertCircle, GraduationCap, RefreshCcw, Search, X } from "lucide-react";
+import {
+  AlertCircle,
+  BookMarked,
+  GraduationCap,
+  RefreshCcw,
+  Search,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useErrorMessage } from "../../../shared/i18n/useErrorMessage";
 import StudentAcademicTaskCard from "../components/StudentAcademicTaskCard";
 import SubmissionModal from "../components/SubmissionModal";
-import { useGetAcademicTasksQuery } from "../../admin/tasks";
+import {
+  useGetAcademicTasksBySubjectQuery,
+  useGetAcademicTasksByYearQuery,
+  useGetAcademicTasksQuery,
+} from "../../admin/tasks";
 import type { AcademicTask } from "../../admin/tasks";
+import { useGetYearsQuery } from "../../admin/academic";
+import { useGetSubjectsQuery } from "../../admin/subjects/api/subjectsApi";
 
 export default function StudentAcademicTasksPage() {
   const { t } = useTranslation(["tasks", "common"]);
@@ -16,10 +29,35 @@ export default function StudentAcademicTasksPage() {
   const isDark = theme === "dark";
 
   const [search, setSearch] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [filterSubject, setFilterSubject] = useState("");
   const [submissionTask, setSubmissionTask] = useState<AcademicTask | null>(null);
 
-  const tasksQuery = useGetAcademicTasksQuery();
+  const { data: years = [] } = useGetYearsQuery();
+  const { data: subjects = [] } = useGetSubjectsQuery();
+
+  const hasSubjectFilter = Boolean(filterSubject);
+  const hasYearOnlyFilter = Boolean(filterYear) && !hasSubjectFilter;
+
+  const allTasksQuery = useGetAcademicTasksQuery(undefined, {
+    skip: hasSubjectFilter || hasYearOnlyFilter,
+  });
+  const byYearQuery = useGetAcademicTasksByYearQuery(filterYear, {
+    skip: !hasYearOnlyFilter,
+  });
+  const bySubjectQuery = useGetAcademicTasksBySubjectQuery(
+    { subjectId: filterSubject, yearId: filterYear || undefined },
+    { skip: !hasSubjectFilter },
+  );
+
+  const tasksQuery = hasSubjectFilter
+    ? bySubjectQuery
+    : hasYearOnlyFilter
+      ? byYearQuery
+      : allTasksQuery;
+
   const tasks = tasksQuery.data ?? [];
+  const hasActiveFilters = Boolean(search || filterYear || filterSubject);
 
   const filteredTasks = tasks.filter((task) => {
     const term = search.trim().toLowerCase();
@@ -40,6 +78,15 @@ export default function StudentAcademicTasksPage() {
       onOpenSubmission={setSubmissionTask}
     />
   );
+
+  const selectClass = `appearance-none rounded-xl border py-2.5 ps-10 pe-4 text-sm font-semibold outline-none transition-colors ${
+    isDark
+      ? "border-white/10 bg-white/5 text-gray-200 focus:border-[#2376BB]"
+      : "border-gray-200 bg-gray-50 text-gray-700 focus:border-[#404293]"
+  }`;
+  const selectIconClass = `pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+    isDark ? "text-gray-500" : "text-gray-400"
+  }`;
 
   return (
     <div className="flex flex-col gap-5">
@@ -64,6 +111,58 @@ export default function StudentAcademicTasksPage() {
             </button>
           )}
         </div>
+
+        <div className="relative">
+          <select
+            value={filterYear}
+            onChange={(event) => setFilterYear(event.target.value)}
+            aria-label={t("academic.filterByYear")}
+            className={selectClass}
+          >
+            <option value="">{t("academic.allYears")}</option>
+            {years.map((year) => (
+              <option key={year._id} value={year._id}>
+                {year.name}
+              </option>
+            ))}
+          </select>
+          <GraduationCap className={selectIconClass} />
+        </div>
+
+        <div className="relative">
+          <select
+            value={filterSubject}
+            onChange={(event) => setFilterSubject(event.target.value)}
+            aria-label={t("academic.filterBySubject")}
+            className={selectClass}
+          >
+            <option value="">{t("academic.allSubjects")}</option>
+            {subjects.map((subject) => (
+              <option key={subject._id} value={subject._id}>
+                {subject.name}
+              </option>
+            ))}
+          </select>
+          <BookMarked className={selectIconClass} />
+        </div>
+
+        {(filterYear || filterSubject) && (
+          <button
+            type="button"
+            onClick={() => {
+              setFilterYear("");
+              setFilterSubject("");
+            }}
+            className={`flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold transition-colors ${
+              isDark
+                ? "text-red-400 hover:border-red-500/20 hover:bg-red-500/10"
+                : "text-red-500 hover:border-red-100 hover:bg-red-50"
+            }`}
+          >
+            <X size={13} /> {t("academic.clearFilters")}
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => tasksQuery.refetch()}
@@ -117,10 +216,10 @@ export default function StudentAcademicTasksPage() {
             <GraduationCap className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
           <p className={`mb-1 font-bold ${isDark ? "text-gray-400" : "text-gray-400"}`}>
-            {t(search ? "academic.emptyNoResults" : "academic.emptyNone")}
+            {t(hasActiveFilters ? "academic.emptyNoResults" : "academic.emptyNone")}
           </p>
           <p className={`text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
-            {t(search ? "academic.emptySearchHint" : "academic.emptyHint")}
+            {t(hasActiveFilters ? "academic.emptySearchHint" : "academic.emptyHint")}
           </p>
         </div>
       ) : (

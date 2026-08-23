@@ -52,7 +52,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
     data: commentsResult,
     isLoading: commentsLoading,
     isFetching: commentsFetching,
-  } = useGetLectureCommentsQuery(lectureId, { skip: !expanded });
+  } = useGetLectureCommentsQuery(lectureId);
 
   const [createComment, { isLoading: isCreating }] = useCreateCommentMutation();
   const [updateComment] = useUpdateCommentMutation();
@@ -124,6 +124,8 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}
+          aria-label={t("interactions.comments")}
+          aria-expanded={expanded}
           className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all sm:gap-1.5 sm:rounded-xl sm:px-3 sm:py-1.5 sm:text-sm ${
             expanded
               ? isDark
@@ -135,9 +137,7 @@ export function LectureInteractions({ lectureId, isDark }: LectureInteractionsPr
           }`}
         >
           <MessageCircle className="h-3.5 w-3.5" />
-          {expanded && commentsResult
-            ? commentsResult.count
-            : t("interactions.comments")}
+          {commentsResult ? commentsResult.count : commentsLoading ? "…" : 0}
         </button>
       </div>
 

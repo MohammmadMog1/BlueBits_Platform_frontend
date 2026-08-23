@@ -6,21 +6,34 @@ import { useScheduleDates } from "../hooks/useScheduleDates";
 interface TimetableGridProps {
   days: DayGroup[];
   timeslots: number[];
+  isDark: boolean;
 }
 
 /**
  * الجدول الكبير: صف لكل يوم امتحان، وعمود لكل فترة.
  * الخلية التي تحوي أكثر من مادة تعني تصادماً فتُبرز بالأحمر.
  */
-export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
+export default function TimetableGrid({
+  days,
+  timeslots,
+  isDark,
+}: TimetableGridProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate } = useScheduleDates();
   return (
-    <div className="overflow-x-auto rounded-2xl border border-gray-100">
+    <div
+      className={`overflow-x-auto rounded-2xl border ${
+        isDark ? "border-white/10" : "border-gray-100"
+      }`}
+    >
       <table className="w-full min-w-[640px] border-collapse text-right">
         <thead>
           <tr className="bg-gradient-to-l from-[#404293] to-[#2376BB] text-white">
-            <th className="sticky right-0 z-10 bg-[#404293] px-4 py-3 text-xs font-black">
+            <th
+              className={`sticky right-0 z-10 px-4 py-3 text-xs font-black ${
+                isDark ? "bg-[#2f3140]" : "bg-[#404293]"
+              }`}
+            >
               {t("schedule.timetable.dayHeader")}
             </th>
             {timeslots.map((timeslot) => (
@@ -34,22 +47,42 @@ export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-gray-100">
+        <tbody className={isDark ? "divide-y divide-white/10" : "divide-y divide-gray-100"}>
           {days.map((day, index) => (
             <tr
               key={day.day}
-              className={index % 2 === 0 ? "bg-white" : "bg-gray-50/60"}
+              className={
+                index % 2 === 0
+                  ? isDark
+                    ? "bg-[#202121]"
+                    : "bg-white"
+                  : isDark
+                    ? "bg-white/[0.03]"
+                    : "bg-gray-50/60"
+              }
             >
               <th
                 scope="row"
-                className={`sticky right-0 z-10 border-l border-gray-100 px-4 py-3 text-right align-top ${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                className={`sticky right-0 z-10 border-l px-4 py-3 text-right align-top ${
+                  isDark ? "border-white/10" : "border-gray-100"
+                } ${
+                  index % 2 === 0
+                    ? isDark
+                      ? "bg-[#202121]"
+                      : "bg-white"
+                    : isDark
+                      ? "bg-[#242525]"
+                      : "bg-gray-50"
                 }`}
               >
-                <p className="text-xs font-black text-gray-900">
+                <p className={`text-xs font-black ${isDark ? "text-white" : "text-gray-900"}`}>
                   {dayOfWeekLabel(day.day)}
                 </p>
-                <p className="mt-0.5 text-[11px] font-semibold text-gray-400">
+                <p
+                  className={`mt-0.5 text-[11px] font-semibold ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
                   {formatDate(day.day)}
                 </p>
               </th>
@@ -62,18 +95,26 @@ export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
                 return (
                   <td
                     key={timeslot}
-                    className={`border-r border-gray-100 px-3 py-3 align-top ${
-                      isClash ? "bg-red-50" : ""
-                    }`}
+                    className={`border-r px-3 py-3 align-top ${
+                      isDark ? "border-white/10" : "border-gray-100"
+                    } ${isClash ? (isDark ? "bg-red-500/10" : "bg-red-50") : ""}`}
                   >
                     {entries.length === 0 ? (
-                      <span className="block text-center text-xs font-bold text-gray-200">
+                      <span
+                        className={`block text-center text-xs font-bold ${
+                          isDark ? "text-gray-700" : "text-gray-200"
+                        }`}
+                      >
                         —
                       </span>
                     ) : (
                       <div className="flex flex-col gap-1.5">
                         {isClash && (
-                          <span className="flex items-center gap-1 text-[10px] font-black text-red-600">
+                          <span
+                            className={`flex items-center gap-1 text-[10px] font-black ${
+                              isDark ? "text-red-400" : "text-red-600"
+                            }`}
+                          >
                             <AlertTriangle size={10} />
                             {t("schedule.timetable.clash", { count: entries.length })}
                           </span>
@@ -83,8 +124,12 @@ export default function TimetableGrid({ days, timeslots }: TimetableGridProps) {
                             key={entry._id}
                             className={`rounded-lg px-2.5 py-1.5 text-center text-[11px] font-bold leading-tight ${
                               isClash
-                                ? "bg-red-100 text-red-700"
-                                : "bg-[#404293]/8 text-[#404293]"
+                                ? isDark
+                                  ? "bg-red-500/15 text-red-400"
+                                  : "bg-red-100 text-red-700"
+                                : isDark
+                                  ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                                  : "bg-[#404293]/8 text-[#404293]"
                             }`}
                           >
                             {entry.subjectName}

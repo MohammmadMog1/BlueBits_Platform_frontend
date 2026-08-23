@@ -68,6 +68,44 @@ export const academicTasksApi = createApi({
         unwrapItem(response),
       providesTags: (...args) => [{ type: "AcademicTask", id: args[2] }],
     }),
+    getAcademicTasksByYear: builder.query<AcademicTask[], string>({
+      query: (yearId) => `/academic-tasks/year/${yearId}`,
+      transformResponse: (response: ApiResponse<AcademicTask[]> | AcademicTask[]) =>
+        unwrapList(response),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((task) => ({
+                type: "AcademicTask" as const,
+                id: task._id,
+              })),
+              { type: "AcademicTask" as const, id: "LIST" },
+            ]
+          : [{ type: "AcademicTask" as const, id: "LIST" }],
+    }),
+    getAcademicTasksBySubject: builder.query<
+      AcademicTask[],
+      { subjectId: string; yearId?: string }
+    >({
+      query: ({ subjectId, yearId }) => {
+        const search = new URLSearchParams();
+        if (yearId) search.set("yearId", yearId);
+        const qs = search.toString();
+        return `/academic-tasks/subject/${subjectId}${qs ? `?${qs}` : ""}`;
+      },
+      transformResponse: (response: ApiResponse<AcademicTask[]> | AcademicTask[]) =>
+        unwrapList(response),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((task) => ({
+                type: "AcademicTask" as const,
+                id: task._id,
+              })),
+              { type: "AcademicTask" as const, id: "LIST" },
+            ]
+          : [{ type: "AcademicTask" as const, id: "LIST" }],
+    }),
     createAcademicTask: builder.mutation<AcademicTask, CreateAcademicTaskPayload>({
       query: (body) => ({ url: "/academic-tasks", method: "POST", body }),
       transformResponse: (response: ApiResponse<AcademicTask> | AcademicTask) =>
@@ -119,6 +157,26 @@ export const academicTasksApi = createApi({
         { type: "TaskSubmission", id: `ME-${taskId}` },
       ],
     }),
+    /**
+     * دفعة وحدة لكل تسليمات المستخدم الحالي عبر كل التاسكات، بدل ما تنعمل
+     * getMySubmission لكل تاسك بالقائمة لحاله (N+1). بانتظار endpoint الباك اند
+     * المقترح: GET /academic-tasks/submissions/me — ما لازم توصل حتى يصير جاهز.
+     */
+    getMySubmissions: builder.query<TaskSubmission[], void>({
+      query: () => "/academic-tasks/submissions/me",
+      transformResponse: (response: ApiResponse<TaskSubmission[]> | TaskSubmission[]) =>
+        unwrapList(response),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((submission) => ({
+                type: "TaskSubmission" as const,
+                id: `ME-${submission.taskId}`,
+              })),
+              { type: "TaskSubmission" as const, id: "ME-LIST" },
+            ]
+          : [{ type: "TaskSubmission" as const, id: "ME-LIST" }],
+    }),
     submitSolution: builder.mutation<TaskSubmission, SubmitSolutionPayload>({
       query: ({ taskId, formData }) => ({
         url: `/academic-tasks/${taskId}/submissions`,
@@ -130,6 +188,7 @@ export const academicTasksApi = createApi({
       invalidatesTags: (_result, _error, { taskId }) => [
         { type: "TaskSubmission", id: `ME-${taskId}` },
         { type: "TaskSubmission", id: `TASK-${taskId}` },
+        { type: "TaskSubmission", id: "ME-LIST" },
       ],
     }),
     getTaskSubmissions: builder.query<TaskSubmission[], string>({
@@ -169,12 +228,15 @@ export const academicTasksApi = createApi({
 export const {
   useGetAcademicTasksQuery,
   useGetAcademicTaskQuery,
+  useGetAcademicTasksByYearQuery,
+  useGetAcademicTasksBySubjectQuery,
   useCreateAcademicTaskMutation,
   useUpdateAcademicTaskMutation,
   useDeleteAcademicTaskMutation,
   useCloseAcademicTaskMutation,
   useGetLecturesBySubjectQuery,
   useGetMySubmissionQuery,
+  useGetMySubmissionsQuery,
   useSubmitSolutionMutation,
   useGetTaskSubmissionsQuery,
   useReviewSubmissionMutation,

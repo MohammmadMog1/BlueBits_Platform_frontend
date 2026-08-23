@@ -6,14 +6,21 @@ import { useLanguage } from "../../../shared/i18n/useLanguage";
 import { useGrantPermissionMutation, useRevokePermissionMutation } from "../api/usersApiSlice";
 import { PERMISSIONS_LIST } from "../types";
 import type { Permission, User } from "../types";
+import { dividerClass, faintClass, headingClass, mutedClass } from "../../../shared/utils/theme";
 
 interface ManagePermissionsModalProps {
   user: User;
   onClose: () => void;
   onError: (message: string) => void;
+  isDark: boolean;
 }
 
-export default function ManagePermissionsModal({ user, onClose, onError }: ManagePermissionsModalProps) {
+export default function ManagePermissionsModal({
+  user,
+  onClose,
+  onError,
+  isDark,
+}: ManagePermissionsModalProps) {
   const { t } = useTranslation(["users", "common"]);
   const { isRTL } = useLanguage();
   const [grantPermission, { isLoading: isGranting }] = useGrantPermissionMutation();
@@ -52,27 +59,31 @@ export default function ManagePermissionsModal({ user, onClose, onError }: Manag
         exit={{ scale: 0.94, y: 24 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
+        className={`w-full max-w-md rounded-3xl shadow-2xl overflow-hidden ${
+          isDark ? "bg-[#202121]" : "bg-white"
+        }`}
       >
-        <div className="px-7 pt-7 pb-5 border-b border-gray-100 flex items-center justify-between">
+        <div className={`px-7 pt-7 pb-5 border-b flex items-center justify-between ${dividerClass(isDark)}`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
               <ShieldCheck className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-base">
+              <h3 className={`font-bold text-base ${headingClass(isDark)}`}>
                 {t("permissions.title", { name: user.name })}
               </h3>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className={`text-xs mt-0.5 ${faintClass(isDark)}`}>
                 {t("permissions.subtitle")}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+              isDark ? "bg-white/10 hover:bg-white/15" : "bg-gray-100 hover:bg-gray-200"
+            }`}
           >
-            <X size={15} className="text-gray-500" />
+            <X size={15} className={isDark ? "text-gray-300" : "text-gray-500"} />
           </button>
         </div>
 
@@ -85,14 +96,20 @@ export default function ManagePermissionsModal({ user, onClose, onError }: Manag
               <div
                 key={permission}
                 className={`flex items-center justify-between gap-4 rounded-2xl border px-4 py-3.5 transition-colors ${
-                  hasPermission ? "border-[#404293]/25 bg-[#404293]/5" : "border-gray-200 bg-gray-50"
+                  hasPermission
+                    ? isDark
+                      ? "border-[#2376BB]/30 bg-[#2376BB]/10"
+                      : "border-[#404293]/25 bg-[#404293]/5"
+                    : isDark
+                      ? "border-white/10 bg-white/5"
+                      : "border-gray-200 bg-gray-50"
                 }`}
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-gray-900">
+                  <p className={`text-sm font-bold ${headingClass(isDark)}`}>
                     {t(`permissions.${permission}.label`)}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className={`text-xs mt-0.5 ${faintClass(isDark)}`}>
                     {t(`permissions.${permission}.description`)}
                   </p>
                 </div>
@@ -101,7 +118,7 @@ export default function ManagePermissionsModal({ user, onClose, onError }: Manag
                   disabled={isBusy}
                   onClick={() => handleToggle(permission, hasPermission)}
                   className={`relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${
-                    hasPermission ? "bg-[#404293]" : "bg-gray-300"
+                    hasPermission ? "bg-[#404293]" : isDark ? "bg-white/15" : "bg-gray-300"
                   }`}
                 >
                   {isPending ? (
@@ -128,7 +145,7 @@ export default function ManagePermissionsModal({ user, onClose, onError }: Manag
             );
           })}
 
-          <div className="flex items-center gap-2 text-xs text-gray-400 pt-1">
+          <div className={`flex items-center gap-2 text-xs pt-1 ${mutedClass(isDark)}`}>
             <AlertCircle size={13} className="shrink-0" />
             {t("permissions.autoSaveHint")}
           </div>
@@ -138,7 +155,11 @@ export default function ManagePermissionsModal({ user, onClose, onError }: Manag
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
+            className={`w-full py-3 rounded-xl border font-semibold text-sm transition-colors ${
+              isDark
+                ? "border-white/10 text-gray-300 hover:bg-white/5"
+                : "border-gray-200 text-gray-600 hover:bg-gray-50"
+            }`}
           >
             {t("common:actions.close")}
           </button>

@@ -5,10 +5,11 @@ import { useScheduleDates } from "../hooks/useScheduleDates";
 
 interface TimetableDayCardsProps {
   days: DayGroup[];
+  isDark: boolean;
 }
 
 /** عرض البطاقات: بطاقة لكل يوم، مفيد للقراءة السريعة على الشاشات الصغيرة */
-export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
+export default function TimetableDayCards({ days, isDark }: TimetableDayCardsProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate } = useScheduleDates();
   return (
@@ -16,13 +17,23 @@ export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
       {days.map((day) => (
         <div
           key={day.day}
-          className="overflow-hidden rounded-2xl border border-gray-100"
+          className={`overflow-hidden rounded-2xl border ${
+            isDark ? "border-white/10" : "border-gray-100"
+          }`}
         >
-          <div className="flex items-center justify-between bg-gray-50 px-4 py-2.5">
-            <p className="text-xs font-black text-gray-800">
+          <div
+            className={`flex items-center justify-between px-4 py-2.5 ${
+              isDark ? "bg-white/5" : "bg-gray-50"
+            }`}
+          >
+            <p className={`text-xs font-black ${isDark ? "text-gray-100" : "text-gray-800"}`}>
               {dayOfWeekLabel(day.day)} · {formatDate(day.day)}
             </p>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-gray-400">
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                isDark ? "bg-white/10 text-gray-400" : "bg-white text-gray-400"
+              }`}
+            >
               {t("schedule.timetable.subjectsCount", {
                 count: day.slots.reduce(
                   (total, slot) => total + slot.entries.length,
@@ -32,21 +43,29 @@ export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
             </span>
           </div>
 
-          <div className="divide-y divide-gray-100 bg-white">
+          <div
+            className={`divide-y ${
+              isDark ? "divide-white/10 bg-[#202121]" : "divide-gray-100 bg-white"
+            }`}
+          >
             {day.slots.map((slot) => {
               const isClash = slot.entries.length > 1;
               return (
                 <div
                   key={slot.timeslot}
                   className={`flex items-start gap-3 px-4 py-2.5 ${
-                    isClash ? "bg-red-50/60" : ""
+                    isClash ? (isDark ? "bg-red-500/10" : "bg-red-50/60") : ""
                   }`}
                 >
                   <span
                     className={`flex shrink-0 items-center gap-1 rounded-lg border px-2 py-1 text-[10px] font-black ${
                       isClash
-                        ? "border-red-200 bg-red-50 text-red-600"
-                        : "border-gray-200 bg-gray-50 text-gray-500"
+                        ? isDark
+                          ? "border-red-500/25 bg-red-500/10 text-red-400"
+                          : "border-red-200 bg-red-50 text-red-600"
+                        : isDark
+                          ? "border-white/10 bg-white/5 text-gray-400"
+                          : "border-gray-200 bg-gray-50 text-gray-500"
                     }`}
                   >
                     <Clock size={10} />
@@ -58,8 +77,12 @@ export default function TimetableDayCards({ days }: TimetableDayCardsProps) {
                         key={entry._id}
                         className={`rounded-lg px-2.5 py-1 text-[11px] font-bold ${
                           isClash
-                            ? "bg-red-100 text-red-700"
-                            : "bg-[#404293]/8 text-[#404293]"
+                            ? isDark
+                              ? "bg-red-500/15 text-red-400"
+                              : "bg-red-100 text-red-700"
+                            : isDark
+                              ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                              : "bg-[#404293]/8 text-[#404293]"
                         }`}
                       >
                         {entry.subjectName}

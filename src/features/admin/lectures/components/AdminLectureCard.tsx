@@ -18,6 +18,7 @@ import type { LecturePopulated } from "../types";
 
 export function AdminLectureCard({
   lec,
+  isDark,
   onDelete,
   onDownload,
   onView,
@@ -25,6 +26,7 @@ export function AdminLectureCard({
   onRename,
 }: {
   lec: LecturePopulated;
+  isDark: boolean;
   onDelete: () => void;
   onDownload: () => void;
   onView: () => void;
@@ -60,7 +62,11 @@ export function AdminLectureCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
-      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-[#404293]/8 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+      className={`group rounded-2xl border transition-all duration-300 overflow-hidden ${
+        isDark
+          ? "border-white/10 bg-white/5 hover:bg-white/10 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-0.5"
+          : "border-gray-100 bg-white shadow-sm hover:shadow-xl hover:shadow-[#404293]/8 hover:-translate-y-0.5"
+      }`}
     >
       <div
         className={`h-1 w-full ${
@@ -102,7 +108,9 @@ export function AdminLectureCard({
                   if (e.key === "Enter") confirmRename();
                   if (e.key === "Escape") setRenaming(false);
                 }}
-                className="flex-1 text-sm font-bold text-gray-900 border-b-2 border-[#404293] bg-transparent outline-none pb-0.5 min-w-0"
+                className={`flex-1 text-sm font-bold border-b-2 border-[#404293] bg-transparent outline-none pb-0.5 min-w-0 ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
               />
               <button
                 onClick={confirmRename}
@@ -115,39 +123,67 @@ export function AdminLectureCard({
                   setDraft(lec.title);
                   setRenaming(false);
                 }}
-                className="text-[11px] text-gray-400 hover:text-gray-600 flex-shrink-0"
+                className={`text-[11px] flex-shrink-0 ${
+                  isDark
+                    ? "text-gray-500 hover:text-gray-300"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
               >
                 <X size={14} />
               </button>
             </div>
           ) : (
             <h4
-              className="text-sm font-bold text-gray-900 leading-snug mb-2 group-hover:text-[#404293] transition-colors line-clamp-2 cursor-pointer"
+              className={`text-sm font-bold leading-snug mb-2 transition-colors line-clamp-2 cursor-pointer ${
+                isDark
+                  ? "text-white group-hover:text-[#7fb5e4]"
+                  : "text-gray-900 group-hover:text-[#404293]"
+              }`}
               onDoubleClick={() => setRenaming(true)}
             >
               {lec.title}
             </h4>
           )}
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 mb-3">
+          <div
+            className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs mb-3 ${
+              isDark ? "text-gray-400" : "text-gray-400"
+            }`}
+          >
             <span className="flex items-center gap-1 font-medium">
-              <Clock size={11} className="text-gray-300" /> {formattedDate}
+              <Clock
+                size={11}
+                className={isDark ? "text-gray-600" : "text-gray-300"}
+              />{" "}
+              {formattedDate}
             </span>
             <span className="flex items-center gap-1 font-medium">
-              <File size={11} className="text-gray-300" />{" "}
+              <File
+                size={11}
+                className={isDark ? "text-gray-600" : "text-gray-300"}
+              />{" "}
               {isPractical
                 ? t("lectureManagement.types.practical")
                 : t("lectureManagement.types.theoretical")}
             </span>
             {/* ✅ تم إضافة حجم الملف بدلاً من downloads/views */}
             <span className="flex items-center gap-1 font-medium">
-              <Download size={11} className="text-[#2376BB]/60" />
-              <span className="text-[#2376BB] font-bold">
+              <Download
+                size={11}
+                className={isDark ? "text-[#7fb5e4]/60" : "text-[#2376BB]/60"}
+              />
+              <span
+                className={`font-bold ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`}
+              >
                 {(lec.fileSize / 1024 / 1024).toFixed(2)} MB
               </span>
             </span>
           </div>
-          <p className="text-[10px] text-gray-300 italic hidden sm:block">
+          <p
+            className={`text-[10px] italic hidden sm:block ${
+              isDark ? "text-gray-600" : "text-gray-300"
+            }`}
+          >
             {t("lectureManagement.card.renameHint")}
           </p>
         </div>
@@ -157,8 +193,12 @@ export function AdminLectureCard({
             onClick={onToggleStatus}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
               lec.isPublished
-                ? "bg-green-500/10 border-green-500/25 text-green-600 hover:bg-green-500/20"
-                : "bg-amber-500/10 border-amber-500/25 text-amber-600 hover:bg-amber-500/20"
+                ? isDark
+                  ? "bg-green-500/15 border-green-500/25 text-green-400 hover:bg-green-500/25"
+                  : "bg-green-500/10 border-green-500/25 text-green-600 hover:bg-green-500/20"
+                : isDark
+                  ? "bg-amber-500/15 border-amber-500/25 text-amber-400 hover:bg-amber-500/25"
+                  : "bg-amber-500/10 border-amber-500/25 text-amber-600 hover:bg-amber-500/20"
             }`}
           >
             {lec.isPublished ? (
@@ -175,25 +215,41 @@ export function AdminLectureCard({
           <div className="flex flex-wrap items-center gap-1.5">
             <button
               onClick={onView}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                isDark
+                  ? "text-gray-400 hover:text-[#7fb5e4] hover:bg-[#2376BB]/10 hover:border-[#2376BB]/20"
+                  : "text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 hover:border-[#404293]/15"
+              }`}
             >
               <Eye size={12} /> {t("lectureManagement.card.view")}
             </button>
             <button
               onClick={onDownload}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                isDark
+                  ? "text-gray-400 hover:text-[#7fb5e4] hover:bg-[#2376BB]/10 hover:border-[#2376BB]/20"
+                  : "text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 hover:border-[#404293]/15"
+              }`}
             >
               <Download size={12} /> {t("lectureManagement.card.download")}
             </button>
             <button
               onClick={() => setRenaming(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                isDark
+                  ? "text-gray-400 hover:text-[#7fb5e4] hover:bg-[#2376BB]/10 hover:border-[#2376BB]/20"
+                  : "text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 hover:border-[#404293]/15"
+              }`}
             >
               <Edit3 size={12} /> {t("lectureManagement.card.rename")}
             </button>
             <button
               onClick={onDelete}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                isDark
+                  ? "text-gray-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20"
+                  : "text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100"
+              }`}
             >
               <Trash2 size={12} /> {t("lectureManagement.card.delete")}
             </button>

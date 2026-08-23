@@ -20,6 +20,15 @@ import {
   toDateInputValue,
 } from "../utils/schedule";
 import { useScheduleDates } from "../hooks/useScheduleDates";
+import {
+  brandGradient,
+  dividerClass,
+  emptyBoxClass,
+  headingClass,
+  mutedClass,
+  panelClass,
+  softBoxClass,
+} from "../../../../shared/utils/theme";
 
 interface ScheduleConfigSummaryProps {
   config: ScheduleConfig;
@@ -27,6 +36,7 @@ interface ScheduleConfigSummaryProps {
   subjects: Subject[];
   onEdit: () => void;
   onDelete: () => void;
+  isDark: boolean;
 }
 
 /**
@@ -52,6 +62,7 @@ export default function ScheduleConfigSummary({
   subjects,
   onEdit,
   onDelete,
+  isDark,
 }: ScheduleConfigSummaryProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate, weekdayNames } = useScheduleDates();
@@ -78,23 +89,27 @@ export default function ScheduleConfigSummary({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-5 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
+      className={`space-y-5 p-6 ${panelClass(isDark)}`}
     >
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 pb-4">
+      <div className={`flex flex-wrap items-start justify-between gap-4 border-b pb-4 ${dividerClass(isDark)}`}>
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-md shadow-emerald-500/25">
             <CheckCircle2 className="h-5 w-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-black text-gray-900">
+              <h2 className={`text-base font-black ${headingClass(isDark)}`}>
                 {t("schedule.summary.configured")}
               </h2>
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600">
+              <span
+                className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                  isDark ? "bg-emerald-500/15 text-emerald-400" : "bg-emerald-50 text-emerald-600"
+                }`}
+              >
                 {config.academicYear}
               </span>
             </div>
-            <p className="mt-0.5 text-xs font-semibold text-gray-400">
+            <p className={`mt-0.5 text-xs font-semibold ${mutedClass(isDark)}`}>
               {t("schedule.summary.semesterAndUpdated", {
                 semester: semesterLabel,
                 date: formatDate(config.updatedAt),
@@ -106,7 +121,7 @@ export default function ScheduleConfigSummary({
           <button
             type="button"
             onClick={onEdit}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-[#404293]/25 transition-all hover:-translate-y-0.5"
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-xs ${brandGradient} rounded-xl font-bold text-white shadow-md shadow-[#404293]/25 transition-all hover:-translate-y-0.5`}
           >
             <Pencil size={13} /> {t("schedule.summary.edit")}
           </button>
@@ -114,7 +129,11 @@ export default function ScheduleConfigSummary({
             type="button"
             onClick={onDelete}
             aria-label={t("schedule.summary.deleteConfig")}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-400 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+            className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors ${
+              isDark
+                ? "border-white/10 text-gray-400 hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-400"
+                : "border-gray-200 text-gray-400 hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+            }`}
           >
             <Trash2 size={15} />
           </button>
@@ -122,24 +141,24 @@ export default function ScheduleConfigSummary({
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3.5">
-          <CalendarRange className="h-4 w-4 shrink-0 text-[#404293]" />
+        <div className={`flex items-center gap-3 px-4 py-3.5 ${softBoxClass(isDark)}`}>
+          <CalendarRange className={`h-4 w-4 shrink-0 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
           <div>
-            <p className="text-[11px] font-bold text-gray-400">
+            <p className={`text-[11px] font-bold ${mutedClass(isDark)}`}>
               {t("schedule.summary.examPeriod")}
             </p>
-            <p className="text-sm font-black text-gray-900">
+            <p className={`text-sm font-black ${headingClass(isDark)}`}>
               {formatDate(config.startDate)} ← {formatDate(config.endDate)}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3.5">
-          <Clock className="h-4 w-4 shrink-0 text-[#2376BB]" />
+        <div className={`flex items-center gap-3 px-4 py-3.5 ${softBoxClass(isDark)}`}>
+          <Clock className={`h-4 w-4 shrink-0 ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`} />
           <div>
-            <p className="text-[11px] font-bold text-gray-400">
+            <p className={`text-[11px] font-bold ${mutedClass(isDark)}`}>
               {t("schedule.summary.dailySlots")}
             </p>
-            <p className="text-sm font-black text-gray-900">
+            <p className={`text-sm font-black ${headingClass(isDark)}`}>
               {t("schedule.summary.slotsPerDay", {
                 count: config.timeslotsPerDay,
               })}
@@ -152,7 +171,9 @@ export default function ScheduleConfigSummary({
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white px-3 py-2.5 shadow-sm"
+            className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 shadow-sm ${
+              isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-white"
+            }`}
           >
             <div
               className="h-7 w-1.5 shrink-0 rounded-full"
@@ -161,10 +182,10 @@ export default function ScheduleConfigSummary({
               }}
             />
             <div>
-              <p className="text-base font-black leading-none text-gray-900">
+              <p className={`text-base font-black leading-none ${headingClass(isDark)}`}>
                 {stat.value}
               </p>
-              <p className="mt-0.5 text-[10px] font-bold text-gray-400">
+              <p className={`mt-0.5 text-[10px] font-bold ${mutedClass(isDark)}`}>
                 {stat.label}
               </p>
             </div>
@@ -173,7 +194,13 @@ export default function ScheduleConfigSummary({
       </div>
 
       {isOverCapacity && (
-        <p className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-700">
+        <p
+          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold ${
+            isDark
+              ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
+        >
           <AlertCircle size={13} className="shrink-0" />
           {t("schedule.summary.capacityWarning", {
             subjects: subjectsConfig.length,
@@ -183,10 +210,10 @@ export default function ScheduleConfigSummary({
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+        <div className={`p-4 ${softBoxClass(isDark)}`}>
           <div className="mb-2.5 flex items-center gap-2">
-            <CalendarOff className="h-4 w-4 text-[#404293]" />
-            <h3 className="text-xs font-black text-gray-900">
+            <CalendarOff className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
+            <h3 className={`text-xs font-black ${headingClass(isDark)}`}>
               {t("schedule.summary.excludedWeekdays")}
             </h3>
           </div>
@@ -195,23 +222,27 @@ export default function ScheduleConfigSummary({
               {config.excludedDaysOfWeek.map((day) => (
                 <span
                   key={day}
-                  className="rounded-lg border border-red-100 bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-600"
+                  className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold ${
+                    isDark
+                      ? "border-red-500/25 bg-red-500/10 text-red-400"
+                      : "border-red-100 bg-red-50 text-red-600"
+                  }`}
                 >
                   {weekdayNames[day] ?? day}
                 </span>
               ))}
             </div>
           ) : (
-            <p className="text-[11px] font-semibold text-gray-400">
+            <p className={`text-[11px] font-semibold ${mutedClass(isDark)}`}>
               {t("schedule.summary.noExcludedWeekdays")}
             </p>
           )}
         </div>
 
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-4">
+        <div className={`p-4 ${softBoxClass(isDark)}`}>
           <div className="mb-2.5 flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-[#404293]" />
-            <h3 className="text-xs font-black text-gray-900">
+            <CalendarDays className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
+            <h3 className={`text-xs font-black ${headingClass(isDark)}`}>
               {t("schedule.summary.excludedDates")}
             </h3>
           </div>
@@ -220,14 +251,18 @@ export default function ScheduleConfigSummary({
               {excludedDates.map((day) => (
                 <span
                   key={day}
-                  className="rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-bold text-gray-600"
+                  className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold ${
+                    isDark
+                      ? "border-white/10 bg-white/5 text-gray-300"
+                      : "border-gray-200 bg-white text-gray-600"
+                  }`}
                 >
                   {dayOfWeekLabel(day)} · {formatDate(day)}
                 </span>
               ))}
             </div>
           ) : (
-            <p className="text-[11px] font-semibold text-gray-400">
+            <p className={`text-[11px] font-semibold ${mutedClass(isDark)}`}>
               {t("schedule.summary.noExcludedDates")}
             </p>
           )}
@@ -236,33 +271,45 @@ export default function ScheduleConfigSummary({
 
       <div>
         <div className="mb-2.5 flex items-center gap-2">
-          <BookMarked className="h-4 w-4 text-[#2376BB]" />
-          <h3 className="text-xs font-black text-gray-900">
+          <BookMarked className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`} />
+          <h3 className={`text-xs font-black ${headingClass(isDark)}`}>
             {t("schedule.summary.subjectsConfig")}
           </h3>
-          <span className="rounded-full bg-[#2376BB]/10 px-2 py-0.5 text-[10px] font-bold text-[#2376BB]">
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+              isDark ? "bg-[#2376BB]/15 text-[#7fb5e4]" : "bg-[#2376BB]/10 text-[#2376BB]"
+            }`}
+          >
             {subjectsConfig.length}
           </span>
         </div>
 
         {subjectsConfig.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-6 text-center text-xs font-bold text-gray-400">
+          <p className={`py-6 text-center text-xs font-bold ${mutedClass(isDark)} ${emptyBoxClass(isDark)}`}>
             {t("schedule.summary.noSubjectsConfigured")}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-gray-100">
+          <div className={`overflow-hidden rounded-2xl border ${isDark ? "border-white/10" : "border-gray-100"}`}>
             <table className="w-full text-right text-xs">
-              <thead className="bg-gray-50 text-[11px] font-black text-gray-500">
+              <thead
+                className={`text-[11px] font-black ${
+                  isDark ? "bg-white/5 text-gray-400" : "bg-gray-50 text-gray-500"
+                }`}
+              >
                 <tr>
                   <th className="px-4 py-2.5">{t("schedule.summary.colSubject")}</th>
                   <th className="px-4 py-2.5">{t("schedule.summary.colCarried")}</th>
                   <th className="px-4 py-2.5">{t("schedule.summary.colDuration")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody
+                className={`divide-y ${
+                  isDark ? "divide-white/10 bg-white/[0.02]" : "divide-gray-100 bg-white"
+                }`}
+              >
                 {subjectsConfig.map((item, index) => (
                   <tr key={`${getRefId(item.subjectId)}-${index}`}>
-                    <td className="px-4 py-2.5 font-bold text-gray-800">
+                    <td className={`px-4 py-2.5 font-bold ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                       {(() => {
                         const result = subjectName(item, subjects);
                         if ("name" in result) return result.name;
@@ -273,13 +320,13 @@ export default function ScheduleConfigSummary({
                             });
                       })()}
                     </td>
-                    <td className="px-4 py-2.5 font-semibold text-gray-500">
+                    <td className={`px-4 py-2.5 font-semibold ${mutedClass(isDark)}`}>
                       <span className="inline-flex items-center gap-1.5">
-                        <Users size={12} className="text-gray-300" />
+                        <Users size={12} className={isDark ? "text-gray-600" : "text-gray-300"} />
                         {item.carriedStudentsCount}
                       </span>
                     </td>
-                    <td className="px-4 py-2.5 font-semibold text-gray-500">
+                    <td className={`px-4 py-2.5 font-semibold ${mutedClass(isDark)}`}>
                       {t("schedule.summary.minutes", {
                         count: item.examDurationOverride,
                       })}

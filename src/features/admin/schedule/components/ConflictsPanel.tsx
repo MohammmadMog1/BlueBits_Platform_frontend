@@ -4,26 +4,45 @@ import { ArrowLeftRight, Database, Search, X } from "lucide-react";
 import { motion } from "motion/react";
 import type { AdminKey } from "../../../../shared/i18n/types";
 import type { ConflictType, ScheduleConflict } from "../types";
+import {
+  emptyBoxClass,
+  headingClass,
+  mutedClass,
+  panelClass,
+} from "../../../../shared/utils/theme";
 
 const PAGE_SIZE = 60;
 
 const CONFLICT_META: Record<
   ConflictType,
-  { labelKey: AdminKey; badge: string; dot: string }
+  {
+    labelKey: AdminKey;
+    badge: { light: string; dark: string };
+    dot: string;
+  }
 > = {
   HARD: {
     labelKey: "schedule.conflicts.strict",
-    badge: "border-red-200 bg-red-50 text-red-600",
+    badge: {
+      light: "border-red-200 bg-red-50 text-red-600",
+      dark: "border-red-500/25 bg-red-500/10 text-red-400",
+    },
     dot: "#EF4444",
   },
   MEDIUM: {
     labelKey: "schedule.conflicts.medium",
-    badge: "border-amber-200 bg-amber-50 text-amber-700",
+    badge: {
+      light: "border-amber-200 bg-amber-50 text-amber-700",
+      dark: "border-amber-500/25 bg-amber-500/10 text-amber-400",
+    },
     dot: "#F59E0B",
   },
   SOFT: {
     labelKey: "schedule.conflicts.soft",
-    badge: "border-sky-200 bg-sky-50 text-sky-700",
+    badge: {
+      light: "border-sky-200 bg-sky-50 text-sky-700",
+      dark: "border-sky-500/25 bg-sky-500/10 text-sky-400",
+    },
     dot: "#0EA5E9",
   },
 };
@@ -32,9 +51,10 @@ const TYPES: ConflictType[] = ["HARD", "MEDIUM", "SOFT"];
 
 interface ConflictsPanelProps {
   conflicts: ScheduleConflict[];
+  isDark: boolean;
 }
 
-export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
+export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProps) {
   const { t } = useTranslation("admin");
   const [typeFilter, setTypeFilter] = useState<ConflictType | "">("");
   const [search, setSearch] = useState("");
@@ -73,14 +93,18 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
+      className={`space-y-4 p-6 ${panelClass(isDark)}`}
     >
       <div className="flex items-center gap-2">
-        <Database className="h-4 w-4 text-[#2376BB]" />
-        <h3 className="text-sm font-black text-gray-900">
+        <Database className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`} />
+        <h3 className={`text-sm font-black ${headingClass(isDark)}`}>
           {t("schedule.conflicts.title")}
         </h3>
-        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-500">
+        <span
+          className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
+            isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-500"
+          }`}
+        >
           {conflicts.length}
         </span>
       </div>
@@ -97,8 +121,12 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
               onClick={() => applyFilter(isActive ? "" : type)}
               className={`flex items-center gap-2.5 rounded-2xl border px-3.5 py-3 text-right transition-all ${
                 isActive
-                  ? "border-[#404293]/40 bg-[#404293]/5 shadow-sm"
-                  : "border-gray-100 bg-white hover:border-gray-200"
+                  ? isDark
+                    ? "border-[#2376BB]/40 bg-[#2376BB]/10 shadow-sm"
+                    : "border-[#404293]/40 bg-[#404293]/5 shadow-sm"
+                  : isDark
+                    ? "border-white/10 bg-white/5 hover:border-white/20"
+                    : "border-gray-100 bg-white hover:border-gray-200"
               }`}
             >
               <div
@@ -108,10 +136,10 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
                 }}
               />
               <div>
-                <p className="text-base font-black leading-none text-gray-900">
+                <p className={`text-base font-black leading-none ${headingClass(isDark)}`}>
                   {counts[type] ?? 0}
                 </p>
-                <p className="mt-0.5 text-[10px] font-bold text-gray-400">
+                <p className={`mt-0.5 text-[10px] font-bold ${mutedClass(isDark)}`}>
                   {t(meta.labelKey)}
                 </p>
               </div>
@@ -120,8 +148,12 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
         })}
       </div>
 
-      <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5">
-        <Search className="h-4 w-4 shrink-0 text-gray-400" />
+      <div
+        className={`flex items-center gap-2 rounded-xl border px-3.5 py-2.5 ${
+          isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+        }`}
+      >
+        <Search className={`h-4 w-4 shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
         <input
           value={search}
           onChange={(event) => {
@@ -129,17 +161,22 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
             setVisible(PAGE_SIZE);
           }}
           placeholder={t("schedule.conflicts.searchPlaceholder")}
-          className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+          className={`flex-1 bg-transparent text-sm outline-none placeholder-gray-400 ${
+            isDark ? "text-gray-200" : "text-gray-700"
+          }`}
         />
         {search && (
           <button type="button" onClick={() => setSearch("")} aria-label={t("schedule.conflicts.clearSearch")}>
-            <X size={13} className="text-gray-300 hover:text-gray-500" />
+            <X
+              size={13}
+              className={isDark ? "text-gray-600 hover:text-gray-400" : "text-gray-300 hover:text-gray-500"}
+            />
           </button>
         )}
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 py-8 text-center text-xs font-bold text-gray-400">
+        <p className={`py-8 text-center text-xs font-bold ${mutedClass(isDark)} ${emptyBoxClass(isDark)}`}>
           {t("schedule.conflicts.noMatches")}
         </p>
       ) : (
@@ -150,18 +187,22 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
               return (
                 <div
                   key={`${conflict.examA}-${conflict.examB}-${index}`}
-                  className="flex flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/60 px-3.5 py-2.5"
+                  className={`flex flex-wrap items-center gap-2 rounded-xl border px-3.5 py-2.5 ${
+                    isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50/60"
+                  }`}
                 >
                   <span
-                    className={`rounded-lg border px-2 py-0.5 text-[10px] font-black ${meta.badge}`}
+                    className={`rounded-lg border px-2 py-0.5 text-[10px] font-black ${
+                      isDark ? meta.badge.dark : meta.badge.light
+                    }`}
                   >
                     {t(meta.labelKey)}
                   </span>
-                  <span className="text-xs font-bold text-gray-800">
+                  <span className={`text-xs font-bold ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                     {conflict.examAName}
                   </span>
-                  <ArrowLeftRight size={12} className="text-gray-300" />
-                  <span className="text-xs font-bold text-gray-800">
+                  <ArrowLeftRight size={12} className={isDark ? "text-gray-600" : "text-gray-300"} />
+                  <span className={`text-xs font-bold ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                     {conflict.examBName}
                   </span>
                 </div>
@@ -173,7 +214,11 @@ export default function ConflictsPanel({ conflicts }: ConflictsPanelProps) {
             <button
               type="button"
               onClick={() => setVisible((current) => current + PAGE_SIZE)}
-              className="w-full rounded-xl border border-gray-200 py-2.5 text-xs font-bold text-gray-500 transition-colors hover:border-[#404293]/30 hover:text-[#404293]"
+              className={`w-full rounded-xl border py-2.5 text-xs font-bold transition-colors ${
+                isDark
+                  ? "border-white/10 text-gray-400 hover:border-[#2376BB]/40 hover:text-[#2376BB]"
+                  : "border-gray-200 text-gray-500 hover:border-[#404293]/30 hover:text-[#404293]"
+              }`}
             >
               {t("schedule.conflicts.showMore", {
                 count: filtered.length - visible,

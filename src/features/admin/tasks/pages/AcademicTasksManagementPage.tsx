@@ -26,12 +26,22 @@ import {
   useUpdateAcademicTaskMutation,
 } from "../api/academicTasksApi";
 import type { AcademicTask, AcademicTaskFormData } from "../types";
+import { useIsDark } from "../../../../shared/hooks/useIsDark";
+import {
+  cardClass,
+  fieldClass,
+  headingClass,
+  iconButtonClass,
+  mutedClass,
+  skeletonClass,
+} from "../../../../shared/utils/theme";
 
 const toastDuration = 3000;
 
 export default function AcademicTasksManagementPage() {
   const { t } = useTranslation(["admin", "common"]);
   const errorMessage = useErrorMessage();
+  const isDark = useIsDark();
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [filterSubject, setFilterSubject] = useState("");
@@ -145,11 +155,11 @@ export default function AcademicTasksManagementPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#404293] to-[#2376BB] shadow-md shadow-[#404293]/25">
               <ClipboardList className="h-[18px] w-[18px] text-white" />
             </div>
-            <h1 className="text-xl font-black tracking-tight text-gray-900">
+            <h1 className={`text-xl font-black tracking-tight ${headingClass(isDark)}`}>
               {t("tasks.title")}
             </h1>
           </div>
-          <p className="text-sm font-medium text-gray-400">
+          <p className={`text-sm font-medium ${mutedClass(isDark)}`}>
             {t("tasks.subtitle")}
           </p>
         </div>
@@ -159,7 +169,7 @@ export default function AcademicTasksManagementPage() {
             onClick={() => tasksQuery.refetch()}
             title={t("common:actions.refresh")}
             aria-label={t("common:actions.refresh")}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition-all hover:border-[#404293]/30 hover:text-[#404293]"
+            className={iconButtonClass(isDark)}
           >
             <RefreshCcw
               className={`h-4 w-4 ${tasksQuery.isFetching ? "animate-spin" : ""}`}
@@ -179,7 +189,7 @@ export default function AcademicTasksManagementPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3.5 shadow-sm transition-shadow hover:shadow-md"
+            className={`flex items-center gap-3 px-4 py-3.5 transition-shadow hover:shadow-md ${cardClass(isDark)}`}
           >
             <div
               className="h-8 w-1.5 shrink-0 rounded-full"
@@ -188,10 +198,10 @@ export default function AcademicTasksManagementPage() {
               }}
             />
             <div>
-              <p className="text-lg font-black leading-none text-gray-900">
+              <p className={`text-lg font-black leading-none ${headingClass(isDark)}`}>
                 {stat.value}
               </p>
-              <p className="mt-0.5 text-[11px] font-semibold text-gray-400">
+              <p className={`mt-0.5 text-[11px] font-semibold ${mutedClass(isDark)}`}>
                 {stat.label}
               </p>
             </div>
@@ -199,18 +209,24 @@ export default function AcademicTasksManagementPage() {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-        <div className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5">
-          <Search className="h-4 w-4 shrink-0 text-gray-400" />
+      <div className={`flex flex-wrap items-center gap-3 p-4 ${cardClass(isDark)}`}>
+        <div
+          className={`flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border px-3.5 py-2.5 ${
+            isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-gray-50"
+          }`}
+        >
+          <Search className={`h-4 w-4 shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={t("tasks.searchPlaceholder")}
-            className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+            className={`flex-1 bg-transparent text-sm outline-none ${
+              isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-700 placeholder-gray-400"
+            }`}
           />
           {search && (
             <button type="button" onClick={() => setSearch("")} aria-label={t("tasks.clearSearch")}>
-              <X size={13} className="text-gray-300 hover:text-gray-500" />
+              <X size={13} className={isDark ? "text-gray-600 hover:text-gray-400" : "text-gray-300 hover:text-gray-500"} />
             </button>
           )}
         </div>
@@ -221,7 +237,7 @@ export default function AcademicTasksManagementPage() {
               setFilterYear(event.target.value);
               setFilterSubject("");
             }}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className={`appearance-none py-2.5 ps-10 pe-4 ${fieldClass(isDark)}`}
           >
             <option value="">{t("tasks.allYears")}</option>
             {yearOptions.map((option) => (
@@ -230,13 +246,17 @@ export default function AcademicTasksManagementPage() {
               </option>
             ))}
           </select>
-          <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <GraduationCap
+            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+              isDark ? "text-gray-500" : "text-gray-400"
+            }`}
+          />
         </div>
         <div className="relative">
           <select
             value={filterSubject}
             onChange={(event) => setFilterSubject(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 ps-10 pe-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className={`appearance-none py-2.5 ps-10 pe-4 ${fieldClass(isDark)}`}
           >
             <option value="">{t("tasks.allSubjects")}</option>
             {subjectOptions.map((option) => (
@@ -250,7 +270,7 @@ export default function AcademicTasksManagementPage() {
           <select
             value={filterStatus}
             onChange={(event) => setFilterStatus(event.target.value)}
-            className="appearance-none rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-4 text-sm font-semibold text-gray-700 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+            className={`appearance-none py-2.5 ${fieldClass(isDark)}`}
           >
             <option value="">{t("tasks.allStatuses")}</option>
             <option value="open">{t("tasks.statusOpen")}</option>
@@ -265,7 +285,11 @@ export default function AcademicTasksManagementPage() {
               setFilterSubject("");
               setFilterStatus("");
             }}
-            className="flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold text-red-500 transition-colors hover:border-red-100 hover:bg-red-50"
+            className={`flex items-center gap-1.5 rounded-xl border border-transparent px-3.5 py-2.5 text-xs font-bold transition-colors ${
+              isDark
+                ? "text-red-400 hover:border-red-500/25 hover:bg-red-500/10"
+                : "text-red-500 hover:border-red-100 hover:bg-red-50"
+            }`}
           >
             <X size={13} /> {t("tasks.clearFilters")}
           </button>
@@ -276,7 +300,11 @@ export default function AcademicTasksManagementPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3.5 text-sm font-semibold text-amber-700"
+          className={`flex items-center gap-3 rounded-2xl border px-5 py-3.5 text-sm font-semibold ${
+            isDark
+              ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           {errorMessage(tasksQuery.error)}
@@ -288,28 +316,36 @@ export default function AcademicTasksManagementPage() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="animate-pulse rounded-2xl border border-gray-100 bg-white p-5"
+              className={`p-5 ${skeletonClass(isDark)}`}
             >
-              <div className="mb-5 h-1 w-full rounded-full bg-gray-100" />
-              <div className="mb-3 h-4 w-3/4 rounded-full bg-gray-100" />
-              <div className="mb-2 h-3 w-full rounded-full bg-gray-100" />
-              <div className="mb-5 h-3 w-2/3 rounded-full bg-gray-100" />
+              <div className={`mb-5 h-1 w-full rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-3 h-4 w-3/4 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-2 h-3 w-full rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+              <div className={`mb-5 h-3 w-2/3 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
               <div className="flex gap-2">
-                <div className="h-7 flex-1 rounded-full bg-gray-100" />
-                <div className="h-7 flex-1 rounded-full bg-gray-100" />
+                <div className={`h-7 flex-1 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+                <div className={`h-7 flex-1 rounded-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
               </div>
             </div>
           ))}
         </div>
       ) : filteredTasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-gray-100 bg-white py-24 text-center shadow-sm">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
-            <ClipboardList className="h-7 w-7 text-gray-300" />
+        <div
+          className={`flex flex-col items-center justify-center rounded-3xl border py-24 text-center shadow-sm ${
+            isDark ? "border-white/10 bg-white/5" : "border-gray-100 bg-white"
+          }`}
+        >
+          <div
+            className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${
+              isDark ? "bg-white/10" : "bg-gray-100"
+            }`}
+          >
+            <ClipboardList className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
-          <p className="mb-1 font-bold text-gray-400">
+          <p className={`mb-1 font-bold ${isDark ? "text-gray-400" : "text-gray-400"}`}>
             {t(search ? "tasks.emptyNoResults" : "tasks.emptyNone")}
           </p>
-          <p className="mb-4 text-sm text-gray-300">
+          <p className={`mb-4 text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
             {t(search ? "tasks.emptySearchHint" : "tasks.emptyHint")}
           </p>
           {!search && (
@@ -329,6 +365,7 @@ export default function AcademicTasksManagementPage() {
               <AcademicTaskCard
                 key={task._id}
                 task={task}
+                isDark={isDark}
                 onEdit={setEditTask}
                 onDelete={setDeletingTask}
                 onClose={setClosingTask}
@@ -343,6 +380,7 @@ export default function AcademicTasksManagementPage() {
         {(showModal || editTask) && (
           <AcademicTaskFormModal
             isEdit={Boolean(editTask)}
+            isDark={isDark}
             initial={
               editTask
                 ? {
@@ -372,6 +410,7 @@ export default function AcademicTasksManagementPage() {
         {submissionsTask && (
           <TaskSubmissionsModal
             task={submissionsTask}
+            isDark={isDark}
             onClose={() => setSubmissionsTask(null)}
           />
         )}
@@ -392,21 +431,27 @@ export default function AcademicTasksManagementPage() {
               exit={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(event) => event.stopPropagation()}
-              className="w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl"
+              className={`w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl ${
+                isDark ? "border border-white/10 bg-[#1a1b1e]" : "bg-white"
+              }`}
             >
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50">
-                <Trash2 className="h-7 w-7 text-red-500" />
+              <div
+                className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${
+                  isDark ? "bg-red-500/10" : "bg-red-50"
+                }`}
+              >
+                <Trash2 className={`h-7 w-7 ${isDark ? "text-red-400" : "text-red-500"}`} />
               </div>
-              <h3 className="mb-2 text-lg font-black text-gray-900">
+              <h3 className={`mb-2 text-lg font-black ${isDark ? "text-white" : "text-gray-900"}`}>
                 {t("tasks.confirmDelete.title")}
               </h3>
-              <p className="mb-1 text-sm text-gray-500">
+              <p className={`mb-1 text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                 {t("tasks.confirmDelete.body")}
               </p>
-              <p className="mb-6 text-sm font-black text-[#404293]">
+              <p className={`mb-6 text-sm font-black ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}>
                 "{deletingTask.title}"
               </p>
-              <p className="mb-6 text-xs text-gray-400">
+              <p className={`mb-6 text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                 {t("tasks.confirmDelete.irreversible")}
               </p>
               <div className="flex gap-3">
@@ -414,7 +459,11 @@ export default function AcademicTasksManagementPage() {
                   type="button"
                   onClick={() => setDeletingTask(null)}
                   disabled={deleteState.isLoading}
-                  className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                  className={`flex-1 rounded-xl border-2 py-3 text-sm font-bold transition-colors disabled:opacity-50 ${
+                    isDark
+                      ? "border-white/10 text-gray-300 hover:bg-white/5"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   {t("common:actions.cancel")}
                 </button>
@@ -459,21 +508,27 @@ export default function AcademicTasksManagementPage() {
               exit={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
               onClick={(event) => event.stopPropagation()}
-              className="w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl"
+              className={`w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl ${
+                isDark ? "border border-white/10 bg-[#1a1b1e]" : "bg-white"
+              }`}
             >
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50">
-                <Lock className="h-7 w-7 text-amber-500" />
+              <div
+                className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${
+                  isDark ? "bg-amber-500/10" : "bg-amber-50"
+                }`}
+              >
+                <Lock className={`h-7 w-7 ${isDark ? "text-amber-400" : "text-amber-500"}`} />
               </div>
-              <h3 className="mb-2 text-lg font-black text-gray-900">
+              <h3 className={`mb-2 text-lg font-black ${isDark ? "text-white" : "text-gray-900"}`}>
                 {t("tasks.confirmClose.title")}
               </h3>
-              <p className="mb-1 text-sm text-gray-500">
+              <p className={`mb-1 text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                 {t("tasks.confirmClose.body")}
               </p>
-              <p className="mb-6 text-sm font-black text-[#404293]">
+              <p className={`mb-6 text-sm font-black ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`}>
                 "{closingTask.title}"
               </p>
-              <p className="mb-6 text-xs text-gray-400">
+              <p className={`mb-6 text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                 {t("tasks.confirmClose.note")}
               </p>
               <div className="flex gap-3">
@@ -481,7 +536,11 @@ export default function AcademicTasksManagementPage() {
                   type="button"
                   onClick={() => setClosingTask(null)}
                   disabled={closeState.isLoading}
-                  className="flex-1 rounded-xl border-2 border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                  className={`flex-1 rounded-xl border-2 py-3 text-sm font-bold transition-colors disabled:opacity-50 ${
+                    isDark
+                      ? "border-white/10 text-gray-300 hover:bg-white/5"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   {t("common:actions.cancel")}
                 </button>

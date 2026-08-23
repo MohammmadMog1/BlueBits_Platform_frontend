@@ -14,13 +14,22 @@ import { useTranslation } from "react-i18next";
 import { useCreateUserMutation } from "../api/usersApiSlice";
 import type { CreateUserPayload, User, UserRole } from "../types";
 import { USER_ROLES } from "../types";
+import {
+  dividerClass,
+  errorAlertClass,
+  faintClass,
+  fieldClass,
+  headingClass,
+  primaryButtonClass,
+} from "../../../shared/utils/theme";
 
 interface CreateUserModalProps {
   onClose: () => void;
   onCreated: (user: User) => void;
+  isDark: boolean;
 }
 
-export default function CreateUserModal({ onClose, onCreated }: CreateUserModalProps) {
+export default function CreateUserModal({ onClose, onCreated, isDark }: CreateUserModalProps) {
   const { t } = useTranslation(["users", "admin", "common"]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,6 +65,8 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
     }
   };
 
+  const labelClass = `block text-sm font-bold mb-1.5 ${isDark ? "text-gray-200" : "text-gray-700"}`;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -70,41 +81,45 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
         exit={{ scale: 0.94, y: 24 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
+        className={`w-full max-w-md rounded-3xl shadow-2xl overflow-hidden ${
+          isDark ? "bg-[#202121]" : "bg-white"
+        }`}
       >
-        <div className="px-7 pt-7 pb-5 border-b border-gray-100 flex items-center justify-between">
+        <div className={`px-7 pt-7 pb-5 border-b flex items-center justify-between ${dividerClass(isDark)}`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
               <Users className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 text-base">{t("create.title")}</h3>
-              <p className="text-xs text-gray-400 mt-0.5">{t("create.subtitle")}</p>
+              <h3 className={`font-bold text-base ${headingClass(isDark)}`}>{t("create.title")}</h3>
+              <p className={`text-xs mt-0.5 ${faintClass(isDark)}`}>{t("create.subtitle")}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+              isDark ? "bg-white/10 hover:bg-white/15" : "bg-gray-100 hover:bg-gray-200"
+            }`}
           >
-            <X size={15} className="text-gray-500" />
+            <X size={15} className={isDark ? "text-gray-300" : "text-gray-500"} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="px-7 py-6 space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className={labelClass}>
               {t("create.nameLabel")} <span className="text-red-400">*</span>
             </label>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder={t("create.namePlaceholder")}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400 transition-all"
+              className={fieldClass(isDark)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className={labelClass}>
               {t("create.emailLabel")} <span className="text-red-400">*</span>
             </label>
             <input
@@ -112,12 +127,12 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
               onChange={(event) => setEmail(event.target.value)}
               type="email"
               placeholder="example@domain.com"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400 transition-all"
+              className={fieldClass(isDark)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className={labelClass}>
               {t("create.passwordLabel")} <span className="text-red-400">*</span>
             </label>
             <div className="relative">
@@ -126,12 +141,14 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
                 onChange={(event) => setPassword(event.target.value)}
                 type={showPass ? "text" : "password"}
                 placeholder={t("create.passwordPlaceholder")}
-                className="w-full px-4 py-3 pr-11 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400 transition-all"
+                className={`pr-11 ${fieldClass(isDark)}`}
               />
               <button
                 type="button"
                 onClick={() => setShowPass((current) => !current)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${
+                  isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
+                }`}
               >
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -139,14 +156,12 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
-              {t("create.roleLabel")}
-            </label>
+            <label className={labelClass}>{t("create.roleLabel")}</label>
             <div className="relative">
               <select
                 value={role}
                 onChange={(event) => setRole(event.target.value as UserRole)}
-                className="w-full appearance-none ps-4 pe-10 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] cursor-pointer"
+                className={`w-full appearance-none cursor-pointer ${fieldClass(isDark)}`}
               >
                 {USER_ROLES.map((roleOption) => (
                   <option key={roleOption} value={roleOption}>
@@ -154,12 +169,16 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                className={`absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none ${
+                  isDark ? "text-gray-500" : "text-gray-400"
+                }`}
+              />
             </div>
           </div>
 
           {formErr && (
-            <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <div className={errorAlertClass(isDark)}>
               <AlertCircle size={14} className="shrink-0" /> {formErr}
             </div>
           )}
@@ -168,14 +187,18 @@ export default function CreateUserModal({ onClose, onCreated }: CreateUserModalP
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
+              className={`flex-1 py-3 rounded-xl border font-semibold text-sm transition-colors ${
+                isDark
+                  ? "border-white/10 text-gray-300 hover:bg-white/5"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
             >
               {t("common:actions.cancel")}
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 py-3 rounded-xl bg-linear-to-r from-[#404293] to-[#2376BB] text-white font-bold text-sm shadow-lg shadow-[#404293]/25 hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0 transition-all flex items-center justify-center gap-2"
+              className={`flex-1 py-3 ${primaryButtonClass}`}
             >
               {isLoading ? (
                 <>

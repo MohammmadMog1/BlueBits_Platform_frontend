@@ -56,6 +56,11 @@
   },
   "academic": {
     "loadFailed": "تعذّر تحميل المهام الأكاديمية.",
+    "allYears": "كل السنوات",
+    "allSubjects": "كل المواد",
+    "filterByYear": "فلترة حسب السنة",
+    "filterBySubject": "فلترة حسب المادة",
+    "clearFilters": "مسح الفلاتر",
     "emptyNoResults": "لا توجد نتائج",
     "emptyNone": "لا توجد مهام أكاديمية بعد",
     "emptySearchHint": "جرّب مصطلح بحث مختلف",
@@ -67,7 +72,6 @@
     "closesAt": "يغلق {{date}}",
     "opensAtLabel": "يفتح: {{date}}",
     "closesAtLabel": "يغلق: {{date}}",
-    "viewSubmission": "عرض التسليم",
     "submitSolution": "تسليم الحل"
   },
   "submissionStatus": {

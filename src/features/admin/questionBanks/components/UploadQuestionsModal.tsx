@@ -30,6 +30,7 @@ type UploadMode = "json" | "docx";
 interface UploadQuestionsModalProps {
   subjectId: string;
   subjectName: string;
+  isDark: boolean;
   /** يُمرَّر عند رفع أسئلة إضافية لبنك موجود */
   presetLectureId?: string;
   onClose: () => void;
@@ -39,6 +40,7 @@ interface UploadQuestionsModalProps {
 export function UploadQuestionsModal({
   subjectId,
   subjectName,
+  isDark,
   presetLectureId,
   onClose,
   onUploaded,
@@ -163,15 +165,18 @@ export function UploadQuestionsModal({
     }
   };
 
-  const inputClass =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-400";
+  const inputClass = `w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] ${
+    isDark
+      ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-500"
+      : "border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400"
+  }`;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-md"
+      className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
@@ -180,28 +185,32 @@ export function UploadQuestionsModal({
         exit={{ scale: 0.94, y: 24 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl"
+        className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl ${
+          isDark ? "border border-white/10 bg-[#1a1b1e]" : "border border-gray-200 bg-white"
+        }`}
       >
         {/* Header */}
-        <div className="px-7 pt-7 pb-5 border-b border-gray-100">
+        <div className={`px-7 pt-7 pb-5 border-b ${isDark ? "border-white/8" : "border-gray-100"}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] flex items-center justify-center shadow-md shadow-[#404293]/25">
                 <BrainCircuit className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base">
+                <h3 className={`font-bold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
                   {t("banks.upload.title")}
                 </h3>
-                <p className="text-xs text-gray-400 mt-0.5">{subjectName}</p>
+                <p className={`text-xs mt-0.5 ${isDark ? "text-gray-500" : "text-gray-400"}`}>{subjectName}</p>
               </div>
             </div>
             <button
               onClick={onClose}
               aria-label={t("common:actions.close")}
-              className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+                isDark ? "bg-white/10 text-gray-300 hover:bg-white/15" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
             >
-              <X size={15} className="text-gray-500" />
+              <X size={15} />
             </button>
           </div>
         </div>
@@ -213,14 +222,18 @@ export function UploadQuestionsModal({
               animate={{ scale: 1, opacity: 1 }}
               className="flex flex-col items-center py-8 text-center gap-4"
             >
-              <div className="w-16 h-16 rounded-full bg-green-500/12 flex items-center justify-center">
-                <CheckCircle2 className="w-8 h-8 text-green-500" />
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  isDark ? "bg-emerald-500/15" : "bg-green-500/12"
+                }`}
+              >
+                <CheckCircle2 className={`w-8 h-8 ${isDark ? "text-emerald-400" : "text-green-500"}`} />
               </div>
               <div>
-                <p className="font-bold text-gray-900 text-base">
+                <p className={`font-bold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
                   {t("banks.upload.successCount", { count: successCount })}
                 </p>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm mt-1 text-gray-400">
                   {t("banks.upload.successHint")}
                 </p>
               </div>
@@ -235,7 +248,7 @@ export function UploadQuestionsModal({
             <>
               {/* Lecture select */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label className={`block text-sm font-semibold mb-1.5 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                   {t("banks.upload.lectureLabel")}
                 </label>
                 <select
@@ -264,13 +277,13 @@ export function UploadQuestionsModal({
                     </option>
                   ))}
                 </select>
-                <p className="text-[11px] text-gray-400 mt-1.5">
+                <p className={`text-[11px] mt-1.5 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                   {t("banks.upload.lectureHint")}
                 </p>
               </div>
 
               {/* Mode tabs */}
-              <div className="flex gap-2 p-1 rounded-2xl bg-gray-100">
+              <div className={`flex gap-2 p-1 rounded-2xl ${isDark ? "bg-white/5" : "bg-gray-100"}`}>
                 {(
                   [
                     {
@@ -294,8 +307,12 @@ export function UploadQuestionsModal({
                     }}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${
                       mode === value
-                        ? "bg-white text-[#404293] shadow-sm"
-                        : "text-gray-500 hover:text-gray-700"
+                        ? isDark
+                          ? "bg-white/10 text-[#7fb5e4] shadow-sm"
+                          : "bg-white text-[#404293] shadow-sm"
+                        : isDark
+                          ? "text-gray-400 hover:text-gray-200"
+                          : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     <Icon size={15} /> {label}
@@ -318,10 +335,16 @@ export function UploadQuestionsModal({
                 }
                 className={`relative flex flex-col items-center justify-center gap-3 py-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer select-none ${
                   dragOver
-                    ? "border-[#404293] bg-[#404293]/5 scale-[1.01]"
+                    ? isDark
+                      ? "border-[#2376BB] bg-[#2376BB]/10 scale-[1.01]"
+                      : "border-[#404293] bg-[#404293]/5 scale-[1.01]"
                     : (mode === "json" && jsonFileName) || (mode === "docx" && docxFile)
-                      ? "border-green-400 bg-green-50"
-                      : "border-gray-200 bg-gray-50 hover:border-[#404293]/50"
+                      ? isDark
+                        ? "border-emerald-500/40 bg-emerald-500/10"
+                        : "border-green-400 bg-green-50"
+                      : isDark
+                        ? "border-white/15 bg-white/5 hover:border-[#2376BB]/50"
+                        : "border-gray-200 bg-gray-50 hover:border-[#404293]/50"
                 }`}
               >
                 <input
@@ -345,22 +368,26 @@ export function UploadQuestionsModal({
                   }}
                 />
 
-                <div className="w-12 h-12 rounded-2xl bg-[#404293]/8 flex items-center justify-center">
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                    isDark ? "bg-[#2376BB]/15" : "bg-[#404293]/8"
+                  }`}
+                >
                   {mode === "json" ? (
-                    <FileJson className="w-6 h-6 text-[#404293]" />
+                    <FileJson className={`w-6 h-6 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
                   ) : (
-                    <FileText className="w-6 h-6 text-[#404293]" />
+                    <FileText className={`w-6 h-6 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
                   )}
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-gray-700 text-sm">
+                  <p className={`font-semibold text-sm ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                     {mode === "json"
                       ? jsonFileName || t("banks.upload.dropJson")
                       : docxFile?.name || t("banks.upload.dropDocx")}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className={`text-xs mt-0.5 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                     {t("banks.upload.or")}{" "}
-                    <span className="text-[#404293] font-semibold">
+                    <span className={isDark ? "text-[#7fb5e4] font-semibold" : "text-[#404293] font-semibold"}>
                       {t("banks.upload.chooseFile")}
                     </span>
                   </p>
@@ -371,7 +398,9 @@ export function UploadQuestionsModal({
                       event.stopPropagation();
                       setDocxFile(null);
                     }}
-                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-semibold"
+                    className={`flex items-center gap-1 text-xs font-semibold ${
+                      isDark ? "text-red-400 hover:text-red-300" : "text-red-500 hover:text-red-600"
+                    }`}
                   >
                     <X size={12} /> {t("banks.upload.removeFile")}
                   </button>
@@ -382,7 +411,7 @@ export function UploadQuestionsModal({
               {mode === "json" && (
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-sm font-semibold text-gray-700">
+                    <label className={`text-sm font-semibold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
                       {t("banks.upload.pasteLabel")}
                     </label>
                     <button
@@ -407,26 +436,46 @@ export function UploadQuestionsModal({
                     dir="ltr"
                     spellCheck={false}
                     placeholder={jsonTemplate}
-                    className="w-full resize-y rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-xs font-mono text-gray-900 outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] placeholder-gray-300"
+                    className={`w-full resize-y rounded-2xl border px-4 py-3 text-xs font-mono outline-none transition-all focus:ring-2 focus:ring-[#404293]/20 focus:border-[#404293] ${
+                      isDark
+                        ? "border-white/10 bg-white/5 text-gray-100 placeholder-gray-600"
+                        : "border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-300"
+                    }`}
                   />
 
                   {jsonText.trim() && (
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-bold">
-                      <span className="px-2.5 py-1 rounded-full bg-[#404293]/10 text-[#404293]">
+                      <span
+                        className={`px-2.5 py-1 rounded-full ${
+                          isDark ? "bg-[#2376BB]/20 text-[#7fb5e4]" : "bg-[#404293]/10 text-[#404293]"
+                        }`}
+                      >
                         {t("banks.upload.validQuestions", {
                           count: parsed?.questions.length ?? 0,
                         })}
                       </span>
-                      <span className="px-2.5 py-1 rounded-full bg-[#2376BB]/10 text-[#2376BB]">
+                      <span
+                        className={`px-2.5 py-1 rounded-full ${
+                          isDark ? "bg-[#2376BB]/20 text-[#7fb5e4]" : "bg-[#2376BB]/10 text-[#2376BB]"
+                        }`}
+                      >
                         {t("banks.upload.mcqCount", { count: mcqCount })}
                       </span>
-                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600">
+                      <span
+                        className={`px-2.5 py-1 rounded-full ${
+                          isDark ? "bg-emerald-500/15 text-emerald-400" : "bg-emerald-500/10 text-emerald-600"
+                        }`}
+                      >
                         {t("banks.upload.trueFalseCount", {
                           count: trueFalseCount,
                         })}
                       </span>
                       {(parsed?.errors.length ?? 0) > 0 && (
-                        <span className="px-2.5 py-1 rounded-full bg-red-500/10 text-red-600">
+                        <span
+                          className={`px-2.5 py-1 rounded-full ${
+                            isDark ? "bg-red-500/15 text-red-400" : "bg-red-500/10 text-red-600"
+                          }`}
+                        >
                           {t("banks.upload.errorsCount", {
                             count: parsed?.errors.length ?? 0,
                           })}
@@ -436,11 +485,15 @@ export function UploadQuestionsModal({
                   )}
 
                   {jsonText.trim() && (parsed?.errors.length ?? 0) > 0 && (
-                    <ul className="mt-2 space-y-1 max-h-32 overflow-y-auto rounded-xl bg-red-50 border border-red-100 px-4 py-2.5">
+                    <ul
+                      className={`mt-2 space-y-1 max-h-32 overflow-y-auto rounded-xl border px-4 py-2.5 ${
+                        isDark ? "bg-red-500/10 border-red-500/25" : "bg-red-50 border-red-100"
+                      }`}
+                    >
                       {parsed?.errors.map((parseError, index) => (
                         <li
                           key={`${parseError.code}-${index}`}
-                          className="text-xs text-red-600"
+                          className={`text-xs ${isDark ? "text-red-400" : "text-red-600"}`}
                         >
                           •{" "}
                           {t(
@@ -458,16 +511,24 @@ export function UploadQuestionsModal({
 
               {/* Docx format hint */}
               {mode === "docx" && (
-                <div className="flex gap-2.5 rounded-2xl bg-[#2376BB]/6 border border-[#2376BB]/15 px-4 py-3">
+                <div
+                  className={`flex gap-2.5 rounded-2xl border px-4 py-3 ${
+                    isDark ? "bg-[#2376BB]/10 border-[#2376BB]/25" : "bg-[#2376BB]/6 border-[#2376BB]/15"
+                  }`}
+                >
                   <Info size={15} className="text-[#2376BB] flex-shrink-0 mt-0.5" />
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className={`text-xs leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                     {t("banks.upload.docxHint")}
                   </p>
                 </div>
               )}
 
               {(localError || serverError) && (
-                <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
+                <div
+                  className={`flex items-start gap-2 text-sm border rounded-xl px-4 py-2.5 ${
+                    isDark ? "text-red-400 bg-red-500/10 border-red-500/25" : "text-red-600 bg-red-50 border-red-200"
+                  }`}
+                >
                   <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
                   <span>{localError || serverError}</span>
                 </div>
@@ -476,7 +537,11 @@ export function UploadQuestionsModal({
               <div className="flex gap-3 pt-1">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors"
+                  className={`flex-1 py-3 rounded-xl border font-semibold text-sm transition-colors ${
+                    isDark
+                      ? "border-white/10 text-gray-300 hover:bg-white/5"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
                 >
                   {t("common:actions.cancel")}
                 </button>

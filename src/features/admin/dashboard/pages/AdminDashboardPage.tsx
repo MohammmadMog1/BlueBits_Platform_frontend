@@ -12,6 +12,7 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import DashboardHeader from "../../../../shared/components/Dashboard/DashboardHeader";
 import QuickActionsPanel from "../../../../shared/components/Dashboard/QuickActionsPanel";
+import StaggerGrid from "../../../../shared/components/Dashboard/StaggerGrid";
 import StatTile from "../../../../shared/components/StatTile/StatTile";
 import { useIsDark } from "../../../../shared/hooks/useIsDark";
 import { errorAlertClass } from "../../../../shared/utils/theme";
@@ -65,7 +66,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* الأرقام السريعة */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <StaggerGrid className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <StatTile
           icon={Users}
           label={t("stats.users")}
@@ -127,10 +128,10 @@ export default function AdminDashboardPage() {
           isLoading={isLoading}
           to="/admin/academic-tasks"
         />
-      </div>
+      </StaggerGrid>
 
       {/* لوحات تحتاج متابعة */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <StaggerGrid className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <ClosingTasksPanel tasks={tasks} isDark={isDark} isLoading={isLoading} />
         <RoleBreakdownPanel users={users} isDark={isDark} isLoading={isLoading} />
         <SurveyStatusPanel surveys={surveys} isDark={isDark} isLoading={isLoading} />
@@ -141,7 +142,7 @@ export default function AdminDashboardPage() {
           isLoading={isLoading}
         />
         <QuickActionsPanel actions={adminQuickActions} isDark={isDark} />
-      </div>
+      </StaggerGrid>
     </div>
   );
 }

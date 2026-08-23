@@ -6,6 +6,7 @@ import Header from "../../components/Header/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import BottomBar from "../../components/BottomBar/BottomBar";
 import ProfileDrawer from "../../../features/profile/components/ProfileDrawer";
+import { useIsDark } from "../../hooks/useIsDark";
 
 export interface NavItem {
   icon: React.ElementType;
@@ -28,9 +29,10 @@ interface MainLayoutProps {
 
 const MainLayout = ({ navItems, userProfile }: MainLayoutProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const isDark = useIsDark();
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-gray-50">
+    <div className={`flex h-dvh overflow-hidden ${isDark ? "bg-[#161719]" : "bg-gray-50"}`}>
       {/* ✅ تم تمرير userProfile الذي يحتوي الآن على role */}
       <Sidebar
         navItems={navItems}

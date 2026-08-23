@@ -16,6 +16,7 @@ import { useGetYearsQuery } from "../../academic/api/academicApi";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
 import { getLecture } from "../../lectures/api/lecturesService";
 import { useGetLecturesBySubjectQuery } from "../api/academicTasksApi";
+import { dividerClass, errorAlertClass, fieldClass } from "../../../../shared/utils/theme";
 import type { AcademicTaskFormData, LectureType } from "../types";
 
 const LECTURE_TYPES: LectureType[] = ["theoretical", "practical"];
@@ -24,6 +25,7 @@ interface AcademicTaskFormModalProps {
   initial?: AcademicTaskFormData;
   isEdit: boolean;
   isSubmitting: boolean;
+  isDark: boolean;
   error?: string;
   onClose: () => void;
   onSubmit: (data: AcademicTaskFormData) => void;
@@ -33,6 +35,7 @@ export default function AcademicTaskFormModal({
   initial,
   isEdit,
   isSubmitting,
+  isDark,
   error,
   onClose,
   onSubmit,
@@ -104,6 +107,10 @@ export default function AcademicTaskFormModal({
     setLectureId("");
   };
 
+  const selectFieldClass = isDark
+    ? "w-full appearance-none rounded-xl border border-white/10 bg-white/5 py-3 ps-10 pe-4 text-sm font-semibold text-gray-100 outline-none transition-colors focus:border-[#2376BB] focus:ring-2 focus:ring-[#2376BB]/20 disabled:opacity-50"
+    : "w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-semibold text-gray-800 outline-none transition-colors focus:border-[#2376BB] focus:ring-2 focus:ring-[#2376BB]/20 disabled:opacity-50";
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!title.trim()) return setFormError(t("tasks.form.titleRequired"));
@@ -140,19 +147,21 @@ export default function AcademicTaskFormModal({
         exit={{ scale: 0.94, y: 24 }}
         transition={{ type: "spring", stiffness: 320, damping: 30 }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className={`w-full max-w-lg overflow-hidden rounded-3xl shadow-2xl ${
+          isDark ? "border border-white/10 bg-[#1a1b1e]" : "bg-white"
+        }`}
       >
-        <div className="border-b border-gray-100 px-7 pb-5 pt-7">
+        <div className={`border-b px-7 pb-5 pt-7 ${dividerClass(isDark)}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] shadow-md shadow-[#404293]/25">
                 <ClipboardList className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-gray-900">
+                <h3 className={`text-base font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
                   {t(isEdit ? "tasks.form.editTitle" : "tasks.form.createTitle")}
                 </h3>
-                <p className="mt-0.5 text-xs text-gray-400">
+                <p className={`mt-0.5 text-xs ${isDark ? "text-gray-500" : "text-gray-400"}`}>
                   {t(isEdit ? "tasks.form.editSubtitle" : "tasks.form.createSubtitle")}
                 </p>
               </div>
@@ -160,10 +169,12 @@ export default function AcademicTaskFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200"
+              className={`flex h-8 w-8 items-center justify-center rounded-xl transition-colors ${
+                isDark ? "bg-white/10 text-gray-300 hover:bg-white/15" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
               aria-label={t("common:actions.close")}
             >
-              <X size={15} className="text-gray-500" />
+              <X size={15} />
             </button>
           </div>
         </div>
@@ -171,33 +182,33 @@ export default function AcademicTaskFormModal({
           onSubmit={handleSubmit}
           className="max-h-[70vh] space-y-5 overflow-y-auto px-7 py-6"
         >
-          <label className="block text-sm font-bold text-gray-700">
+          <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
             {t("tasks.form.titleLabel")} <span className="text-red-400">*</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder={t("tasks.form.titlePlaceholder")}
-              className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+              className={`mt-1.5 ${fieldClass(isDark)}`}
             />
           </label>
-          <label className="block text-sm font-bold text-gray-700">
+          <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
             {t("tasks.form.descriptionLabel")}
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               placeholder={t("tasks.form.descriptionPlaceholder")}
               rows={3}
-              className="mt-1.5 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all placeholder-gray-400 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+              className={`mt-1.5 resize-none ${fieldClass(isDark)}`}
             />
           </label>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <label className="block text-sm font-bold text-gray-700">
+            <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("tasks.form.yearLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={yearId}
                   onChange={(event) => handleYearChange(event.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className={selectFieldClass}
                 >
                   <option value="">{t("tasks.form.chooseYear")}</option>
                   {yearOptions.map((option) => (
@@ -206,17 +217,21 @@ export default function AcademicTaskFormModal({
                     </option>
                   ))}
                 </select>
-                <GraduationCap className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <GraduationCap
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
               </div>
             </label>
-            <label className="block text-sm font-bold text-gray-700">
+            <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("tasks.form.subjectLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={subjectId}
                   onChange={(event) => handleSubjectChange(event.target.value)}
                   disabled={!yearId}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className={selectFieldClass}
                 >
                   <option value="">{t("tasks.form.chooseSubject")}</option>
                   {subjectOptions.map((option) => (
@@ -225,10 +240,14 @@ export default function AcademicTaskFormModal({
                     </option>
                   ))}
                 </select>
-                <BookMarked className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <BookMarked
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
               </div>
             </label>
-            <label className="block text-sm font-bold text-gray-700">
+            <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("tasks.form.lectureTypeLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
@@ -237,7 +256,7 @@ export default function AcademicTaskFormModal({
                     handleLectureTypeChange(event.target.value as LectureType | "")
                   }
                   disabled={!subjectId}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className={selectFieldClass}
                 >
                   <option value="">{t("tasks.form.chooseType")}</option>
                   {LECTURE_TYPES.map((type) => (
@@ -246,17 +265,21 @@ export default function AcademicTaskFormModal({
                     </option>
                   ))}
                 </select>
-                <Layers className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Layers
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
               </div>
             </label>
-            <label className="block text-sm font-bold text-gray-700 sm:col-span-2">
+            <label className={`block text-sm font-bold sm:col-span-2 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("tasks.form.lectureLabel")} <span className="text-red-400">*</span>
               <div className="relative mt-1.5">
                 <select
                   value={lectureId}
                   onChange={(event) => setLectureId(event.target.value)}
                   disabled={!lectureType}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 ps-10 pe-4 text-sm font-normal text-gray-900 outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 disabled:opacity-50"
+                  className={selectFieldClass}
                 >
                   <option value="">{t("tasks.form.chooseLecture")}</option>
                   {lectureOptions.map((option) => (
@@ -265,49 +288,53 @@ export default function AcademicTaskFormModal({
                     </option>
                   ))}
                 </select>
-                <FileText className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <FileText
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
               </div>
             </label>
           </div>
           <div>
-            <p className="mb-1.5 text-sm font-bold text-gray-700">
+            <p className={`mb-1.5 text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("tasks.form.durationLabel")} <span className="text-red-400">*</span>
             </p>
             <div className="grid grid-cols-3 gap-3">
-              <label className="block text-xs font-semibold text-gray-500">
+              <label className={`block text-xs font-semibold ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                 {t("tasks.form.days")}
                 <input
                   type="number"
                   min={0}
                   value={durationDays}
                   onChange={(event) => setDurationDays(Number(event.target.value))}
-                  className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className={`mt-1.5 ${fieldClass(isDark)}`}
                 />
               </label>
-              <label className="block text-xs font-semibold text-gray-500">
+              <label className={`block text-xs font-semibold ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                 {t("tasks.form.hours")}
                 <input
                   type="number"
                   min={0}
                   value={durationHours}
                   onChange={(event) => setDurationHours(Number(event.target.value))}
-                  className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className={`mt-1.5 ${fieldClass(isDark)}`}
                 />
               </label>
-              <label className="block text-xs font-semibold text-gray-500">
+              <label className={`block text-xs font-semibold ${isDark ? "text-gray-400" : "text-gray-500"}`}>
                 {t("tasks.form.minutes")}
                 <input
                   type="number"
                   min={0}
                   value={durationMinutes}
                   onChange={(event) => setDurationMinutes(Number(event.target.value))}
-                  className="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-normal text-gray-900 outline-none transition-all focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20"
+                  className={`mt-1.5 ${fieldClass(isDark)}`}
                 />
               </label>
             </div>
           </div>
           {(formError || error) && (
-            <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className={errorAlertClass(isDark)}>
               <AlertCircle size={14} className="shrink-0" />
               {formError || error}
             </div>
@@ -316,7 +343,11 @@ export default function AcademicTaskFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
+              className={`flex-1 rounded-xl border py-3 text-sm font-semibold transition-colors ${
+                isDark
+                  ? "border-white/10 text-gray-300 hover:bg-white/5"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
             >
               {t("common:actions.cancel")}
             </button>

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import { Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import { Sparkles, LayoutGrid } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../../../../shared/i18n/useLanguage";
 import { useLatestLectures } from "../hooks/useLatestLectures";
 import { LatestLectureCard } from "./LatestLectureCard";
+import { AllLecturesModal } from "./AllLecturesModal";
 import type { LecturePopulated } from "../types";
 
 interface LatestLecturesSectionProps {
@@ -13,14 +14,13 @@ interface LatestLecturesSectionProps {
 
 export function LatestLecturesSection({ onOpenLecture }: LatestLecturesSectionProps) {
   const { t } = useTranslation("lectures");
-  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [showAll, setShowAll] = useState(false);
+  const [showAllModal, setShowAllModal] = useState(false);
 
-  // Always fetch 10; showAll toggles between showing 5 or all 10
-  const { latestLectures, loading } = useLatestLectures(10);
-  const visibleLectures = showAll ? latestLectures : latestLectures.slice(0, 5);
+  // نجيب كل المحاضرات المنشورة (بلا حد أقصى) حتى تعرضها نافذة "عرض الكل" كاملة
+  const { latestLectures, loading } = useLatestLectures(Number.MAX_SAFE_INTEGER);
+  const visibleLectures = latestLectures.slice(0, 5);
 
   if (loading || latestLectures.length === 0) return null;
 
@@ -35,16 +35,15 @@ export function LatestLecturesSection({ onOpenLecture }: LatestLecturesSectionPr
         </h2>
         {latestLectures.length > 5 && (
           <button
-            onClick={() => setShowAll((prev) => !prev)}
-            className={`text-xs sm:text-sm md:text-base font-medium hover:underline flex items-center gap-1 sm:gap-1.5 ${isDark ? "text-[#33529F]" : "text-[#404293]"}`}
+            onClick={() => setShowAllModal(true)}
+            className={`flex items-center gap-1 sm:gap-1.5 rounded-full px-3 py-1.5 text-xs sm:text-sm font-bold transition-all ${
+              isDark
+                ? "bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white"
+                : "bg-[#404293]/6 text-[#404293] hover:bg-[#404293]/12"
+            }`}
           >
-            {t(showAll ? "latest.showLess" : "latest.viewAll")}
-            {/* السهم اتجاهي: ينقلب في RTL */}
-            {showAll === isRTL ? (
-              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            ) : (
-              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            )}
+            <LayoutGrid className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            {t("latest.viewAll")}
           </button>
         )}
       </div>
@@ -54,6 +53,17 @@ export function LatestLecturesSection({ onOpenLecture }: LatestLecturesSectionPr
           <LatestLectureCard key={lecture._id} lecture={lecture} onClick={onOpenLecture} />
         ))}
       </div>
+
+      <AnimatePresence>
+        {showAllModal && (
+          <AllLecturesModal
+            lectures={latestLectures}
+            isDark={isDark}
+            onClose={() => setShowAllModal(false)}
+            onOpenLecture={onOpenLecture}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

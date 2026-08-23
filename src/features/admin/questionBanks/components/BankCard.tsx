@@ -21,6 +21,7 @@ import {
 
 interface BankCardProps {
   bank: QuestionBank;
+  isDark: boolean;
   disabled?: boolean;
   canPublish?: boolean;
   canDelete?: boolean;
@@ -32,6 +33,7 @@ interface BankCardProps {
 
 export function BankCard({
   bank,
+  isDark,
   disabled,
   canPublish = true,
   canDelete = true,
@@ -51,7 +53,11 @@ export function BankCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
-      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-[#404293]/8 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+      className={`group rounded-2xl border shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden ${
+        isDark
+          ? "bg-white/5 border-white/10 hover:shadow-black/20"
+          : "bg-white border-gray-100 hover:shadow-[#404293]/8"
+      }`}
     >
       <div
         className={`h-1 w-full ${
@@ -73,7 +79,11 @@ export function BankCard({
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <h4
             onClick={onOpen}
-            className="text-sm font-bold text-gray-900 leading-snug mb-2 group-hover:text-[#404293] transition-colors line-clamp-2 cursor-pointer"
+            className={`text-sm font-bold leading-snug mb-2 transition-colors line-clamp-2 cursor-pointer ${
+              isDark
+                ? "text-white group-hover:text-[#7fb5e4]"
+                : "text-gray-900 group-hover:text-[#404293]"
+            }`}
           >
             {getLectureTitle(bank) || bank.title}
           </h4>
@@ -87,14 +97,15 @@ export function BankCard({
               {t("banks.card.questions")}
             </span>
             <span className="flex items-center gap-1 font-medium">
-              <Clock size={11} className="text-gray-300" />
+              <Clock size={11} className={isDark ? "text-gray-600" : "text-gray-300"} />
               {formatDateTimeOrDash(bank.publishedAt ?? bank.createdAt)}
             </span>
             <span className="flex items-center gap-1 font-medium">
-              <User size={11} className="text-gray-300" /> {getCreatorName(bank)}
+              <User size={11} className={isDark ? "text-gray-600" : "text-gray-300"} />{" "}
+              {getCreatorName(bank)}
             </span>
           </div>
-          <p className="text-[11px] text-gray-400 font-semibold">
+          <p className={`text-[11px] font-semibold ${isDark ? "text-gray-500" : "text-gray-400"}`}>
             {getSubjectName(bank)}
           </p>
         </div>
@@ -106,8 +117,12 @@ export function BankCard({
             title={canPublish ? undefined : t("banks.noPublishPermission")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border disabled:opacity-50 disabled:cursor-not-allowed ${
               isPublished
-                ? "bg-green-500/10 border-green-500/25 text-green-600 hover:bg-green-500/20"
-                : "bg-amber-500/10 border-amber-500/25 text-amber-600 hover:bg-amber-500/20"
+                ? isDark
+                  ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25"
+                  : "bg-green-500/10 border-green-500/25 text-green-600 hover:bg-green-500/20"
+                : isDark
+                  ? "bg-amber-500/15 border-amber-500/30 text-amber-400 hover:bg-amber-500/25"
+                  : "bg-amber-500/10 border-amber-500/25 text-amber-600 hover:bg-amber-500/20"
             }`}
           >
             {isPublished ? (
@@ -124,7 +139,11 @@ export function BankCard({
           <div className="flex flex-wrap items-center gap-1.5">
             <button
               onClick={onOpen}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 border border-transparent hover:border-[#404293]/15 transition-all"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                isDark
+                  ? "text-gray-400 hover:text-[#7fb5e4] hover:bg-[#2376BB]/10 hover:border-[#2376BB]/25"
+                  : "text-gray-500 hover:text-[#404293] hover:bg-[#404293]/6 hover:border-[#404293]/15"
+              }`}
             >
               <Eye size={12} /> {t("banks.card.review")}
             </button>
@@ -143,7 +162,9 @@ export function BankCard({
                   </button>
                   <button
                     onClick={() => setConfirmDelete(false)}
-                    className="px-2 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-600"
+                    className={`px-2 py-1.5 rounded-xl text-xs font-semibold ${
+                      isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
+                    }`}
                   >
                     {t("banks.card.cancel")}
                   </button>
@@ -151,7 +172,11 @@ export function BankCard({
               ) : (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-transparent transition-all ${
+                    isDark
+                      ? "text-gray-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20"
+                      : "text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100"
+                  }`}
                 >
                   <Trash2 size={12} /> {t("banks.card.delete")}
                 </button>

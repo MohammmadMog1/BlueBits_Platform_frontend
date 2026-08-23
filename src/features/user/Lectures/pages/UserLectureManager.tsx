@@ -1,23 +1,32 @@
 import type { ReactNode } from "react";
 import { useTheme } from "next-themes";
 import {
-  Calendar,
-  Layers,
   Book,
-  ChevronRight,
-  MonitorPlay,
-  ArrowLeft,
-  GraduationCap,
   BookOpen,
+  Check,
   FlaskConical,
   FolderOpen,
+  GraduationCap,
+  Layers,
   Loader2,
+  MonitorPlay,
   Search,
   X,
+  ArrowLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../../shared/i18n/useLanguage";
+import {
+  brandGradient,
+  brandGradientBr,
+  dividerClass,
+  faintClass,
+  ghostButtonClass,
+  headingClass,
+  mutedClass,
+  panelClass,
+} from "../../../../shared/utils/theme";
 import { useLectures } from "../hooks/useLectures";
 import { LectureCard } from "../components/LectureCard";
 import { LatestLecturesSection } from "../components/LatestLecturesSection";
@@ -26,6 +35,20 @@ import type { LectureType } from "../types";
 import type { LectureStep } from "../hooks/useLectures";
 
 const STEP_ORDER: LectureStep[] = ["year", "semester", "subject", "type", "lectures"];
+
+const STEP_ICONS: Record<LectureStep, React.ElementType> = {
+  year: GraduationCap,
+  semester: Layers,
+  subject: Book,
+  type: FlaskConical,
+  lectures: MonitorPlay,
+};
+
+const pageVariants = {
+  initial: { opacity: 0, x: 20 },
+  in: { opacity: 1, x: 0 },
+  out: { opacity: 0, x: -20 },
+};
 
 export function UserLectureManager() {
   const { t } = useTranslation(["lectures", "common"]);
@@ -69,113 +92,98 @@ export function UserLectureManager() {
     (s) => s._id === selectedSubjectId,
   )?.name;
 
-  const pageVariants = {
-    initial: { opacity: 0, x: 20 },
-    in: { opacity: 1, x: 0 },
-    out: { opacity: 0, x: -20 },
+  const stepLabels: Record<LectureStep, string> = {
+    year: selectedYearName || t("breadcrumb.year"),
+    semester: selectedSemesterName || t("breadcrumb.semester"),
+    subject: selectedSubjectName || t("breadcrumb.subject"),
+    type:
+      step === "lectures"
+        ? t(selectedType === "practical" ? "type.practical" : "type.theoretical")
+        : t("breadcrumb.type"),
+    lectures: t("breadcrumb.lectures"),
   };
 
-  const tileHoverLight =
-    "[@media(hover:hover)]:hover:bg-gradient-to-r [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:-translate-y-1 sm:[@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-[#404293]/30 [@media(hover:hover)]:hover:shadow-xl";
-  const tileHoverDark =
-    "[@media(hover:hover)]:hover:bg-gradient-to-r [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:-translate-y-1 sm:[@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-xl";
-  const tileHoverBrLight =
-    "[@media(hover:hover)]:hover:bg-gradient-to-br [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:-translate-y-1 sm:[@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-[#404293]/30 [@media(hover:hover)]:hover:shadow-xl";
-  const tileHoverBrDark =
-    "[@media(hover:hover)]:hover:bg-gradient-to-br [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:-translate-y-1 sm:[@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-xl";
-  const iconHover =
-    "[@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:scale-110";
+  const stepReachable: Record<LectureStep, boolean> = {
+    year: true,
+    semester: Boolean(selectedYearId),
+    subject: Boolean(selectedSemesterId),
+    type: Boolean(selectedSubjectId),
+    lectures: false,
+  };
 
-  const renderBreadcrumb = () => (
-    <div className="flex flex-wrap items-center gap-1 sm:gap-2 md:gap-3 text-xs sm:text-sm md:text-base font-semibold">
-      <button
-        onClick={() => navTo("year")}
-        className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "year" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
-      >
-        <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-        <span className="hidden sm:inline">
-          {selectedYearName || t("breadcrumb.selectYear")}
-        </span>
-        <span className="sm:hidden">
-          {selectedYearName || t("breadcrumb.year")}
-        </span>
-      </button>
+  const renderStepper = () => (
+    <div className="flex flex-1 items-center gap-1 overflow-x-auto scrollbar-hide sm:gap-1.5">
+      {STEP_ORDER.map((key, index) => {
+        const Icon = STEP_ICONS[key];
+        const status =
+          index < currentStepIndex ? "done" : index === currentStepIndex ? "current" : "upcoming";
+        const clickable = status !== "current" && key !== "lectures" && stepReachable[key];
 
-      {currentStepIndex >= 1 && (
-        <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-          <button
-            onClick={() => navTo("semester")}
-            disabled={!selectedYearId}
-            className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "semester" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : !selectedYearId ? "opacity-50 cursor-not-allowed text-gray-400" : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
-          >
-            <Layers className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            {selectedSemesterName || t("breadcrumb.semester")}
-          </button>
-        </>
-      )}
+        return (
+          <div key={key} className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+            <button
+              type="button"
+              onClick={clickable ? () => navTo(key) : undefined}
+              disabled={!clickable}
+              aria-current={status === "current" ? "step" : undefined}
+              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all duration-300 sm:h-10 sm:w-10 ${
+                status === "done"
+                  ? `border-transparent ${brandGradientBr} text-white shadow-sm ${clickable ? "hover:scale-105" : ""}`
+                  : status === "current"
+                    ? isDark
+                      ? "border-[#2376BB] bg-[#2376BB]/15 text-[#7fb5e4] shadow-[0_0_0_4px_rgba(35,118,187,0.14)]"
+                      : "border-[#2376BB] bg-[#2376BB]/10 text-[#2376BB] shadow-[0_0_0_4px_rgba(35,118,187,0.1)]"
+                    : isDark
+                      ? "cursor-not-allowed border-white/10 bg-white/5 text-gray-600"
+                      : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-300"
+              }`}
+            >
+              {status === "done" ? (
+                <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              ) : (
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              )}
+            </button>
 
-      {currentStepIndex >= 2 && (
-        <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-          <button
-            onClick={() => navTo("subject")}
-            disabled={!selectedSemesterId}
-            className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "subject" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : !selectedSemesterId ? "opacity-50 cursor-not-allowed text-gray-400" : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
-          >
-            <Book className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            <span className="truncate max-w-[100px] sm:max-w-[150px]">
-              {selectedSubjectName || t("breadcrumb.subject")}
+            <span
+              className={`hidden max-w-[90px] truncate text-xs font-bold sm:inline sm:text-sm md:max-w-[140px] ${
+                status === "upcoming"
+                  ? isDark
+                    ? "text-gray-600"
+                    : "text-gray-300"
+                  : status === "current"
+                    ? headingClass(isDark)
+                    : mutedClass(isDark)
+              }`}
+            >
+              {stepLabels[key]}
             </span>
-          </button>
-        </>
-      )}
 
-      {currentStepIndex >= 3 && (
-        <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-          <button
-            onClick={() => navTo("type")}
-            className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl transition-all ${step === "type" ? (isDark ? "bg-[#404293]/30 text-white shadow-sm" : "bg-[#404293]/10 text-[#404293] shadow-sm") : isDark ? "text-gray-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/10" : "text-gray-500 [@media(hover:hover)]:hover:text-[#404293] [@media(hover:hover)]:hover:bg-[#404293]/5"}`}
-          >
-            <FlaskConical className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            {step === "lectures"
-              ? t(
-                  selectedType === "practical"
-                    ? "type.practical"
-                    : "type.theoretical",
-                )
-              : t("breadcrumb.type")}
-          </button>
-        </>
-      )}
-
-      {currentStepIndex >= 4 && (
-        <>
-          <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0 ${isRTL ? "rotate-180" : ""} ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-          <span
-            className={`flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl ${isDark ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-600"}`}
-          >
-            <MonitorPlay className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            {t("breadcrumb.lectures")}
-          </span>
-        </>
-      )}
+            {index < STEP_ORDER.length - 1 && (
+              <span
+                className={`h-0.5 w-4 shrink-0 rounded-full transition-colors duration-300 sm:w-8 md:w-10 ${
+                  index < currentStepIndex ? brandGradient : isDark ? "bg-white/10" : "bg-gray-200"
+                }`}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-10 min-h-full flex flex-col bg-transparent">
-      <div className="mb-4 sm:mb-6 md:mb-8">
+    <div className="flex min-h-full flex-col gap-6 p-3 sm:gap-8 sm:p-4 md:gap-10 md:p-6 lg:p-10">
+      <div>
         <h1
-          className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 md:gap-4 ${isDark ? "text-white" : "text-gray-900"}`}
+          className={`mb-2 flex items-center gap-2.5 text-2xl font-black tracking-tight sm:gap-3 sm:text-3xl md:gap-4 md:text-4xl ${headingClass(isDark)}`}
         >
-          <div className="p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-xl md:rounded-2xl bg-gradient-to-br from-[#404293] to-[#2376BB] text-white shadow-lg">
-            <Book className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl sm:h-12 sm:w-12 md:h-14 md:w-14 ${brandGradientBr} text-white shadow-lg shadow-[#404293]/25`}>
+            <Book className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
           </div>
           {t("title")}
         </h1>
-        <p className={`text-xs sm:text-sm md:text-base ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+        <p className={`text-xs font-medium sm:text-sm md:text-base ${mutedClass(isDark)}`}>
           {t("subtitle")}
         </p>
       </div>
@@ -183,28 +191,24 @@ export function UserLectureManager() {
       <RecentDownloadsSection onOpenLecture={handleView} />
       <LatestLecturesSection onOpenLecture={handleView} />
 
-      <div
-        className={`flex-1 flex flex-col rounded-xl sm:rounded-2xl md:rounded-[2rem] border shadow-xl transition-colors backdrop-blur-xl ${isDark ? "bg-white/5 border-white/10" : "bg-white/90 border-gray-200"}`}
-      >
+      <div className={`flex flex-1 flex-col ${panelClass(isDark)}`}>
         <div
-          className={`p-3 sm:p-4 md:p-6 sm:px-4 md:px-8 rounded-t-xl sm:rounded-t-2xl md:rounded-t-[2rem] border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 md:gap-6 ${isDark ? "border-white/10 bg-white/[0.02]" : "border-gray-200 bg-white/50"}`}
+          className={`flex flex-col gap-3 border-b p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4 md:px-6 md:py-5 ${dividerClass(isDark)}`}
         >
-          {renderBreadcrumb()}
+          {renderStepper()}
 
           {step !== "year" && (
             <button
               onClick={goBack}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 md:px-4 py-1.5 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm md:text-base font-semibold transition-all border shadow-sm ${isDark ? "bg-white/5 border-white/20 [@media(hover:hover)]:hover:bg-white/10 text-gray-200" : "bg-white border-gray-300 [@media(hover:hover)]:hover:bg-gray-50 text-gray-800"}`}
+              className={`shrink-0 self-start sm:self-auto ${ghostButtonClass(isDark)}`}
             >
-              <ArrowLeft
-                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${isRTL ? "rotate-180" : ""}`}
-              />
+              <ArrowLeft className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isRTL ? "rotate-180" : ""}`} />
               {t("common:actions.back")}
             </button>
           )}
         </div>
 
-        <div className="p-3 sm:p-4 md:p-6 lg:p-8 min-h-[300px] sm:min-h-[350px] md:min-h-[400px] relative">
+        <div className="relative min-h-[300px] p-3 sm:min-h-[350px] sm:p-4 md:min-h-[400px] md:p-6 lg:p-8">
           <AnimatePresence mode="wait">
             {/* STEP 1: YEAR */}
             {step === "year" && (
@@ -214,28 +218,21 @@ export function UserLectureManager() {
                 animate="in"
                 exit="out"
                 variants={pageVariants}
-                className="flex flex-col h-full"
+                className="flex h-full flex-col"
               >
-                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
-                  <Calendar className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${isDark ? "text-gray-400" : "text-gray-500"}`} />
-                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    {t("steps.selectYear")}
-                  </h2>
-                </div>
+                <StepHeading icon={GraduationCap} label={t("steps.selectYear")} isDark={isDark} />
                 {yearsLoading ? (
-                  <LoadingPlaceholder label={t("loading.years")} />
+                  <LoadingPlaceholder label={t("loading.years")} isDark={isDark} />
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-5">
                     {years.map((year) => (
-                      <button
+                      <SelectionTile
                         key={year._id}
+                        label={year.name}
+                        icon={GraduationCap}
                         onClick={() => selectYear(year._id)}
-                        className={`py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-sm sm:text-lg md:text-xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-1.5 sm:gap-3 md:gap-4 group backdrop-blur-md
-                          ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
-                      >
-                        <GraduationCap className={`w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12 opacity-40 transition-opacity duration-500 ${iconHover}`} />
-                        {year.name}
-                      </button>
+                        isDark={isDark}
+                      />
                     ))}
                   </div>
                 )}
@@ -245,26 +242,19 @@ export function UserLectureManager() {
             {/* STEP 2: SEMESTER */}
             {step === "semester" && (
               <motion.div key="semester-step" initial="initial" animate="in" exit="out" variants={pageVariants}>
-                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
-                  <Layers className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
-                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    {t("steps.selectSemester")}
-                  </h2>
-                </div>
+                <StepHeading icon={Layers} label={t("steps.selectSemester")} isDark={isDark} />
                 {semestersLoading ? (
-                  <LoadingPlaceholder label={t("loading.semesters")} />
+                  <LoadingPlaceholder label={t("loading.semesters")} isDark={isDark} />
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 max-w-4xl">
+                  <div className="grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5">
                     {semesters.map((semester) => (
-                      <button
+                      <SelectionTile
                         key={semester._id}
+                        label={semester.name}
+                        icon={Layers}
                         onClick={() => selectSemester(semester._id)}
-                        className={`py-5 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-base sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-2 sm:gap-4 md:gap-5 group backdrop-blur-md
-                          ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
-                      >
-                        <Layers className={`w-7 h-7 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
-                        {semester.name}
-                      </button>
+                        isDark={isDark}
+                      />
                     ))}
                   </div>
                 )}
@@ -274,39 +264,25 @@ export function UserLectureManager() {
             {/* STEP 3: SUBJECT */}
             {step === "subject" && (
               <motion.div key="subject-step" initial="initial" animate="in" exit="out" variants={pageVariants}>
-                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
-                  <Book className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
-                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    {t("steps.selectSubject")}
-                  </h2>
-                </div>
+                <StepHeading icon={Book} label={t("steps.selectSubject")} isDark={isDark} />
                 {subjectsLoading ? (
-                  <LoadingPlaceholder label={t("loading.subjects")} />
+                  <LoadingPlaceholder label={t("loading.subjects")} isDark={isDark} />
                 ) : subjects.length === 0 ? (
                   <EmptyState
-                    icon={<FolderOpen className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`} />}
+                    icon={<FolderOpen className={`h-6 w-6 sm:h-7 sm:w-7 ${faintClass(isDark)}`} />}
                     title={t("empty.noSubjectsTitle")}
                     message={t("empty.noSubjectsMessage")}
                     isDark={isDark}
                   />
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-3">
                     {subjects.map((subject) => (
-                      <button
+                      <SubjectTile
                         key={subject._id}
+                        name={subject.name}
                         onClick={() => selectSubject(subject._id)}
-                        className={`p-3 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-semibold transition-all duration-300 shadow-sm flex flex-col items-start gap-2 sm:gap-4 md:gap-5 group text-start backdrop-blur-md
-                          ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverBrDark}` : `bg-white/80 text-gray-800 border border-gray-200 ${tileHoverBrLight}`}`}
-                      >
-                        <div
-                          className={`p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl md:rounded-2xl transition-colors ${isDark ? "bg-white/10 text-white" : `bg-blue-50 text-[#404293] [@media(hover:hover)]:group-hover:bg-white/20 [@media(hover:hover)]:group-hover:text-white`}`}
-                        >
-                          <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8" />
-                        </div>
-                        <span className="text-sm sm:text-lg md:text-xl leading-tight font-bold">
-                          {subject.name}
-                        </span>
-                      </button>
+                        isDark={isDark}
+                      />
                     ))}
                   </div>
                 )}
@@ -316,28 +292,21 @@ export function UserLectureManager() {
             {/* STEP 4: TYPE */}
             {step === "type" && (
               <motion.div key="type-step" initial="initial" animate="in" exit="out" variants={pageVariants}>
-                <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-4 sm:mb-6 md:mb-8">
-                  <FlaskConical className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#404293]" />
-                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                    {t("steps.selectType")}
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 max-w-4xl">
+                <StepHeading icon={FlaskConical} label={t("steps.selectType")} isDark={isDark} />
+                <div className="grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5">
                   {(
                     [
                       { value: "theoretical", icon: BookOpen },
                       { value: "practical", icon: FlaskConical },
                     ] as { value: LectureType; icon: typeof BookOpen }[]
                   ).map(({ value, icon: Icon }) => (
-                    <button
+                    <SelectionTile
                       key={value}
+                      label={t(`type.${value}`)}
+                      icon={Icon}
                       onClick={() => selectType(value)}
-                      className={`py-5 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 rounded-xl sm:rounded-2xl md:rounded-[2rem] font-bold text-base sm:text-xl md:text-2xl transition-all duration-300 shadow-sm flex flex-col items-center justify-center gap-2 sm:gap-4 md:gap-5 group backdrop-blur-md
-                        ${isDark ? `bg-white/5 text-gray-200 border border-white/10 ${tileHoverDark}` : `bg-white/80 text-gray-700 border border-gray-200 ${tileHoverLight}`}`}
-                    >
-                      <Icon className={`w-7 h-7 sm:w-12 sm:h-12 md:w-14 md:h-14 opacity-50 transition-opacity duration-500 ${iconHover}`} />
-                      {t(`type.${value}`)}
-                    </button>
+                      isDark={isDark}
+                    />
                   ))}
                 </div>
               </motion.div>
@@ -346,36 +315,39 @@ export function UserLectureManager() {
             {/* STEP 5: LECTURES */}
             {step === "lectures" && (
               <motion.div key="lectures-step" initial="initial" animate="in" exit="out" variants={pageVariants}>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+                <div className="mb-4 flex flex-col justify-between gap-3 sm:mb-6 sm:flex-row sm:items-center md:mb-8 md:gap-4">
                   <h2
-                    className={`text-base sm:text-lg md:text-2xl font-bold flex items-center gap-2 sm:gap-2.5 md:gap-3 ${isDark ? "text-white" : "text-gray-900"}`}
+                    className={`flex items-center gap-2 text-base font-bold sm:gap-2.5 sm:text-lg md:gap-3 md:text-2xl ${headingClass(isDark)}`}
                   >
-                    <MonitorPlay className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-[#404293]" />
+                    <MonitorPlay className="h-4 w-4 text-[#404293] sm:h-5 sm:w-5 md:h-7 md:w-7" />
                     <span className="truncate">
                       {t("lecturesFor", { subject: selectedSubjectName })}
                     </span>
                   </h2>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span
-                      className={`self-start sm:self-auto px-3 sm:px-3.5 md:px-4 py-1 sm:py-1 md:py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-sm ${isDark ? "bg-[#2376BB]/20 text-blue-300 border border-blue-500/20" : "bg-blue-50 text-[#404293] border border-blue-200"}`}
+                      className={`self-start whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold sm:self-auto sm:px-3.5 sm:py-1 md:px-4 md:py-1.5 md:text-sm ${
+                        isDark ? "bg-[#2376BB]/15 text-[#7fb5e4]" : "bg-[#404293]/8 text-[#404293]"
+                      }`}
                     >
                       {t("totalCount", { count: contextLectures.length })}
                     </span>
                     <div
-                      className={`flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl border shadow-sm ${isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white"}`}
+                      className={`flex items-center gap-2 rounded-xl border px-3 py-1.5 sm:py-2 ${
+                        isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white"
+                      }`}
                     >
-                      <Search className={`w-3.5 h-3.5 flex-shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
+                      <Search className={`h-3.5 w-3.5 shrink-0 ${isDark ? "text-gray-500" : "text-gray-400"}`} />
                       <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder={t("searchPlaceholder")}
-                        className={`bg-transparent text-xs sm:text-sm outline-none w-24 sm:w-36 ${isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-700 placeholder-gray-400"}`}
+                        className={`w-24 bg-transparent text-xs outline-none sm:w-36 sm:text-sm ${
+                          isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-700 placeholder-gray-400"
+                        }`}
                       />
                       {search && (
-                        <button
-                          onClick={() => setSearch("")}
-                          aria-label={t("clearSearch")}
-                        >
+                        <button onClick={() => setSearch("")} aria-label={t("clearSearch")}>
                           <X size={13} className={isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-300 hover:text-gray-500"} />
                         </button>
                       )}
@@ -384,20 +356,16 @@ export function UserLectureManager() {
                 </div>
 
                 {fetchStatus === "loading" ? (
-                  <LoadingPlaceholder label={t("loading.lectures")} />
+                  <LoadingPlaceholder label={t("loading.lectures")} isDark={isDark} />
                 ) : contextLectures.length === 0 ? (
                   <EmptyState
-                    icon={<MonitorPlay className={`w-6 h-6 sm:w-7 sm:h-7 ${isDark ? "text-gray-500" : "text-gray-300"}`} />}
+                    icon={<MonitorPlay className={`h-6 w-6 sm:h-7 sm:w-7 ${faintClass(isDark)}`} />}
                     title={t("empty.noLecturesTitle")}
-                    message={
-                      search
-                        ? t("empty.noMatches")
-                        : t("empty.noLecturesMessage")
-                    }
+                    message={search ? t("empty.noMatches") : t("empty.noLecturesMessage")}
                     isDark={isDark}
                   />
                 ) : (
-                  <div className="flex flex-col gap-3 sm:gap-4">
+                  <div className="flex flex-col gap-2.5 sm:gap-3">
                     {contextLectures.map((lecture) => (
                       <LectureCard
                         key={lecture._id}
@@ -417,10 +385,85 @@ export function UserLectureManager() {
   );
 }
 
-function LoadingPlaceholder({ label }: { label: string }) {
+function StepHeading({
+  icon: Icon,
+  label,
+  isDark,
+}: {
+  icon: React.ElementType;
+  label: string;
+  isDark: boolean;
+}) {
   return (
-    <div className="flex items-center justify-center gap-2 py-16 sm:py-20 text-gray-400">
-      <Loader2 className="w-5 h-5 animate-spin" />
+    <div className="mb-4 flex items-center gap-2 sm:mb-6 sm:gap-2.5 md:mb-8 md:gap-3">
+      <Icon className={`h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 ${mutedClass(isDark)}`} />
+      <h2 className={`text-lg font-bold sm:text-xl md:text-2xl ${headingClass(isDark)}`}>{label}</h2>
+    </div>
+  );
+}
+
+function SelectionTile({
+  label,
+  icon: Icon,
+  onClick,
+  isDark,
+}: {
+  label: string;
+  icon: React.ElementType;
+  onClick: () => void;
+  isDark: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:gap-3.5 sm:rounded-[1.75rem] sm:p-7 sm:hover:-translate-y-1.5 [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:bg-gradient-to-br [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white ${
+        isDark
+          ? "border-white/10 bg-white/5 text-gray-200 [@media(hover:hover)]:hover:shadow-black/30"
+          : "border-gray-200 bg-white/80 text-gray-700 [@media(hover:hover)]:hover:shadow-[#404293]/25"
+      }`}
+    >
+      <Icon className="h-7 w-7 opacity-45 transition-opacity duration-300 group-hover:opacity-100 sm:h-11 sm:w-11" />
+      <span className="text-sm font-bold sm:text-lg">{label}</span>
+    </button>
+  );
+}
+
+function SubjectTile({
+  name,
+  onClick,
+  isDark,
+}: {
+  name: string;
+  onClick: () => void;
+  isDark: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group flex flex-col items-start gap-3 rounded-2xl border p-4 text-start font-semibold shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:gap-4 sm:rounded-[1.75rem] sm:p-6 [@media(hover:hover)]:hover:border-transparent [@media(hover:hover)]:hover:bg-gradient-to-br [@media(hover:hover)]:hover:from-[#404293] [@media(hover:hover)]:hover:to-[#2376BB] [@media(hover:hover)]:hover:text-white ${
+        isDark
+          ? "border-white/10 bg-white/5 text-gray-200 [@media(hover:hover)]:hover:shadow-black/30"
+          : "border-gray-200 bg-white/80 text-gray-800 [@media(hover:hover)]:hover:shadow-[#404293]/25"
+      }`}
+    >
+      <div
+        className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors sm:h-12 sm:w-12 sm:rounded-2xl ${
+          isDark
+            ? "bg-white/10 text-white"
+            : "bg-[#404293]/8 text-[#404293] group-hover:bg-white/20 group-hover:text-white"
+        }`}
+      >
+        <BookOpen className="h-5 w-5 sm:h-6 sm:w-6" />
+      </div>
+      <span className="text-sm font-bold leading-tight sm:text-lg">{name}</span>
+    </button>
+  );
+}
+
+function LoadingPlaceholder({ label, isDark }: { label: string; isDark: boolean }) {
+  return (
+    <div className={`flex items-center justify-center gap-2 py-16 sm:py-20 ${mutedClass(isDark)}`}>
+      <Loader2 className="h-5 w-5 animate-spin" />
       <span className="text-sm font-medium">{label}</span>
     </div>
   );
@@ -438,14 +481,14 @@ function EmptyState({
   isDark: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-14 sm:py-16 text-center">
+    <div className="flex flex-col items-center justify-center py-14 text-center sm:py-16">
       <div
-        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-4 ${isDark ? "bg-white/5" : "bg-gray-100"}`}
+        className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl sm:h-16 sm:w-16 ${isDark ? "bg-white/5" : "bg-gray-100"}`}
       >
         {icon}
       </div>
-      <p className={`font-bold mb-1 ${isDark ? "text-gray-300" : "text-gray-500"}`}>{title}</p>
-      <p className={`text-sm ${isDark ? "text-gray-500" : "text-gray-400"}`}>{message}</p>
+      <p className={`mb-1 font-bold ${mutedClass(isDark)}`}>{title}</p>
+      <p className={`text-sm ${faintClass(isDark)}`}>{message}</p>
     </div>
   );
 }
