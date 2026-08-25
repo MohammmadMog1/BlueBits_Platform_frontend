@@ -17,6 +17,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  lastFetchedAt: null,
 };
 
 const authSlice = createSlice({
@@ -47,6 +48,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.lastFetchedAt = Date.now();
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.isLoading = false;
@@ -80,6 +82,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.lastFetchedAt = Date.now();
       })
       .addCase(getMeThunk.rejected, (state, action) => {
         state.isLoading = false;
