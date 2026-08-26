@@ -9,6 +9,7 @@ import { useContextSwitch } from "../../hooks/useContextSwitch";
 import { useLanguage } from "../../i18n/useLanguage";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { getProfileImageUrl } from "../../utils/user";
+import logoImage from "../../../app/assets/Logo notext.png";
 
 interface SidebarProps {
   navItems: NavItem[];
@@ -75,7 +76,7 @@ export default function Sidebar({
           <Link to={"/"}>
             <img
               className="h-10 w-auto object-contain flex-shrink-0"
-              src="/src/app/assets/Logo notext.png"
+              src={logoImage}
               alt="Logo"
             />
           </Link>
