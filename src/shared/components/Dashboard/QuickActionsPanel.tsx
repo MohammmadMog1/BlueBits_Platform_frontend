@@ -54,6 +54,7 @@ export default function QuickActionsPanel({
     "users",
     "ai",
     "profile",
+    "doctor",
   ]);
 
   return (

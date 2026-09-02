@@ -20,6 +20,7 @@ import type tasks from "./locales/ar/tasks.json";
 import type users from "./locales/ar/users.json";
 import type ai from "./locales/ar/ai.json";
 import type profile from "./locales/ar/profile.json";
+import type doctor from "./locales/ar/doctor.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -39,6 +40,7 @@ declare module "i18next" {
       users: typeof users;
       ai: typeof ai;
       profile: typeof profile;
+      doctor: typeof doctor;
     };
     returnNull: false;
   }

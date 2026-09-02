@@ -1,0 +1,162 @@
+{
+  "dashboard": {
+    "title": "لوحة الدكتور",
+    "subtitle": "نظرة عامة على موادك ومحاضراتك وبنوك أسئلتك",
+    "loadError": "تعذّر تحميل بعض بيانات اللوحة.",
+    "stats": {
+      "subjects": "موادي",
+      "lectures": "محاضراتي",
+      "lecturesHint": "{{published}} منشورة · {{draft}} مسودة",
+      "questionBanks": "بنوك الأسئلة",
+      "questionBanksHint": "{{published}} منشور · {{draft}} مسودة",
+      "totalQuestions": "إجمالي الأسئلة"
+    },
+    "mySubjects": {
+      "title": "موادي",
+      "hint": "عدد المحاضرات وبنوك الأسئلة في كل مادة",
+      "manageLink": "عرض كل موادي",
+      "emptyTitle": "لم تُسنَد إليك مواد بعد",
+      "emptyHint": "تواصل مع الإدارة لإسنادك كمحاضر لمادة",
+      "lecturesShort": "محاضرة",
+      "banksShort": "بنك أسئلة"
+    },
+    "recentLectures": {
+      "title": "أحدث المحاضرات",
+      "hint": "آخر المحاضرات التي رفعتها",
+      "emptyTitle": "لا توجد محاضرات بعد",
+      "emptyHint": "ابدأ برفع أول محاضرة لموادك"
+    }
+  },
+  "quickActions": {
+    "subjects": { "label": "موادي", "hint": "عرض المواد المسندة إليك" },
+    "lectures": { "label": "محاضراتي", "hint": "إدارة محاضرات موادك" },
+    "uploadLecture": { "label": "رفع محاضرة", "hint": "أضف محاضرة جديدة" },
+    "questionBanks": { "label": "بنوك الأسئلة", "hint": "إدارة بنوك أسئلة موادك" }
+  },
+  "subjects": {
+    "title": "موادي",
+    "subtitle": "المواد التي تم إسنادك كمحاضر لها",
+    "searchPlaceholder": "ابحث في موادي...",
+    "emptyNone": "لم تُسنَد إليك أي مواد بعد",
+    "emptyHint": "تواصل مع الإدارة لإسنادك كمحاضر لمادة",
+    "emptyNoResults": "لا توجد نتائج مطابقة",
+    "emptySearchHint": "جرّب كلمة بحث مختلفة",
+    "clearSearch": "مسح البحث",
+    "lecturesCount": "{{count}} محاضرة",
+    "banksCount": "{{count}} بنك أسئلة"
+  },
+  "lectures": {
+    "title": "محاضراتي",
+    "subtitle": "محاضرات المواد التي تدرّسها",
+    "uploadLecture": "رفع محاضرة",
+    "uploadShort": "رفع",
+    "searchPlaceholder": "ابحث في محاضراتي...",
+    "allSubjects": "كل موادي",
+    "allTypes": "كل الأنواع",
+    "clearFilters": "مسح الفلاتر",
+    "types": { "theoretical": "نظري", "practical": "عملي" },
+    "stats": {
+      "totalLectures": "إجمالي المحاضرات",
+      "published": "منشورة",
+      "draft": "مسودة",
+      "subjects": "موادي"
+    },
+    "empty": {
+      "noSubjectsTitle": "لا توجد مواد مسندة إليك",
+      "noSubjectsMessage": "لا يمكنك رفع محاضرات قبل إسنادك لمادة",
+      "noLecturesTitle": "لا توجد محاضرات بعد",
+      "noMatches": "لا توجد نتائج مطابقة لبحثك",
+      "uploadFirst": "ابدأ برفع أول محاضرة"
+    },
+    "card": {
+      "pdfBadge": "PDF",
+      "labBadge": "عملي",
+      "view": "عرض",
+      "download": "تحميل",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "published": "منشورة",
+      "draft": "مسودة"
+    },
+    "form": {
+      "uploadTitle": "رفع محاضرة جديدة",
+      "editTitle": "تعديل المحاضرة",
+      "subjectLabel": "المادة",
+      "chooseSubject": "اختر المادة",
+      "typeLabel": "النوع",
+      "titleLabel": "عنوان المحاضرة",
+      "titlePlaceholder": "مثال: المحاضرة الأولى - مقدمة",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف مختصر للمحاضرة (اختياري)",
+      "publishCheckbox": "نشر المحاضرة مباشرة",
+      "publishedHint": "ستكون مرئية للطلاب فور الرفع",
+      "draftHint": "ستبقى مسودة غير مرئية للطلاب",
+      "dropzone": {
+        "dropTitle": "اسحب الملف هنا",
+        "releaseToUpload": "أفلت للرفع",
+        "or": "أو",
+        "browseFiles": "تصفّح الملفات",
+        "hint": "PDF أو فيديو، حتى 200 ميجابايت"
+      },
+      "removeFile": "إزالة الملف",
+      "replaceFileHint": "اترك الملف فارغاً للاحتفاظ بالملف الحالي",
+      "uploading": "جارِ الرفع...",
+      "submit": "رفع المحاضرة",
+      "saveChanges": "حفظ التعديلات",
+      "cancel": "إلغاء",
+      "successTitle": "تم الرفع بنجاح",
+      "successMessage": "تم رفع \"{{title}}\" بنجاح",
+      "updatedTitle": "تم الحفظ",
+      "done": "تم",
+      "errors": {
+        "missingFields": "يرجى تعبئة العنوان واختيار المادة والملف",
+        "fileTooLarge": "حجم الملف كبير جداً (الحد الأقصى 200 ميجابايت)",
+        "invalidFileType": "نوع الملف غير مدعوم",
+        "uploadFailed": "تعذّر رفع المحاضرة",
+        "updateFailed": "تعذّر حفظ التعديلات"
+      }
+    },
+    "confirmDelete": {
+      "title": "حذف المحاضرة؟",
+      "body": "سيتم حذف هذه المحاضرة نهائياً:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "yes": "نعم، احذف",
+      "working": "جارِ الحذف..."
+    }
+  },
+  "banks": {
+    "title": "بنوك أسئلتي",
+    "subtitle": "بنوك الأسئلة الخاصة بمحاضرات موادك",
+    "uploadTitle": "رفع بنك أسئلة",
+    "uploadShort": "رفع",
+    "searchPlaceholder": "ابحث في بنوك أسئلتي...",
+    "stats": {
+      "totalBanks": "إجمالي البنوك",
+      "published": "منشورة",
+      "drafts": "مسودات",
+      "totalQuestions": "إجمالي الأسئلة"
+    },
+    "empty": {
+      "noBanksTitle": "لا توجد بنوك أسئلة بعد",
+      "noMatches": "لا توجد نتائج مطابقة لبحثك",
+      "uploadFirst": "ابدأ برفع أول بنك أسئلة"
+    },
+    "backToList": "العودة إلى بنوك أسئلتي",
+    "upload": {
+      "subjectLabel": "المادة",
+      "chooseSubject": "اختر المادة",
+      "noSubjects": "لا توجد مواد مسندة إليك",
+      "lectureLabel": "المحاضرة",
+      "chooseLecture": "اختر المحاضرة",
+      "noLectures": "لا توجد محاضرات لهذه المادة",
+      "chooseSubjectFirst": "اختر المادة أولاً"
+    },
+    "confirmDelete": {
+      "title": "حذف بنك الأسئلة؟",
+      "body": "سيتم حذف هذا البنك وكل أسئلته نهائياً:",
+      "irreversible": "لا يمكن التراجع عن هذا الإجراء.",
+      "yes": "نعم، احذف",
+      "working": "جارِ الحذف..."
+    }
+  }
+}

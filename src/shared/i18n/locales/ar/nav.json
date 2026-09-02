@@ -23,6 +23,12 @@
     "scheduleGenerate": "جدول الامتحانات",
     "assistant": "المساعد الذكي"
   },
+  "doctor": {
+    "dashboard": "الرئيسية",
+    "subjects": "موادي",
+    "lectures": "محاضراتي",
+    "questionBanks": "بنوك أسئلتي"
+  },
   "switch": {
     "backToApp": "العودة إلى التطبيق",
     "goToAdmin": "الذهاب إلى لوحة الإدارة"

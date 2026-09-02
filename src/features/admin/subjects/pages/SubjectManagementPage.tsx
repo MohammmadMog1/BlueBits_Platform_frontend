@@ -32,6 +32,7 @@ import {
 } from "../../academic/api/academicApi";
 import SubjectCard from "../components/SubjectCard";
 import SubjectFormModal from "../components/SubjectFormModal";
+import AssignLecturerModal from "../components/AssignLecturerModal";
 import {
   useCreateSubjectMutation,
   useDeleteSubjectMutation,
@@ -53,6 +54,8 @@ export default function SubjectManagementPage() {
   const [showModal, setShowModal] = useState(false);
   const [editSubject, setEditSubject] = useState<Subject | null>(null);
   const [deletingSubject, setDeletingSubject] = useState<Subject | null>(null);
+  const [managingLecturersSubjectId, setManagingLecturersSubjectId] = useState<string | null>(null);
+  const isSuperAdmin = user?.role === "SUPER_ADMIN";
 
   const subjectsQuery = useGetSubjectsQuery({
     yearId: filterYear || undefined,
@@ -353,6 +356,9 @@ export default function SubjectManagementPage() {
                 isDark={isDark}
                 onEdit={setEditSubject}
                 onDelete={setDeletingSubject}
+                onManageLecturers={
+                  isSuperAdmin ? (s) => setManagingLecturersSubjectId(s._id) : undefined
+                }
               />
             ))}
           </div>
@@ -472,6 +478,22 @@ export default function SubjectManagementPage() {
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {(() => {
+          const managingLecturersSubject = subjects.find(
+            (s) => s._id === managingLecturersSubjectId,
+          );
+          return (
+            managingLecturersSubject && (
+              <AssignLecturerModal
+                subject={managingLecturersSubject}
+                isDark={isDark}
+                onClose={() => setManagingLecturersSubjectId(null)}
+              />
+            )
+          );
+        })()}
       </AnimatePresence>
     </div>
   );

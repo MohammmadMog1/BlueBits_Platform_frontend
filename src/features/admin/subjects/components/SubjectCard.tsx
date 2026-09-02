@@ -1,4 +1,4 @@
-import { GraduationCap, Layers, Edit3, Trash2 } from "lucide-react";
+import { GraduationCap, Layers, Edit3, Trash2, Users } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,6 +16,8 @@ interface SubjectCardProps {
   isDark: boolean;
   onEdit: (subject: Subject) => void;
   onDelete: (subject: Subject) => void;
+  /** يُمرَّر فقط لـ SUPER_ADMIN — يُظهر زر إدارة المحاضرين */
+  onManageLecturers?: (subject: Subject) => void;
 }
 
 export default function SubjectCard({
@@ -25,6 +27,7 @@ export default function SubjectCard({
   isDark,
   onEdit,
   onDelete,
+  onManageLecturers,
 }: SubjectCardProps) {
   const { t } = useTranslation("admin");
 
@@ -72,6 +75,29 @@ export default function SubjectCard({
             <Layers className="h-3 w-3" /> {semesterLabel}
           </span>
         </div>
+        {onManageLecturers && (
+          <button
+            type="button"
+            onClick={() => onManageLecturers(subject)}
+            className={`mb-2 flex w-full items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-semibold transition-all ${
+              isDark
+                ? "border-white/10 text-gray-300 hover:border-[#2376BB]/40 hover:bg-[#2376BB]/10 hover:text-[#7fb5e4]"
+                : "border-gray-200 text-gray-600 hover:border-[#404293]/30 hover:bg-[#404293]/6 hover:text-[#404293]"
+            }`}
+          >
+            <Users size={12} />
+            {t("subjects.card.manageLecturers")}
+            {subject.lecturerIds && subject.lecturerIds.length > 0 && (
+              <span
+                className={`ms-1 rounded-full px-1.5 py-0.5 text-[10px] font-black ${
+                  isDark ? "bg-white/10" : "bg-gray-100"
+                }`}
+              >
+                {subject.lecturerIds.length}
+              </span>
+            )}
+          </button>
+        )}
         <div className={`flex items-center gap-2 border-t pt-3 ${dividerClass(isDark)}`}>
           <button
             type="button"

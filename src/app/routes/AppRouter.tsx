@@ -5,12 +5,14 @@ import { authRoutes } from "../../features/auth/auth.routes";
 
 import UserLayout from "../../features/user/components/UserLayout";
 import AdminLayout from "../../features/admin/components/AdminLayout";
+import DoctorLayout from "../../features/doctor/components/DoctorLayout";
 
 import ProtectedRoute from "../../features/auth/components/ProtectedRoute";
 import GlobalError from "../../shared/components/ErrorBoundary/GlobalError";
 
 import { userRoutes } from "../../features/user/user.routes";
 import { adminRoutes } from "../../features/admin/admin.routes";
+import { doctorRoutes } from "../../features/doctor/doctor.routes";
 
 const router = createBrowserRouter([
   ...landingRoutes,
@@ -40,6 +42,18 @@ const router = createBrowserRouter([
     ),
     errorElement: <GlobalError messageKey="errors.adminArea" />,
     children: adminRoutes,
+  },
+
+  // --- مسارات الدكتور ---
+  {
+    path: "/doctor",
+    element: (
+      <ProtectedRoute allowedRoles={["DOCTOR"]}>
+        <DoctorLayout />
+      </ProtectedRoute>
+    ),
+    errorElement: <GlobalError messageKey="errors.doctorArea" />,
+    children: doctorRoutes,
   },
 ]);
 

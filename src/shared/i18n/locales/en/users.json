@@ -47,6 +47,11 @@
     "count_one": "{{count}} user",
     "count_other": "{{count}} users"
   },
+  "pagination": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "rowsPerPage": "Rows per page",
+    "page": "Page {{page}} of {{totalPages}}"
+  },
   "create": {
     "title": "Create a new user",
     "subtitle": "Enter the new account's details",

@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../../../../app/store/store";
 import type {
+  AssignLecturerPayload,
   CreateSubjectPayload,
+  MySubject,
   Subject,
   SubjectResponse,
   SubjectsQuery,
@@ -11,7 +13,7 @@ import type {
 const productionBaseUrl = "https://bluebits24.onrender.com/api/v1.0.0";
 
 // ✅ تم إصلاح unwrapList للتعامل مع جميع أشكال الاستجابات
-const unwrapList = (response: any): Subject[] => {
+const unwrapList = <T = Subject>(response: any): T[] => {
   // 1. مصفوفة مباشرة
   if (Array.isArray(response)) return response;
   
@@ -107,6 +109,51 @@ export const subjectsApi = createApi({
         { type: "Subject", id: "LIST" },
       ],
     }),
+    getMySubjects: builder.query<MySubject[], void>({
+      query: () => "/subjects/my-subjects",
+      transformResponse: (response: unknown) => unwrapList<MySubject>(response),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((subject) => ({
+                type: "Subject" as const,
+                id: subject._id,
+              })),
+              { type: "Subject" as const, id: "MY_LIST" },
+            ]
+          : [{ type: "Subject" as const, id: "MY_LIST" }],
+    }),
+    getSubjectsByLecturer: builder.query<MySubject[], string>({
+      query: (lecturerId) => `/subjects/lecturer/${lecturerId}`,
+      transformResponse: (response: unknown) => unwrapList<MySubject>(response),
+      providesTags: [{ type: "Subject" as const, id: "LIST" }],
+    }),
+    assignLecturer: builder.mutation<Subject, AssignLecturerPayload>({
+      query: ({ subjectId, lecturerId }) => ({
+        url: `/subjects/${subjectId}/assign-lecturer`,
+        method: "PATCH",
+        body: { lecturerId },
+      }),
+      transformResponse: (response: SubjectResponse) => unwrapItem(response),
+      invalidatesTags: (...args) => [
+        { type: "Subject", id: args[2].subjectId },
+        { type: "Subject", id: "LIST" },
+        { type: "Subject", id: "MY_LIST" },
+      ],
+    }),
+    unassignLecturer: builder.mutation<Subject, AssignLecturerPayload>({
+      query: ({ subjectId, lecturerId }) => ({
+        url: `/subjects/${subjectId}/unassign-lecturer`,
+        method: "PATCH",
+        body: { lecturerId },
+      }),
+      transformResponse: (response: SubjectResponse) => unwrapItem(response),
+      invalidatesTags: (...args) => [
+        { type: "Subject", id: args[2].subjectId },
+        { type: "Subject", id: "LIST" },
+        { type: "Subject", id: "MY_LIST" },
+      ],
+    }),
   }),
 });
 
@@ -116,4 +163,8 @@ export const {
   useCreateSubjectMutation,
   useUpdateSubjectMutation,
   useDeleteSubjectMutation,
+  useGetMySubjectsQuery,
+  useGetSubjectsByLecturerQuery,
+  useAssignLecturerMutation,
+  useUnassignLecturerMutation,
 } = subjectsApi;

@@ -456,7 +456,23 @@
     },
     "card": {
       "edit": "تعديل",
-      "delete": "حذف"
+      "delete": "حذف",
+      "manageLecturers": "المحاضرون"
+    },
+    "lecturers": {
+      "title": "محاضرو المادة",
+      "subtitle": "إسناد أو إزالة دكتور كمحاضر لهذه المادة",
+      "assignedTitle": "المحاضرون المسندون",
+      "noneAssigned": "لا يوجد محاضرون مسندون بعد",
+      "chooseDoctor": "اختر دكتوراً...",
+      "noDoctors": "لا يوجد أطباء متاحون للإسناد",
+      "assign": "إسناد",
+      "assigning": "جارٍ الإسناد...",
+      "unassign": "إزالة",
+      "unassigning": "جارٍ الإزالة...",
+      "close": "إغلاق",
+      "assignFailed": "تعذّر إسناد المحاضر",
+      "unassignFailed": "تعذّر إزالة المحاضر"
     },
     "form": {
       "createTitle": "إضافة مادة جديدة",

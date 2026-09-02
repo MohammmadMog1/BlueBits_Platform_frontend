@@ -46,6 +46,11 @@
     "deleteUser": "حذف {{name}}",
     "count": "{{count}} مستخدم"
   },
+  "pagination": {
+    "showing": "عرض {{from}}–{{to}} من {{total}}",
+    "rowsPerPage": "عدد الصفوف",
+    "page": "صفحة {{page}} من {{totalPages}}"
+  },
   "create": {
     "title": "إنشاء مستخدم جديد",
     "subtitle": "أدخل بيانات الحساب الجديد",

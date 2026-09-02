@@ -456,7 +456,23 @@
     },
     "card": {
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "manageLecturers": "Lecturers"
+    },
+    "lecturers": {
+      "title": "Subject lecturers",
+      "subtitle": "Assign or remove a doctor as a lecturer for this subject",
+      "assignedTitle": "Assigned lecturers",
+      "noneAssigned": "No lecturers assigned yet",
+      "chooseDoctor": "Choose a doctor...",
+      "noDoctors": "No doctors available to assign",
+      "assign": "Assign",
+      "assigning": "Assigning...",
+      "unassign": "Remove",
+      "unassigning": "Removing...",
+      "close": "Close",
+      "assignFailed": "Failed to assign lecturer",
+      "unassignFailed": "Failed to remove lecturer"
     },
     "form": {
       "createTitle": "Add a new subject",

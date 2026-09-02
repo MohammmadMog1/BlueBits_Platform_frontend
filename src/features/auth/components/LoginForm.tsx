@@ -47,7 +47,11 @@ export default function LoginForm({ onNavigate }: Props) {
       const { user } = await login({ email, password });
 
       const isAdminRole = user.role === "ADMIN" || user.role === "SUPER_ADMIN";
-      const defaultPath = isAdminRole ? "/admin" : "/user";
+      const defaultPath = isAdminRole
+        ? "/admin"
+        : user.role === "DOCTOR"
+          ? "/doctor"
+          : "/user";
 
       const from = (location.state as { from?: { pathname?: string } } | null)
         ?.from?.pathname;

@@ -23,6 +23,12 @@
     "scheduleGenerate": "Exam Schedule",
     "assistant": "AI Assistant"
   },
+  "doctor": {
+    "dashboard": "Dashboard",
+    "subjects": "My Subjects",
+    "lectures": "My Lectures",
+    "questionBanks": "My Question Banks"
+  },
   "switch": {
     "backToApp": "Back to App",
     "goToAdmin": "Go to Admin Panel"

@@ -1,0 +1,162 @@
+{
+  "dashboard": {
+    "title": "Doctor Dashboard",
+    "subtitle": "An overview of your subjects, lectures, and question banks",
+    "loadError": "Some dashboard data could not be loaded.",
+    "stats": {
+      "subjects": "My Subjects",
+      "lectures": "My Lectures",
+      "lecturesHint": "{{published}} published · {{draft}} draft",
+      "questionBanks": "Question Banks",
+      "questionBanksHint": "{{published}} published · {{draft}} draft",
+      "totalQuestions": "Total Questions"
+    },
+    "mySubjects": {
+      "title": "My Subjects",
+      "hint": "Lectures and question banks per subject",
+      "manageLink": "View all my subjects",
+      "emptyTitle": "No subjects assigned yet",
+      "emptyHint": "Contact the administration to be assigned as a lecturer",
+      "lecturesShort": "lecture",
+      "banksShort": "question bank"
+    },
+    "recentLectures": {
+      "title": "Recent Lectures",
+      "hint": "The latest lectures you uploaded",
+      "emptyTitle": "No lectures yet",
+      "emptyHint": "Start by uploading your first lecture"
+    }
+  },
+  "quickActions": {
+    "subjects": { "label": "My Subjects", "hint": "View subjects assigned to you" },
+    "lectures": { "label": "My Lectures", "hint": "Manage your subjects' lectures" },
+    "uploadLecture": { "label": "Upload Lecture", "hint": "Add a new lecture" },
+    "questionBanks": { "label": "Question Banks", "hint": "Manage your subjects' question banks" }
+  },
+  "subjects": {
+    "title": "My Subjects",
+    "subtitle": "Subjects you are assigned to as a lecturer",
+    "searchPlaceholder": "Search my subjects...",
+    "emptyNone": "No subjects assigned yet",
+    "emptyHint": "Contact the administration to be assigned as a lecturer",
+    "emptyNoResults": "No matching results",
+    "emptySearchHint": "Try a different search term",
+    "clearSearch": "Clear search",
+    "lecturesCount": "{{count}} lectures",
+    "banksCount": "{{count}} question banks"
+  },
+  "lectures": {
+    "title": "My Lectures",
+    "subtitle": "Lectures for the subjects you teach",
+    "uploadLecture": "Upload Lecture",
+    "uploadShort": "Upload",
+    "searchPlaceholder": "Search my lectures...",
+    "allSubjects": "All my subjects",
+    "allTypes": "All types",
+    "clearFilters": "Clear filters",
+    "types": { "theoretical": "Theoretical", "practical": "Practical" },
+    "stats": {
+      "totalLectures": "Total Lectures",
+      "published": "Published",
+      "draft": "Draft",
+      "subjects": "My Subjects"
+    },
+    "empty": {
+      "noSubjectsTitle": "No subjects assigned to you",
+      "noSubjectsMessage": "You can't upload lectures before being assigned a subject",
+      "noLecturesTitle": "No lectures yet",
+      "noMatches": "No results match your search",
+      "uploadFirst": "Start by uploading your first lecture"
+    },
+    "card": {
+      "pdfBadge": "PDF",
+      "labBadge": "Lab",
+      "view": "View",
+      "download": "Download",
+      "edit": "Edit",
+      "delete": "Delete",
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "form": {
+      "uploadTitle": "Upload a New Lecture",
+      "editTitle": "Edit Lecture",
+      "subjectLabel": "Subject",
+      "chooseSubject": "Choose a subject",
+      "typeLabel": "Type",
+      "titleLabel": "Lecture title",
+      "titlePlaceholder": "e.g. Lecture 1 - Introduction",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short description of the lecture (optional)",
+      "publishCheckbox": "Publish immediately",
+      "publishedHint": "Will be visible to students right away",
+      "draftHint": "Will stay as a draft, hidden from students",
+      "dropzone": {
+        "dropTitle": "Drag a file here",
+        "releaseToUpload": "Release to upload",
+        "or": "or",
+        "browseFiles": "browse files",
+        "hint": "PDF or video, up to 200MB"
+      },
+      "removeFile": "Remove file",
+      "replaceFileHint": "Leave the file empty to keep the current one",
+      "uploading": "Uploading...",
+      "submit": "Upload Lecture",
+      "saveChanges": "Save Changes",
+      "cancel": "Cancel",
+      "successTitle": "Uploaded successfully",
+      "successMessage": "\"{{title}}\" was uploaded successfully",
+      "updatedTitle": "Saved",
+      "done": "Done",
+      "errors": {
+        "missingFields": "Please fill in the title, subject, and file",
+        "fileTooLarge": "File is too large (200MB max)",
+        "invalidFileType": "Unsupported file type",
+        "uploadFailed": "Failed to upload the lecture",
+        "updateFailed": "Failed to save changes"
+      }
+    },
+    "confirmDelete": {
+      "title": "Delete this lecture?",
+      "body": "This lecture will be permanently deleted:",
+      "irreversible": "This action cannot be undone.",
+      "yes": "Yes, delete",
+      "working": "Deleting..."
+    }
+  },
+  "banks": {
+    "title": "My Question Banks",
+    "subtitle": "Question banks for your subjects' lectures",
+    "uploadTitle": "Upload Question Bank",
+    "uploadShort": "Upload",
+    "searchPlaceholder": "Search my question banks...",
+    "stats": {
+      "totalBanks": "Total Banks",
+      "published": "Published",
+      "drafts": "Drafts",
+      "totalQuestions": "Total Questions"
+    },
+    "empty": {
+      "noBanksTitle": "No question banks yet",
+      "noMatches": "No results match your search",
+      "uploadFirst": "Start by uploading your first question bank"
+    },
+    "backToList": "Back to my question banks",
+    "upload": {
+      "subjectLabel": "Subject",
+      "chooseSubject": "Choose a subject",
+      "noSubjects": "No subjects assigned to you",
+      "lectureLabel": "Lecture",
+      "chooseLecture": "Choose a lecture",
+      "noLectures": "No lectures for this subject",
+      "chooseSubjectFirst": "Choose a subject first"
+    },
+    "confirmDelete": {
+      "title": "Delete this question bank?",
+      "body": "This bank and all its questions will be permanently deleted:",
+      "irreversible": "This action cannot be undone.",
+      "yes": "Yes, delete",
+      "working": "Deleting..."
+    }
+  }
+}

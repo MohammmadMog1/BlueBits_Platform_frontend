@@ -29,6 +29,7 @@ import { reactionsApi } from "../../features/user/Lectures/interactions/api/reac
 import { questionBanksApi } from "../../features/admin/questionBanks/api/questionBanksApi";
 import { scheduleApi } from "../../features/admin/schedule/api/scheduleApi";
 import { surveysApi } from "../../features/admin/surveys/api/surveysApi";
+import { doctorApi } from "../../features/doctor/api/doctorApi";
 
 // ✅ الحل: إنشاء Storage Engine مخصص يتجاوز مشاكل الـ Bundler في Vite
 const customStorage = {
@@ -64,6 +65,7 @@ const rootReducer = combineReducers({
   [questionBanksApi.reducerPath]: questionBanksApi.reducer,
   [scheduleApi.reducerPath]: scheduleApi.reducer,
   [surveysApi.reducerPath]: surveysApi.reducer,
+  [doctorApi.reducerPath]: doctorApi.reducer,
 });
 
 const persistConfig = {
@@ -98,6 +100,7 @@ export const store = configureStore({
       questionBanksApi.middleware,
       scheduleApi.middleware,
       surveysApi.middleware,
+      doctorApi.middleware,
     ),
 });
 

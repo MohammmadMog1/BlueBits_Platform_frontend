@@ -1,6 +1,7 @@
 // src/features/profile/types/profile.types.ts
 export type UserRole =
   | "USER"
+  | "DOCTOR"
   | "LECTURER"
   | "BLUE"
   | "ADMIN"

@@ -21,6 +21,9 @@ export type DashboardKey = `dashboard:${ParseKeys<"dashboard">}`;
 /** مفتاح داخل namespace لوحة التحكم: "schedule.timetable.viewGrid" */
 export type AdminKey = ParseKeys<"admin">;
 
+/** مفتاح داخل namespace لوحة الدكتور */
+export type DoctorKey = ParseKeys<"doctor">;
+
 /**
  * أي مفتاح ترجمة كامل بصيغة "ns:key".
  *
@@ -50,4 +53,5 @@ export type AllNamespaces = [
   "users",
   "ai",
   "profile",
+  "doctor",
 ];

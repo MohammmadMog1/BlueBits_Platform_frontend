@@ -8,6 +8,23 @@ import type {
   UserRole,
 } from "../types";
 
+/**
+ * يفكّ تغليف استجابة قائمة المستخدمين مهما كان شكلها:
+ * مصفوفة مباشرة، أو { data: [...] }، أو { data: { users: [...] } } (envelope الحالي).
+ * بدون هذا التفكيك يصبح `result` كائناً لا مصفوفة، فيفشل `.map()` داخل
+ * `providesTags` بصمت ويبقى الطلب عالقاً في حالة "تحميل" للأبد رغم نجاحه.
+ */
+const unwrapUsers = (response: unknown): User[] => {
+  if (Array.isArray(response)) return response;
+  const data = (response as { data?: unknown })?.data;
+  if (Array.isArray(data)) return data;
+  const nestedUsers = (data as { users?: unknown })?.users;
+  if (Array.isArray(nestedUsers)) return nestedUsers;
+  const directUsers = (response as { users?: unknown })?.users;
+  if (Array.isArray(directUsers)) return directUsers;
+  return [];
+};
+
 export const usersApi = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({
@@ -27,9 +44,7 @@ export const usersApi = createApi({
   endpoints: (builder) => ({
     getUsers: builder.query<User[], void>({
       query: () => "/users",
-      transformResponse: (response: UsersResponse | User[]) => {
-        return (response as UsersResponse).data ?? (response as User[]);
-      },
+      transformResponse: (response: UsersResponse | User[]) => unwrapUsers(response),
       providesTags: (result) =>
         result
           ? [
@@ -43,9 +58,7 @@ export const usersApi = createApi({
     }),
     getUsersByYear: builder.query<User[], string>({
       query: (yearId) => `/users/year/${yearId}`,
-      transformResponse: (response: UsersResponse | User[]) => {
-        return (response as UsersResponse).data ?? (response as User[]);
-      },
+      transformResponse: (response: UsersResponse | User[]) => unwrapUsers(response),
       providesTags: (result) =>
         result
           ? [

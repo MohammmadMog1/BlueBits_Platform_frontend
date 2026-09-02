@@ -39,7 +39,11 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
     if (!hasRequiredRole) {
       // توجيه ذكي بناءً على دور المستخدم الفعلي
       const isAdminRole = user.role === "ADMIN" || user.role === "SUPER_ADMIN";
-      const fallbackPath = isAdminRole ? "/admin" : "/user";
+      const fallbackPath = isAdminRole
+        ? "/admin"
+        : user.role === "DOCTOR"
+          ? "/doctor"
+          : "/user";
       
       return <Navigate to={fallbackPath} replace />;
     }
