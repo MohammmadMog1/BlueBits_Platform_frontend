@@ -5,7 +5,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useErrorMessage } from "../../../shared/i18n/useErrorMessage";
 import StudentAnnouncementCard from "../components/StudentAnnouncementCard";
-import { useGetAnnouncementsQuery, useGetMyAnnouncementsQuery } from "../../admin/announcements";
+import {
+  AnnouncementDetailModal,
+  useGetAnnouncementsQuery,
+  useGetMyAnnouncementsQuery,
+} from "../../admin/announcements";
 import type { Announcement } from "../../admin/announcements";
 
 type AnnouncementsTab = "all" | "mine";
@@ -27,6 +31,7 @@ export default function StudentAnnouncementsPage() {
 
   const [activeTab, setActiveTab] = useState<AnnouncementsTab>("all");
   const [search, setSearch] = useState("");
+  const [viewingAnnouncement, setViewingAnnouncement] = useState<Announcement | null>(null);
 
   const allQuery = useGetAnnouncementsQuery();
   const myQuery = useGetMyAnnouncementsQuery();
@@ -174,11 +179,22 @@ export default function StudentAnnouncementsPage() {
                 key={announcement._id}
                 announcement={announcement}
                 isDark={isDark}
+                onView={setViewingAnnouncement}
               />
             ))}
           </div>
         </AnimatePresence>
       )}
+
+      <AnimatePresence>
+        {viewingAnnouncement && (
+          <AnnouncementDetailModal
+            announcement={viewingAnnouncement}
+            isDark={isDark}
+            onClose={() => setViewingAnnouncement(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

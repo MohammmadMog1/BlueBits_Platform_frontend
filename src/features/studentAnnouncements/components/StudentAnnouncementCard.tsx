@@ -6,6 +6,7 @@ import { useFormatters } from "../../../shared/i18n/useFormatters";
 interface StudentAnnouncementCardProps {
   announcement: Announcement;
   isDark: boolean;
+  onView: (announcement: Announcement) => void;
 }
 
 const yearName = (yearId: Announcement["yearId"]) =>
@@ -14,6 +15,7 @@ const yearName = (yearId: Announcement["yearId"]) =>
 export default function StudentAnnouncementCard({
   announcement,
   isDark,
+  onView,
 }: StudentAnnouncementCardProps) {
   const { formatDateTime } = useFormatters();
   return (
@@ -22,7 +24,16 @@ export default function StudentAnnouncementCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
-      className={`overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+      role="button"
+      tabIndex={0}
+      onClick={() => onView(announcement)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onView(announcement);
+        }
+      }}
+      className={`cursor-pointer overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
         isDark
           ? "border-white/10 bg-white/5 hover:shadow-[#2376BB]/10"
           : "border-gray-100 bg-white hover:shadow-[#404293]/8"

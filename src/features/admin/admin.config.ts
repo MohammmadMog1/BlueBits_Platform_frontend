@@ -7,6 +7,7 @@ import {
   ClipboardCheck,
   ClipboardList,
   GraduationCap,
+  Layers,
   LayoutDashboard,
   Megaphone,
   Users,
@@ -31,6 +32,11 @@ export const adminNavItems: NavItem[] = [
     icon: CalendarClock,
     labelKey: "nav:admin.scheduleSettings",
     path: "/admin/schedule-settings",
+  },
+  {
+    icon: Layers,
+    labelKey: "nav:admin.scheduleGroups",
+    path: "/admin/schedule-groups",
   },
   {
     icon: CalendarCheck,

@@ -7,13 +7,14 @@ import {
   CheckCircle2,
   Clock,
   Pencil,
+  Pin,
   Trash2,
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import type { Subject } from "../../subjects/types";
-import type { ScheduleConfig, SubjectConfig } from "../types";
+import type { FixedSubjectConfig, ScheduleConfig, SubjectConfig } from "../types";
 import {
   calcCapacity,
   getRefId,
@@ -44,7 +45,7 @@ interface ScheduleConfigSummaryProps {
  * لأن الدالة نقيّة ولا تعرف اللغة الحالية.
  */
 const subjectName = (
-  item: SubjectConfig,
+  item: SubjectConfig | FixedSubjectConfig,
   subjects: Subject[],
 ): { name: string } | { key: "deleted" } | { key: "unknown"; id: string } => {
   if (item.subjectId && typeof item.subjectId === "object") {
@@ -75,6 +76,7 @@ export default function ScheduleConfigSummary({
     config.timeslotsPerDay,
   );
   const subjectsConfig = config.subjectsConfig ?? [];
+  const fixedSubjects = config.fixedSubjects ?? [];
   const isOverCapacity =
     capacity.totalSlots > 0 && subjectsConfig.length > capacity.totalSlots;
 
@@ -330,6 +332,71 @@ export default function ScheduleConfigSummary({
                       {t("schedule.summary.minutes", {
                         count: item.examDurationOverride,
                       })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <div className="mb-2.5 flex items-center gap-2">
+          <Pin className={`h-4 w-4 ${isDark ? "text-[#7fb5e4]" : "text-[#2376BB]"}`} />
+          <h3 className={`text-xs font-black ${headingClass(isDark)}`}>
+            {t("schedule.fixedSubjects.title")}
+          </h3>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+              isDark ? "bg-[#2376BB]/15 text-[#7fb5e4]" : "bg-[#2376BB]/10 text-[#2376BB]"
+            }`}
+          >
+            {fixedSubjects.length}
+          </span>
+        </div>
+
+        {fixedSubjects.length === 0 ? (
+          <p className={`py-6 text-center text-xs font-bold ${mutedClass(isDark)} ${emptyBoxClass(isDark)}`}>
+            {t("schedule.fixedSubjects.noneConfigured")}
+          </p>
+        ) : (
+          <div className={`overflow-hidden rounded-2xl border ${isDark ? "border-white/10" : "border-gray-100"}`}>
+            <table className="w-full text-right text-xs">
+              <thead
+                className={`text-[11px] font-black ${
+                  isDark ? "bg-white/5 text-gray-400" : "bg-gray-50 text-gray-500"
+                }`}
+              >
+                <tr>
+                  <th className="px-4 py-2.5">{t("schedule.summary.colSubject")}</th>
+                  <th className="px-4 py-2.5">{t("schedule.fixedSubjects.colDate")}</th>
+                  <th className="px-4 py-2.5">{t("schedule.fixedSubjects.colTimeslot")}</th>
+                </tr>
+              </thead>
+              <tbody
+                className={`divide-y ${
+                  isDark ? "divide-white/10 bg-white/[0.02]" : "divide-gray-100 bg-white"
+                }`}
+              >
+                {fixedSubjects.map((item, index) => (
+                  <tr key={`${getRefId(item.subjectId)}-${index}`}>
+                    <td className={`px-4 py-2.5 font-bold ${isDark ? "text-gray-200" : "text-gray-800"}`}>
+                      {(() => {
+                        const result = subjectName(item, subjects);
+                        if ("name" in result) return result.name;
+                        return result.key === "deleted"
+                          ? t("schedule.summary.deletedSubject")
+                          : t("schedule.summary.unknownSubject", {
+                              id: result.id.slice(0, 8),
+                            });
+                      })()}
+                    </td>
+                    <td className={`px-4 py-2.5 font-semibold ${mutedClass(isDark)}`}>
+                      {formatDate(item.examDate)}
+                    </td>
+                    <td className={`px-4 py-2.5 font-semibold ${mutedClass(isDark)}`}>
+                      {t("schedule.timetable.slotLabel", { number: item.timeslot })}
                     </td>
                   </tr>
                 ))}

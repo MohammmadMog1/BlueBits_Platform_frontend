@@ -6,7 +6,8 @@
     "survey": "Exam Survey",
     "todo": "To-Do",
     "announcements": "Announcements",
-    "assistant": "AI Assistant"
+    "assistant": "AI Assistant",
+    "questionBanks": "Question Banks"
   },
   "admin": {
     "dashboard": "Admin Dashboard",
@@ -20,6 +21,7 @@
     "surveys": "Schedule Survey",
     "surveyStats": "Survey Stats",
     "scheduleSettings": "Schedule Settings",
+    "scheduleGroups": "Elective Subject Groups",
     "scheduleGenerate": "Exam Schedule",
     "assistant": "AI Assistant"
   },

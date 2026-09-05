@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
-import { Loader2, Save, UserRound, GraduationCap, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, UserRound, GraduationCap, CheckCircle2, AlertCircle } from "lucide-react";
 import { useUpdateMeMutation } from "../api/profileApi";
 import { useGetYearsQuery } from "../../admin/academic/api/academicApi";
 import type { User } from "../types/profile.types";
@@ -21,7 +21,7 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
   const [saved, setSaved] = useState(false);
   const [updateMe, { isLoading }] = useUpdateMeMutation();
 
-  const { data: years, isLoading: yearsLoading } = useGetYearsQuery();
+  const { data: years, isLoading: yearsLoading, isError: yearsFailed } = useGetYearsQuery();
 
   useEffect(() => {
     setName(user.name);
@@ -93,7 +93,7 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
           <select
             value={yearId}
             onChange={(e) => setYearId(e.target.value)}
-            disabled={yearsLoading}
+            disabled={yearsLoading || yearsFailed}
             className={`w-full px-4 py-2.5 rounded-xl border text-[13px] outline-none transition-all focus:border-[#404293]/40 focus:ring-2 focus:ring-[#404293]/10 disabled:opacity-60 ${
               isDark
                 ? "border-white/10 bg-white/5 text-gray-100 focus:bg-white/10"
@@ -117,6 +117,15 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
               </>
             )}
           </select>
+          {yearsFailed && (
+            <p
+              className={`mt-1.5 flex items-center gap-1.5 text-[12px] font-semibold ${
+                isDark ? "text-red-400" : "text-red-600"
+              }`}
+            >
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {t("editForm.yearsLoadFailed")}
+            </p>
+          )}
         </div>
       </div>
 

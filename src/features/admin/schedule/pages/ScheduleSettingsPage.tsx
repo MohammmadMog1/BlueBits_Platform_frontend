@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ScheduleConfigForm from "../components/ScheduleConfigForm";
 import ScheduleConfigSummary from "../components/ScheduleConfigSummary";
@@ -25,6 +26,7 @@ import { useIsDark } from "../../../../shared/hooks/useIsDark";
 import {
   brandGradient,
   cardClass,
+  ghostButtonClass,
   headingClass,
   iconButtonClass,
   mutedClass,
@@ -33,7 +35,7 @@ import {
 } from "../../../../shared/utils/theme";
 
 export default function ScheduleSettingsPage() {
-  const { t } = useTranslation(["admin", "common"]);
+  const { t } = useTranslation(["admin", "common", "nav"]);
   const isDark = useIsDark();
   const {
     semesters,
@@ -85,17 +87,25 @@ export default function ScheduleSettingsPage() {
             {t("schedule.settings.subtitle")}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={refetch}
-          disabled={!selectedSemesterId}
-          title={t("common:actions.update")}
-          className={`disabled:opacity-40 ${iconButtonClass(isDark)}`}
-        >
-          <RefreshCcw
-            className={`h-4 w-4 ${configFetching ? "animate-spin" : ""}`}
-          />
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/admin/schedule-groups"
+            className={`flex items-center gap-1.5 ${ghostButtonClass(isDark)}`}
+          >
+            <Layers size={13} /> {t("nav:admin.scheduleGroups")}
+          </Link>
+          <button
+            type="button"
+            onClick={refetch}
+            disabled={!selectedSemesterId}
+            title={t("common:actions.update")}
+            className={`disabled:opacity-40 ${iconButtonClass(isDark)}`}
+          >
+            <RefreshCcw
+              className={`h-4 w-4 ${configFetching ? "animate-spin" : ""}`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* ── اختيار الفصل ─────────────────────── */}

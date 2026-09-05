@@ -18,6 +18,7 @@
     "namePlaceholder": "Your name",
     "yearLabel": "Academic Year",
     "selectYear": "Select year",
+    "yearsLoadFailed": "Couldn't load the years list, try again later",
     "saveChanges": "Save Changes",
     "savedSuccess": "Saved successfully"
   },

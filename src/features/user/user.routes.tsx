@@ -28,6 +28,7 @@ import TasksHubPage from "./pages/TasksHubPage";
 import { UserLectureManager } from "./Lectures";
 import { McqPracticePage } from "./mcq";
 import { SurveyPage } from "./survey";
+import { UserQuestionBanksPage } from "./questionBanks";
 // import UserDashboardPage from "./pages/UserDashboardPage"; // مثال
 
 export const userRoutes: RouteObject[] = [
@@ -62,6 +63,10 @@ export const userRoutes: RouteObject[] = [
   {
     path: "survey", // هذا يعني /user/survey — استبيان برنامج الفحص
     element: <SurveyPage />,
+  },
+  {
+    path: "question-banks", // هذا يعني /user/question-banks — لمن يملك صلاحيات بنوك الأسئلة فقط
+    element: <UserQuestionBanksPage />,
   },
   // أضف باقي صفحات المستخدم هنا
 ];

@@ -29,7 +29,7 @@ import { LectureManagementPage } from "./lectures";
 import { QuestionBanksManagementPage } from "./questionBanks";
 import { AcademicTasksManagementPage } from "./tasks";
 import { AnnouncementsManagementPage } from "./announcements";
-import { ScheduleGeneratorPage, ScheduleSettingsPage } from "./schedule";
+import { ScheduleGeneratorPage, ScheduleSettingsPage, SubjectGroupsManagementPage } from "./schedule";
 import { SurveyFormsManagementPage, SurveyStatsPage } from "./surveys";
 import { AiChatPage } from "../ai";
 
@@ -82,6 +82,10 @@ export const adminRoutes: RouteObject[] = [
   {
     path: "schedule-settings", // هذا يعني /admin/schedule-settings
     element: <ScheduleSettingsPage />,
+  },
+  {
+    path: "schedule-groups", // هذا يعني /admin/schedule-groups
+    element: <SubjectGroupsManagementPage />,
   },
   {
     path: "schedule-generate", // هذا يعني /admin/schedule-generate

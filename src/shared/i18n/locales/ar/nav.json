@@ -6,7 +6,8 @@
     "survey": "استبيان الامتحانات",
     "todo": "المهام",
     "announcements": "الإعلانات",
-    "assistant": "المساعد الذكي"
+    "assistant": "المساعد الذكي",
+    "questionBanks": "بنك الأسئلة"
   },
   "admin": {
     "dashboard": "لوحة الإدارة",
@@ -20,6 +21,7 @@
     "surveys": "استبيان الجدول",
     "surveyStats": "إحصاءات الاستبيان",
     "scheduleSettings": "إعدادات الجدول",
+    "scheduleGroups": "غروبات المواد الاختيارية",
     "scheduleGenerate": "جدول الامتحانات",
     "assistant": "المساعد الذكي"
   },

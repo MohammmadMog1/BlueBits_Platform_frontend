@@ -1,5 +1,6 @@
 export { default as ScheduleSettingsPage } from "./pages/ScheduleSettingsPage";
 export { default as ScheduleGeneratorPage } from "./pages/ScheduleGeneratorPage";
+export { default as SubjectGroupsManagementPage } from "./pages/SubjectGroupsManagementPage";
 export { scheduleApi } from "./api/scheduleApi";
 export * from "./api/scheduleApi";
 export { subjectGroupsApi } from "./api/subjectGroupsApi";
@@ -8,3 +9,4 @@ export * from "./types";
 export * from "./utils/schedule";
 export { useScheduleConfigManager } from "./hooks/useScheduleConfigManager";
 export { useScheduleGenerator } from "./hooks/useScheduleGenerator";
+export { useSubjectGroupsManager } from "./hooks/useSubjectGroupsManager";

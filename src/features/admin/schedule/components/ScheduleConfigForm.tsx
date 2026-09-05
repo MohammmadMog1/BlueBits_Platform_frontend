@@ -16,6 +16,7 @@ import {
 import { motion } from "motion/react";
 import type { Subject } from "../../subjects/types";
 import type {
+  FixedSubjectRow,
   ScheduleConfig,
   ScheduleConfigFormValues,
   SubjectConfigRow,
@@ -24,6 +25,7 @@ import type {
 import {
   DAYS_OF_WEEK,
   calcCapacity,
+  createFixedSubjectRow,
   createSubjectRow,
   defaultAcademicYear,
   getRefId,
@@ -32,6 +34,7 @@ import {
 } from "../utils/schedule";
 import { useScheduleDates } from "../hooks/useScheduleDates";
 import SubjectsConfigEditor from "./SubjectsConfigEditor";
+import FixedSubjectsEditor from "./FixedSubjectsEditor";
 import {
   brandGradient,
   faintClass,
@@ -66,6 +69,15 @@ const buildRows = (config?: ScheduleConfig | null): SubjectConfigRow[] =>
     }),
   );
 
+const buildFixedRows = (config?: ScheduleConfig | null): FixedSubjectRow[] =>
+  (config?.fixedSubjects ?? []).map((item) =>
+    createFixedSubjectRow({
+      subjectId: getRefId(item.subjectId),
+      examDate: toDateInputValue(item.examDate),
+      timeslot: String(item.timeslot ?? 1),
+    }),
+  );
+
 export default function ScheduleConfigForm({
   mode,
   semesterLabel,
@@ -97,6 +109,7 @@ export default function ScheduleConfigForm({
   );
   const [newExcludedDate, setNewExcludedDate] = useState("");
   const [rows, setRows] = useState<SubjectConfigRow[]>(() => buildRows(initial));
+  const [fixedRows, setFixedRows] = useState<FixedSubjectRow[]>(() => buildFixedRows(initial));
   const [formError, setFormError] = useState("");
 
   const slots = Number(timeslotsPerDay);
@@ -171,6 +184,20 @@ export default function ScheduleConfigForm({
         t("schedule.form.errors.invalidSubjectNumbers"),
       );
 
+    if (fixedRows.some((row) => !row.subjectId || !row.examDate))
+      return setFormError(t("schedule.form.errors.fixedSubjectRequired"));
+
+    const fixedIds = fixedRows.map((row) => row.subjectId);
+    if (new Set(fixedIds).size !== fixedIds.length)
+      return setFormError(t("schedule.form.errors.duplicateFixedSubject"));
+
+    const invalidFixedSlots = fixedRows.some((row) => {
+      const slot = Number(row.timeslot);
+      return !Number.isFinite(slot) || slot < 1 || slot > slots;
+    });
+    if (invalidFixedSlots)
+      return setFormError(t("schedule.form.errors.invalidFixedTimeslot"));
+
     setFormError("");
     onSubmit({
       academicYear: academicYear.trim(),
@@ -183,6 +210,11 @@ export default function ScheduleConfigForm({
         subjectId: row.subjectId,
         carriedStudentsCount: Number(row.carriedStudentsCount),
         examDurationOverride: Number(row.examDurationOverride),
+      })),
+      fixedSubjects: fixedRows.map((row) => ({
+        subjectId: row.subjectId,
+        examDate: new Date(`${row.examDate}T00:00:00.000Z`).toISOString(),
+        timeslot: Number(row.timeslot),
       })),
     });
   };
@@ -435,6 +467,19 @@ export default function ScheduleConfigForm({
           subjectGroups={subjectGroups}
           isLoading={subjectsLoading}
           onChange={setRows}
+          isDark={isDark}
+        />
+      </div>
+
+      {/* ── مواد مثبّتة بموعد وفترة يدوياً ───── */}
+      <div className={`p-4 ${softBoxClass(isDark)}`}>
+        <FixedSubjectsEditor
+          rows={fixedRows}
+          subjects={subjects}
+          startDate={startDate}
+          endDate={endDate}
+          timeslotsPerDay={slots}
+          onChange={setFixedRows}
           isDark={isDark}
         />
       </div>

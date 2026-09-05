@@ -23,6 +23,7 @@ import {
 import { useGetYearsQuery } from "../../academic/api/academicApi";
 import AnnouncementCard from "../components/AnnouncementCard";
 import AnnouncementFormModal from "../components/AnnouncementFormModal";
+import AnnouncementDetailModal from "../components/AnnouncementDetailModal";
 import {
   useCreateAnnouncementMutation,
   useDeleteAnnouncementMutation,
@@ -40,6 +41,7 @@ export default function AnnouncementsManagementPage() {
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [viewingAnnouncement, setViewingAnnouncement] = useState<Announcement | null>(null);
   const [editAnnouncement, setEditAnnouncement] = useState<Announcement | null>(null);
   const [deletingAnnouncement, setDeletingAnnouncement] = useState<Announcement | null>(
     null,
@@ -305,6 +307,7 @@ export default function AnnouncementsManagementPage() {
                 key={announcement._id}
                 announcement={announcement}
                 isDark={isDark}
+                onView={setViewingAnnouncement}
                 onEdit={setEditAnnouncement}
                 onDelete={setDeletingAnnouncement}
               />
@@ -312,6 +315,24 @@ export default function AnnouncementsManagementPage() {
           </div>
         </AnimatePresence>
       )}
+
+      <AnimatePresence>
+        {viewingAnnouncement && (
+          <AnnouncementDetailModal
+            announcement={viewingAnnouncement}
+            isDark={isDark}
+            onClose={() => setViewingAnnouncement(null)}
+            onEdit={(announcement) => {
+              setViewingAnnouncement(null);
+              setEditAnnouncement(announcement);
+            }}
+            onDelete={(announcement) => {
+              setViewingAnnouncement(null);
+              setDeletingAnnouncement(announcement);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {(showModal || editAnnouncement) && (

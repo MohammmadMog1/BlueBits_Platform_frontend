@@ -46,6 +46,7 @@
   },
   "notifications": {
     "label": "Notifications",
+    "empty": "No notifications yet",
     "count_one": "1 notification",
     "count_other": "{{count}} notifications"
   },

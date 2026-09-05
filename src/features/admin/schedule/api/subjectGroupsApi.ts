@@ -96,7 +96,11 @@ export const subjectGroupsApi = createApi({
       query: (body) => ({ url: "/subject-groups", method: "POST", body }),
       transformResponse: (response: ApiResponse<SubjectGroup> | SubjectGroup) =>
         unwrapItem(response),
-      invalidatesTags: [{ type: "SubjectGroup", id: "LIST" }],
+      // "SEMESTER-<id>" ينعش أيضاً كاش getSubjectGroupsBySemesterDetailed، الذي لا يحمل وسم "LIST"
+      invalidatesTags: (_result, _error, { semesterId }) => [
+        { type: "SubjectGroup", id: "LIST" },
+        { type: "SubjectGroup", id: `SEMESTER-${semesterId}` },
+      ],
     }),
 
     updateSubjectGroup: builder.mutation<SubjectGroup, UpdateSubjectGroupPayload>({

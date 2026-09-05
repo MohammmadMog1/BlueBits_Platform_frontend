@@ -18,6 +18,7 @@
     "namePlaceholder": "اسمك",
     "yearLabel": "السنة الدراسية",
     "selectYear": "اختر السنة",
+    "yearsLoadFailed": "تعذّر تحميل قائمة السنوات، حاول لاحقاً",
     "saveChanges": "حفظ التغييرات",
     "savedSuccess": "تم الحفظ بنجاح"
   },

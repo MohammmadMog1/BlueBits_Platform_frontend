@@ -1,5 +1,6 @@
 import type {
   DayGroup,
+  FixedSubjectRow,
   Ref,
   SubjectConfigRow,
   SubjectGroup,
@@ -189,6 +190,19 @@ export const createSubjectRow = (
   subjectId: "",
   carriedStudentsCount: "0",
   examDurationOverride: "120",
+  ...overrides,
+});
+
+let fixedRowSeq = 0;
+
+/** صف مادة مثبّتة جديد في النموذج – الـ key يبقى ثابتاً لتستقر قائمة React */
+export const createFixedSubjectRow = (
+  overrides: Partial<Omit<FixedSubjectRow, "key">> = {},
+): FixedSubjectRow => ({
+  key: `fixed-row-${(fixedRowSeq += 1)}`,
+  subjectId: "",
+  examDate: "",
+  timeslot: "1",
   ...overrides,
 });
 

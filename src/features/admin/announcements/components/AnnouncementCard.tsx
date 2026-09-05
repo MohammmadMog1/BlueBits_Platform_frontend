@@ -8,6 +8,7 @@ import type { Announcement } from "../types";
 interface AnnouncementCardProps {
   announcement: Announcement;
   isDark: boolean;
+  onView: (announcement: Announcement) => void;
   onEdit: (announcement: Announcement) => void;
   onDelete: (announcement: Announcement) => void;
 }
@@ -21,6 +22,7 @@ const creatorName = (createdBy: Announcement["createdBy"]) =>
 export default function AnnouncementCard({
   announcement,
   isDark,
+  onView,
   onEdit,
   onDelete,
 }: AnnouncementCardProps) {
@@ -33,7 +35,16 @@ export default function AnnouncementCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
-      className={`group overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#404293]/8 ${cardClass(isDark)}`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onView(announcement)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onView(announcement);
+        }
+      }}
+      className={`group cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#404293]/8 ${cardClass(isDark)}`}
     >
       <div className="h-1.5 w-full bg-gradient-to-r from-[#404293] to-[#2376BB]" />
       <div className="p-5">
@@ -69,7 +80,10 @@ export default function AnnouncementCard({
         <div className={`flex items-center gap-2 border-t pt-3 ${dividerClass(isDark)}`}>
           <button
             type="button"
-            onClick={() => onEdit(announcement)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEdit(announcement);
+            }}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold transition-all ${
               isDark
                 ? "text-gray-400 hover:border-[#2376BB]/20 hover:bg-[#2376BB]/10 hover:text-[#2376BB]"
@@ -80,7 +94,10 @@ export default function AnnouncementCard({
           </button>
           <button
             type="button"
-            onClick={() => onDelete(announcement)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(announcement);
+            }}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent py-2 text-xs font-semibold transition-all ${
               isDark
                 ? "text-gray-500 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-400"

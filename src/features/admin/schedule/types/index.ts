@@ -35,6 +35,14 @@ export interface SubjectConfig {
   examDurationOverride: number;
 }
 
+/** مادة مثبّتة بموعد وفترة محدّدين مسبقاً – لا يُغيّرهما المولّد التلقائي */
+export interface FixedSubjectConfig {
+  subjectId: Ref<PopulatedSubjectRef>;
+  /** ISO */
+  examDate: string;
+  timeslot: number;
+}
+
 export interface ScheduleConfig {
   _id: string;
   semesterId: Ref<PopulatedSemester>;
@@ -46,6 +54,7 @@ export interface ScheduleConfig {
   excludedDaysOfWeek: number[];
   timeslotsPerDay: number;
   subjectsConfig: SubjectConfig[];
+  fixedSubjects?: FixedSubjectConfig[];
   createdBy: Ref<{ _id: string; name?: string }>;
   createdAt: string;
   updatedAt: string;
@@ -60,6 +69,13 @@ export interface SubjectConfigInput {
   examDurationOverride: number;
 }
 
+export interface FixedSubjectInput {
+  subjectId: string;
+  /** ISO */
+  examDate: string;
+  timeslot: number;
+}
+
 /** ما يملأه الأدمن في النموذج – بدون الفصل (تختاره الصفحة) */
 export interface ScheduleConfigFormValues {
   academicYear: string;
@@ -72,6 +88,7 @@ export interface ScheduleConfigFormValues {
   excludedDaysOfWeek: number[];
   timeslotsPerDay: number;
   subjectsConfig: SubjectConfigInput[];
+  fixedSubjects: FixedSubjectInput[];
 }
 
 export interface ScheduleConfigPayload extends ScheduleConfigFormValues {
@@ -87,6 +104,18 @@ export interface SubjectConfigRow {
   subjectId: string;
   carriedStudentsCount: string;
   examDurationOverride: string;
+}
+
+/**
+ * صف مادة مثبّتة داخل النموذج: نفس منطق `SubjectConfigRow` –
+ * الفترة تبقى نصاً أثناء الكتابة وتُحوَّل رقماً عند الإرسال.
+ */
+export interface FixedSubjectRow {
+  key: string;
+  subjectId: string;
+  /** YYYY-MM-DD */
+  examDate: string;
+  timeslot: string;
 }
 
 export interface UpdateScheduleConfigPayload {

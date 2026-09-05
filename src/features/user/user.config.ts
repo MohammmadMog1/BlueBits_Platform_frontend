@@ -5,6 +5,7 @@ import {
   BrainCircuit,
   CheckSquare,
   ClipboardCheck,
+  FolderOpen,
   Megaphone,
   Sparkles,
 } from "lucide-react";
@@ -24,3 +25,13 @@ export const userNavItems: NavItem[] = [
   { icon: Megaphone, labelKey: "nav:user.announcements", path: "/user/announcements" },
   { icon: Sparkles, labelKey: "nav:user.assistant", path: "/user/assistant" },
 ];
+
+/**
+ * يظهر فقط لمن يملك إحدى صلاحيات بنك الأسئلة (permissions) — راجع UserLayout.
+ * ليس ضمن userNavItems لأنه شرطي وليس ثابتاً لكل المستخدمين.
+ */
+export const userQuestionBankNavItem: NavItem = {
+  icon: FolderOpen,
+  labelKey: "nav:user.questionBanks",
+  path: "/user/question-banks",
+};
