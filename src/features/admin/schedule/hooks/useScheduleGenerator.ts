@@ -87,9 +87,11 @@ export function useScheduleGenerator() {
 
   const runSolve = async () => {
     if (!selectedSemesterId) return;
+    const academicYear = configQuery.data?.academicYear;
+    if (!academicYear) return;
     setSuccessMessage("");
     try {
-      await solve(selectedSemesterId).unwrap();
+      await solve({ semesterId: selectedSemesterId, academicYear }).unwrap();
       setSuccessMessage(t("schedule.generator.generated"));
     } catch {
       // الخطأ معروض عبر solveError

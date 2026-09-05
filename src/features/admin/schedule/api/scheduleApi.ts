@@ -13,16 +13,20 @@ import type {
   ScheduleConfig,
   ScheduleConfigPayload,
   ScheduleData,
+  SolveSchedulePayload,
   UpdateScheduleConfigPayload,
 } from "../types";
 
 /**
- * ⚠️ مسارات solve / result / publish لم يحدّدها توصيف الباك،
+ * ⚠️ مسارات result / publish لم يحدّدها توصيف الباك،
  * واستُنتجت من نمط بقية المسارات: /schedule/<action>/:semesterId
  * إن اختلفت في الباك، التعديل هنا فقط يكفي.
+ *
+ * solve مؤكد من الشبكة الفعلية: POST /schedule/solve (بدون id بالمسار)
+ * والـ body فيه { semesterId, academicYear }.
  */
 const SCHEDULE_PATHS = {
-  solve: (semesterId: string) => `/schedule/solve/${semesterId}`,
+  solve: "/schedule/solve",
   result: (semesterId: string) => `/schedule/result/${semesterId}`,
   publish: (semesterId: string) => `/schedule/publish/${semesterId}`,
 } as const;
@@ -171,13 +175,15 @@ export const scheduleApi = createApi({
      * تشغيل الـ solver: يجمع البيانات ويرسلها لـ exam-solver ثم يرجّع الجدول.
      * عملية طويلة – لا نضع لها timeout يدوي.
      */
-    solveSchedule: builder.mutation<GeneratedSchedule, string>({
-      queryFn: (semesterId, _api, _extra, fetchWithBQ: FetchWithBQ) =>
-        tryMethods<GeneratedSchedule>(fetchWithBQ, SCHEDULE_PATHS.solve(semesterId), [
-          "POST",
-          "GET",
-        ]),
-      invalidatesTags: (_result, _error, semesterId) => [
+    solveSchedule: builder.mutation<GeneratedSchedule, SolveSchedulePayload>({
+      query: ({ semesterId, academicYear }) => ({
+        url: SCHEDULE_PATHS.solve,
+        method: "POST",
+        body: { semesterId, academicYear },
+      }),
+      transformResponse: (response: ApiResponse<GeneratedSchedule> | GeneratedSchedule) =>
+        unwrapItem(response),
+      invalidatesTags: (_result, _error, { semesterId }) => [
         { type: "Schedule", id: semesterId },
       ],
     }),

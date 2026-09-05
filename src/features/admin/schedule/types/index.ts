@@ -123,6 +123,11 @@ export interface UpdateScheduleConfigPayload {
   data: ScheduleConfigPayload;
 }
 
+export interface SolveSchedulePayload {
+  semesterId: string;
+  academicYear: string;
+}
+
 export interface DeleteScheduleConfigPayload {
   id: string;
   /** لتحديث الكاش فقط – لا يُرسل للـ API */

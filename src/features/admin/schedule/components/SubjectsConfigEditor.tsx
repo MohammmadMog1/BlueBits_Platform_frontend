@@ -364,7 +364,6 @@ export default function SubjectsConfigEditor({
                             <input
                               type="number"
                               min={1}
-                              step={5}
                               value={row.examDurationOverride}
                               onChange={(event) =>
                                 updateRow(row.key, { examDurationOverride: event.target.value })
