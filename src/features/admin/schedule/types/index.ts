@@ -164,3 +164,72 @@ export interface GeneratedSchedule {
   createdAt: string;
   updatedAt: string;
 }
+
+// ==============================
+// Subject groups (مواد اختيارية تتشارك نفس الفترة الامتحانية)
+// ==============================
+export interface PopulatedGroupYear {
+  _id: string;
+  name: string;
+  order?: number;
+}
+
+export interface PopulatedGroupSemester {
+  _id: string;
+  name: string;
+}
+
+export interface PopulatedGroupCreator {
+  _id: string;
+  name?: string;
+  email?: string;
+}
+
+/** مادة داخل الغروب – كما يرجعها /subject-groups/:id (مع تفاصيل إضافية أحياناً) */
+export interface SubjectGroupSubject {
+  _id: string;
+  name: string;
+  yearId?: Ref<PopulatedGroupYear>;
+  semesterId?: Ref<PopulatedGroupSemester>;
+  lecturerIds?: string[];
+  groupId?: Ref<{ _id: string; name?: string }>;
+}
+
+export interface SubjectGroup {
+  _id: string;
+  id?: string;
+  name: string;
+  yearId: Ref<PopulatedGroupYear>;
+  semesterId: Ref<PopulatedGroupSemester>;
+  createdBy?: Ref<PopulatedGroupCreator>;
+  createdAt?: string;
+  updatedAt?: string;
+  /** غائبة من قوائم الفهرسة (getAll/بحسب فصل)، وحاضرة عند جلب الغروب بمفرده */
+  subjects?: SubjectGroupSubject[];
+}
+
+export interface CreateSubjectGroupPayload {
+  name: string;
+  yearId: string;
+  semesterId: string;
+}
+
+export interface UpdateSubjectGroupPayload {
+  id: string;
+  data: { name: string };
+}
+
+/** إضافة/إزالة مادة من غروب */
+export interface SubjectGroupMemberPayload {
+  id: string;
+  subjectId: string;
+}
+
+/** عضوية مادة داخل غروب اختياري – مشتقة محلياً من قائمة الغروبات لفصل معيّن */
+export interface SubjectGroupMembership {
+  groupId: string;
+  groupName: string;
+}
+
+/** subjectId → عضويته في غروب (إن وُجدت) */
+export type SubjectGroupIndex = Map<string, SubjectGroupMembership>;

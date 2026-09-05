@@ -2,6 +2,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { MoreHorizontal } from "lucide-react";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import MoreOpenIcon from "./MoreOpen";
@@ -39,12 +40,20 @@ function BottomBarLink({ item, active, isDark, label }: BottomBarLinkProps) {
     >
       {active && (
         /* التوسيط الأفقي فيزيائي عن قصد: المؤشّر مركزي في الاتجاهين */
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB]" />
+        <motion.span
+          layoutId="bottombar-active-indicator"
+          transition={{ type: "spring", stiffness: 450, damping: 32 }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB]"
+        />
       )}
-      <div className={`p-1.5 rounded-xl transition-all ${active ? "bg-[#404293]/10" : ""}`}>
+      <div
+        className={`p-1.5 rounded-xl transition-all duration-200 ${
+          active ? "bg-[#404293]/10 scale-105" : ""
+        }`}
+      >
         <Icon
           aria-hidden="true"
-          className={`w-5 h-5 transition-transform ${active ? "scale-110" : ""}`}
+          className={`w-5 h-5 transition-transform duration-200 ${active ? "scale-110" : ""}`}
         />
       </div>
       <span className="w-full max-w-full text-center text-[10px] font-semibold leading-[1.15] tracking-tight [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
@@ -105,9 +114,15 @@ export default function BottomBar({ navItems, userProfile, maxVisible = 4 }: Bot
             }`}
           >
             <div className="relative p-1.5 rounded-xl">
-              <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
+              <MoreHorizontal
+                className={`w-5 h-5 transition-transform duration-200 ${moreOpen ? "rotate-90" : ""}`}
+                aria-hidden="true"
+              />
               {switchAction && (
-                <span className="absolute top-0.5 end-0.5 w-2 h-2 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] ring-2 ring-white dark:ring-[#1a1b1e]" />
+                <span className="absolute top-0.5 end-0.5 flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2376BB] opacity-60" />
+                  <span className="relative w-2 h-2 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] ring-2 ring-white dark:ring-[#1a1b1e]" />
+                </span>
               )}
             </div>
             <span className="w-full max-w-full text-center text-[10px] font-semibold leading-[1.15] tracking-tight [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">

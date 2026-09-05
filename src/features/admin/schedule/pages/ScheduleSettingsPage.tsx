@@ -43,6 +43,7 @@ export default function ScheduleSettingsPage() {
     config,
     subjects,
     subjectsLoading,
+    subjectGroups,
     configLoading,
     configFetching,
     configError,
@@ -175,6 +176,7 @@ export default function ScheduleSettingsPage() {
           initial={mode === "edit" ? config : null}
           subjects={subjects}
           subjectsLoading={subjectsLoading}
+          subjectGroups={subjectGroups}
           isSubmitting={isSubmitting}
           error={submitError}
           onCancel={cancelForm}

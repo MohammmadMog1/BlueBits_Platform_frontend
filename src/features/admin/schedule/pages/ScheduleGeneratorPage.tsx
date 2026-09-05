@@ -47,6 +47,7 @@ export default function ScheduleGeneratorPage() {
     hasGeneratedData,
     schedule,
     resultLoading,
+    subjectGroupIndex,
     isGenerating,
     isSolving,
     isPublishing,
@@ -245,7 +246,13 @@ export default function ScheduleGeneratorPage() {
         ))}
 
       {/* ── النتائج ──────────────────────────── */}
-      {hasGeneratedData && <ConflictsPanel conflicts={conflicts} isDark={isDark} />}
+      {hasGeneratedData && (
+        <ConflictsPanel
+          conflicts={conflicts}
+          isDark={isDark}
+          subjectGroupIndex={subjectGroupIndex}
+        />
+      )}
 
       {resultLoading ? (
         <div className={`space-y-4 p-6 ${cardClass(isDark)}`}>
@@ -263,6 +270,7 @@ export default function ScheduleGeneratorPage() {
           publishError={publishError}
           onPublish={askPublish}
           isDark={isDark}
+          subjectGroupIndex={subjectGroupIndex}
         />
       ) : (
         !isSolving && (

@@ -19,6 +19,7 @@ import type {
   ScheduleConfig,
   ScheduleConfigFormValues,
   SubjectConfigRow,
+  SubjectGroup,
 } from "../types";
 import {
   DAYS_OF_WEEK,
@@ -48,6 +49,7 @@ interface ScheduleConfigFormProps {
   initial?: ScheduleConfig | null;
   subjects: Subject[];
   subjectsLoading: boolean;
+  subjectGroups?: SubjectGroup[];
   isSubmitting: boolean;
   error?: string;
   onCancel: () => void;
@@ -70,6 +72,7 @@ export default function ScheduleConfigForm({
   initial,
   subjects,
   subjectsLoading,
+  subjectGroups = [],
   isSubmitting,
   error,
   onCancel,
@@ -429,6 +432,7 @@ export default function ScheduleConfigForm({
         <SubjectsConfigEditor
           rows={rows}
           subjects={subjects}
+          subjectGroups={subjectGroups}
           isLoading={subjectsLoading}
           onChange={setRows}
           isDark={isDark}

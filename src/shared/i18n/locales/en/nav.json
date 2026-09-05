@@ -31,7 +31,8 @@
   },
   "switch": {
     "backToApp": "Back to App",
-    "goToAdmin": "Go to Admin Panel"
+    "goToAdmin": "Go to Admin Panel",
+    "goToDoctor": "Go to Doctor Panel"
   },
   "aria": {
     "bottomNav": "Bottom navigation",

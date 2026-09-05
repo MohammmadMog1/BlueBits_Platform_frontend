@@ -3,6 +3,7 @@ import {
   AlertCircle,
   ClipboardList,
   GraduationCap,
+  Loader2,
   Lock,
   Plus,
   RefreshCcw,
@@ -56,8 +57,8 @@ export default function AcademicTasksManagementPage() {
   );
 
   const tasksQuery = useGetAcademicTasksQuery();
-  const { data: years = [] } = useGetYearsQuery();
-  const { data: subjects = [] } = useGetSubjectsQuery({
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
+  const { data: subjects = [], isLoading: subjectsLoading } = useGetSubjectsQuery({
     yearId: filterYear || undefined,
   });
   const [createTask, createState] = useCreateAcademicTaskMutation();
@@ -237,33 +238,55 @@ export default function AcademicTasksManagementPage() {
               setFilterYear(event.target.value);
               setFilterSubject("");
             }}
-            className={`appearance-none py-2.5 ps-10 pe-4 ${fieldClass(isDark)}`}
+            disabled={yearsLoading}
+            className={`appearance-none py-2.5 ps-10 pe-4 disabled:opacity-60 ${fieldClass(isDark)}`}
           >
-            <option value="">{t("tasks.allYears")}</option>
-            {yearOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
+            {yearsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("tasks.allYears")}</option>
+                {yearOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <GraduationCap
-            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-              isDark ? "text-gray-500" : "text-gray-400"
-            }`}
-          />
+          {yearsLoading ? (
+            <Loader2
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                isDark ? "text-gray-500" : "text-gray-400"
+              }`}
+            />
+          ) : (
+            <GraduationCap
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                isDark ? "text-gray-500" : "text-gray-400"
+              }`}
+            />
+          )}
         </div>
         <div className="relative">
           <select
             value={filterSubject}
             onChange={(event) => setFilterSubject(event.target.value)}
-            className={`appearance-none py-2.5 ps-10 pe-4 ${fieldClass(isDark)}`}
+            disabled={subjectsLoading}
+            className={`appearance-none py-2.5 ps-10 pe-4 disabled:opacity-60 ${fieldClass(isDark)}`}
           >
-            <option value="">{t("tasks.allSubjects")}</option>
-            {subjectOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
+            {subjectsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("tasks.allSubjects")}</option>
+                {subjectOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
         </div>
         <div className="relative">

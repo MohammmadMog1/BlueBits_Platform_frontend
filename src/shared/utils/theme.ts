@@ -74,7 +74,7 @@ export const fieldClass = (isDark: boolean): string =>
   }`;
 
 export const iconButtonClass = (isDark: boolean): string =>
-  `flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all ${
+  `flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all active:scale-90 ${
     isDark
       ? "border-white/10 bg-white/5 text-gray-400 hover:border-[#2376BB]/40 hover:text-[#2376BB]"
       : "border-gray-200 bg-white text-gray-400 shadow-sm hover:border-[#404293]/30 hover:text-[#404293]"

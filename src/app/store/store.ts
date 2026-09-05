@@ -28,6 +28,7 @@ import { commentsApi } from "../../features/user/Lectures/interactions/api/comme
 import { reactionsApi } from "../../features/user/Lectures/interactions/api/reactionsApi";
 import { questionBanksApi } from "../../features/admin/questionBanks/api/questionBanksApi";
 import { scheduleApi } from "../../features/admin/schedule/api/scheduleApi";
+import { subjectGroupsApi } from "../../features/admin/schedule/api/subjectGroupsApi";
 import { surveysApi } from "../../features/admin/surveys/api/surveysApi";
 import { doctorApi } from "../../features/doctor/api/doctorApi";
 
@@ -64,6 +65,7 @@ const rootReducer = combineReducers({
   [reactionsApi.reducerPath]: reactionsApi.reducer,
   [questionBanksApi.reducerPath]: questionBanksApi.reducer,
   [scheduleApi.reducerPath]: scheduleApi.reducer,
+  [subjectGroupsApi.reducerPath]: subjectGroupsApi.reducer,
   [surveysApi.reducerPath]: surveysApi.reducer,
   [doctorApi.reducerPath]: doctorApi.reducer,
 });
@@ -99,6 +101,7 @@ export const store = configureStore({
       reactionsApi.middleware,
       questionBanksApi.middleware,
       scheduleApi.middleware,
+      subjectGroupsApi.middleware,
       surveysApi.middleware,
       doctorApi.middleware,
     ),

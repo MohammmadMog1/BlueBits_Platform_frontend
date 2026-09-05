@@ -9,6 +9,7 @@ import {
   useGetScheduleConfigQuery,
   useUpdateScheduleConfigMutation,
 } from "../api/scheduleApi";
+import { useGetSubjectGroupsBySemesterDetailedQuery } from "../api/subjectGroupsApi";
 import type { ScheduleConfigFormValues } from "../types";
 
 
@@ -33,6 +34,11 @@ export function useScheduleConfigManager() {
   });
   const subjectsQuery = useGetSubjectsQuery(
     { semesterId: selectedSemesterId },
+    { skip: !selectedSemesterId },
+  );
+  /** غروبات المواد الاختيارية لهذا الفصل – لإضافة كل مواد الغروب دفعة واحدة */
+  const subjectGroupsQuery = useGetSubjectGroupsBySemesterDetailedQuery(
+    selectedSemesterId,
     { skip: !selectedSemesterId },
   );
 
@@ -126,6 +132,8 @@ export function useScheduleConfigManager() {
     config,
     subjects: subjectsQuery.data ?? [],
     subjectsLoading: subjectsQuery.isLoading,
+    subjectGroups: subjectGroupsQuery.data ?? [],
+    subjectGroupsLoading: subjectGroupsQuery.isLoading,
     configLoading: configQuery.isLoading,
     configFetching: configQuery.isFetching,
     configError: configQuery.isError ? errorMessage(configQuery.error) : "",

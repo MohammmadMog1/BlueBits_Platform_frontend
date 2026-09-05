@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "motion/react";
 import {
   accentIconClass,
   cardClass,
@@ -37,16 +38,17 @@ export default function StatTile({
   isLoading = false,
 }: StatTileProps) {
   const content = (
-    <div
-      className={`flex h-full items-center gap-3.5 p-4 ${cardClass(isDark)} transition-all ${
-        to ? "hover:-translate-y-0.5 hover:shadow-md" : ""
+    <motion.div
+      whileHover={to ? { y: -3 } : undefined}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className={`group flex h-full items-center gap-3.5 p-4 ${cardClass(isDark)} ${
+        to ? "hover:shadow-md" : ""
       }`}
     >
       <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${accentIconClass(
-          isDark,
-          tone,
-        )}`}
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition-transform duration-200 ${
+          to ? "group-hover:scale-110 group-hover:-rotate-3" : ""
+        } ${accentIconClass(isDark, tone)}`}
       >
         <Icon className="h-[18px] w-[18px]" />
       </div>
@@ -67,7 +69,7 @@ export default function StatTile({
           </p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 
   if (!to) return content;

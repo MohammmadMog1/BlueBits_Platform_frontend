@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   GraduationCap,
   Layers,
+  Loader2,
   RefreshCcw,
   X,
 } from "lucide-react";
@@ -31,6 +32,8 @@ interface SubjectFormModalProps {
   error?: string;
   yearOptions: Option[];
   semesterOptions: Option[];
+  yearsLoading?: boolean;
+  semestersLoading?: boolean;
   isDark: boolean;
   onClose: () => void;
   onSubmit: (data: SubjectFormData) => void;
@@ -43,6 +46,8 @@ export default function SubjectFormModal({
   error,
   yearOptions,
   semesterOptions,
+  yearsLoading = false,
+  semestersLoading = false,
   isDark,
   onClose,
   onSubmit,
@@ -150,18 +155,31 @@ export default function SubjectFormModal({
                 <select
                   value={yearId}
                   onChange={(event) => setYearId(event.target.value)}
-                  className={selectClass}
+                  disabled={yearsLoading}
+                  className={`${selectClass} disabled:opacity-60`}
                 >
-                  <option value="">{t("subjects.form.chooseYear")}</option>
-                  {yearOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {yearsLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">{t("subjects.form.chooseYear")}</option>
+                      {yearOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
-                <GraduationCap
-                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
-                />
+                {yearsLoading ? (
+                  <Loader2
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${faintClass(isDark)}`}
+                  />
+                ) : (
+                  <GraduationCap
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+                  />
+                )}
               </div>
             </label>
             <label className={labelClass}>
@@ -170,18 +188,31 @@ export default function SubjectFormModal({
                 <select
                   value={semesterId}
                   onChange={(event) => setSemesterId(event.target.value)}
-                  className={selectClass}
+                  disabled={semestersLoading}
+                  className={`${selectClass} disabled:opacity-60`}
                 >
-                  <option value="">{t("subjects.form.chooseSemester")}</option>
-                  {semesterOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {semestersLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">{t("subjects.form.chooseSemester")}</option>
+                      {semesterOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
-                <Layers
-                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
-                />
+                {semestersLoading ? (
+                  <Loader2
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${faintClass(isDark)}`}
+                  />
+                ) : (
+                  <Layers
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+                  />
+                )}
               </div>
             </label>
           </div>

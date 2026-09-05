@@ -4,6 +4,7 @@ import {
   AlertCircle,
   BookMarked,
   GraduationCap,
+  Loader2,
   RefreshCcw,
   Search,
   X,
@@ -33,8 +34,8 @@ export default function StudentAcademicTasksPage() {
   const [filterSubject, setFilterSubject] = useState("");
   const [submissionTask, setSubmissionTask] = useState<AcademicTask | null>(null);
 
-  const { data: years = [] } = useGetYearsQuery();
-  const { data: subjects = [] } = useGetSubjectsQuery();
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
+  const { data: subjects = [], isLoading: subjectsLoading } = useGetSubjectsQuery();
 
   const hasSubjectFilter = Boolean(filterSubject);
   const hasYearOnlyFilter = Boolean(filterYear) && !hasSubjectFilter;
@@ -117,16 +118,27 @@ export default function StudentAcademicTasksPage() {
             value={filterYear}
             onChange={(event) => setFilterYear(event.target.value)}
             aria-label={t("academic.filterByYear")}
-            className={selectClass}
+            disabled={yearsLoading}
+            className={`${selectClass} disabled:opacity-60`}
           >
-            <option value="">{t("academic.allYears")}</option>
-            {years.map((year) => (
-              <option key={year._id} value={year._id}>
-                {year.name}
-              </option>
-            ))}
+            {yearsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("academic.allYears")}</option>
+                {years.map((year) => (
+                  <option key={year._id} value={year._id}>
+                    {year.name}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <GraduationCap className={selectIconClass} />
+          {yearsLoading ? (
+            <Loader2 className={`${selectIconClass} animate-spin`} />
+          ) : (
+            <GraduationCap className={selectIconClass} />
+          )}
         </div>
 
         <div className="relative">
@@ -134,16 +146,27 @@ export default function StudentAcademicTasksPage() {
             value={filterSubject}
             onChange={(event) => setFilterSubject(event.target.value)}
             aria-label={t("academic.filterBySubject")}
-            className={selectClass}
+            disabled={subjectsLoading}
+            className={`${selectClass} disabled:opacity-60`}
           >
-            <option value="">{t("academic.allSubjects")}</option>
-            {subjects.map((subject) => (
-              <option key={subject._id} value={subject._id}>
-                {subject.name}
-              </option>
-            ))}
+            {subjectsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("academic.allSubjects")}</option>
+                {subjects.map((subject) => (
+                  <option key={subject._id} value={subject._id}>
+                    {subject.name}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <BookMarked className={selectIconClass} />
+          {subjectsLoading ? (
+            <Loader2 className={`${selectIconClass} animate-spin`} />
+          ) : (
+            <BookMarked className={selectIconClass} />
+          )}
         </div>
 
         {(filterYear || filterSubject) && (

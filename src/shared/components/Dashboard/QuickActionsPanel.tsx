@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "motion/react";
 import { Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SectionCard from "./SectionCard";
@@ -69,28 +70,34 @@ export default function QuickActionsPanel({
         {actions.map((action) => {
           const Icon = action.icon;
           return (
-            <Link
+            <motion.div
               key={action.to + action.labelKey}
-              to={action.to}
-              className={`flex items-center gap-2.5 px-3 py-3 transition-all hover:-translate-y-0.5 hover:shadow-md ${softBoxClass(isDark)}`}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
             >
-              <div
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${accentIconClass(
-                  isDark,
-                  action.tone ?? "brand",
-                )}`}
+              <Link
+                to={action.to}
+                className={`group flex items-center gap-2.5 px-3 py-3 transition-shadow hover:shadow-md ${softBoxClass(isDark)}`}
               >
-                <Icon className="h-4 w-4" />
-              </div>
-              <div className="min-w-0">
-                <p className={`truncate text-[11px] font-black ${headingClass(isDark)}`}>
-                  {t(action.labelKey)}
-                </p>
-                <p className={`truncate text-[10px] font-semibold ${faintClass(isDark)}`}>
-                  {t(action.hintKey)}
-                </p>
-              </div>
-            </Link>
+                <div
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110 ${accentIconClass(
+                    isDark,
+                    action.tone ?? "brand",
+                  )}`}
+                >
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className={`truncate text-[11px] font-black ${headingClass(isDark)}`}>
+                    {t(action.labelKey)}
+                  </p>
+                  <p className={`truncate text-[10px] font-semibold ${faintClass(isDark)}`}>
+                    {t(action.hintKey)}
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
           );
         })}
       </div>

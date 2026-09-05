@@ -1,9 +1,18 @@
-import { AlertCircle, BookMarked, ListPlus, Plus, Trash2, Users } from "lucide-react";
+import { useMemo } from "react";
+import {
+  AlertCircle,
+  BookMarked,
+  Layers,
+  ListPlus,
+  Plus,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "motion/react";
 import type { Subject } from "../../subjects/types";
-import type { SubjectConfigRow } from "../types";
-import { createSubjectRow } from "../utils/schedule";
+import type { SubjectConfigRow, SubjectGroup } from "../types";
+import { buildSubjectGroupIndex, createSubjectRow } from "../utils/schedule";
 import {
   emptyBoxClass,
   fieldClass,
@@ -18,6 +27,8 @@ interface SubjectsConfigEditorProps {
   isLoading: boolean;
   onChange: (rows: SubjectConfigRow[]) => void;
   isDark: boolean;
+  /** غروبات المواد الاختيارية لهذا الفصل – لإضافة كل مواد الغروب دفعة واحدة */
+  subjectGroups?: SubjectGroup[];
 }
 
 export default function SubjectsConfigEditor({
@@ -26,10 +37,12 @@ export default function SubjectsConfigEditor({
   isLoading,
   onChange,
   isDark,
+  subjectGroups = [],
 }: SubjectsConfigEditorProps) {
   const { t } = useTranslation("admin");
   const usedIds = new Set(rows.map((row) => row.subjectId).filter(Boolean));
   const remaining = subjects.filter((subject) => !usedIds.has(subject._id));
+  const groupIndex = useMemo(() => buildSubjectGroupIndex(subjectGroups), [subjectGroups]);
 
   const updateRow = (key: string, patch: Partial<SubjectConfigRow>) =>
     onChange(rows.map((row) => (row.key === key ? { ...row, ...patch } : row)));
@@ -45,6 +58,14 @@ export default function SubjectsConfigEditor({
       ...rows,
       ...remaining.map((subject) => createSubjectRow({ subjectId: subject._id })),
     ]);
+
+  /** إضافة كل مواد غروب اختياري دفعة واحدة – مواد الغروب تتشارك نفس الفترة الامتحانية */
+  const addGroup = (group: SubjectGroup) => {
+    const newRows = (group.subjects ?? [])
+      .filter((subject) => !usedIds.has(subject._id))
+      .map((subject) => createSubjectRow({ subjectId: subject._id }));
+    if (newRows.length > 0) onChange([...rows, ...newRows]);
+  };
 
   return (
     <div className="space-y-3">
@@ -91,6 +112,52 @@ export default function SubjectsConfigEditor({
         </div>
       </div>
 
+      {subjectGroups.length > 0 && (
+        <div className={`rounded-2xl border p-3 ${isDark ? "border-[#2376BB]/20 bg-[#2376BB]/[0.06]" : "border-[#404293]/15 bg-[#404293]/[0.04]"}`}>
+          <div className="mb-2 flex items-center gap-1.5">
+            <Layers className={`h-3.5 w-3.5 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
+            <p className={`text-xs font-black ${headingClass(isDark)}`}>
+              {t("schedule.subjectsEditor.groupsTitle")}
+            </p>
+          </div>
+          <p className={`mb-2.5 text-[11px] font-semibold ${mutedClass(isDark)}`}>
+            {t("schedule.subjectsEditor.groupsHint")}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {subjectGroups.map((group) => {
+              const groupSubjects = group.subjects ?? [];
+              const remainingInGroup = groupSubjects.filter(
+                (subject) => !usedIds.has(subject._id),
+              );
+              return (
+                <button
+                  key={group._id}
+                  type="button"
+                  onClick={() => addGroup(group)}
+                  disabled={remainingInGroup.length === 0}
+                  title={groupSubjects.map((subject) => subject.name).join("، ")}
+                  className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                    isDark
+                      ? "border-white/10 bg-white/5 text-gray-300 hover:border-[#2376BB]/40 hover:text-[#7fb5e4]"
+                      : "border-gray-200 bg-white text-gray-600 hover:border-[#404293]/30 hover:text-[#404293]"
+                  }`}
+                >
+                  <ListPlus size={12} />
+                  {group.name}
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 text-[10px] ${
+                      isDark ? "bg-white/10" : "bg-gray-100"
+                    }`}
+                  >
+                    {remainingInGroup.length}/{groupSubjects.length}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, index) => (
@@ -117,6 +184,7 @@ export default function SubjectsConfigEditor({
               const isDuplicate =
                 Boolean(row.subjectId) &&
                 rows.filter((item) => item.subjectId === row.subjectId).length > 1;
+              const membership = groupIndex.get(row.subjectId);
 
               return (
                 <motion.div
@@ -224,6 +292,19 @@ export default function SubjectsConfigEditor({
                       <Trash2 size={15} />
                     </button>
                   </div>
+
+                  {membership && (
+                    <p
+                      className={`mt-2 flex items-center gap-1.5 text-[11px] font-bold ${
+                        isDark ? "text-[#7fb5e4]" : "text-[#404293]"
+                      }`}
+                    >
+                      <Layers size={12} />
+                      {t("schedule.subjectsEditor.groupBadge", {
+                        group: membership.groupName,
+                      })}
+                    </p>
+                  )}
 
                   {(isDuplicate || isUnknown) && (
                     <p

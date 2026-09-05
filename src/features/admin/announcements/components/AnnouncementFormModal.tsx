@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertCircle, CheckCircle2, GraduationCap, Megaphone, RefreshCcw, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Megaphone, RefreshCcw, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useGetYearsQuery } from "../../academic/api/academicApi";
@@ -31,7 +31,7 @@ export default function AnnouncementFormModal({
   const [yearId, setYearId] = useState(initial?.yearId ?? "");
   const [formError, setFormError] = useState("");
 
-  const { data: years = [] } = useGetYearsQuery();
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
   const yearOptions = years.map((year) => ({ id: year._id, label: year.name }));
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -121,25 +121,39 @@ export default function AnnouncementFormModal({
               <select
                 value={yearId}
                 onChange={(event) => setYearId(event.target.value)}
-                disabled={isEdit}
+                disabled={isEdit || yearsLoading}
                 className={`w-full appearance-none rounded-xl border py-3 ps-10 pe-4 text-sm font-semibold outline-none transition-colors focus:border-[#2376BB] focus:ring-2 focus:ring-[#2376BB]/20 disabled:opacity-50 ${
                   isDark
                     ? "border-white/10 bg-white/5 text-gray-100"
                     : "border-gray-200 bg-gray-50 text-gray-800"
                 }`}
               >
-                <option value="">{t("admin.form.chooseYear")}</option>
-                {yearOptions.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
+                {yearsLoading ? (
+                  <option value="">{t("common:states.loading")}</option>
+                ) : (
+                  <>
+                    <option value="">{t("admin.form.chooseYear")}</option>
+                    {yearOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </>
+                )}
               </select>
-              <GraduationCap
-                className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                  isDark ? "text-gray-500" : "text-gray-400"
-                }`}
-              />
+              {yearsLoading ? (
+                <Loader2
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
+              ) : (
+                <GraduationCap
+                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  }`}
+                />
+              )}
             </div>
             {isEdit && (
               <span className={`mt-1 block text-xs font-normal ${faintClass(isDark)}`}>

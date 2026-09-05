@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import type { NavItem, UserProfile } from "../../layout/MainLayout/MainLayout";
@@ -73,7 +74,7 @@ export default function Sidebar({
         }`}
       >
         <div className="flex items-center gap-3 overflow-hidden">
-          <Link to={"/"}>
+          <Link to={"/"} className="transition-transform duration-200 hover:scale-[1.04] active:scale-95">
             <img
               className="h-10 w-auto object-contain flex-shrink-0"
               src={logoImage}
@@ -81,7 +82,12 @@ export default function Sidebar({
             />
           </Link>
           {!collapsed && (
-            <div className="leading-tight">
+            <motion.div
+              initial={{ opacity: 0, x: isRTL ? 6 : -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="leading-tight"
+            >
               {/* اسم المنتج علامة تجارية – يبقى لاتينياً في كل اللغات */}
               <h2 className="text-[20px] font-bold text-[#404295]" dir="ltr">
                 BlueBits
@@ -89,14 +95,14 @@ export default function Sidebar({
               <p className="text-[12px] uppercase tracking-wider text-[#404293]">
                 {roleLabel}
               </p>
-            </div>
+            </motion.div>
           )}
         </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-label={t(collapsed ? "nav:aria.expandSidebar" : "nav:aria.collapseSidebar")}
           aria-expanded={!collapsed}
-          className={`p-1.5 rounded-lg flex-shrink-0 transition-colors ${
+          className={`p-1.5 rounded-lg flex-shrink-0 transition-all duration-200 active:scale-90 ${
             isDark ? "text-gray-400 hover:bg-white/8" : "text-gray-500 hover:bg-gray-100"
           }`}
         >
@@ -120,29 +126,39 @@ export default function Sidebar({
           const Icon = item.icon;
           const label = t(item.labelKey);
           return (
-            <button
+            <motion.button
               key={item.path}
               onClick={() => handleNav(item.path)}
               title={collapsed ? label : ""}
               aria-label={collapsed ? label : undefined}
               aria-current={active ? "page" : undefined}
-              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+              whileHover={active ? undefined : { x: isRTL ? -3 : 3 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-xl group overflow-hidden ${
                 active
-                  ? "bg-gradient-to-r from-[#404293] to-[#2376BB] text-white shadow-md shadow-[#404293]/25"
+                  ? "text-white"
                   : isDark
                   ? "text-gray-400 hover:bg-white/8 hover:text-white"
                   : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
               } ${collapsed ? "justify-center" : ""}`}
             >
+              {active && (
+                <motion.span
+                  layoutId="sidebar-active-pill"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#404293] to-[#2376BB] shadow-md shadow-[#404293]/25"
+                />
+              )}
               <Icon
-                className={`w-[18px] h-[18px] flex-shrink-0 transition-transform group-hover:scale-110 ${
+                className={`relative w-[18px] h-[18px] flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
                   active ? "text-white" : ""
                 }`}
               />
               {!collapsed && (
-                <span className="text-[13px] font-semibold truncate">{label}</span>
+                <span className="relative text-[13px] font-semibold truncate">{label}</span>
               )}
-            </button>
+            </motion.button>
           );
         })}
       </nav>
@@ -155,21 +171,24 @@ export default function Sidebar({
       >
         {/* ✨ Back Button الديناميكي */}
         {backButton && (
-          <button
+          <motion.button
             onClick={() => handleNav(backButton.path)}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group ${
+            whileHover={{ x: isRTL ? -3 : 3 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl group ${
               isDark
                 ? "text-gray-400 hover:bg-white/8 hover:text-white"
                 : "text-gray-600 hover:bg-[#404293]/6 hover:text-[#404293]"
             } ${collapsed ? "justify-center" : ""}`}
           >
-            <backButton.icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <backButton.icon className="w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
             {!collapsed && (
               <span className="text-[14px] font-semibold truncate">
                 {t(backButton.labelKey)}
               </span>
             )}
-          </button>
+          </motion.button>
         )}
 
         {/* User Card */}
@@ -183,11 +202,11 @@ export default function Sidebar({
             title={collapsed ? t("profile.myProfile") : ""}
             aria-label={t("profile.open")}
             aria-pressed={isProfileOpen}
-            className={`flex items-center flex-1 min-w-0 rounded-lg p-0.5 transition-colors ${
+            className={`group flex items-center flex-1 min-w-0 rounded-lg p-0.5 transition-colors ${
               isProfileOpen ? "" : isDark ? "hover:bg-white/8" : "hover:bg-[#404293]/6"
             } ${collapsed ? "justify-center" : ""}`}
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#404293] to-[#2376BB] flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-transparent transition-all duration-200 group-hover:ring-[#404293]/25">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}

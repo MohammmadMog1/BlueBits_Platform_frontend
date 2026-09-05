@@ -148,7 +148,12 @@ export default function AssignLecturerModal({ subject, isDark, onClose }: Assign
             <label className={`block text-sm font-semibold mb-2 ${isDark ? "text-gray-200" : "text-gray-700"}`}>
               {t("subjects.lecturers.chooseDoctor")}
             </label>
-            {availableDoctors.length === 0 ? (
+            {usersLoading ? (
+              <div className="flex items-center gap-2 py-4 text-gray-400">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">{t("common:states.loading")}</span>
+              </div>
+            ) : availableDoctors.length === 0 ? (
               <p className={`text-sm ${mutedClass(isDark)}`}>{t("subjects.lecturers.noDoctors")}</p>
             ) : (
               <div className="flex gap-2">

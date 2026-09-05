@@ -279,7 +279,10 @@
       "durationTitle": "Exam duration in minutes",
       "removeSubject": "Remove subject",
       "duplicateWarning": "This subject is duplicated — remove one of the rows",
-      "notInSemesterWarning": "This subject is not among the current semester's subjects"
+      "notInSemesterWarning": "This subject is not among the current semester's subjects",
+      "groupsTitle": "Add an elective group at once",
+      "groupsHint": "Subjects in the same group are electives expected to share the same slot, since students split between them.",
+      "groupBadge": "Part of the elective group: {{group}}"
     },
     "generator": {
       "title": "Generate the exam timetable",
@@ -316,7 +319,9 @@
       "searchPlaceholder": "Search by subject name...",
       "clearSearch": "Clear search",
       "noMatches": "No matching conflicts",
-      "showMore": "Show more ({{count}} remaining)"
+      "showMore": "Show more ({{count}} remaining)",
+      "hideExpected": "Hide overlaps expected within an elective group ({{count}})",
+      "expectedBadge": "Expected elective"
     },
     "timetable": {
       "viewGrid": "Grid",
@@ -340,7 +345,8 @@
       "slotHeader": "Slot {{number}}",
       "slotLabel": "Slot {{number}}",
       "clash": "Clash ({{count}})",
-      "subjectsCount": "{{count}} subjects"
+      "subjectsCount": "{{count}} subjects",
+      "expectedGroup": "Elective group ({{count}})"
     }
   },
   "tasks": {
@@ -546,7 +552,47 @@
   "banks": {
     "title": "Question Banks (MCQ)",
     "subtitle": "Navigate by year → semester → subject to upload, review and publish banks",
-    "upload": "Upload Questions",
+    "upload": {
+      "title": "Upload Questions",
+      "lectureLabel": "Lecture",
+      "noLectures": "This subject has no lectures",
+      "chooseLecture": "Choose a lecture",
+      "lectureHint": "If the lecture already has a bank, the questions are added to it.",
+      "modeJson": "JSON",
+      "modeDocx": "Word (.docx)",
+      "dropJson": "Drop the questions file (.json) here",
+      "dropDocx": "Drop the Word file (.docx) here",
+      "or": "or",
+      "chooseFile": "pick a file from your device",
+      "removeFile": "Remove file",
+      "pasteLabel": "Or paste the questions as JSON",
+      "insertTemplate": "Insert template",
+      "validQuestions": "{{count}} valid questions",
+      "mcqCount": "{{count}} multiple choice",
+      "trueFalseCount": "{{count}} true / false",
+      "errorsCount": "{{count}} errors",
+      "docxHint": "The Word file must follow the format agreed with the server (a question, then its options, marking the correct answer). If the server cannot recognise the questions, you'll see a message warning that the file doesn't follow the required format.",
+      "submit": "Upload questions",
+      "submitting": "Uploading…",
+      "successCount": "{{count}} questions uploaded successfully",
+      "successHint": "The bank is saved as a draft — review the questions, then publish it to students.",
+      "done": "Done",
+      "sample": {
+        "mcqQuestion": "What is 2 + 2?",
+        "mcqExplanation": "Because 2+2=4",
+        "trueFalseQuestion": "The Earth is spherical"
+      },
+      "errors": {
+        "jsonExtension": "The file must be a .json file",
+        "readFailed": "Could not read the file.",
+        "docxExtension": "The file must be a .docx file",
+        "lectureRequired": "Choose the lecture this question bank belongs to.",
+        "noValidQuestions": "There are no valid questions to upload.",
+        "fixErrors": "Fix the errors shown below before uploading.",
+        "docxRequired": "Choose the Word file first.",
+        "uploadFailed": "Failed to upload the questions."
+      }
+    },
     "uploadShort": "Upload",
     "noCreatePermission": "You don't have permission to create a question bank",
     "noPublishPermission": "You don't have permission to publish",
@@ -655,47 +701,6 @@
         "needTwoOptions": "The question needs at least two options.",
         "optionWithoutText": "An option cannot be left empty.",
         "oneCorrect": "Mark exactly one correct answer."
-      }
-    },
-    "upload": {
-      "title": "Upload Questions",
-      "lectureLabel": "Lecture",
-      "noLectures": "This subject has no lectures",
-      "chooseLecture": "Choose a lecture",
-      "lectureHint": "If the lecture already has a bank, the questions are added to it.",
-      "modeJson": "JSON",
-      "modeDocx": "Word (.docx)",
-      "dropJson": "Drop the questions file (.json) here",
-      "dropDocx": "Drop the Word file (.docx) here",
-      "or": "or",
-      "chooseFile": "pick a file from your device",
-      "removeFile": "Remove file",
-      "pasteLabel": "Or paste the questions as JSON",
-      "insertTemplate": "Insert template",
-      "validQuestions": "{{count}} valid questions",
-      "mcqCount": "{{count}} multiple choice",
-      "trueFalseCount": "{{count}} true / false",
-      "errorsCount": "{{count}} errors",
-      "docxHint": "The Word file must follow the format agreed with the server (a question, then its options, marking the correct answer). If the server cannot recognise the questions, you'll see a message warning that the file doesn't follow the required format.",
-      "submit": "Upload questions",
-      "submitting": "Uploading…",
-      "successCount": "{{count}} questions uploaded successfully",
-      "successHint": "The bank is saved as a draft — review the questions, then publish it to students.",
-      "done": "Done",
-      "sample": {
-        "mcqQuestion": "What is 2 + 2?",
-        "mcqExplanation": "Because 2+2=4",
-        "trueFalseQuestion": "The Earth is spherical"
-      },
-      "errors": {
-        "jsonExtension": "The file must be a .json file",
-        "readFailed": "Could not read the file.",
-        "docxExtension": "The file must be a .docx file",
-        "lectureRequired": "Choose the lecture this question bank belongs to.",
-        "noValidQuestions": "There are no valid questions to upload.",
-        "fixErrors": "Fix the errors shown below before uploading.",
-        "docxRequired": "Choose the Word file first.",
-        "uploadFailed": "Failed to upload the questions."
       }
     },
     "parseErrors": {

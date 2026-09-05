@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeftRight, Database, Search, X } from "lucide-react";
+import { ArrowLeftRight, Database, Layers, Search, X } from "lucide-react";
 import { motion } from "motion/react";
 import type { AdminKey } from "../../../../shared/i18n/types";
-import type { ConflictType, ScheduleConflict } from "../types";
+import type { ConflictType, ScheduleConflict, SubjectGroupIndex } from "../types";
 import {
   emptyBoxClass,
   headingClass,
@@ -52,13 +52,33 @@ const TYPES: ConflictType[] = ["HARD", "MEDIUM", "SOFT"];
 interface ConflictsPanelProps {
   conflicts: ScheduleConflict[];
   isDark: boolean;
+  /** subjectId → عضويته في غروب اختياري، لتمييز التداخلات المتوقعة بين مواد نفس الغروب */
+  subjectGroupIndex?: SubjectGroupIndex;
 }
 
-export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProps) {
+export default function ConflictsPanel({
+  conflicts,
+  isDark,
+  subjectGroupIndex,
+}: ConflictsPanelProps) {
   const { t } = useTranslation("admin");
   const [typeFilter, setTypeFilter] = useState<ConflictType | "">("");
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
+  const [hideExpected, setHideExpected] = useState(false);
+
+  const isExpected = (conflict: ScheduleConflict): boolean => {
+    if (!subjectGroupIndex) return false;
+    const groupA = subjectGroupIndex.get(conflict.examA)?.groupId;
+    const groupB = subjectGroupIndex.get(conflict.examB)?.groupId;
+    return Boolean(groupA) && groupA === groupB;
+  };
+
+  const expectedCount = useMemo(
+    () => (subjectGroupIndex ? conflicts.filter(isExpected).length : 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [conflicts, subjectGroupIndex],
+  );
 
   const counts = useMemo(
     () =>
@@ -75,6 +95,7 @@ export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProp
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return conflicts.filter((conflict) => {
+      if (hideExpected && isExpected(conflict)) return false;
       if (typeFilter && conflict.type !== typeFilter) return false;
       if (!term) return true;
       return (
@@ -82,7 +103,8 @@ export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProp
         conflict.examBName.toLowerCase().includes(term)
       );
     });
-  }, [conflicts, typeFilter, search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conflicts, typeFilter, search, hideExpected, subjectGroupIndex]);
 
   const applyFilter = (type: ConflictType | "") => {
     setTypeFilter(type);
@@ -175,6 +197,26 @@ export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProp
         )}
       </div>
 
+      {expectedCount > 0 && (
+        <label
+          className={`flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-xs font-bold ${
+            isDark ? "border-white/10 bg-white/5 text-gray-300" : "border-gray-200 bg-gray-50 text-gray-600"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={hideExpected}
+            onChange={(event) => {
+              setHideExpected(event.target.checked);
+              setVisible(PAGE_SIZE);
+            }}
+            className="h-3.5 w-3.5 accent-[#404293]"
+          />
+          <Layers className={`h-3.5 w-3.5 ${isDark ? "text-[#7fb5e4]" : "text-[#404293]"}`} />
+          {t("schedule.conflicts.hideExpected", { count: expectedCount })}
+        </label>
+      )}
+
       {filtered.length === 0 ? (
         <p className={`py-8 text-center text-xs font-bold ${mutedClass(isDark)} ${emptyBoxClass(isDark)}`}>
           {t("schedule.conflicts.noMatches")}
@@ -184,6 +226,7 @@ export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProp
           <div className="space-y-1.5">
             {filtered.slice(0, visible).map((conflict, index) => {
               const meta = CONFLICT_META[conflict.type];
+              const expected = isExpected(conflict);
               return (
                 <div
                   key={`${conflict.examA}-${conflict.examB}-${index}`}
@@ -198,6 +241,18 @@ export default function ConflictsPanel({ conflicts, isDark }: ConflictsPanelProp
                   >
                     {t(meta.labelKey)}
                   </span>
+                  {expected && (
+                    <span
+                      className={`flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[10px] font-black ${
+                        isDark
+                          ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-400"
+                          : "border-emerald-200 bg-emerald-50 text-emerald-600"
+                      }`}
+                    >
+                      <Layers size={10} />
+                      {t("schedule.conflicts.expectedBadge")}
+                    </span>
+                  )}
                   <span className={`text-xs font-bold ${isDark ? "text-gray-200" : "text-gray-800"}`}>
                     {conflict.examAName}
                   </span>

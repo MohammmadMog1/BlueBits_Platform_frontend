@@ -7,6 +7,7 @@ import {
   FileText,
   GraduationCap,
   Layers,
+  Loader2,
   RefreshCcw,
   X,
 } from "lucide-react";
@@ -54,12 +55,12 @@ export default function AcademicTaskFormModal({
   );
   const [formError, setFormError] = useState("");
 
-  const { data: years = [] } = useGetYearsQuery();
-  const { data: subjects = [] } = useGetSubjectsQuery(
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
+  const { data: subjects = [], isLoading: subjectsLoading } = useGetSubjectsQuery(
     { yearId: yearId || undefined },
     { skip: !yearId },
   );
-  const { data: lectures = [] } = useGetLecturesBySubjectQuery(
+  const { data: lectures = [], isLoading: lecturesLoading } = useGetLecturesBySubjectQuery(
     { subjectId, type: lectureType as LectureType },
     { skip: !subjectId || !lectureType },
   );
@@ -208,20 +209,35 @@ export default function AcademicTaskFormModal({
                 <select
                   value={yearId}
                   onChange={(event) => handleYearChange(event.target.value)}
+                  disabled={yearsLoading}
                   className={selectFieldClass}
                 >
-                  <option value="">{t("tasks.form.chooseYear")}</option>
-                  {yearOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {yearsLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">{t("tasks.form.chooseYear")}</option>
+                      {yearOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
-                <GraduationCap
-                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                    isDark ? "text-gray-500" : "text-gray-400"
-                  }`}
-                />
+                {yearsLoading ? (
+                  <Loader2
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                ) : (
+                  <GraduationCap
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                )}
               </div>
             </label>
             <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
@@ -230,21 +246,35 @@ export default function AcademicTaskFormModal({
                 <select
                   value={subjectId}
                   onChange={(event) => handleSubjectChange(event.target.value)}
-                  disabled={!yearId}
+                  disabled={!yearId || subjectsLoading}
                   className={selectFieldClass}
                 >
-                  <option value="">{t("tasks.form.chooseSubject")}</option>
-                  {subjectOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {subjectsLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">{t("tasks.form.chooseSubject")}</option>
+                      {subjectOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
-                <BookMarked
-                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                    isDark ? "text-gray-500" : "text-gray-400"
-                  }`}
-                />
+                {subjectsLoading ? (
+                  <Loader2
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                ) : (
+                  <BookMarked
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                )}
               </div>
             </label>
             <label className={`block text-sm font-bold ${isDark ? "text-gray-200" : "text-gray-700"}`}>
@@ -278,21 +308,35 @@ export default function AcademicTaskFormModal({
                 <select
                   value={lectureId}
                   onChange={(event) => setLectureId(event.target.value)}
-                  disabled={!lectureType}
+                  disabled={!lectureType || lecturesLoading}
                   className={selectFieldClass}
                 >
-                  <option value="">{t("tasks.form.chooseLecture")}</option>
-                  {lectureOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {lecturesLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">{t("tasks.form.chooseLecture")}</option>
+                      {lectureOptions.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
-                <FileText
-                  className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                    isDark ? "text-gray-500" : "text-gray-400"
-                  }`}
-                />
+                {lecturesLoading ? (
+                  <Loader2
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                ) : (
+                  <FileText
+                    className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                      isDark ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
+                )}
               </div>
             </label>
           </div>

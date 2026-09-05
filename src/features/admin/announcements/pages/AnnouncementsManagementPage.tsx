@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   AlertCircle,
   GraduationCap,
+  Loader2,
   Megaphone,
   Plus,
   RefreshCcw,
@@ -48,7 +49,7 @@ export default function AnnouncementsManagementPage() {
   );
 
   const announcementsQuery = useGetAnnouncementsQuery();
-  const { data: years = [] } = useGetYearsQuery();
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
   const [createAnnouncement, createState] = useCreateAnnouncementMutation();
   const [updateAnnouncement, updateState] = useUpdateAnnouncementMutation();
   const [deleteAnnouncement, deleteState] = useDeleteAnnouncementMutation();
@@ -183,24 +184,39 @@ export default function AnnouncementsManagementPage() {
           <select
             value={filterYear}
             onChange={(event) => setFilterYear(event.target.value)}
-            className={`appearance-none rounded-xl border py-2.5 ps-10 pe-4 text-sm font-semibold outline-none focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
+            disabled={yearsLoading}
+            className={`appearance-none rounded-xl border py-2.5 ps-10 pe-4 text-sm font-semibold outline-none disabled:opacity-60 focus:border-[#404293] focus:ring-2 focus:ring-[#404293]/20 ${
               isDark
                 ? "border-white/10 bg-white/5 text-gray-100"
                 : "border-gray-200 bg-gray-50 text-gray-700"
             }`}
           >
-            <option value="">{t("admin.allYears")}</option>
-            {yearOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
+            {yearsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("admin.allYears")}</option>
+                {yearOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <GraduationCap
-            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-              isDark ? "text-gray-500" : "text-gray-400"
-            }`}
-          />
+          {yearsLoading ? (
+            <Loader2
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${
+                isDark ? "text-gray-500" : "text-gray-400"
+              }`}
+            />
+          ) : (
+            <GraduationCap
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
+                isDark ? "text-gray-500" : "text-gray-400"
+              }`}
+            />
+          )}
         </div>
         {filterYear && (
           <button

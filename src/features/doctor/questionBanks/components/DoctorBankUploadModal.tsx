@@ -45,7 +45,7 @@ export function DoctorBankUploadModal({
   const jsonFileRef = useRef<HTMLInputElement>(null);
   const docxFileRef = useRef<HTMLInputElement>(null);
 
-  const { data: subjects = [] } = useGetMySubjectsQuery();
+  const { data: subjects = [], isLoading: subjectsLoading } = useGetMySubjectsQuery();
   const { data: myLectures = [], isLoading: lecturesLoading } = useGetMyLecturesQuery();
 
   const [mode, setMode] = useState<UploadMode>("json");
@@ -246,16 +246,23 @@ export function DoctorBankUploadModal({
                 <select
                   value={subjectId}
                   onChange={(event) => handleSubjectChange(event.target.value)}
-                  className={inputClass}
+                  disabled={subjectsLoading}
+                  className={`${inputClass} disabled:opacity-60`}
                 >
-                  <option value="">
-                    {t(subjects.length === 0 ? "banks.upload.noSubjects" : "banks.upload.chooseSubject")}
-                  </option>
-                  {subjects.map((subject) => (
-                    <option key={subject._id} value={subject._id}>
-                      {subject.name}
-                    </option>
-                  ))}
+                  {subjectsLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">
+                        {t(subjects.length === 0 ? "banks.upload.noSubjects" : "banks.upload.chooseSubject")}
+                      </option>
+                      {subjects.map((subject) => (
+                        <option key={subject._id} value={subject._id}>
+                          {subject.name}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
               </div>
 
@@ -269,21 +276,27 @@ export function DoctorBankUploadModal({
                   disabled={!subjectId || lecturesLoading}
                   className={`${inputClass} disabled:opacity-60`}
                 >
-                  <option value="">
-                    {t(
-                      !subjectId
-                        ? "banks.upload.chooseSubjectFirst"
-                        : lectures.length === 0
-                          ? "banks.upload.noLectures"
-                          : "banks.upload.chooseLecture",
-                    )}
-                  </option>
-                  {lectures.map((lecture) => (
-                    <option key={lecture._id} value={lecture._id}>
-                      {lecture.title} ·{" "}
-                      {t(lecture.type === "practical" ? "lectures.types.practical" : "lectures.types.theoretical")}
-                    </option>
-                  ))}
+                  {lecturesLoading ? (
+                    <option value="">{t("common:states.loading")}</option>
+                  ) : (
+                    <>
+                      <option value="">
+                        {t(
+                          !subjectId
+                            ? "banks.upload.chooseSubjectFirst"
+                            : lectures.length === 0
+                              ? "banks.upload.noLectures"
+                              : "banks.upload.chooseLecture",
+                        )}
+                      </option>
+                      {lectures.map((lecture) => (
+                        <option key={lecture._id} value={lecture._id}>
+                          {lecture.title} ·{" "}
+                          {t(lecture.type === "practical" ? "lectures.types.practical" : "lectures.types.theoretical")}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
               </div>
 

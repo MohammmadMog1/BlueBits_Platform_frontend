@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function EditProfileForm({ user, onUpdated }: Props) {
-  const { t } = useTranslation("profile");
+  const { t } = useTranslation(["profile", "common"]);
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [name, setName] = useState(user.name);
@@ -21,7 +21,7 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
   const [saved, setSaved] = useState(false);
   const [updateMe, { isLoading }] = useUpdateMeMutation();
 
-  const { data: years } = useGetYearsQuery();
+  const { data: years, isLoading: yearsLoading } = useGetYearsQuery();
 
   useEffect(() => {
     setName(user.name);
@@ -82,35 +82,42 @@ export default function EditProfileForm({ user, onUpdated }: Props) {
         </div>
 
         {/* Year */}
-        {years && years.length > 0 && (
-          <div>
-            <label
-              className={`flex items-center gap-1.5 text-[12px] font-semibold mb-1.5 ${
-                isDark ? "text-gray-300" : "text-gray-600"
-              }`}
-            >
-              <GraduationCap className="w-3.5 h-3.5" /> {t("editForm.yearLabel")}
-            </label>
-            <select
-              value={yearId}
-              onChange={(e) => setYearId(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-xl border text-[13px] outline-none focus:border-[#404293]/40 focus:ring-2 focus:ring-[#404293]/10 transition-all ${
-                isDark
-                  ? "border-white/10 bg-white/5 text-gray-100 focus:bg-white/10"
-                  : "border-gray-200 bg-gray-50 text-gray-700 focus:bg-white"
-              }`}
-            >
+        <div>
+          <label
+            className={`flex items-center gap-1.5 text-[12px] font-semibold mb-1.5 ${
+              isDark ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            <GraduationCap className="w-3.5 h-3.5" /> {t("editForm.yearLabel")}
+          </label>
+          <select
+            value={yearId}
+            onChange={(e) => setYearId(e.target.value)}
+            disabled={yearsLoading}
+            className={`w-full px-4 py-2.5 rounded-xl border text-[13px] outline-none transition-all focus:border-[#404293]/40 focus:ring-2 focus:ring-[#404293]/10 disabled:opacity-60 ${
+              isDark
+                ? "border-white/10 bg-white/5 text-gray-100 focus:bg-white/10"
+                : "border-gray-200 bg-gray-50 text-gray-700 focus:bg-white"
+            }`}
+          >
+            {yearsLoading ? (
               <option value="" className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
-                {t("editForm.selectYear")}
+                {t("common:states.loading")}
               </option>
-              {years.map((y) => (
-                <option key={y._id} value={y._id} className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
-                  {y.name}
+            ) : (
+              <>
+                <option value="" className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
+                  {t("editForm.selectYear")}
                 </option>
-              ))}
-            </select>
-          </div>
-        )}
+                {(years ?? []).map((y) => (
+                  <option key={y._id} value={y._id} className={isDark ? "bg-[#1a1b1e] text-gray-100" : ""}>
+                    {y.name}
+                  </option>
+                ))}
+              </>
+            )}
+          </select>
+        </div>
       </div>
 
       <div className="mt-6 flex items-center gap-3">

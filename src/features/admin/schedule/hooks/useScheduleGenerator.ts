@@ -9,6 +9,8 @@ import {
   usePublishScheduleMutation,
   useSolveScheduleMutation,
 } from "../api/scheduleApi";
+import { useGetSubjectGroupsBySemesterDetailedQuery } from "../api/subjectGroupsApi";
+import { buildSubjectGroupIndex } from "../utils/schedule";
 
 
 export function useScheduleGenerator() {
@@ -30,6 +32,15 @@ export function useScheduleGenerator() {
   const resultQuery = useGetScheduleResultQuery(selectedSemesterId, {
     skip: !selectedSemesterId,
   });
+  /** غروبات المواد الاختيارية لهذا الفصل – لتمييز التداخلات المتوقعة عن التصادمات الفعلية */
+  const subjectGroupsQuery = useGetSubjectGroupsBySemesterDetailedQuery(
+    selectedSemesterId,
+    { skip: !selectedSemesterId },
+  );
+  const subjectGroupIndex = useMemo(
+    () => buildSubjectGroupIndex(subjectGroupsQuery.data ?? []),
+    [subjectGroupsQuery.data],
+  );
 
   const [generateData, generateState] = useGenerateScheduleDataMutation();
   const [solve, solveState] = useSolveScheduleMutation();
@@ -108,6 +119,8 @@ export function useScheduleGenerator() {
     hasGeneratedData: Boolean(generateState.data),
     schedule,
     resultLoading: resultQuery.isLoading,
+    subjectGroupIndex,
+    subjectGroupsLoading: subjectGroupsQuery.isLoading,
 
     // الحالة
     isGenerating: generateState.isLoading,

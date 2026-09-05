@@ -61,6 +61,29 @@
     overflow-x: hidden;
   }
 
+  /*
+   * إصلاح قوائم <select> المنسدلة في الوضع الداكن: المتصفّح يرسم نافذة
+   * الخيارات (option popup) بألوان نظام التشغيل الافتراضية (خلفية بيضاء)
+   * بغضّ النظر عن كلاسات Tailwind على عنصر select نفسه. `color-scheme`
+   * وحدها غير كافية على بعض إصدارات Chrome/Windows (لاحظنا خلفية بيضاء
+   * تبقى كما هي)، لذا نفرض لون الخلفية والنص صراحة على كل <option> –
+   * وهو ما يُطبَّق فعلياً من المتصفح خلافاً لخلفية النافذة المنبثقة ذاتها.
+   */
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html.dark select option {
+    background-color: #1f2123;
+    color: #e5e7eb;
+  }
+
+  html.dark select option:checked,
+  html.dark select option:hover {
+    background-color: #2376bb;
+    color: #ffffff;
+  }
+
   /**
    * الخط متوفّر بوزن Medium فقط، لذا نسمح للمتصفّح بتوليد الأوزان الأثقل
    * صناعياً حتى يبقى التسلسل البصري (font-bold / font-black) مرئياً.

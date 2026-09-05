@@ -1,4 +1,5 @@
 import { RefreshCcw } from "lucide-react";
+import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import {
   brandGradientBr,
@@ -37,11 +38,14 @@ export default function DashboardHeader({
     <header className="flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
         <div className="mb-1 flex items-center gap-2.5">
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${brandGradientBr} shadow-md shadow-[#404293]/25`}
           >
             <Icon className="h-5 w-5 text-white" />
-          </div>
+          </motion.div>
           <h1
             className={`truncate text-xl font-black tracking-tight ${headingClass(isDark)}`}
           >

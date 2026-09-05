@@ -4,6 +4,7 @@ import {
   BookMarked,
   GraduationCap,
   Layers,
+  Loader2,
   Plus,
   RefreshCcw,
   Search,
@@ -61,8 +62,8 @@ export default function SubjectManagementPage() {
     yearId: filterYear || undefined,
     semesterId: filterSemester || undefined,
   });
-  const { data: years = [] } = useGetYearsQuery();
-  const { data: semesters = [] } = useGetSemestersQuery();
+  const { data: years = [], isLoading: yearsLoading } = useGetYearsQuery();
+  const { data: semesters = [], isLoading: semestersLoading } = useGetSemestersQuery();
   const [createSubject, createState] = useCreateSubjectMutation();
   const [updateSubject, updateState] = useUpdateSubjectMutation();
   const [deleteSubject, deleteState] = useDeleteSubjectMutation();
@@ -232,35 +233,61 @@ export default function SubjectManagementPage() {
           <select
             value={filterYear}
             onChange={(event) => setFilterYear(event.target.value)}
-            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-4`}
+            disabled={yearsLoading}
+            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-8 disabled:opacity-60`}
           >
-            <option value="">{t("subjects.allYears")}</option>
-            {yearOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
+            {yearsLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("subjects.allYears")}</option>
+                {yearOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <GraduationCap
-            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
-          />
+          {yearsLoading ? (
+            <Loader2
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${faintClass(isDark)}`}
+            />
+          ) : (
+            <GraduationCap
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+            />
+          )}
         </div>
         <div className="relative">
           <select
             value={filterSemester}
             onChange={(event) => setFilterSemester(event.target.value)}
-            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-4`}
+            disabled={semestersLoading}
+            className={`${fieldClass(isDark)} w-auto appearance-none py-2.5 ps-10 pe-8 disabled:opacity-60`}
           >
-            <option value="">{t("subjects.allSemesters")}</option>
-            {semesterOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
+            {semestersLoading ? (
+              <option value="">{t("common:states.loading")}</option>
+            ) : (
+              <>
+                <option value="">{t("subjects.allSemesters")}</option>
+                {semesterOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            )}
           </select>
-          <Layers
-            className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
-          />
+          {semestersLoading ? (
+            <Loader2
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin ${faintClass(isDark)}`}
+            />
+          ) : (
+            <Layers
+              className={`pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 ${faintClass(isDark)}`}
+            />
+          )}
         </div>
         {(filterYear || filterSemester) && (
           <button
@@ -383,6 +410,8 @@ export default function SubjectManagementPage() {
             error={modalError}
             yearOptions={yearOptions}
             semesterOptions={semesterOptions}
+            yearsLoading={yearsLoading}
+            semestersLoading={semestersLoading}
             isDark={isDark}
             onClose={() => {
               setShowModal(false);

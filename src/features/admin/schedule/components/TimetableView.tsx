@@ -12,7 +12,7 @@ import {
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import type { AdminKey } from "../../../../shared/i18n/types";
-import type { GeneratedSchedule, TimetableViewMode } from "../types";
+import type { GeneratedSchedule, SubjectGroupIndex, TimetableViewMode } from "../types";
 import {
   countClashes,
   groupTimetableByDay,
@@ -44,6 +44,8 @@ interface TimetableViewProps {
   publishError?: string;
   onPublish: () => void;
   isDark: boolean;
+  /** subjectId → عضويته في غروب اختياري – لتمييز التداخل المتوقع عن التصادم الفعلي */
+  subjectGroupIndex?: SubjectGroupIndex;
 }
 
 export default function TimetableView({
@@ -52,6 +54,7 @@ export default function TimetableView({
   publishError,
   onPublish,
   isDark,
+  subjectGroupIndex,
 }: TimetableViewProps) {
   const { t } = useTranslation("admin");
   const { formatDate } = useScheduleDates();
@@ -66,7 +69,7 @@ export default function TimetableView({
     [schedule.timetable],
   );
 
-  const clashes = countClashes(days);
+  const clashes = countClashes(days, subjectGroupIndex);
   const isPublished = schedule.status === "published";
   const hardScore = schedule.score?.hardScore ?? 0;
   const hasHardViolations = hardScore < 0;
@@ -304,9 +307,18 @@ export default function TimetableView({
           {t("schedule.timetable.empty")}
         </p>
       ) : viewMode === "grid" ? (
-        <TimetableGrid days={days} timeslots={timeslots} isDark={isDark} />
+        <TimetableGrid
+          days={days}
+          timeslots={timeslots}
+          isDark={isDark}
+          subjectGroupIndex={subjectGroupIndex}
+        />
       ) : (
-        <TimetableDayCards days={days} isDark={isDark} />
+        <TimetableDayCards
+          days={days}
+          isDark={isDark}
+          subjectGroupIndex={subjectGroupIndex}
+        />
       )}
 
       {isPublished && (

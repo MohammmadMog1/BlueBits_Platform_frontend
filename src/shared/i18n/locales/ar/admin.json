@@ -279,7 +279,10 @@
       "durationTitle": "مدّة الامتحان بالدقائق",
       "removeSubject": "حذف المادة",
       "duplicateWarning": "هذه المادة مكرّرة – احذف أحد الصفّين",
-      "notInSemesterWarning": "هذه المادة غير موجودة ضمن مواد الفصل الحالي"
+      "notInSemesterWarning": "هذه المادة غير موجودة ضمن مواد الفصل الحالي",
+      "groupsTitle": "إضافة غروب اختياري دفعة واحدة",
+      "groupsHint": "مواد الغروب الواحد اختيارية ومتوقّع أن تُجدول في نفس الفترة لأن الطلاب ينقسمون بينها.",
+      "groupBadge": "ضمن الغروب الاختياري: {{group}}"
     },
     "generator": {
       "title": "توليد برنامج الفحص",
@@ -316,7 +319,9 @@
       "searchPlaceholder": "بحث باسم المادة...",
       "clearSearch": "مسح البحث",
       "noMatches": "لا توجد تعارضات مطابقة",
-      "showMore": "عرض المزيد ({{count}} متبقٍ)"
+      "showMore": "عرض المزيد ({{count}} متبقٍ)",
+      "hideExpected": "إخفاء التداخلات المتوقعة ضمن غروب اختياري ({{count}})",
+      "expectedBadge": "اختياري متوقع"
     },
     "timetable": {
       "viewGrid": "جدول",
@@ -340,7 +345,8 @@
       "slotHeader": "الفترة {{number}}",
       "slotLabel": "فترة {{number}}",
       "clash": "تصادم ({{count}})",
-      "subjectsCount": "{{count}} مادة"
+      "subjectsCount": "{{count}} مادة",
+      "expectedGroup": "غروب اختياري ({{count}})"
     }
   },
   "tasks": {
@@ -544,7 +550,47 @@
   "banks": {
     "title": "بنوك الأسئلة (MCQ)",
     "subtitle": "تنقّل بالسنة ← الفصل ← المادة لرفع البنوك ومراجعتها ونشرها",
-    "upload": "رفع أسئلة",
+    "upload": {
+      "title": "رفع الأسئلة",
+      "lectureLabel": "المحاضرة",
+      "noLectures": "لا توجد محاضرات في هذه المادة",
+      "chooseLecture": "اختر المحاضرة",
+      "lectureHint": "إذا كان للمحاضرة بنك موجود، تُضاف الأسئلة إليه.",
+      "modeJson": "JSON",
+      "modeDocx": "Word (.docx)",
+      "dropJson": "أفلت ملف الأسئلة (.json) هنا",
+      "dropDocx": "أفلت ملف الوورد (.docx) هنا",
+      "or": "أو",
+      "chooseFile": "اختر ملفاً من جهازك",
+      "removeFile": "إزالة الملف",
+      "pasteLabel": "أو الصق الأسئلة كـ JSON",
+      "insertTemplate": "إدراج نموذج",
+      "validQuestions": "{{count}} سؤال صالح",
+      "mcqCount": "{{count}} اختيار من متعدد",
+      "trueFalseCount": "{{count}} صح / خطأ",
+      "errorsCount": "{{count}} خطأ",
+      "docxHint": "ملف الوورد يجب أن يلتزم بالصيغة المتفق عليها مع الخادم (سؤال ثم خياراته وتحديد الإجابة الصحيحة). إذا لم يتعرّف الخادم على الأسئلة ستظهر رسالة تنبّه إلى أن الملف لا يلتزم بالصيغة المطلوبة.",
+      "submit": "رفع الأسئلة",
+      "submitting": "جارٍ الرفع…",
+      "successCount": "تم رفع {{count}} سؤال بنجاح",
+      "successHint": "البنك محفوظ كمسودة — راجع الأسئلة ثم انشره للطلاب.",
+      "done": "تمّ",
+      "sample": {
+        "mcqQuestion": "ما هو ناتج 2 + 2؟",
+        "mcqExplanation": "لأن 2+2=4",
+        "trueFalseQuestion": "الأرض كروية الشكل"
+      },
+      "errors": {
+        "jsonExtension": "الملف يجب أن يكون بصيغة .json",
+        "readFailed": "تعذّر قراءة الملف.",
+        "docxExtension": "الملف يجب أن يكون بصيغة .docx",
+        "lectureRequired": "اختر المحاضرة التي سيُربط بها بنك الأسئلة.",
+        "noValidQuestions": "لا توجد أسئلة صالحة للرفع.",
+        "fixErrors": "صحّح الأخطاء الظاهرة أدناه قبل الرفع.",
+        "docxRequired": "اختر ملف الوورد أولاً.",
+        "uploadFailed": "تعذّر رفع الأسئلة."
+      }
+    },
     "uploadShort": "رفع",
     "noCreatePermission": "لا تملك صلاحية إنشاء بنك أسئلة",
     "noPublishPermission": "لا تملك صلاحية النشر",
@@ -652,47 +698,6 @@
         "needTwoOptions": "السؤال يحتاج خيارين على الأقل.",
         "optionWithoutText": "لا يمكن ترك خيار بدون نص.",
         "oneCorrect": "حدّد إجابة صحيحة واحدة."
-      }
-    },
-    "upload": {
-      "title": "رفع الأسئلة",
-      "lectureLabel": "المحاضرة",
-      "noLectures": "لا توجد محاضرات في هذه المادة",
-      "chooseLecture": "اختر المحاضرة",
-      "lectureHint": "إذا كان للمحاضرة بنك موجود، تُضاف الأسئلة إليه.",
-      "modeJson": "JSON",
-      "modeDocx": "Word (.docx)",
-      "dropJson": "أفلت ملف الأسئلة (.json) هنا",
-      "dropDocx": "أفلت ملف الوورد (.docx) هنا",
-      "or": "أو",
-      "chooseFile": "اختر ملفاً من جهازك",
-      "removeFile": "إزالة الملف",
-      "pasteLabel": "أو الصق الأسئلة كـ JSON",
-      "insertTemplate": "إدراج نموذج",
-      "validQuestions": "{{count}} سؤال صالح",
-      "mcqCount": "{{count}} اختيار من متعدد",
-      "trueFalseCount": "{{count}} صح / خطأ",
-      "errorsCount": "{{count}} خطأ",
-      "docxHint": "ملف الوورد يجب أن يلتزم بالصيغة المتفق عليها مع الخادم (سؤال ثم خياراته وتحديد الإجابة الصحيحة). إذا لم يتعرّف الخادم على الأسئلة ستظهر رسالة تنبّه إلى أن الملف لا يلتزم بالصيغة المطلوبة.",
-      "submit": "رفع الأسئلة",
-      "submitting": "جارٍ الرفع…",
-      "successCount": "تم رفع {{count}} سؤال بنجاح",
-      "successHint": "البنك محفوظ كمسودة — راجع الأسئلة ثم انشره للطلاب.",
-      "done": "تمّ",
-      "sample": {
-        "mcqQuestion": "ما هو ناتج 2 + 2؟",
-        "mcqExplanation": "لأن 2+2=4",
-        "trueFalseQuestion": "الأرض كروية الشكل"
-      },
-      "errors": {
-        "jsonExtension": "الملف يجب أن يكون بصيغة .json",
-        "readFailed": "تعذّر قراءة الملف.",
-        "docxExtension": "الملف يجب أن يكون بصيغة .docx",
-        "lectureRequired": "اختر المحاضرة التي سيُربط بها بنك الأسئلة.",
-        "noValidQuestions": "لا توجد أسئلة صالحة للرفع.",
-        "fixErrors": "صحّح الأخطاء الظاهرة أدناه قبل الرفع.",
-        "docxRequired": "اختر ملف الوورد أولاً.",
-        "uploadFailed": "تعذّر رفع الأسئلة."
       }
     },
     "parseErrors": {

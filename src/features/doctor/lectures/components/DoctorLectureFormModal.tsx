@@ -18,6 +18,7 @@ import type { LectureType, LecturePopulated } from "../../../admin/lectures/type
 interface DoctorLectureFormModalProps {
   isDark: boolean;
   subjects: MySubject[];
+  isSubjectsLoading?: boolean;
   defaultSubjectId?: string;
   lecture?: LecturePopulated | null;
   onClose: () => void;
@@ -29,11 +30,12 @@ const MAX_SIZE = 200 * 1024 * 1024;
 export function DoctorLectureFormModal({
   isDark,
   subjects,
+  isSubjectsLoading = false,
   defaultSubjectId,
   lecture,
   onClose,
 }: DoctorLectureFormModalProps) {
-  const { t } = useTranslation("doctor");
+  const { t } = useTranslation(["doctor", "common"]);
   const errorMessage = useErrorMessage();
   const isEdit = Boolean(lecture);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -198,14 +200,21 @@ export function DoctorLectureFormModal({
                     <select
                       value={subjectId}
                       onChange={(event) => setSubjectId(event.target.value)}
-                      className={inputClass}
+                      disabled={isSubjectsLoading}
+                      className={`${inputClass} disabled:opacity-60`}
                     >
-                      <option value="">{t("lectures.form.chooseSubject")}</option>
-                      {subjects.map((subject) => (
-                        <option key={subject._id} value={subject._id}>
-                          {subject.name}
-                        </option>
-                      ))}
+                      {isSubjectsLoading ? (
+                        <option value="">{t("common:states.loading")}</option>
+                      ) : (
+                        <>
+                          <option value="">{t("lectures.form.chooseSubject")}</option>
+                          {subjects.map((subject) => (
+                            <option key={subject._id} value={subject._id}>
+                              {subject.name}
+                            </option>
+                          ))}
+                        </>
+                      )}
                     </select>
                   </div>
 

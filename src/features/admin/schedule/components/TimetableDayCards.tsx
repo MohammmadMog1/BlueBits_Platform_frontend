@@ -1,15 +1,22 @@
-import { Clock } from "lucide-react";
-import type { DayGroup } from "../types";
+import { Clock, Layers } from "lucide-react";
+import type { DayGroup, SubjectGroupIndex } from "../types";
 import { useTranslation } from "react-i18next";
 import { useScheduleDates } from "../hooks/useScheduleDates";
+import { isExpectedGroupOverlap } from "../utils/schedule";
 
 interface TimetableDayCardsProps {
   days: DayGroup[];
   isDark: boolean;
+  /** subjectId → عضويته في غروب اختياري – لتمييز التداخل المتوقع عن التصادم الفعلي */
+  subjectGroupIndex?: SubjectGroupIndex;
 }
 
 /** عرض البطاقات: بطاقة لكل يوم، مفيد للقراءة السريعة على الشاشات الصغيرة */
-export default function TimetableDayCards({ days, isDark }: TimetableDayCardsProps) {
+export default function TimetableDayCards({
+  days,
+  isDark,
+  subjectGroupIndex,
+}: TimetableDayCardsProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate } = useScheduleDates();
   return (
@@ -49,12 +56,24 @@ export default function TimetableDayCards({ days, isDark }: TimetableDayCardsPro
             }`}
           >
             {day.slots.map((slot) => {
-              const isClash = slot.entries.length > 1;
+              const isExpected =
+                slot.entries.length > 1 &&
+                Boolean(subjectGroupIndex) &&
+                isExpectedGroupOverlap(slot.entries, subjectGroupIndex!);
+              const isClash = slot.entries.length > 1 && !isExpected;
               return (
                 <div
                   key={slot.timeslot}
                   className={`flex items-start gap-3 px-4 py-2.5 ${
-                    isClash ? (isDark ? "bg-red-500/10" : "bg-red-50/60") : ""
+                    isClash
+                      ? isDark
+                        ? "bg-red-500/10"
+                        : "bg-red-50/60"
+                      : isExpected
+                        ? isDark
+                          ? "bg-emerald-500/10"
+                          : "bg-emerald-50/60"
+                        : ""
                   }`}
                 >
                   <span
@@ -63,12 +82,16 @@ export default function TimetableDayCards({ days, isDark }: TimetableDayCardsPro
                         ? isDark
                           ? "border-red-500/25 bg-red-500/10 text-red-400"
                           : "border-red-200 bg-red-50 text-red-600"
-                        : isDark
-                          ? "border-white/10 bg-white/5 text-gray-400"
-                          : "border-gray-200 bg-gray-50 text-gray-500"
+                        : isExpected
+                          ? isDark
+                            ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-400"
+                            : "border-emerald-200 bg-emerald-50 text-emerald-600"
+                          : isDark
+                            ? "border-white/10 bg-white/5 text-gray-400"
+                            : "border-gray-200 bg-gray-50 text-gray-500"
                     }`}
                   >
-                    <Clock size={10} />
+                    {isExpected ? <Layers size={10} /> : <Clock size={10} />}
                     {t("schedule.timetable.slotLabel", { number: slot.timeslot })}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -80,9 +103,13 @@ export default function TimetableDayCards({ days, isDark }: TimetableDayCardsPro
                             ? isDark
                               ? "bg-red-500/15 text-red-400"
                               : "bg-red-100 text-red-700"
-                            : isDark
-                              ? "bg-[#2376BB]/15 text-[#7fb5e4]"
-                              : "bg-[#404293]/8 text-[#404293]"
+                            : isExpected
+                              ? isDark
+                                ? "bg-emerald-500/15 text-emerald-400"
+                                : "bg-emerald-100 text-emerald-700"
+                              : isDark
+                                ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                                : "bg-[#404293]/8 text-[#404293]"
                         }`}
                       >
                         {entry.subjectName}

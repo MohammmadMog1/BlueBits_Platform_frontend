@@ -1,22 +1,27 @@
-import { AlertTriangle } from "lucide-react";
-import type { DayGroup } from "../types";
+import { AlertTriangle, Layers } from "lucide-react";
+import type { DayGroup, SubjectGroupIndex } from "../types";
 import { useTranslation } from "react-i18next";
 import { useScheduleDates } from "../hooks/useScheduleDates";
+import { isExpectedGroupOverlap } from "../utils/schedule";
 
 interface TimetableGridProps {
   days: DayGroup[];
   timeslots: number[];
   isDark: boolean;
+  /** subjectId → عضويته في غروب اختياري – لتمييز التداخل المتوقع عن التصادم الفعلي */
+  subjectGroupIndex?: SubjectGroupIndex;
 }
 
 /**
  * الجدول الكبير: صف لكل يوم امتحان، وعمود لكل فترة.
- * الخلية التي تحوي أكثر من مادة تعني تصادماً فتُبرز بالأحمر.
+ * الخلية التي تحوي أكثر من مادة تعني تصادماً فتُبرز بالأحمر، إلا إذا كانت
+ * كل موادها من نفس الغروب الاختياري فهذا تداخل متوقع (يُبرز بلون محايد).
  */
 export default function TimetableGrid({
   days,
   timeslots,
   isDark,
+  subjectGroupIndex,
 }: TimetableGridProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate } = useScheduleDates();
@@ -90,14 +95,28 @@ export default function TimetableGrid({
               {timeslots.map((timeslot) => {
                 const slot = day.slots.find((item) => item.timeslot === timeslot);
                 const entries = slot?.entries ?? [];
-                const isClash = entries.length > 1;
+                const isExpected =
+                  entries.length > 1 &&
+                  Boolean(subjectGroupIndex) &&
+                  isExpectedGroupOverlap(entries, subjectGroupIndex!);
+                const isClash = entries.length > 1 && !isExpected;
 
                 return (
                   <td
                     key={timeslot}
                     className={`border-r px-3 py-3 align-top ${
                       isDark ? "border-white/10" : "border-gray-100"
-                    } ${isClash ? (isDark ? "bg-red-500/10" : "bg-red-50") : ""}`}
+                    } ${
+                      isClash
+                        ? isDark
+                          ? "bg-red-500/10"
+                          : "bg-red-50"
+                        : isExpected
+                          ? isDark
+                            ? "bg-emerald-500/[0.06]"
+                            : "bg-emerald-50/60"
+                          : ""
+                    }`}
                   >
                     {entries.length === 0 ? (
                       <span
@@ -119,6 +138,16 @@ export default function TimetableGrid({
                             {t("schedule.timetable.clash", { count: entries.length })}
                           </span>
                         )}
+                        {isExpected && (
+                          <span
+                            className={`flex items-center gap-1 text-[10px] font-black ${
+                              isDark ? "text-emerald-400" : "text-emerald-600"
+                            }`}
+                          >
+                            <Layers size={10} />
+                            {t("schedule.timetable.expectedGroup", { count: entries.length })}
+                          </span>
+                        )}
                         {entries.map((entry) => (
                           <span
                             key={entry._id}
@@ -127,9 +156,13 @@ export default function TimetableGrid({
                                 ? isDark
                                   ? "bg-red-500/15 text-red-400"
                                   : "bg-red-100 text-red-700"
-                                : isDark
-                                  ? "bg-[#2376BB]/15 text-[#7fb5e4]"
-                                  : "bg-[#404293]/8 text-[#404293]"
+                                : isExpected
+                                  ? isDark
+                                    ? "bg-emerald-500/15 text-emerald-400"
+                                    : "bg-emerald-100 text-emerald-700"
+                                  : isDark
+                                    ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                                    : "bg-[#404293]/8 text-[#404293]"
                             }`}
                           >
                             {entry.subjectName}

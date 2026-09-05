@@ -65,10 +65,14 @@ export default function SectionCard({
         {to && (
           <Link
             to={to}
-            className="flex shrink-0 items-center gap-1 text-[11px] font-bold text-[#2376BB] transition-opacity hover:opacity-75"
+            className="group/link flex shrink-0 items-center gap-1 text-[11px] font-bold text-[#2376BB] transition-opacity hover:opacity-75"
           >
             {toLabel ?? t("actions.viewAll")}
-            <ArrowLeft className={`h-3 w-3 ${isRTL ? "" : "rotate-180"}`} />
+            <ArrowLeft
+              className={`h-3 w-3 transition-transform duration-200 ${
+                isRTL ? "group-hover/link:-translate-x-0.5" : "rotate-180 group-hover/link:translate-x-0.5"
+              }`}
+            />
           </Link>
         )}
       </div>

@@ -1,4 +1,11 @@
-import type { DayGroup, Ref, SubjectConfigRow, TimetableEntry } from "../types";
+import type {
+  DayGroup,
+  Ref,
+  SubjectConfigRow,
+  SubjectGroup,
+  SubjectGroupIndex,
+  TimetableEntry,
+} from "../types";
 
 const DAY_MS = 86_400_000;
 /** سقف أمان حتى لا تدور الحلقة على مدى تواريخ غير منطقي */
@@ -129,10 +136,46 @@ export const listTimeslots = (entries: TimetableEntry[]): number[] => {
   return Array.from({ length: max }, (_, index) => index + 1);
 };
 
-/** عدد الفترات التي تحوي أكثر من مادة – أي تصادم فعلي */
-export const countClashes = (days: DayGroup[]): number =>
+/**
+ * subjectId → عضويته في غروب اختياري، مبنية من غروبات فصل معيّن.
+ * تُستخدم لتمييز الفترات التي تحوي أكثر من مادة اختيارية بنفس الغروب
+ * (تداخل متوقّع ومقصود) عن التصادمات الفعلية.
+ */
+export const buildSubjectGroupIndex = (groups: SubjectGroup[]): SubjectGroupIndex => {
+  const index: SubjectGroupIndex = new Map();
+  groups.forEach((group) => {
+    (group.subjects ?? []).forEach((subject) => {
+      index.set(subject._id, { groupId: group._id, groupName: group.name });
+    });
+  });
+  return index;
+};
+
+/** هل كل مواد هذه الفترة تتبع نفس الغروب الاختياري؟ (تداخل متوقع، ليس تصادماً) */
+export const isExpectedGroupOverlap = (
+  entries: { subjectId: string }[],
+  groupIndex: SubjectGroupIndex,
+): boolean => {
+  if (entries.length < 2) return false;
+  const groupIds = entries.map((entry) => groupIndex.get(entry.subjectId)?.groupId);
+  const first = groupIds[0];
+  return Boolean(first) && groupIds.every((id) => id === first);
+};
+
+/**
+ * عدد الفترات التي تحوي أكثر من مادة – أي تصادم فعلي.
+ * الفترات التي تحوي فقط مواد اختيارية من نفس الغروب لا تُحتسب تصادماً
+ * (يُمرَّر `groupIndex` عند توفّره).
+ */
+export const countClashes = (days: DayGroup[], groupIndex?: SubjectGroupIndex): number =>
   days.reduce(
-    (total, day) => total + day.slots.filter((slot) => slot.entries.length > 1).length,
+    (total, day) =>
+      total +
+      day.slots.filter(
+        (slot) =>
+          slot.entries.length > 1 &&
+          !(groupIndex && isExpectedGroupOverlap(slot.entries, groupIndex)),
+      ).length,
     0,
   );
 

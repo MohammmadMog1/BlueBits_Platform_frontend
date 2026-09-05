@@ -43,7 +43,7 @@ export default function DoctorLecturesPage() {
   const [deletingLecture, setDeletingLecture] = useState<LecturePopulated | null>(null);
 
   const lecturesQuery = useGetMyLecturesQuery();
-  const { data: subjects = [] } = useGetMySubjectsQuery();
+  const { data: subjects = [], isLoading: subjectsLoading } = useGetMySubjectsQuery();
   const [deleteLecture, deleteState] = useDeleteLectureMutation();
   const [updateLecture] = useUpdateLectureMutation();
 
@@ -160,14 +160,21 @@ export default function DoctorLecturesPage() {
         <select
           value={filterSubject}
           onChange={(event) => setFilterSubject(event.target.value)}
-          className={`${fieldClass(isDark)} w-auto`}
+          disabled={subjectsLoading}
+          className={`${fieldClass(isDark)} w-auto disabled:opacity-60`}
         >
-          <option value="">{t("doctor:lectures.allSubjects")}</option>
-          {subjects.map((subject) => (
-            <option key={subject._id} value={subject._id}>
-              {subject.name}
-            </option>
-          ))}
+          {subjectsLoading ? (
+            <option value="">{t("common:states.loading")}</option>
+          ) : (
+            <>
+              <option value="">{t("doctor:lectures.allSubjects")}</option>
+              {subjects.map((subject) => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.name}
+                </option>
+              ))}
+            </>
+          )}
         </select>
         <select
           value={filterType}
@@ -254,6 +261,7 @@ export default function DoctorLecturesPage() {
           <DoctorLectureFormModal
             isDark={isDark}
             subjects={subjects}
+            isSubjectsLoading={subjectsLoading}
             defaultSubjectId={filterSubject || undefined}
             lecture={editingLecture}
             onClose={() => {
