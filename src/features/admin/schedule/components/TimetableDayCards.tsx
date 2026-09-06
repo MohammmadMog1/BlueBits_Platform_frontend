@@ -1,5 +1,5 @@
 import { Clock, Layers } from "lucide-react";
-import type { DayGroup, SubjectGroupIndex } from "../types";
+import type { DayGroup, SubjectGroupIndex, SubjectYearIndex } from "../types";
 import { useTranslation } from "react-i18next";
 import { useScheduleDates } from "../hooks/useScheduleDates";
 import { isExpectedGroupOverlap } from "../utils/schedule";
@@ -9,6 +9,8 @@ interface TimetableDayCardsProps {
   isDark: boolean;
   /** subjectId → عضويته في غروب اختياري – لتمييز التداخل المتوقع عن التصادم الفعلي */
   subjectGroupIndex?: SubjectGroupIndex;
+  /** subjectId → اسم السنة الدراسية التابعة لها المادة، إن أمكن معرفتها */
+  subjectYearIndex?: SubjectYearIndex;
 }
 
 /** عرض البطاقات: بطاقة لكل يوم، مفيد للقراءة السريعة على الشاشات الصغيرة */
@@ -16,6 +18,7 @@ export default function TimetableDayCards({
   days,
   isDark,
   subjectGroupIndex,
+  subjectYearIndex,
 }: TimetableDayCardsProps) {
   const { t } = useTranslation("admin");
   const { dayOfWeekLabel, formatDate } = useScheduleDates();
@@ -95,26 +98,34 @@ export default function TimetableDayCards({
                     {t("schedule.timetable.slotLabel", { number: slot.timeslot })}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {slot.entries.map((entry) => (
-                      <span
-                        key={entry._id}
-                        className={`rounded-lg px-2.5 py-1 text-[11px] font-bold ${
-                          isClash
-                            ? isDark
-                              ? "bg-red-500/15 text-red-400"
-                              : "bg-red-100 text-red-700"
-                            : isExpected
+                    {slot.entries.map((entry) => {
+                      const yearName = subjectYearIndex?.get(entry.subjectId);
+                      return (
+                        <span
+                          key={entry._id}
+                          className={`rounded-lg px-2.5 py-1 text-[11px] font-bold ${
+                            isClash
                               ? isDark
-                                ? "bg-emerald-500/15 text-emerald-400"
-                                : "bg-emerald-100 text-emerald-700"
-                              : isDark
-                                ? "bg-[#2376BB]/15 text-[#7fb5e4]"
-                                : "bg-[#404293]/8 text-[#404293]"
-                        }`}
-                      >
-                        {entry.subjectName}
-                      </span>
-                    ))}
+                                ? "bg-red-500/15 text-red-400"
+                                : "bg-red-100 text-red-700"
+                              : isExpected
+                                ? isDark
+                                  ? "bg-emerald-500/15 text-emerald-400"
+                                  : "bg-emerald-100 text-emerald-700"
+                                : isDark
+                                  ? "bg-[#2376BB]/15 text-[#7fb5e4]"
+                                  : "bg-[#404293]/8 text-[#404293]"
+                          }`}
+                        >
+                          {entry.subjectName}
+                          {yearName && (
+                            <span className="ms-1 font-semibold opacity-70">
+                              · {yearName}
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               );

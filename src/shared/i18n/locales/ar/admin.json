@@ -178,7 +178,13 @@
       "noMatchingSubjects": "لا توجد مواد مطابقة",
       "carrying": "حملة",
       "rest": "راحة",
-      "daysValue": "{{count}} يوم"
+      "daysValue": "{{count}} يوم",
+      "exportCsv": "تصدير CSV",
+      "exportStatus": "الحالة",
+      "colSubject": "المادة",
+      "colResponses": "عدد الإجابات",
+      "colDays": "متوسط أيام الراحة",
+      "colDifficulty": "متوسط الصعوبة"
     }
   },
   "schedule": {
@@ -354,6 +360,7 @@
     "generator": {
       "title": "توليد برنامج الفحص",
       "subtitle": "جمّع البيانات، ولّد الجدول، راجع التعارضات، ثم انشره للطلاب",
+      "viewSurveyStats": "إحصائيات الاستبيان",
       "noConfigWarning": "لا توجد إعدادات جدولة لفصل \"{{semester}}\" – لا يمكن توليد الجدول قبل ضبطها.",
       "goToSettings": "اذهب للإعدادات",
       "collectTitle": "تجميع البيانات",
@@ -366,6 +373,7 @@
       "resolve": "إعادة التوليد",
       "running": "جاري التنفيذ...",
       "solvingHint": "المحرّك يبحث عن أفضل توزيع – قد تستغرق العملية دقيقة أو أكثر، لا تغلق الصفحة.",
+      "loadingHint": "جاري تحميل الجدول...",
       "collected": "تم تجميع بيانات الجدولة – {{count}} تعارض",
       "generated": "تم توليد الجدول بنجاح",
       "published": "تم نشر الجدول",
@@ -391,6 +399,7 @@
       "expectedBadge": "اختياري متوقع"
     },
     "timetable": {
+      "academicYearLabel": "العام الدراسي",
       "viewGrid": "جدول",
       "viewCards": "بطاقات",
       "scheduledSubjects": "مواد مجدولة",
@@ -405,6 +414,8 @@
       "publish": "نشر الجدول",
       "hardViolated": "قيود صارمة مخروقة",
       "hardSatisfied": "لا خروقات في القيود الصارمة",
+      "hardScoreLabel": "صارمة",
+      "softScoreLabel": "مرنة",
       "clashesNotice": "{{count}} فترة فيها أكثر من مادة في نفس الوقت – مُبرزة بالأحمر أدناه.",
       "empty": "الجدول فارغ",
       "publishedNotice": "هذا الجدول منشور ومرئي للطلاب.",
@@ -413,7 +424,17 @@
       "slotLabel": "فترة {{number}}",
       "clash": "تصادم ({{count}})",
       "subjectsCount": "{{count}} مادة",
-      "expectedGroup": "غروب اختياري ({{count}})"
+      "expectedGroup": "غروب اختياري ({{count}})",
+      "exportCsv": "تصدير CSV",
+      "exportSummaryTitle": "إحصائيات الجدولة",
+      "exportTimetableTitle": "جدول الفحص",
+      "statusLabel": "الحالة",
+      "updatedAtLabel": "آخر تحديث",
+      "colDay": "التاريخ",
+      "colWeekday": "اليوم",
+      "colTimeslot": "الفترة",
+      "colSubject": "المادة",
+      "colYear": "السنة الدراسية"
     }
   },
   "tasks": {

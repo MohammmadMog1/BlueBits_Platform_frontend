@@ -216,3 +216,6 @@ export const defaultAcademicYear = (): string => {
 
 /** رسالة الخطأ – المصدر الموحّد الآن `shared/i18n/useErrorMessage` */
 export { serverMessage } from "../../../../shared/utils/apiError";
+
+/** أدوات تصدير CSV – المصدر الموحّد الآن `shared/utils/csv` */
+export { csvEscape, downloadTextFile, rowsToCsv } from "../../../../shared/utils/csv";

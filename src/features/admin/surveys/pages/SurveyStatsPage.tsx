@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import {
   AlertCircle,
   BarChart3,
+  Download,
   GraduationCap,
   Inbox,
   RefreshCcw,
@@ -16,15 +17,18 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useFormatters } from "../../../../shared/i18n/useFormatters";
+import { downloadTextFile, rowsToCsv } from "../../../../shared/utils/csv";
 import SubjectStatsTable from "../components/SubjectStatsTable";
 import { useSurveyStats } from "../hooks/useSurveyStats";
 import type { StatsScope, SubjectStatsSortKey } from "../types";
+import { roundTo } from "../utils/survey";
 import {
   statusLabelKey,
   dividerClass,
   errorAlertClass,
   faintClass,
   fieldClass,
+  ghostButtonClass,
   headingClass,
   iconButtonClass,
   mutedClass,
@@ -74,6 +78,40 @@ export default function SurveyStatsPage() {
     refetch,
   } = useSurveyStats();
 
+  /** يصدّر إحصاءات كل الكتل المعروضة حالياً (بعد البحث والترتيب) كملف CSV */
+  const handleExportCsv = () => {
+    const rows: (string | number)[][] = [];
+
+    blocks.forEach((block, index) => {
+      if (index > 0) rows.push([]);
+      rows.push([`${block.yearName ?? "—"} — ${block.academicYear}`]);
+      if (block.formStatus) {
+        rows.push([t("surveys.stats.exportStatus"), t(statusLabelKey(block.formStatus))]);
+      }
+      rows.push([t("surveys.stats.studentsAnswered"), block.totalStudentsResponded]);
+      rows.push([t("surveys.stats.subjectsAppeared"), block.subjects.length]);
+      rows.push([]);
+      rows.push([
+        t("surveys.stats.colSubject"),
+        t("surveys.stats.colResponses"),
+        t("surveys.stats.carrying"),
+        t("surveys.stats.colDays"),
+        t("surveys.stats.colDifficulty"),
+      ]);
+      block.subjects.forEach((subject) => {
+        rows.push([
+          subject.subjectName,
+          subject.totalResponsesForSubject,
+          subject.carryingCount,
+          roundTo(subject.avgPreferredDaysBefore),
+          roundTo(subject.avgDifficultyRating),
+        ]);
+      });
+    });
+
+    downloadTextFile("survey-stats.csv", rowsToCsv(rows));
+  };
+
   return (
     <div className="mx-auto flex max-w-[1300px] flex-col gap-6">
       {/* ── الترويسة ─────────────────────────── */}
@@ -94,15 +132,26 @@ export default function SurveyStatsPage() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={refetch}
-          title={t("common:actions.refresh")}
-          aria-label={t("common:actions.refresh")}
-          className={iconButtonClass(isDark)}
-        >
-          <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            disabled={blocks.length === 0}
+            className={`${ghostButtonClass(isDark)} disabled:cursor-not-allowed disabled:opacity-40`}
+          >
+            <Download size={14} />
+            {t("surveys.stats.exportCsv")}
+          </button>
+          <button
+            type="button"
+            onClick={refetch}
+            title={t("common:actions.refresh")}
+            aria-label={t("common:actions.refresh")}
+            className={iconButtonClass(isDark)}
+          >
+            <RefreshCcw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
+          </button>
+        </div>
       </div>
 
       {/* ── أدوات التصفية ────────────────────── */}

@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useErrorMessage } from "../../../../shared/i18n/useErrorMessage";
-import { useGetSemestersQuery } from "../../academic/api/academicApi";
+import { useGetSemestersQuery, useGetYearsQuery } from "../../academic/api/academicApi";
+import { useGetSubjectsQuery } from "../../subjects/api/subjectsApi";
 import {
   useGenerateScheduleDataMutation,
   useGetScheduleConfigQuery,
@@ -10,6 +11,7 @@ import {
   useSolveScheduleMutation,
 } from "../api/scheduleApi";
 import { useGetSubjectGroupsBySemesterDetailedQuery } from "../api/subjectGroupsApi";
+import type { SubjectYearIndex } from "../types";
 import { buildSubjectGroupIndex } from "../utils/schedule";
 
 
@@ -41,6 +43,24 @@ export function useScheduleGenerator() {
     () => buildSubjectGroupIndex(subjectGroupsQuery.data ?? []),
     [subjectGroupsQuery.data],
   );
+
+  /** لعرض السنة الدراسية لكل مادة داخل الجدول، إن أمكن معرفتها */
+  const subjectsQuery = useGetSubjectsQuery(
+    { semesterId: selectedSemesterId },
+    { skip: !selectedSemesterId },
+  );
+  const yearsQuery = useGetYearsQuery();
+  const subjectYearIndex = useMemo(() => {
+    const yearNameById = new Map(
+      (yearsQuery.data ?? []).map((year) => [year._id, year.name]),
+    );
+    const index: SubjectYearIndex = new Map();
+    for (const subject of subjectsQuery.data ?? []) {
+      const yearName = yearNameById.get(subject.yearId);
+      if (yearName) index.set(subject._id, yearName);
+    }
+    return index;
+  }, [subjectsQuery.data, yearsQuery.data]);
 
   const [generateData, generateState] = useGenerateScheduleDataMutation();
   const [solve, solveState] = useSolveScheduleMutation();
@@ -121,8 +141,11 @@ export function useScheduleGenerator() {
     hasGeneratedData: Boolean(generateState.data),
     schedule,
     resultLoading: resultQuery.isLoading,
+    /** يشمل جلب آخر جدول محفوظ وتشغيل الـ solver معاً – لعرض لودينغ موحّد فوق الجدول */
+    isScheduleLoading: resultQuery.isLoading || solveState.isLoading,
     subjectGroupIndex,
     subjectGroupsLoading: subjectGroupsQuery.isLoading,
+    subjectYearIndex,
 
     // الحالة
     isGenerating: generateState.isLoading,

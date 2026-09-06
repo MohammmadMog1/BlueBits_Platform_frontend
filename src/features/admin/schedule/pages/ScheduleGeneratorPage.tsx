@@ -7,6 +7,7 @@
 import { Link } from "react-router-dom";
 import {
   AlertCircle,
+  BarChart3,
   CheckCircle2,
   Database,
   Send,
@@ -46,8 +47,9 @@ export default function ScheduleGeneratorPage() {
     conflicts,
     hasGeneratedData,
     schedule,
-    resultLoading,
+    isScheduleLoading,
     subjectGroupIndex,
+    subjectYearIndex,
     isGenerating,
     isSolving,
     isPublishing,
@@ -101,18 +103,32 @@ export default function ScheduleGeneratorPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* ── الترويسة ─────────────────────────── */}
-      <div>
-        <div className="mb-1 flex items-center gap-2.5">
-          <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${brandGradient} shadow-md shadow-[#404293]/25`}>
-            <Sparkles className="h-[18px] w-[18px] text-white" />
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="mb-1 flex items-center gap-2.5">
+            <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${brandGradient} shadow-md shadow-[#404293]/25`}>
+              <Sparkles className="h-[18px] w-[18px] text-white" />
+            </div>
+            <h1 className={`text-xl font-black tracking-tight ${headingClass(isDark)}`}>
+              {t("schedule.generator.title")}
+            </h1>
           </div>
-          <h1 className={`text-xl font-black tracking-tight ${headingClass(isDark)}`}>
-            {t("schedule.generator.title")}
-          </h1>
+          <p className={`text-sm font-medium ${mutedClass(isDark)}`}>
+            {t("schedule.generator.subtitle")}
+          </p>
         </div>
-        <p className={`text-sm font-medium ${mutedClass(isDark)}`}>
-          {t("schedule.generator.subtitle")}
-        </p>
+
+        <Link
+          to="/admin/survey-stats"
+          className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-bold transition-colors ${
+            isDark
+              ? "border-white/10 text-gray-300 hover:border-[#2376BB]/40 hover:text-[#7fb5e4]"
+              : "border-gray-200 text-gray-600 hover:border-[#404293]/30 hover:text-[#404293]"
+          }`}
+        >
+          <BarChart3 size={14} />
+          {t("schedule.generator.viewSurveyStats")}
+        </Link>
       </div>
 
       <SemesterPicker
@@ -204,13 +220,6 @@ export default function ScheduleGeneratorPage() {
         ))}
       </div>
 
-      {isSolving && (
-        <p className={`flex items-center gap-2 text-sm font-semibold ${infoAlertClass(isDark)}`}>
-          <Sparkles className="h-4 w-4 shrink-0 animate-pulse" />
-          {t("schedule.generator.solvingHint")}
-        </p>
-      )}
-
       {/* ── التنبيهات ────────────────────────── */}
       <AnimatePresence>
         {successMessage && (
@@ -254,8 +263,22 @@ export default function ScheduleGeneratorPage() {
         />
       )}
 
-      {resultLoading ? (
+      {isScheduleLoading ? (
         <div className={`space-y-4 p-6 ${cardClass(isDark)}`}>
+          <p className={`flex items-center gap-2 text-sm font-semibold ${infoAlertClass(isDark)}`}>
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              className="inline-flex"
+            >
+              <Sparkles className="h-4 w-4 shrink-0" />
+            </motion.span>
+            {t(
+              isSolving
+                ? "schedule.generator.solvingHint"
+                : "schedule.generator.loadingHint",
+            )}
+          </p>
           <div className={`h-10 w-1/3 ${skeletonClass(isDark)}`} />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {Array.from({ length: 4 }).map((_, index) => (
@@ -271,21 +294,20 @@ export default function ScheduleGeneratorPage() {
           onPublish={askPublish}
           isDark={isDark}
           subjectGroupIndex={subjectGroupIndex}
+          subjectYearIndex={subjectYearIndex}
         />
       ) : (
-        !isSolving && (
-          <div className={`flex flex-col items-center justify-center py-20 text-center ${cardClass(isDark)}`}>
-            <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${isDark ? "bg-white/10" : "bg-gray-100"}`}>
-              <Wand2 className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
-            </div>
-            <p className={`mb-1 font-bold ${mutedClass(isDark)}`}>
-              {t("schedule.generator.emptyTitle")}
-            </p>
-            <p className={`text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
-              {t("schedule.generator.emptyHint")}
-            </p>
+        <div className={`flex flex-col items-center justify-center py-20 text-center ${cardClass(isDark)}`}>
+          <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${isDark ? "bg-white/10" : "bg-gray-100"}`}>
+            <Wand2 className={`h-7 w-7 ${isDark ? "text-gray-600" : "text-gray-300"}`} />
           </div>
-        )
+          <p className={`mb-1 font-bold ${mutedClass(isDark)}`}>
+            {t("schedule.generator.emptyTitle")}
+          </p>
+          <p className={`text-sm ${isDark ? "text-gray-600" : "text-gray-300"}`}>
+            {t("schedule.generator.emptyHint")}
+          </p>
+        </div>
       )}
 
       {/* ── تأكيد النشر ──────────────────────── */}

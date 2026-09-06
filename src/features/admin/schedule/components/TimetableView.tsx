@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   CalendarCheck,
   CheckCircle2,
+  Download,
   LayoutGrid,
   Send,
   ShieldCheck,
@@ -12,11 +13,18 @@ import {
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import type { AdminKey } from "../../../../shared/i18n/types";
-import type { GeneratedSchedule, SubjectGroupIndex, TimetableViewMode } from "../types";
+import type {
+  GeneratedSchedule,
+  SubjectGroupIndex,
+  SubjectYearIndex,
+  TimetableViewMode,
+} from "../types";
 import {
   countClashes,
+  downloadTextFile,
   groupTimetableByDay,
   listTimeslots,
+  rowsToCsv,
 } from "../utils/schedule";
 import { useScheduleDates } from "../hooks/useScheduleDates";
 import TimetableDayCards from "./TimetableDayCards";
@@ -46,6 +54,8 @@ interface TimetableViewProps {
   isDark: boolean;
   /** subjectId → عضويته في غروب اختياري – لتمييز التداخل المتوقع عن التصادم الفعلي */
   subjectGroupIndex?: SubjectGroupIndex;
+  /** subjectId → اسم السنة الدراسية التابعة لها المادة، إن أمكن معرفتها */
+  subjectYearIndex?: SubjectYearIndex;
 }
 
 export default function TimetableView({
@@ -55,9 +65,10 @@ export default function TimetableView({
   onPublish,
   isDark,
   subjectGroupIndex,
+  subjectYearIndex,
 }: TimetableViewProps) {
   const { t } = useTranslation("admin");
-  const { formatDate } = useScheduleDates();
+  const { formatDate, dayOfWeekLabel } = useScheduleDates();
   const [viewMode, setViewMode] = useState<TimetableViewMode>("grid");
 
   const days = useMemo(
@@ -72,9 +83,15 @@ export default function TimetableView({
   const clashes = countClashes(days, subjectGroupIndex);
   const isPublished = schedule.status === "published";
   const hardScore = schedule.score?.hardScore ?? 0;
+  const softScore = schedule.score?.softScore ?? 0;
   const hasHardViolations = hardScore < 0;
 
   const stats = [
+    {
+      label: t("schedule.timetable.academicYearLabel"),
+      value: schedule.academicYear,
+      color: "#8B5CF6",
+    },
     {
       label: t("schedule.timetable.scheduledSubjects"),
       value: schedule.timetable?.length ?? 0,
@@ -91,6 +108,49 @@ export default function TimetableView({
       color: clashes ? "#EF4444" : "#059669",
     },
   ];
+
+  /** يصدّر الإحصائيات الكاملة وجدول الفحص كملف CSV (يُفتح مباشرة في Excel) */
+  const handleExportCsv = () => {
+    const rows: (string | number)[][] = [
+      [t("schedule.timetable.exportSummaryTitle")],
+      [t("schedule.timetable.academicYearLabel"), schedule.academicYear],
+      [
+        t("schedule.timetable.statusLabel"),
+        t(isPublished ? "schedule.timetable.published" : "schedule.timetable.draft"),
+      ],
+      [t("schedule.timetable.hardScoreLabel"), hardScore],
+      [t("schedule.timetable.softScoreLabel"), softScore],
+      [t("schedule.timetable.scheduledSubjects"), schedule.timetable?.length ?? 0],
+      [t("schedule.timetable.examDays"), days.length],
+      [t("schedule.timetable.clashingSlots"), clashes],
+      [t("schedule.timetable.updatedAtLabel"), formatDate(schedule.updatedAt)],
+      [],
+      [t("schedule.timetable.exportTimetableTitle")],
+      [
+        t("schedule.timetable.colDay"),
+        t("schedule.timetable.colWeekday"),
+        t("schedule.timetable.colTimeslot"),
+        t("schedule.timetable.colSubject"),
+        t("schedule.timetable.colYear"),
+      ],
+    ];
+
+    days.forEach((day) => {
+      day.slots.forEach((slot) => {
+        slot.entries.forEach((entry) => {
+          rows.push([
+            day.day,
+            dayOfWeekLabel(day.day),
+            slot.timeslot,
+            entry.subjectName,
+            subjectYearIndex?.get(entry.subjectId) ?? "",
+          ]);
+        });
+      });
+    });
+
+    downloadTextFile(`exam-schedule-${schedule.academicYear}.csv`, rowsToCsv(rows));
+  };
 
   return (
     <motion.div
@@ -176,6 +236,19 @@ export default function TimetableView({
 
           <button
             type="button"
+            onClick={handleExportCsv}
+            className={`flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 text-xs font-bold transition-colors ${
+              isDark
+                ? "border-white/10 text-gray-300 hover:border-[#2376BB]/40 hover:text-[#7fb5e4]"
+                : "border-gray-200 text-gray-600 hover:border-[#404293]/30 hover:text-[#404293]"
+            }`}
+          >
+            <Download size={13} />
+            {t("schedule.timetable.exportCsv")}
+          </button>
+
+          <button
+            type="button"
             onClick={onPublish}
             disabled={isPublishing}
             className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60 ${
@@ -225,7 +298,7 @@ export default function TimetableView({
           ) : (
             <ShieldCheck className={`h-4 w-4 shrink-0 ${isDark ? "text-emerald-400" : "text-emerald-600"}`} />
           )}
-          <div>
+          <div className="min-w-0 flex-1">
             <p
               className={`text-[11px] font-bold ${
                 hasHardViolations
@@ -243,8 +316,8 @@ export default function TimetableView({
                   : "schedule.timetable.hardSatisfied",
               )}
             </p>
-            <p
-              className={`text-sm font-black ${
+            <div
+              className={`mt-1 flex items-center gap-3 ${
                 hasHardViolations
                   ? isDark
                     ? "text-red-300"
@@ -253,15 +326,35 @@ export default function TimetableView({
                     ? "text-emerald-300"
                     : "text-emerald-700"
               }`}
-              dir="ltr"
             >
-              {schedule.score?.raw ??
-                `${hardScore}hard/${schedule.score?.softScore ?? 0}soft`}
-            </p>
+              <div className="flex items-baseline gap-1.5" dir="ltr">
+                <span className="text-base font-black tabular-nums">{hardScore}</span>
+                <span className="text-[10px] font-bold opacity-70">
+                  {t("schedule.timetable.hardScoreLabel")}
+                </span>
+              </div>
+              <div
+                className={`h-4 w-px shrink-0 ${
+                  hasHardViolations
+                    ? isDark
+                      ? "bg-red-400/30"
+                      : "bg-red-500/30"
+                    : isDark
+                      ? "bg-emerald-400/30"
+                      : "bg-emerald-600/30"
+                }`}
+              />
+              <div className="flex items-baseline gap-1.5" dir="ltr">
+                <span className="text-base font-black tabular-nums">{softScore}</span>
+                <span className="text-[10px] font-bold opacity-70">
+                  {t("schedule.timetable.softScoreLabel")}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -276,7 +369,7 @@ export default function TimetableView({
                 }}
               />
               <div>
-                <p className={`text-base font-black leading-none ${headingClass(isDark)}`}>
+                <p className={`text-base font-black leading-none ${headingClass(isDark)}`} dir="ltr">
                   {stat.value}
                 </p>
                 <p className={`mt-0.5 text-[10px] font-bold ${mutedClass(isDark)}`}>
@@ -312,12 +405,14 @@ export default function TimetableView({
           timeslots={timeslots}
           isDark={isDark}
           subjectGroupIndex={subjectGroupIndex}
+          subjectYearIndex={subjectYearIndex}
         />
       ) : (
         <TimetableDayCards
           days={days}
           isDark={isDark}
           subjectGroupIndex={subjectGroupIndex}
+          subjectYearIndex={subjectYearIndex}
         />
       )}
 

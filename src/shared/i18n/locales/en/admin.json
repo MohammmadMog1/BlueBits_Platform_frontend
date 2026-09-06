@@ -178,7 +178,13 @@
       "noMatchingSubjects": "No matching subjects",
       "carrying": "Retakes",
       "rest": "Rest",
-      "daysValue": "{{count}} days"
+      "daysValue": "{{count}} days",
+      "exportCsv": "Export CSV",
+      "exportStatus": "Status",
+      "colSubject": "Subject",
+      "colResponses": "Responses",
+      "colDays": "Avg. rest days",
+      "colDifficulty": "Avg. difficulty"
     }
   },
   "schedule": {
@@ -354,6 +360,7 @@
     "generator": {
       "title": "Generate the exam timetable",
       "subtitle": "Collect the data, generate the timetable, review conflicts, then publish it to students",
+      "viewSurveyStats": "Survey stats",
       "noConfigWarning": "No scheduling settings for the \"{{semester}}\" semester — the timetable cannot be generated until they are set.",
       "goToSettings": "Go to settings",
       "collectTitle": "Collect data",
@@ -366,6 +373,7 @@
       "resolve": "Regenerate",
       "running": "Working...",
       "solvingHint": "The solver is searching for the best arrangement — this can take a minute or more, don't close the page.",
+      "loadingHint": "Loading the timetable...",
       "collected": "Scheduling data collected — {{count}} conflicts",
       "generated": "Timetable generated successfully",
       "published": "Timetable published",
@@ -391,6 +399,7 @@
       "expectedBadge": "Expected elective"
     },
     "timetable": {
+      "academicYearLabel": "Academic year",
       "viewGrid": "Grid",
       "viewCards": "Cards",
       "scheduledSubjects": "Scheduled subjects",
@@ -405,6 +414,8 @@
       "publish": "Publish timetable",
       "hardViolated": "Hard constraints violated",
       "hardSatisfied": "No hard-constraint violations",
+      "hardScoreLabel": "hard",
+      "softScoreLabel": "soft",
       "clashesNotice": "{{count}} slots hold more than one subject at the same time — highlighted in red below.",
       "empty": "The timetable is empty",
       "publishedNotice": "This timetable is published and visible to students.",
@@ -413,7 +424,17 @@
       "slotLabel": "Slot {{number}}",
       "clash": "Clash ({{count}})",
       "subjectsCount": "{{count}} subjects",
-      "expectedGroup": "Elective group ({{count}})"
+      "expectedGroup": "Elective group ({{count}})",
+      "exportCsv": "Export CSV",
+      "exportSummaryTitle": "Scheduling statistics",
+      "exportTimetableTitle": "Exam timetable",
+      "statusLabel": "Status",
+      "updatedAtLabel": "Last updated",
+      "colDay": "Date",
+      "colWeekday": "Day",
+      "colTimeslot": "Slot",
+      "colSubject": "Subject",
+      "colYear": "Study year"
     }
   },
   "tasks": {

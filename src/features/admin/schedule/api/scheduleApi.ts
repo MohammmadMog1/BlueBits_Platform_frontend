@@ -17,14 +17,7 @@ import type {
   UpdateScheduleConfigPayload,
 } from "../types";
 
-/**
- * ⚠️ مسارات result / publish لم يحدّدها توصيف الباك،
- * واستُنتجت من نمط بقية المسارات: /schedule/<action>/:semesterId
- * إن اختلفت في الباك، التعديل هنا فقط يكفي.
- *
- * solve مؤكد من الشبكة الفعلية: POST /schedule/solve (بدون id بالمسار)
- * والـ body فيه { semesterId, academicYear }.
- */
+
 const SCHEDULE_PATHS = {
   solve: "/schedule/solve",
   result: (semesterId: string) => `/schedule/result/${semesterId}`,

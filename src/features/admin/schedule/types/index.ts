@@ -267,3 +267,6 @@ export interface SubjectGroupMembership {
 
 /** subjectId → عضويته في غروب (إن وُجدت) */
 export type SubjectGroupIndex = Map<string, SubjectGroupMembership>;
+
+/** subjectId → اسم السنة الدراسية التابعة لها المادة (لعرضها في الجدول، إن أمكن معرفتها) */
+export type SubjectYearIndex = Map<string, string>;
